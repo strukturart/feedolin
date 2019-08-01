@@ -1,0 +1,57 @@
+{
+	"version": "1.0.0",
+	"name": "news-reader",
+	"description": "news-reader",
+	"launch_path": "/index.html",
+	"type": "certified",
+
+
+	"icons": {
+		"56": "/icons/icon-56-56.png",
+		"112": "/icons/icon-112-112.png"
+	},
+	
+	"developer": 
+	{
+		"name": "strukturart",
+		"url": "https://strukturart.com"
+	},
+
+
+	"permissions": 
+	{
+
+		"desktop-notification":{},
+
+		"geolocation": {
+		"description": "Required to show user's location"
+		},
+
+		"device-storage:sdcard": {
+		"description": "Read from sd-card",
+		"access": "readonly"
+		},
+
+
+		"device-storage:apps":{ "access": "readonly" },
+		"webapps-manage":{ },
+
+
+
+
+		"spatialnavigation-app-manage": {
+		"navigator.spatialNavigationEnabled": false
+		},
+
+		"systemXHR": {
+		"description": "Required to load remote content"
+		}
+
+
+
+ 
+	}
+
+
+ 
+}

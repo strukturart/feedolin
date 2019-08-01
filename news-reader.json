@@ -1,0 +1,18 @@
+[
+	
+		
+		{
+			"url":":www.tagesschau.de/xml/atom/",
+			"limit":"100"
+		},
+
+		{
+			"url":"http://podcast.wdr.de/radio/leonardo.xml",
+			"limit":"2"
+		}
+
+	
+	
+]
+
+
