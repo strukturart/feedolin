@@ -32,7 +32,7 @@ html,body
 {
 
 	font-weight: 100;
-	width:100%;
+	width:90%;
 	position:relative;
 	margin:0px;
 	padding:0px;  
@@ -41,9 +41,14 @@ html,body
 	-webkit-appearance: none;
 	height: 100%;
 	margin: 0;
+	//background:black;
 }
 
 
+h1
+{
+	font-size:1rem;
+}
 
 
 
@@ -68,176 +73,57 @@ div#window-status
 /*///////////////////////////
 ///FINDER////////////////*/
 
-div#finder
+div#news-feed
 {
 	position:relative;
-	background:black;
+	background:white;
 	padding:5px;
-	color:white;
-	height:100vh;
-	width:100vw;
-}
-
-
-div#finder-error
-{
-	position:absolute;
-	z-index:2;
-	top:50%;
-	left:50%;
-	margin:-7px 0 0 -50px;
-	width:92px;
-	background:black;
-	color:white;
-	font-size:14px;
-	padding:3px;
-	display:none;
-}
-
-
-div#finder div#app-list
-{
-	background:black;
-	color:white;
-	margin:0 0 3px 0;
-	padding:3px;
-	max-height:90%;
-	min-width:95%;
-	overflow:hidden;
-}
-
-div#finder div#app-list div
-{
-	min-width:100%;
-}
-
-
-
-div#finder div:focus
-{
-	background:yellow;
 	color:black;
-}
-
-
-div#weather-wrapper
-{
-	display:none;
-	background:black;
-	
-}
-
-div#quick-settings
-{
-	display:none;
-	position:relative;
-	background:black;
-	padding:5px;
-	color:white;
 	height:100vh;
-	width:100vw;
+	width:90vw;
+	font-weight:normal;
+
+}
+
+div#news-feed div#news-feed-list article
+{
+	margin:0 0 15px 0;
+	font-weight:normal;
+}
+
+
+div#news-feed div#news-feed-list article:focus
+{
+	background:silver;
+}
+
+
+
+
+div#news-feed div#news-feed-list article h1
+{
+	font-size:1rem;
+	font-weight:bold;
+
+}
+
+
+
+div#news-feed div#news-feed-list article time
+{
+	font-size:0.8rem;
 	
 }
 
 
-div#quick-settings div:focus
+div#news-feed div#news-feed-list article div.summary
 {
-	background:yellow;
-	color:black;
-}
+	display:none;
 
-
-/*///////////////////////////
-///LOCATION////////////////*/
-
-
-div#location
-{
-  position:absolute;
-  z-index:1000;
-  left:0;
-  top:0;
-  background:black;
-  color:white;
-  font-size: 14px;
-  padding:5px 10px 50px 5px;
-  overflow: hidden;
-  display:none;
 }
 
 
 
-div#weather-wrapper div#message
-{
-	position:absolute;
-	z-index:5;
-	color:white;
-	top:40%;
-	text-align:center;
-}
-
-
-div#location div#weather
-{
-	margin:10px 0 0 0;
-}
-
-div#location div#temp
-{
-	font-size:1.7rem;
-}
-
-
-div#location div#weather section
-{
-	border-top:2px dashed white;
-	margin: 0 0 0px 0;
-	padding:12px 5px 12px 5px;
-
-}
-
-div#location div#weather div#weather-bar div#icon
-{
-	margin:8px 0 0 0;
-}
-
-
-
-div#location div#weather div#wind-dir
-{
-	font-size:1.7rem;
-	max-height:1.7rem!Important;
-}
-
-div#location div#weather div#wind-speed
-{
-	font-size:0.7rem;
-	max-height:1.7rem!Important;
-	margin:-10px 0 0 0;
-}
-
-
-
-div#location div#weather div#wind-speed div#wind-speed-val
-{
-	max-height:0.7rem;
-
-}
-
-div#location div#weather div#wind-speed div#wind-speed-unit
-{
-	max-height:0.7rem;
-}
-
-.day-style-1
-{
-	background:rgba(0,0,255,0.6);
-}
-
-.day-style-2
-{
-	background:rgba(11,135,61,0.6);
-}
 
 
 

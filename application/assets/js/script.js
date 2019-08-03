@@ -6,37 +6,21 @@ $(document).ready(function()
 	//Global Vars
 	var windowOpen = false;
 	var i = -1;
-	var finderNav_tabindex = -1;
-	var app_list_filter_arr = [];
-	var app_shortcut_arr = [];
-	var list_all = false;
 	var debug = true;
 	var page = 0;
 	var pos_focus = 0
 
+
+var article_array;
 
 
 
 	var items = "";
 
 
-	var pages_arr = [];
-
 
 
 	$("div#window-status").text(windowOpen);
-
-
-//execute weather function once 
-	var once_exec = (function() {
-	    var executed = false;
-	    return function() {
-	        if (!executed) {
-	            executed = true;
-	            weather()
-	        }
-	    };
-	})();
 
 
 
@@ -52,11 +36,11 @@ $(document).ready(function()
 
 		finder.on("empty", function (needle) 
 		{
-			alert("no sdcard found, no openweathermap api-key found");
+			alert("no sdcard found");
 			return;
 		});
 
-		finder.search("news-reader.json");
+		finder.search("rss-reader.json");
 
 
 
@@ -98,7 +82,6 @@ $(document).ready(function()
 
 									$.each(app_list_filter, function(i, item) {
 
-									//alert(item.url,item.limit);
 									rss_fetcher(item.url,item.limit)
 
 									
@@ -153,18 +136,42 @@ function rss_fetcher(param_url,param_limit)
 		
 			var data = xhttp.response;
 
-
-		//alert(data)
+		//rss atom items
 		$(data).find('entry').each(function(){
 			i++
-		  var item_title = $(this).find('title').text();
-		  var item_summary = $(this).find('summary').text();
-		  //alert(item_title)
-		  var article = $('<article tabindex="'+i+'"><h1>'+item_title+'</h1><div>'+item_summary+'</div></article>')
-		  $('div#news-feed-list').append(article)
+		if(i < param_limit)
+		{
+			var item_title = $(this).find('title').text();
+			var item_summary = $(this).find('summary').text();
+			var item_date = $(this).find('updated').text();
+			var article = $('<article tabindex="'+i+'"><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+			$('div#news-feed-list').append(article);
+			$("div#news-feed-list article:first").focus()
+
+			article_array = $('div#news-feed-list article')
+		}
+	})
 
 
-    });
+		//rss 
+		$(data).find('item').each(function(){
+			i++
+		if(i < param_limit)
+		{
+			var item_title = $(this).find('title').text();
+			var item_summary = $(this).find('description').text();
+			var item_date = $(this).find('pubDate').text();
+			var article = $('<article tabindex="'+i+'"><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+			$('div#news-feed-list').append(article);
+			$("div#news-feed-list article:first").focus()
+
+			article_array = $('div#news-feed-list article')
+		}
+
+
+
+
+	});
 
 					
 
@@ -184,6 +191,7 @@ function rss_fetcher(param_url,param_limit)
 
 
 
+
 }
 
 
@@ -199,15 +207,15 @@ function rss_fetcher(param_url,param_limit)
 
 
 	function nav (move) {
-			console.log(pages_arr.length)
+		var $focused = $(':focus');
 		
-		if(move == "+1" &&  pos_focus < finderNav_tabindex)
+		if(move == "+1" &&  pos_focus < article_array.length)
 		{
 			pos_focus++
 
-			if( pos_focus <= finderNav_tabindex)
+			if( pos_focus <= article_array.length)
 			{
-				var targetElement = items[pos_focus];
+				var targetElement = article_array[pos_focus];
 				targetElement.focus();
 
 			}
@@ -218,7 +226,7 @@ function rss_fetcher(param_url,param_limit)
 			pos_focus--
 			if( pos_focus >= 0)
 			{
-				var targetElement = items[ pos_focus];
+				var targetElement = article_array[ pos_focus];
 				targetElement.focus();
 
 			}
@@ -302,6 +310,27 @@ function rss_fetcher(param_url,param_limit)
 
 
 
+function show_article()
+{
+	var $focused = $(':focus');
+	$('article').css('display','none')
+	$focused.css('display','block')
+	$('div.summary').css('display','block')
+
+
+
+}
+
+
+function show_article_list()
+{
+	var $focused = $(':focus');
+	$('article').css('display','block')
+	$('div.summary').css('display','none')
+
+}
+
+
 
 
 	//////////////////////////
@@ -317,7 +346,7 @@ function rss_fetcher(param_url,param_limit)
 
 
 	        case 'Enter':
-	      
+	      		show_article();
 	        break;
 
 
@@ -337,6 +366,12 @@ function rss_fetcher(param_url,param_limit)
 			case 'ArrowLeft':
 				nav("slide_left")
 			break; 
+
+			case 'SoftLeft':
+				show_article_list();
+			break;
+
+
 
 
 
