@@ -10,17 +10,17 @@ $(document).ready(function()
 	var page = 0;
 	var pos_focus = 0
 
-
+var n = -1;
 var article_array;
 
 
+var tabindex_i = -0;
 
 	var items = "";
 
 
 
 
-	$("div#window-status").text(windowOpen);
 
 
 
@@ -82,11 +82,13 @@ var article_array;
 
 									$.each(app_list_filter, function(i, item) {
 
-									rss_fetcher(item.url,item.limit)
+									rss_fetcher(item.url,item.limit,item.channel)
 
 									
 								
 									});
+
+
 
 
 
@@ -111,7 +113,7 @@ finder()
 //rss-fetch////
 //////////////////////////////
 
-function rss_fetcher(param_url,param_limit)
+function rss_fetcher(param_url,param_limit,param_channel)
 {
 
 	
@@ -141,16 +143,22 @@ function rss_fetcher(param_url,param_limit)
 			i++
 		if(i < param_limit)
 		{
+
 			var item_title = $(this).find('title').text();
 			var item_summary = $(this).find('summary').text();
-			var item_date = $(this).find('updated').text();
-			var article = $('<article tabindex="'+i+'"><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+			var item_date_unix =Date.parse($(this).find('updated').text());
+			item_date = new Date(item_date_unix)
+			item_date = item_date.toGMTString()
+
+			var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
 			$('div#news-feed-list').append(article);
-			$("div#news-feed-list article:first").focus()
 
 			article_array = $('div#news-feed-list article')
 		}
+
 	})
+
+		i=0
 
 
 		//rss 
@@ -160,8 +168,12 @@ function rss_fetcher(param_url,param_limit)
 		{
 			var item_title = $(this).find('title').text();
 			var item_summary = $(this).find('description').text();
-			var item_date = $(this).find('pubDate').text();
-			var article = $('<article tabindex="'+i+'"><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+			var item_date_unix =Date.parse($(this).find('pubDate').text());
+			item_date = new Date(item_date_unix)
+			item_date = item_date.toGMTString()
+
+
+			var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
 			$('div#news-feed-list').append(article);
 			$("div#news-feed-list article:first").focus()
 
@@ -173,14 +185,30 @@ function rss_fetcher(param_url,param_limit)
 
 	});
 
+		i=0
+
+/*
+	$("div#news-feed-list article").sort(sort_li).appendTo('div#news-feed-list');
+	function sort_li(a, b) {
+	return ($(b).data('sort')) < ($(a).data('sort')) ? 1 : -1;
+	}
+	*/
+	
 					
 
-					
+
+			$('div#news-feed-list article').each(function (index) {
+
+				$(this).prop("tabindex",index);
+				$('div#news-feed-list article:first').focus()
+
+			})
+
+			
 
 		}
 	};
 
-	$("div#message-box").css('display','none')
 
 
 	xhttp.onerror = function () {
@@ -190,6 +218,12 @@ function rss_fetcher(param_url,param_limit)
 	xhttp.send(null)
 
 
+
+	$("div#message-box").css('display','none')
+
+
+
+			
 
 
 }
@@ -207,9 +241,11 @@ function rss_fetcher(param_url,param_limit)
 
 
 	function nav (move) {
+			
+
 		var $focused = $(':focus');
 		
-		if(move == "+1" &&  pos_focus < article_array.length)
+		if(move == "+1" &&  pos_focus < article_array.length-1)
 		{
 			pos_focus++
 
@@ -233,72 +269,9 @@ function rss_fetcher(param_url,param_limit)
 		}
 
 
-		if(move == "slide_right")
-		{
-
-			if(page < pages_arr.length-1)
-			{
-				page++
-
-				$("div.page").css("display","none");
-				$("div#"+pages_arr[page]).css("display","block");
+	
 
 
-
-				if(pages_arr[page] == "weather-wrapper")
-				{
-					//execute weather() only once
-					once_exec()
-				}
-				
-
-				if(pages_arr[page] == "quick-settings")
-				{
-					items = document.querySelectorAll('div#quick-settings > div.items');
-					$('div#quick-settings').find('div.items[tabindex=0]').focus();
-					pos_focus = 0;
-				}
-
-				if(pages_arr[page] == "finder")
-				{
-					items = document.querySelectorAll('div#app-list > div.items');
-					$('div#app-list').find('div.items[tabindex=0]').focus();
-					pos_focus = 0;
-
-				}
-
-				
-			}		
-		}
-
-
-		if(move == "slide_left")
-		{
-			if(page > 0)
-			{
-				page--
-
-					$("div.page").css("display","none");
-					$("div#"+pages_arr[page]).css("display","block");
-
-				if(pages_arr[page] == "quick-settings")
-				{
-					items = document.querySelectorAll('div#quick-settings > div.items');
-					$('div#quick-settings').find('div.items[tabindex=0]').focus();
-					pos_focus = 0;
-				}
-
-
-				if(pages_arr[page] == "finder")
-				{
-					items = document.querySelectorAll('div#app-list > div.items');
-					$('div#app-list').find('div.items[tabindex=0]').focus();
-					pos_focus = 0;
-				}
-
-			
-			}
-		}
 
 
 

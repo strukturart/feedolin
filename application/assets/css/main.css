@@ -50,7 +50,12 @@ h1
 	font-size:1rem;
 }
 
-
+img
+{
+	max-width:90vw;
+	height:auto;
+	display:block;
+}
 
 /*///////////////////////////
 ///HELPER////////////////*/
@@ -130,15 +135,15 @@ div#news-feed div#news-feed-list article div.summary
 
 div#message-box
 {
-	display:none;
+	display:block;
 	position:fixed;
-	bottom:5px;
+	top:0px;
 	left:0px;
-	padding:5px;
+	padding:10px;
 	min-width:100vw;
-	height:auto;
-	background:pink;
-	color:black;
+	height:100vh;
+	background:black;
+	color:white;
 	z-index:2000;
 }
 
