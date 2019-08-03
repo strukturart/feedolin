@@ -4,17 +4,16 @@ $(document).ready(function()
 
 
 	//Global Vars
-	var windowOpen = false;
 	var i = -1;
 	var debug = true;
 	var page = 0;
 	var pos_focus = 0
 
-var n = -1;
-var article_array;
+	var n = -1;
+	var article_array;
 
 
-var tabindex_i = -0;
+	var tabindex_i = -0;
 
 	var items = "";
 
@@ -128,7 +127,7 @@ function rss_fetcher(param_url,param_limit,param_channel)
 	xhttp.overrideMimeType('text/xml');
 
 	$("div#message-box").css('display','block')
-	$("div#message-box").text("Please wait checking "+param_url)
+	$("div#message-box").text("Please wait, downloading content.")
 	
 
 
@@ -138,54 +137,51 @@ function rss_fetcher(param_url,param_limit,param_channel)
 		
 			var data = xhttp.response;
 
-		//rss atom items
-		$(data).find('entry').each(function(){
-			i++
-		if(i < param_limit)
-		{
+			//rss atom items
+			$(data).find('entry').each(function(){
+				i++
+				if(i < param_limit)
+				{
 
-			var item_title = $(this).find('title').text();
-			var item_summary = $(this).find('summary').text();
-			var item_date_unix =Date.parse($(this).find('updated').text());
-			item_date = new Date(item_date_unix)
-			item_date = item_date.toGMTString()
+					var item_title = $(this).find('title').text();
+					var item_summary = $(this).find('summary').text();
+					var item_date_unix =Date.parse($(this).find('updated').text());
+					item_date = new Date(item_date_unix)
+					item_date = item_date.toGMTString()
 
-			var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
-			$('div#news-feed-list').append(article);
+					var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+					$('div#news-feed-list').append(article);
 
-			article_array = $('div#news-feed-list article')
-		}
+					article_array = $('div#news-feed-list article')
+				}
 
-	})
+			})
 
-		i=0
-
-
-		//rss 
-		$(data).find('item').each(function(){
-			i++
-		if(i < param_limit)
-		{
-			var item_title = $(this).find('title').text();
-			var item_summary = $(this).find('description').text();
-			var item_date_unix =Date.parse($(this).find('pubDate').text());
-			item_date = new Date(item_date_unix)
-			item_date = item_date.toGMTString()
+			i=0
 
 
-			var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
-			$('div#news-feed-list').append(article);
-			$("div#news-feed-list article:first").focus()
+			//rss 
+			$(data).find('item').each(function(){
+				i++
+				if(i < param_limit)
+				{
+					var item_title = $(this).find('title').text();
+					var item_summary = $(this).find('description').text();
+					var item_date_unix =Date.parse($(this).find('pubDate').text());
+					item_date = new Date(item_date_unix)
+					item_date = item_date.toGMTString()
 
-			article_array = $('div#news-feed-list article')
-		}
 
+					var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+					$('div#news-feed-list').append(article);
+					$("div#news-feed-list article:first").focus()
 
+					article_array = $('div#news-feed-list article')
+				}
 
+			});
 
-	});
-
-		i=0
+			i=0
 
 /*
 	$("div#news-feed-list article").sort(sort_li).appendTo('div#news-feed-list');
@@ -207,6 +203,13 @@ function rss_fetcher(param_url,param_limit,param_channel)
 			
 
 		}
+
+		else
+		{
+			alert("The content could not be downloaded. Error code: "+xhttp.status) 
+		}
+
+
 	};
 
 
@@ -218,8 +221,9 @@ function rss_fetcher(param_url,param_limit,param_channel)
 	xhttp.send(null)
 
 
-
+setTimeout(function(){
 	$("div#message-box").css('display','none')
+}, 7000);
 
 
 

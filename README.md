@@ -48,9 +48,7 @@ channel = Name of channel
 
 ## To do
 
-+ wrong image size 
 + Soft right go to url
 + fullscreen
 + sort by date
-+ add channel tag
 

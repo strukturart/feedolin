@@ -61,17 +61,6 @@ img
 ///HELPER////////////////*/
 
 
-div#window-status
-{
-	position:fixed;
-	top:10px;
-	left:5px;
-	background:black;
-	color:white;
-	z-index: 900;
-	display:none;
-
-}
 
 
 
