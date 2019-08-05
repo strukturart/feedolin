@@ -4,7 +4,7 @@
 <head>
 	
 	<title>rss-reader</title>
-	<meta http-equiv="Content-Security-Policy" content="default-src  https://api.openweathermap.org/* 'self'">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
 
 
 
@@ -25,7 +25,12 @@
 	<!---------------->
 	<div id="news-feed" class="flex width-100 height-100 page">
 		<div id="news-feed-list">
-			
+		</div>
+		<div id="button-bar">
+			<div class="inner flex justify-content-spacebetween width-100">
+				<div id="button-left">back</div>
+				<div id="button-right">visit source</div>
+			</div>
 		</div>
 	</div>
 
@@ -35,7 +40,9 @@
 	//////////////
 	-->
 
-	<div id="message-box" class="flex width-100 height-100"></div>
+	<div id="message-box" class="flex width-100 height-100">
+		<div class="text-center">Please wait<br> downloading rss-feeds</div>
+	</div>
 
 
 </div>
@@ -46,5 +53,6 @@
 	<script defer src="assets/js/jQuery-3.1.0.js"></script>
 	<script defer src="assets/js/moments.min.js"></script>
 	<script defer src="assets/js/applait.finder.min.js"></script>
+	<script defer src="assets/js/TinySort.js"></script>
 	<script defer src="assets/js/script.js"></script>
 

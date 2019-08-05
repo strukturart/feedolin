@@ -113,11 +113,51 @@ div#news-feed div#news-feed-list article time
 div#news-feed div#news-feed-list article div.summary
 {
 	display:none;
+	padding:0 0 30px 0;
 
 }
 
 
+div#button-bar
+{
+	position:fixed;
+	bottom:16px;
+	left:0px;
+	display:none;
+	height:10px;
 
+}
+
+div#button-bar div#inner
+{
+	position:relative;
+	
+
+}
+
+div#button-bar div
+{
+	background:black;
+	color:white;
+	padding:2px;
+}
+
+div#button-bar div#button-left
+{
+	background:black;
+	color:white;
+	padding:2px;
+	width:20px;
+}
+
+
+div#button-bar div#button-right
+{
+	background:black;
+	color:white;
+	padding:2px;
+	width:92px;
+}
 
 
 
@@ -128,7 +168,7 @@ div#message-box
 	position:fixed;
 	top:0px;
 	left:0px;
-	padding:10px;
+	padding:40px 10px 10px 10px;
 	min-width:100vw;
 	height:100vh;
 	background:black;

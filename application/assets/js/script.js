@@ -5,17 +5,18 @@ $(document).ready(function()
 
 	//Global Vars
 	var i = -1;
-	var debug = true;
+	var debug = false;
 	var page = 0;
 	var pos_focus = 0
 
-	var n = -1;
 	var article_array;
 
 
 	var tabindex_i = -0;
 
-	var items = "";
+
+	var window_status = "article-list";
+
 
 
 
@@ -127,8 +128,6 @@ function rss_fetcher(param_url,param_limit,param_channel)
 	xhttp.overrideMimeType('text/xml');
 
 	$("div#message-box").css('display','block')
-	$("div#message-box").text("Please wait, downloading content.")
-	
 
 
 	xhttp.onload = function () {
@@ -145,11 +144,12 @@ function rss_fetcher(param_url,param_limit,param_channel)
 
 					var item_title = $(this).find('title').text();
 					var item_summary = $(this).find('summary').text();
+					var item_link = $(this).find('link').attr("href");
 					var item_date_unix =Date.parse($(this).find('updated').text());
 					item_date = new Date(item_date_unix)
 					item_date = item_date.toGMTString()
 
-					var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+					var article = $('<article data-order = "'+item_date_unix+'" data-link = "'+item_link+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
 					$('div#news-feed-list').append(article);
 
 					article_array = $('div#news-feed-list article')
@@ -160,19 +160,20 @@ function rss_fetcher(param_url,param_limit,param_channel)
 			i=0
 
 
-			//rss 
+			//rss 2.0 items
 			$(data).find('item').each(function(){
 				i++
 				if(i < param_limit)
 				{
 					var item_title = $(this).find('title').text();
 					var item_summary = $(this).find('description').text();
+					var item_link = $(this).find('link').text();
 					var item_date_unix =Date.parse($(this).find('pubDate').text());
 					item_date = new Date(item_date_unix)
 					item_date = item_date.toGMTString()
 
 
-					var article = $('<article data-sort = "'+item_date_unix+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
+					var article = $('<article data-order = "'+item_date_unix+'" data-link = "'+item_link+'"><div class="channel">'+param_channel+'</div><time>'+item_date+'</time><h1>'+item_title+'</h1><div class="summary">'+item_summary+'</div></article>')
 					$('div#news-feed-list').append(article);
 					$("div#news-feed-list article:first").focus()
 
@@ -183,23 +184,6 @@ function rss_fetcher(param_url,param_limit,param_channel)
 
 			i=0
 
-/*
-	$("div#news-feed-list article").sort(sort_li).appendTo('div#news-feed-list');
-	function sort_li(a, b) {
-	return ($(b).data('sort')) < ($(a).data('sort')) ? 1 : -1;
-	}
-	*/
-	
-					
-
-
-			$('div#news-feed-list article').each(function (index) {
-
-				$(this).prop("tabindex",index);
-				$('div#news-feed-list article:first').focus()
-
-			})
-
 			
 
 		}
@@ -207,6 +191,8 @@ function rss_fetcher(param_url,param_limit,param_channel)
 		else
 		{
 			alert("The content could not be downloaded. Error code: "+xhttp.status) 
+			
+    
 		}
 
 
@@ -221,19 +207,77 @@ function rss_fetcher(param_url,param_limit,param_channel)
 	xhttp.send(null)
 
 
-setTimeout(function(){
-	$("div#message-box").css('display','none')
-}, 7000);
+
+	xhttp.onreadystatechange = function() {
+  if(this.readyState == this.HEADERS_RECEIVED) {
+
+    // Get the raw header string
+    var headers = xhttp.getAllResponseHeaders();
+    console.log(headers);
+
+    // Convert the header string into an array
+    // of individual headers
+    var arr = headers.trim().split(/[\r\n]+/);
+
+    // Create a map of header names to values
+    var headerMap = {};
+    arr.forEach(function (line) {
+      var parts = line.split(': ');
+      var header = parts.shift();
+      var value = parts.join(': ');
+      headerMap[header] = value;
+    });
+  }
+}
 
 
 
-			
+
+
+
 
 
 }
 
 
+function set_tabindex()
+{
 
+	$('div#news-feed-list article').each(function (index) {
+
+				$(this).prop("tabindex",index);
+				$('div#news-feed-list article:first').focus()
+
+
+	})
+}
+
+
+	function sort_data() {
+
+		var $wrapper = $('div#news-feed-list');
+
+		$wrapper.find('article').sort(function(a, b) {
+		return +b.dataset.order - +a.dataset.order;
+		})
+		.appendTo($wrapper);
+		
+		article_array = $('div#news-feed-list article')
+		set_tabindex()
+	}
+
+  
+
+
+
+
+setTimeout(function(){
+
+	sort_data()
+	$("div#message-box").css('display','none')
+
+
+}, 5000);
 
 
 
@@ -246,41 +290,33 @@ setTimeout(function(){
 
 	function nav (move) {
 			
-
-		var $focused = $(':focus');
-		
-		if(move == "+1" &&  pos_focus < article_array.length-1)
+		if(window_status == "article-list")
 		{
-			pos_focus++
-
-			if( pos_focus <= article_array.length)
+			var $focused = $(':focus');
+			
+			if(move == "+1" &&  pos_focus < article_array.length-1)
 			{
-				var targetElement = article_array[pos_focus];
-				targetElement.focus();
+				pos_focus++
 
+				if( pos_focus <= article_array.length)
+				{
+					var targetElement = article_array[pos_focus];
+					targetElement.focus();
+
+				}
+			}
+
+			if(move == "-1" &&   pos_focus > 0)
+			{
+				pos_focus--
+				if( pos_focus >= 0)
+				{
+					var targetElement = article_array[ pos_focus];
+					targetElement.focus();
+
+				}
 			}
 		}
-
-		if(move == "-1" &&   pos_focus > 0)
-		{
-			pos_focus--
-			if( pos_focus >= 0)
-			{
-				var targetElement = article_array[ pos_focus];
-				targetElement.focus();
-
-			}
-		}
-
-
-	
-
-
-
-
-
-
-		
 
 	}
 
@@ -293,6 +329,10 @@ function show_article()
 	$('article').css('display','none')
 	$focused.css('display','block')
 	$('div.summary').css('display','block')
+	$('div#button-bar').css('display','block')
+	window_status = "single-article";
+
+
 
 
 
@@ -301,9 +341,39 @@ function show_article()
 
 function show_article_list()
 {
+	window_status = "article-list";
+
 	var $focused = $(':focus');
 	$('article').css('display','block')
 	$('div.summary').css('display','none')
+	$('div#button-bar').css('display','none')
+
+	var targetElement = article_array[ pos_focus];
+	targetElement.focus();
+
+	window.scrollTo(0, $(targetElement).offset().top);
+
+
+}
+
+
+function open_url()
+{
+		var targetElement = article_array[ pos_focus];
+		var link_target = $(targetElement ).data('link');
+
+
+
+    var activity = new MozActivity({
+    name: "view",
+    data: {
+              type: "url",
+              disposition: "inline",
+              url: link_target
+          }
+    });
+ 
+
 
 }
 
@@ -347,6 +417,11 @@ function show_article_list()
 			case 'SoftLeft':
 				show_article_list();
 			break;
+
+			case 'SoftRight':
+				open_url();
+			break;
+
 
 
 
