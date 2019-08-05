@@ -48,7 +48,6 @@ channel = Name of channel
 
 ## To do
 
-+ Soft right go to url
-+ fullscreen
-+ sort by date
++ Some serve make a 302 error
+
 
