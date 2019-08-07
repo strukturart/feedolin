@@ -50,7 +50,7 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 
 + Some serve make a 302 error
 
-# Donation
+## Donation
 
 You like the app and you have enough money
 
