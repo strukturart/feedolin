@@ -53,6 +53,7 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 # Donation
 
 Do you like the app ?
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q8QLA8CNMWAWG)
 
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 <input type="hidden" name="cmd" value="_s-xclick" />
