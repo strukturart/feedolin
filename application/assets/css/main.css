@@ -28,6 +28,8 @@
 }
 
 
+
+
 html,body
 {
 
@@ -118,6 +120,26 @@ div#news-feed div#news-feed-list article div.summary
 }
 
 
+div#source-page
+{
+	display:none;
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:2000;
+	background:black;
+	min-height:100vh;
+	width:100vw;
+	background:black;
+}
+
+
+div#source-page iframe
+{
+
+	height:10000px;
+}
+
 div#button-bar
 {
 	position:fixed;
@@ -125,6 +147,7 @@ div#button-bar
 	left:0px;
 	display:none;
 	height:10px;
+	z-index:3000;
 
 }
 

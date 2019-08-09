@@ -5,23 +5,12 @@ $(document).ready(function()
 
 	//Global Vars
 	var i = -1;
-	var debug = false;
+	var debug = true;
 	var page = 0;
 	var pos_focus = 0
-
 	var article_array;
-
-
 	var tabindex_i = -0;
-
-
 	var window_status = "article-list";
-
-
-
-
-
-
 
 
 
@@ -31,7 +20,7 @@ $(document).ready(function()
 	{
 
 
-	var finder = new Applait.Finder({ type: "sdcard", debugMode: true });
+	var finder = new Applait.Finder({ type: "sdcard", debugMode: false });
 
 
 		finder.on("empty", function (needle) 
@@ -78,14 +67,9 @@ $(document).ready(function()
 
 							}
 									var app_list_filter = JSON.parse(search_result);
-									
-
 									$.each(app_list_filter, function(i, item) {
-
 									rss_fetcher(item.url,item.limit,item.channel)
 
-									
-								
 									});
 
 
@@ -192,7 +176,6 @@ function rss_fetcher(param_url,param_limit,param_channel)
 		{
 			alert("The content could not be downloaded. Error code: "+xhttp.status) 
 			
-    
 		}
 
 
@@ -353,27 +336,36 @@ function show_article_list()
 
 	window.scrollTo(0, $(targetElement).offset().top);
 
+	$("div#source-page").css("display","none")
+	$("div#source-page iframe").attr("src","")
+	$('div#button-bar div#button-right').css('display','block');
+
+
 
 }
 
 
 function open_url()
 {
-		var targetElement = article_array[ pos_focus];
-		var link_target = $(targetElement ).data('link');
+	var targetElement = article_array[ pos_focus];
+	var link_target = $(targetElement ).data('link');
+/*
 
+	var activity = new MozActivity({
+	name: "view",
+	data: {
+			type: "url",
+			disposition: "inline",
+			url: link_target
+	      }
+	});
+*/
 
+$("div#source-page").css("display","block")
+$("div#source-page iframe").attr("src",link_target)
+$('div#button-bar div#button-right').css('display','none');
 
-    var activity = new MozActivity({
-    name: "view",
-    data: {
-              type: "url",
-              disposition: "inline",
-              url: link_target
-          }
-    });
- 
-
+window_status = "source-page";
 
 }
 

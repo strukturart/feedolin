@@ -27,6 +27,9 @@
 		"description": "Read from sd-card",
 		"access": "readonly"
 		},
+		
+		"browser": {},
+		"embed-apps": {},
 
 
 		"spatialnavigation-app-manage": {
