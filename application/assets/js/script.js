@@ -4,14 +4,15 @@ $(document).ready(function()
 
 
 	//Global Vars
+	var redirection_counter = -1;
 	var i = -1;
-	var debug = true;
+	var debug = false;
 	var page = 0;
 	var pos_focus = 0
 	var article_array;
 	var tabindex_i = -0;
 	var window_status = "article-list";
-
+	var redirections_arr = [];
 
 
 
@@ -68,13 +69,14 @@ $(document).ready(function()
 							}
 									var app_list_filter = JSON.parse(search_result);
 									$.each(app_list_filter, function(i, item) {
-									rss_fetcher(item.url,item.limit,item.channel)
+									rss_fetcher(item.url,item.limit,item.channel,false)
+
+
 
 									});
 
-
-
-
+									
+									//alert(redirections)
 
 					};
 					reader.readAsText(file)
@@ -89,19 +91,12 @@ finder()
 
 
 
-
-
-
-
 //////////////////////////////
 //rss-fetch////
 //////////////////////////////
 
-function rss_fetcher(param_url,param_limit,param_channel)
+function rss_fetcher(param_url,param_limit,param_channel,param_redirect)
 {
-
-	
-
 
 
 	var xhttp = new XMLHttpRequest({ mozSystem: true });
@@ -111,13 +106,16 @@ function rss_fetcher(param_url,param_limit,param_channel)
 	xhttp.responseType = 'document';
 	xhttp.overrideMimeType('text/xml');
 
+
+
 	$("div#message-box").css('display','block')
 
 
 	xhttp.onload = function () {
+		
 		if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) 
 		{
-		
+
 			var data = xhttp.response;
 
 			//rss atom items
@@ -172,11 +170,27 @@ function rss_fetcher(param_url,param_limit,param_channel)
 
 		}
 
-		else
+		////Redirection
+		if (xhttp.status === 301) 
 		{
-			alert("The content could not be downloaded. Error code: "+xhttp.status) 
+			if(param_redirect != true)
+			{
+			redirection_counter++;
+			redirections_arr[redirection_counter] = [xhttp.responseURL,param_limit,param_channel];
+			}
+
+			if(param_redirect == true)
+			{
 			
+				$("div#message-box div.text-center").text("");
+				$("div#message-box").css("display","block");
+				$("div#message-box div#redirections").css("display","block");
+				$("div#message-box div#redirections").append("<div>"+param_channel+"</div>")
+
+			}
 		}
+
+
 
 
 	};
@@ -184,43 +198,14 @@ function rss_fetcher(param_url,param_limit,param_channel)
 
 
 	xhttp.onerror = function () {
-	alert("error");
+	alert("status: "+xhttp.status);
+		
 	};
 
 	xhttp.send(null)
-
-
-
-	xhttp.onreadystatechange = function() {
-  if(this.readyState == this.HEADERS_RECEIVED) {
-
-    // Get the raw header string
-    var headers = xhttp.getAllResponseHeaders();
-    console.log(headers);
-
-    // Convert the header string into an array
-    // of individual headers
-    var arr = headers.trim().split(/[\r\n]+/);
-
-    // Create a map of header names to values
-    var headerMap = {};
-    arr.forEach(function (line) {
-      var parts = line.split(': ');
-      var header = parts.shift();
-      var value = parts.join(': ');
-      headerMap[header] = value;
-    });
-  }
 }
 
 
-
-
-
-
-
-
-}
 
 
 function set_tabindex()
@@ -228,8 +213,8 @@ function set_tabindex()
 
 	$('div#news-feed-list article').each(function (index) {
 
-				$(this).prop("tabindex",index);
-				$('div#news-feed-list article:first').focus()
+		$(this).prop("tabindex",index);
+		$('div#news-feed-list article:first').focus()
 
 
 	})
@@ -249,18 +234,42 @@ function set_tabindex()
 		set_tabindex()
 	}
 
-  
+
+	//wait till downloads are done than try redirection
+	setTimeout(function(){
+
+		if(redirections_arr.length > 0)
+		{
+
+			//try redirections
+			for(var i =0; i < redirections_arr.length; i++)
+			{
+				//alert(redirections_arr.length+" / "+i)
+				rss_fetcher(redirections_arr[i][0],redirections_arr[i][1],redirections_arr[i][2],true);
+			}
+
+		}
+
+
+		//sort content by date
+		sort_data();
+
+	}, 5000);
 
 
 
+		//wait till downloads are done than try redirection
+		setTimeout(function(){
 
-setTimeout(function(){
+	
+		//sort content by date
+		sort_data();
+		$("div#message-box").css('display','none');
 
-	sort_data()
-	$("div#message-box").css('display','none')
+	}, 10000);
 
 
-}, 5000);
+
 
 
 
@@ -345,27 +354,18 @@ function show_article_list()
 }
 
 
+
+
 function open_url()
 {
 	var targetElement = article_array[ pos_focus];
 	var link_target = $(targetElement ).data('link');
-/*
 
-	var activity = new MozActivity({
-	name: "view",
-	data: {
-			type: "url",
-			disposition: "inline",
-			url: link_target
-	      }
-	});
-*/
+	$("div#source-page").css("display","block")
+	$("div#source-page iframe").attr("src",link_target)
+	$('div#button-bar div#button-right').css('display','none');
 
-$("div#source-page").css("display","block")
-$("div#source-page iframe").attr("src",link_target)
-$('div#button-bar div#button-right').css('display','none');
-
-window_status = "source-page";
+	window_status = "source-page";
 
 }
 
@@ -380,13 +380,12 @@ window_status = "source-page";
 
 	function handleKeyDown(evt) {
 
-
 			switch (evt.key) {
 
 
-	        case 'Enter':
-	      		show_article();
-	        break;
+			case 'Enter':
+				show_article();
+			break;
 
 
 			case 'ArrowDown':
@@ -398,13 +397,6 @@ window_status = "source-page";
 				nav("-1")
 			break; 
 
-			case 'ArrowRight':
-				nav("slide_right")
-			break; 
-
-			case 'ArrowLeft':
-				nav("slide_left")
-			break; 
 
 			case 'SoftLeft':
 				show_article_list();
@@ -413,11 +405,6 @@ window_status = "source-page";
 			case 'SoftRight':
 				open_url();
 			break;
-
-
-
-
-
 
 
 		}
