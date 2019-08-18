@@ -170,13 +170,18 @@ function rss_fetcher(param_url,param_limit,param_channel,param_redirect)
 
 		}
 
+		if (xhttp.status === 404) 
+		{
+			alert("Url not found");
+		}
+
 		////Redirection
 		if (xhttp.status === 301) 
 		{
 			if(param_redirect != true)
 			{
 			redirection_counter++;
-			redirections_arr[redirection_counter] = [xhttp.responseURL,param_limit,param_channel];
+			redirections_arr[redirection_counter] = [xhttp.getResponseHeader('Location'),param_limit,param_channel];
 			}
 
 			if(param_redirect == true)
