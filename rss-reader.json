@@ -2,13 +2,15 @@
 	
 		
 		{
-			"url":":www.tagesschau.de/xml/atom/",
-			"limit":"100"
+			"url":"https://www.tagesschau.de/xml/atom/",
+			"limit":"10",
+			"channel":"ard"
 		},
 
 		{
-			"url":"http://podcast.wdr.de/radio/leonardo.xml",
-			"limit":"2"
+			"url":"https://www.faz.net/rss/aktuell/politik/",
+			"limit":"2",
+			"channel":"FAZ"
 		}
 
 	
