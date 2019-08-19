@@ -44,7 +44,7 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 + Enter to show full news
 + Soft left to go back 
 + Soft right go to url
-
++ If you are in *visit source* page press 2 for auto scroll
 
 ## To do
 
