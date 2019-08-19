@@ -85,10 +85,17 @@ $(document).ready(function()
 
 	}	
 
+//check if internet connection 
+if (navigator.onLine) {
 
-finder()
+	finder()
 
-
+} else {
+	//alert('offline');
+	$("div#message-box div.text-center").text("No Internet connection");
+	$("div#message-box").css("display","block");
+	
+}
 
 
 //////////////////////////////
