@@ -283,7 +283,34 @@ function set_tabindex()
 
 
 
+var running_autoscroll = false;
+var interval = "";
 
+function auto_scroll(param1,param2)
+{
+	
+		if(window_status === "source-page" && running_autoscroll == false && param2 === "on")
+
+		{
+			running_autoscroll = true;
+			interval = setInterval(function() {
+			window.scrollBy(0, 1);
+			}, param1);
+			return;
+	
+		}
+
+		if(running_autoscroll == true || param2 === "off")
+		{
+			clearInterval(interval);
+			running_autoscroll = false;
+
+
+		}
+	
+	
+
+}
 
 
 ////////////////////////
@@ -401,21 +428,29 @@ function open_url()
 
 
 			case 'ArrowDown':
-				nav("+1")
+				nav("+1");
+				auto_scroll(30,"off");
 			break; 
 
 
 			case 'ArrowUp':
-				nav("-1")
+				nav("-1");
+				auto_scroll(30,"off");
 			break; 
 
 
 			case 'SoftLeft':
 				show_article_list();
+				auto_scroll(30,"off");
 			break;
 
 			case 'SoftRight':
 				open_url();
+			break;
+
+
+			case '2':
+				 auto_scroll(30,"on");
 			break;
 
 
