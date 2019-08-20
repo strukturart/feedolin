@@ -417,9 +417,11 @@ function open_url()
 
 
 
-	function handleKeyDown(evt) {
+	function handleKeyDown(evt) 
+	{
 
-			switch (evt.key) {
+			switch (evt.key) 
+			{
 
 
 			case 'Enter':
@@ -449,12 +451,16 @@ function open_url()
 			break;
 
 
+			case 'Backspace':
+				 window.close();
+			break;
+
 			case '2':
 				 auto_scroll(30,"on");
 			break;
 
 
-		}
+			}
 
 	};
 
