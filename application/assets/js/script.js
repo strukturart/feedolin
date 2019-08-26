@@ -323,7 +323,9 @@ function auto_scroll(param1,param2)
 			
 		if(window_status == "article-list")
 		{
-			var $focused = $(':focus');
+			var $focused = $(':focus')[0];
+
+			
 			
 			if(move == "+1" &&  pos_focus < article_array.length-1)
 			{
@@ -331,8 +333,20 @@ function auto_scroll(param1,param2)
 
 				if( pos_focus <= article_array.length)
 				{
+
+					var focusedElement = $(':focus')[0].offsetTop+20;
+						
+
+					window.scrollTo({
+					top: focusedElement,
+					left: 100,
+					behavior: 'smooth'
+					});
+
+					
 					var targetElement = article_array[pos_focus];
 					targetElement.focus();
+
 
 				}
 			}
@@ -342,8 +356,10 @@ function auto_scroll(param1,param2)
 				pos_focus--
 				if( pos_focus >= 0)
 				{
-					var targetElement = article_array[ pos_focus];
+					var targetElement = article_array[pos_focus];
 					targetElement.focus();
+					var focusedElement = $(':focus')[0].offsetTop;
+					window.scrollTo({ top: focusedElement+20, behavior: 'smooth'});
 
 				}
 			}
@@ -362,10 +378,6 @@ function show_article()
 	$('div.summary').css('display','block')
 	$('div#button-bar').css('display','block')
 	window_status = "single-article";
-
-
-
-
 
 }
 
@@ -452,7 +464,8 @@ function open_url()
 
 
 			case 'Backspace':
-				 window.close();
+				show_article_list();
+				//window.close();
 			break;
 
 			case '2':
