@@ -384,7 +384,7 @@ function show_article()
 
 function show_article_list()
 {
-	window_status = "article-list";
+	
 
 	var $focused = $(':focus');
 	$('article').css('display','block')
@@ -399,6 +399,7 @@ function show_article_list()
 	$("div#source-page").css("display","none")
 	$("div#source-page iframe").attr("src","")
 	$('div#button-bar div#button-right').css('display','block');
+	window_status = "article-list";
 
 
 
@@ -464,8 +465,11 @@ function open_url()
 
 
 			case 'Backspace':
+				evt.preventDefault();
+					if(window_status == "article-list")
+					{window.close()}
 				show_article_list();
-				//window.close();
+			
 			break;
 
 			case '2':
