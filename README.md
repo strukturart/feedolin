@@ -1,3 +1,5 @@
+![logo](/images/logo.png) 
+
 ## rss-reader
 
 read you favorit rss/atom feeds
@@ -46,14 +48,8 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 + Soft right go to url
 + If you are in **visit source** page press 2 for auto scroll
 
-## To do
-
-+ Some serve make a 302 error
-
 ## Donation
 
 You like the app and you have enough money
 
-[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q8QLA8CNMWAWG)
-
-
+<a href="https://www.buymeacoffee.com/vj6Q8lR" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/lato-orange.png" alt="Buy Me A Coffee" style="height: 25px !important;width: 108px !important;" ></a>
