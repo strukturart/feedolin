@@ -140,11 +140,12 @@ $(document).ready(function() {
                         var item_title = $(this).find('title').text();
 
                         //search feature
-                        if (get_setting_status == "true") {
+                        if (get_setting_status == "true" && alarm === true) {
 
                             var n = item_title.search(get_search);
                             if (n != -1) {
-                                notify("Rss-Reader", "search term founded", false, false)
+                                notify("Rss-Reader", "search term founded", false, false);
+                                window.close();
                             }
                         }
 
@@ -497,7 +498,9 @@ $(document).ready(function() {
     ///ALARM
 
     //alarm listener
+    var alarm = false;
     navigator.mozSetMessageHandler("alarm", function(mozAlarm) {
+        alarm = true;
         removeAlarms();
         setAlarm(get_interval);
     });
