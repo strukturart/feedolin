@@ -1,10 +1,20 @@
-function notify(param_title, param_text, param_silent) {
+function notify(param_title, param_text, param_silent, requireInteraction) {
 
     var options = {
-            body: param_text,
-            silent: param_silent
-        }
-        // Let's check if the browser supports notifications
+        body: param_text,
+        silent: param_silent,
+        requireInteraction: requireInteraction
+
+
+    }
+
+
+
+
+
+
+
+    // Let's check if the browser supports notifications
     if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");
     }
@@ -14,6 +24,8 @@ function notify(param_title, param_text, param_silent) {
         // If it's okay let's create a notification
         var notification = new Notification(param_title, options);
 
+
+
     }
 
     // Otherwise, we need to ask the user for permission
@@ -21,7 +33,18 @@ function notify(param_title, param_text, param_silent) {
         Notification.requestPermission().then(function(permission) {
             // If the user accepts, let's create a notification
             if (permission === "granted") {
-                var notification = new Notification(param_title, options);
+                var notification = new Notification(param_title, options, action);
+
+                document.addEventListener('visibilitychange', function() {
+                    if (document.visibilityState === 'visible') {
+                        // The tab has become visible so clear the now-stale Notification.                                                                                                                                      
+                        notification.close();
+
+                        toaster("yes", 2000)
+
+
+                    }
+                });
 
 
             }
@@ -30,15 +53,16 @@ function notify(param_title, param_text, param_silent) {
 
 }
 
+
+
 //silent notification
-function toaster(text) {
+function toaster(text, time) {
 
-    $("div#toast").text(text)
+
+    $("div#toast").html(text)
+
     $("div#toast").animate({ top: "0px" }, 1000, "linear", function() {
-
-
-        $("div#toast").delay(2000).animate({ top: "-100px" }, 1000);
-
+        $("div#toast").delay(time).animate({ top: "-110vh" }, 1000);
 
     });
 
@@ -58,16 +82,24 @@ function check_iconnection() {
 }
 
 
-
-//disable enable sleep mode
-function lock_screen(param1) {
-    var lock;
+//wake up screen
+function screenWakeLock(param1) {
     if (param1 == "lock") {
-        lock = window.navigator.requestWakeLock('screen');
+        lock = window.navigator.requestWakeLock("screen");
+
+        lock.onsuccess = function() {
+            toaster("screen-lock", 10000);
+
+        };
+
+        lock.onerror = function() {
+            alert("An error occurred: " + this.error.name);
+        };
     }
 
     if (param1 == "unlock") {
-        lock.unlock();
-
+        if (lock.topic == "screen") {
+            lock.unlock();
+        }
     }
 }

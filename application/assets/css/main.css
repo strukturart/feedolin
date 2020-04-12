@@ -104,11 +104,10 @@
      top: 0;
      left: 0;
      z-index: 2000;
-     background: black;
+     background: white;
      min-height: 100vh;
      width: 101vw;
      overflow: scroll;
-     background: black;
  }
  
  div#source-page div#iframe-wrapper {
@@ -131,37 +130,48 @@
      overflow: scroll;
  }
  
- div#button-bar {
+ div#bottom-bar {
      position: fixed;
-     bottom: 16px;
+     bottom: 10px;
      left: 0px;
-     display: none;
-     height: 10px;
-     z-index: 3000;
+     height: 15px;
+     z-index: 2;
+     background: black;
  }
  
- div#button-bar div#inner {
+ div#bottom-bar div#inner {
      position: relative;
  }
  
- div#button-bar div {
+ div#bottom-bar div {
      background: black;
      color: white;
      padding: 2px;
  }
  
- div#button-bar div#button-left {
+ div#bottom-bar div#button-center {
      background: black;
-     color: black;
+     color: white;
+     padding: 2px;
+     width: 30%;
+     text-align: center;
+ }
+ 
+ div#bottom-bar div#button-left {
+     background: black;
+     color: white;
      padding: 2px;
      width: 20px;
+     text-align: left;
+     width: 30%;
  }
  
- div#button-bar div#button-right {
+ div#bottom-bar div#button-right {
      background: black;
      color: white;
      padding: 2px;
-     width: 92px;
+     width: 30%;
+     text-align: right;
  }
  
  div#message-box {
@@ -174,7 +184,7 @@
      height: 100vh;
      background: black;
      color: white;
-     z-index: 2000;
+     z-index: 3;
  }
  
  div#message-box div#redirections {
@@ -184,6 +194,85 @@
  div#message-box div#redirections h1 {
      margin: 0 0 10px 0;
      font-size: 1.2rem;
+ }
+ 
+ div#settings {
+     display: none;
+     background: gray;
+     padding: 5px;
+     height: 100%;
+ }
+ 
+ div#settings div#text {
+     margin: 0 0 20px 0;
+ }
+ 
+ div#settings div#input-wrapper {
+     margin: 0 0 0px 0;
+ }
+ 
+ div#settings div#input-wrapper input {
+     width: 80%;
+     height: 30px;
+     font-size: 1.2rem;
+     border: 2px solid black;
+     margin: 0 0 15px 0;
+     padding: 0 3px 0 3px;
+ }
+ 
+ div#settings div#input-wrapper input:focus label {
+     background: pink;
+ }
+ 
+ .switch {
+     position: relative;
+     display: inline-block;
+     width: 52px;
+     height: 30px;
+ }
+ 
+ .switch input {
+     opacity: 0;
+     width: 0;
+     height: 0;
+ }
+ 
+ .slider {
+     position: absolute;
+     cursor: pointer;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: #ccc;
+     -webkit-transition: .4s;
+     transition: .4s;
+ }
+ 
+ .slider:before {
+     position: absolute;
+     content: "";
+     height: 22px;
+     width: 22px;
+     left: 4px;
+     bottom: 4px;
+     background-color: white;
+     -webkit-transition: .4s;
+     transition: .4s;
+ }
+ 
+ input:checked+.slider {
+     background-color: black;
+ }
+ 
+ input:focus+.slider {
+     box-shadow: 0 0 1px black;
+ }
+ 
+ input:checked+.slider:before {
+     -webkit-transform: translateX(22px);
+     -ms-transform: translateX(22px);
+     transform: translateX(22px);
  }
  /* KaiOS portrait devices (240x320) */
  
