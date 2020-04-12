@@ -11,8 +11,33 @@ $(document).ready(function() {
     var tabindex_i = -0;
     var window_status = "article-list";
     var redirections_arr = [];
+    var source_list = [];
 
     check_iconnection();
+
+    //get search feature settings
+    var setting_status;
+    var get_setting_status;
+    var get_interval;
+    var get_search;
+
+    function get_settings() {
+        get_search = localStorage.getItem('search');
+        get_interval = localStorage.getItem('interval');
+        get_setting_status = localStorage.getItem('status');
+
+        $("div#input-wrapper #search").val(get_search)
+        $("div#input-wrapper #time").val(get_interval)
+
+        if (get_setting_status == "true") {
+            $('input[type=checkbox]').prop('checked', true);
+        } else {
+            $('input[type=checkbox]').prop('checked', false);
+
+        }
+
+    }
+    get_settings()
 
 
     /////////////////////////
@@ -42,29 +67,20 @@ $(document).ready(function() {
 
             reader.onloadend = function(event) {
 
-                search_result = event.target.result
-
+                var data;
                 //check if json valid
-                var printError = function(error, explicit) {
-                    toaster("[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}");
-                }
-
                 try {
-
+                    data = JSON.parse(event.target.result);
                 } catch (e) {
-                    if (e instanceof SyntaxError) {
-                        toaster("Json file is not valid");
-                        return;
-                    } else {
-
-                    }
-
+                    toaster("Json is not valid")
+                    return false;
                 }
-                var app_list_filter = JSON.parse(search_result);
+
+                var app_list_filter = data
                 $.each(app_list_filter, function(i, item) {
                     rss_fetcher(item.url, item.limit, item.channel, false)
 
-
+                    source_list.push([item.url, item.limit, item.channel, false])
 
                 });
 
@@ -78,7 +94,7 @@ $(document).ready(function() {
     }
 
 
-    finder()
+    finder();
 
     //////////////////////////////
     //rss-fetch////
@@ -120,7 +136,20 @@ $(document).ready(function() {
                         var article = $('<article data-order = "' + item_date_unix + '" data-link = "' + item_link + '"><div class="channel">' + param_channel + '</div><time>' + item_date + '</time><h1>' + item_title + '</h1><div class="summary">' + item_summary + '</div></article>')
                         $('div#news-feed-list').append(article);
 
-                        article_array = $('div#news-feed-list article')
+                        article_array = $('div#news-feed-list article');
+                        var item_title = $(this).find('title').text();
+
+                        //search feature
+                        if (get_setting_status == "true" && alarm === true) {
+
+                            var n = item_title.search(get_search);
+                            if (n != -1) {
+                                notify("Rss-Reader", "search term founded", false, false);
+                                window.close();
+                            }
+                        }
+
+
                     }
 
                 })
@@ -161,12 +190,12 @@ $(document).ready(function() {
 
             ////Redirection
             if (xhttp.status === 301) {
-                if (param_redirect != true) {
+                if (param_redirect !== true) {
                     redirection_counter++;
                     redirections_arr[redirection_counter] = [xhttp.getResponseHeader('Location'), param_limit, param_channel];
                 }
 
-                if (param_redirect == true) {
+                if (param_redirect === true) {
                     getAllResponseHeaders()
                     $("div#message-box div.text-center").text("");
                     $("div#message-box").css("display", "block");
@@ -182,14 +211,13 @@ $(document).ready(function() {
 
 
 
-
-
         };
 
 
 
         xhttp.onerror = function() {
             toaster(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders());
+
 
         };
 
@@ -232,7 +260,6 @@ $(document).ready(function() {
 
             //try redirections
             for (var i = 0; i < redirections_arr.length; i++) {
-                //alert(redirections_arr.length+" / "+i)
                 rss_fetcher(redirections_arr[i][0], redirections_arr[i][1], redirections_arr[i][2], true);
             }
 
@@ -266,7 +293,7 @@ $(document).ready(function() {
 
     function auto_scroll(param1, param2) {
 
-        if (window_status === "source-page" && running_autoscroll == false && param2 === "on")
+        if (window_status === "source-page" && running_autoscroll === false && param2 === "on")
 
         {
             running_autoscroll = true;
@@ -279,7 +306,7 @@ $(document).ready(function() {
 
         }
 
-        if (running_autoscroll == true || param2 === "off") {
+        if (running_autoscroll === true || param2 === "off") {
             clearInterval(interval);
             running_autoscroll = false;
             lock_screen("unlock");
@@ -298,6 +325,26 @@ $(document).ready(function() {
 
     function nav(move) {
 
+        var settings_array = $("div#settings [tabIndex]")
+
+        if (window_status == "settings") {
+            if (move == "+1" && pos_focus < settings_array.length - 1) {
+                pos_focus++
+                var $focused = $(':focus')[0];
+                var targetElement = settings_array[pos_focus];
+                targetElement.focus();
+
+            }
+
+            if (move == "-1" && pos_focus > 0) {
+                pos_focus--
+                var $focused = $(':focus')[0];
+                var targetElement = settings_array[pos_focus];
+                targetElement.focus();
+            }
+
+
+        }
         if (window_status == "article-list") {
             var $focused = $(':focus')[0];
 
@@ -337,8 +384,45 @@ $(document).ready(function() {
             }
         }
 
+
     }
 
+
+    function bottom_bar(left, center, right) {
+        $("div#bottom-bar div#button-left").text(left)
+        $("div#bottom-bar div#button-center").text(center)
+        $("div#bottom-bar div#button-right").text(right)
+    }
+    bottom_bar("settings", "select", "")
+
+
+
+
+
+    function save_settings() {
+
+        var search = $("div#input-wrapper #search").val();
+        var setting_interval = $("div#input-wrapper #time").val();
+
+
+
+        if (search != "" || setting_interval != "") {
+            localStorage.setItem('search', search);
+            localStorage.setItem('interval', setting_interval);
+            localStorage.setItem('status', setting_status);
+            toaster("saved", 3000)
+            if (setting_interval != "") {
+                setAlarm(setting_interval)
+
+            }
+
+
+        } else {
+            toaster("please fill in all fields", 3000)
+        }
+
+
+    }
 
 
 
@@ -347,17 +431,35 @@ $(document).ready(function() {
         $('article').css('display', 'none')
         $focused.css('display', 'block')
         $('div.summary').css('display', 'block')
-        $('div#button-bar').css('display', 'block')
+        $('div#bottom-bar').css('display', 'block')
+        $('div#settings').css('display', 'none')
+        bottom_bar("", "", "visit source")
         window_status = "single-article";
-
     }
 
 
+
+    function show_settings() {
+        pos_focus = 0;
+        $('article').css('display', 'none')
+        $('div#settings').css('display', 'block')
+        bottom_bar("save", "", "back")
+        $("div#bottom-bar").css("display", "block")
+        $("div#input-wrapper input#search").focus();
+        window_status = "settings";
+    }
+
+
+
     function show_article_list() {
+        pos_focus = 0;
         var $focused = $(':focus');
         $('article').css('display', 'block')
         $('div.summary').css('display', 'none')
-        $('div#button-bar').css('display', 'none')
+        $('div#bottom-bar').css('display', 'block')
+        $('div#settings').css('display', 'none')
+
+        bottom_bar("settings", "select", "")
 
         var targetElement = article_array[pos_focus];
         targetElement.focus();
@@ -384,9 +486,103 @@ $(document).ready(function() {
 
         $("div#source-page").css("display", "block")
         $("div#source-page iframe").attr("src", link_target)
-        $('div#button-bar div#button-right').css('display', 'none');
+        $('div#bottom-bar').css('display', 'none')
         window_status = "source-page";
 
+
+
+    }
+
+
+
+    ///ALARM
+
+    //alarm listener
+    var alarm = false;
+    navigator.mozSetMessageHandler("alarm", function(mozAlarm) {
+        alarm = true;
+        removeAlarms();
+        setAlarm(get_interval);
+    });
+
+
+    //remove alarms
+    function removeAlarms() {
+        var request = navigator.mozAlarms.getAll();
+
+        request.onsuccess = function() {
+
+
+            this.result.forEach(function(alarm) {
+
+                navigator.mozAlarms.remove(alarm.id);
+
+
+            });
+            console.log('operation successful:' + this.result.length + 'alarms pending');
+        };
+
+        request.onerror = function() {
+            console.log("An error occurred: " + this.error.name);
+        };
+    }
+
+
+    //set alarm
+    function setAlarm(durration) {
+
+        durration = Number(durration);
+
+        //alarm 3min later
+        let alarmDate = moment().add(durration, 'm').format("MMMM D, YYYY HH:mm:ss");
+        //This the date to schedule the alarm
+        var myDate = new Date(alarmDate);
+
+        // This is arbitrary data pass to the alarm
+        var data = {
+            foo: "bar"
+        }
+
+        // The "honorTimezone" string is what make the alarm honoring it
+        var request = navigator.mozAlarms.add(alarmDate, 'honorTimezone');
+
+        request.onsuccess = function() {
+            toaster("The alarm has been scheduled", 10000);
+            // alarmId = this.result;
+
+        };
+
+        request.onerror = function() {
+            alert("An error occurred: " + this.error.name);
+        };
+
+    }
+
+
+
+
+
+    //get all alarms
+    function getAlarm() {
+
+        var request = navigator.mozAlarms.getAll();
+
+        request.onsuccess = function() {
+            alert(navigator.mozHasPendingMessage("alarm"))
+
+
+
+            this.result.forEach(function(alarm) {
+                console.log('Id: ' + alarm.id);
+                alert('date: ' + alarm.date);
+                console.log('respectTimezone: ' + alarm.respectTimezone);
+                console.log('data: ' + JSON.stringify(alarm.data));
+            });
+        };
+
+        request.onerror = function() {
+            alert("An error occurred: " + this.error.name);
+        };
 
     }
 
@@ -406,7 +602,26 @@ $(document).ready(function() {
 
 
             case 'Enter':
-                show_article();
+                if (window_status == "article-list") { show_article(); }
+
+
+                if ($('input[type=checkbox]').is(":focus")) {
+                    if ($('input[type=checkbox]').is(':checked')) {
+                        $('input[type=checkbox]').prop('checked', false);
+                        setting_status = "false";
+                        removeAlarms();
+                        save_settings();
+
+                    } else {
+                        $('input[type=checkbox]').prop('checked', true);
+                        setting_status = "true";
+                        save_settings();
+
+
+                    }
+
+
+                }
                 break;
 
 
@@ -423,19 +638,68 @@ $(document).ready(function() {
 
 
             case 'SoftLeft':
-                show_article_list();
-                auto_scroll(30, "off");
+                if (window_status == "article-list") {
+                    show_settings()
+                    return;
+
+                }
+                if (window_status == "settings") {
+                    save_settings()
+                    return;
+
+                }
+
                 break;
 
             case 'SoftRight':
-                open_url();
+                if (window_status == "single-article") {
+                    open_url();
+                    return
+                }
+                if (window_status == "settings") {
+                    show_article_list();
+                    return;
+                }
+                break;
+
+
+            case '1':
+                setAlarm("5");
+                break;
+
+
+            case '2':
+                getAlarm();
+                break;
+
+            case '3':
+                removeAlarms();
                 break;
 
 
             case 'Backspace':
                 evt.preventDefault();
-                if (window_status == "article-list") { window.close() }
-                show_article_list();
+                if (window_status == "article-list") {
+                    window.close();
+                    return;
+                }
+
+                if (window_status == "settings") {
+                    show_article_list();
+                    return;
+                }
+
+                if (window_status == "single-article") {
+                    show_article_list();
+                    return;
+                }
+
+                if (window_status == "source-page") {
+                    show_article_list();
+                    auto_scroll(30, "off");
+                    return;
+                }
+
                 break;
 
             case '2':
@@ -456,7 +720,7 @@ $(document).ready(function() {
     ////BUG OUTPUT////////////
     /////////////////////////
 
-    if (debug == true) {
+    if (debug) {
         $(window).on("error", function(evt) {
 
             console.log("jQuery error event:", evt);

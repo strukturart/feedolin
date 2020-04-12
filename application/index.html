@@ -23,7 +23,25 @@
         <!---------------->
         <!--news-feed-->
         <!---------------->
-        <div id="news-feed" class="flex width-100 height-100 page">
+        <div id="news-feed" class="width-100 height-100 page">
+            <div id="settings">
+                <div id="text">
+                    You can search for a word / phrase, if it is found you will be notified.
+                </div>
+                <div id="input-wrapper">
+                    <label for="search">word / phrase</label>
+                    <input tabindex="0" type="search" id="search" name="search">
+                    <label for="time">search interval in minutes</label>
+                    <input tabindex="1" type="text" pattern="^[0-9]*$" id="time" name="time">
+                </div>
+                <div>
+                    <div>activate / deactivate</div>
+                    <label class="switch">
+                        <input tabindex="2" type="checkbox" id="status">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
             <div id="news-feed-list">
             </div>
             <div id="source-page" class=" width-100 height-100">
@@ -31,10 +49,11 @@
                     <iframe src="" scrolling="yes" mozbrowser allowfullscreen></iframe>
                 </div>
             </div>
-            <div id="button-bar">
+            <div id="bottom-bar">
                 <div class="inner flex justify-content-spacebetween width-100">
-                    <div id="button-left">back</div>
-                    <div id="button-right">visit source</div>
+                    <div id="button-left"></div>
+                    <div id="button-center"></div>
+                    <div id="button-right"></div>
                 </div>
             </div>
         </div>
@@ -65,3 +84,4 @@
 <script defer src="assets/js/applait.finder.min.js"></script>
 <script defer src="assets/js/helper.js"></script>
 <script defer src="assets/js/script.js"></script>
+<script defer src="assets/js/alarm.js"></script>
