@@ -1,8 +1,8 @@
 ![logo](/images/logo.png) 
 
-## rss-reader
+## rss-reader and podcast downloader
 
-read you favorit rss/atom feeds
+read you favorit rss/atom feeds and download or stream your podcasts.
 
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
