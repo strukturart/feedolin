@@ -50,8 +50,11 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 + Soft right go to url
 + visit source page: press key 2 to activate the auto scroll
 
+## to do
++ panels
++ loading animation
+
 ## Donation
 
-You like the app and you have enough money
 
 <a href="https://www.buymeacoffee.com/vj6Q8lR" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/lato-orange.png" alt="Buy Me A Coffee" style="height: 25px !important;width: 108px !important;" ></a>
