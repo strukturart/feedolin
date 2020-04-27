@@ -19,12 +19,14 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 	
 		
 		{
+			"categorie":"news",
 			"url":"https://rss-source-url/",
 			"limit":"10",
 			"channel":"channel name"
 		},
 
 		{
+			"categorie":"podcast",
 			"url":"https://rss-source-url/",
 			"limit":"20",
 			"channel":"channel name"
@@ -40,6 +42,7 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 + url = url of source
 + limit = How many articles should be downloaded
 + channel = Name of channel
++ categorie = panel navigation
 
 
 ## How to use

@@ -23,6 +23,10 @@
         <!---------------->
         <!--news-feed-->
         <!---------------->
+        <div id="navigation" class="width-100">
+            <div></div>
+        </div>
+
         <div id="news-feed" class="width-100 height-100 page">
             <div id="settings">
                 <div id="text">
@@ -32,7 +36,7 @@
                     <label for="search">word / phrase</label>
                     <input tabindex="0" type="search" id="search" name="search">
                     <label for="time">search interval in minutes</label>
-                    <input tabindex="1" type="text" pattern="^[0-9]*$" id="time" name="time">
+                    <input tabindex="1" type="tel" pattern="^[0-9]*$" id="time" name="time">
                 </div>
                 <div>
                     <div>activate / deactivate</div>
@@ -49,6 +53,7 @@
                     <iframe src="" scrolling="yes" mozbrowser allowfullscreen></iframe>
                 </div>
             </div>
+            <a id="download-button" class="podcast" href="" download>download</a>
             <div id="bottom-bar">
                 <div class="inner flex justify-content-spacebetween width-100">
                     <div id="button-left"></div>
@@ -64,12 +69,8 @@
 	//////////////
 	-->
 
-        <div id="message-box" class="flex width-100 height-100">
+        <div id="message-box" class="flex width-100 height-100 align-item-center">
             <div id="download" class="text-center">Please wait<br> downloading rss-feeds</div>
-            <div id="redirections">
-                <h1>Not all feeds could be downloaded,<br> please check the urls of following channels</h1>
-
-            </div>
         </div>
 
 
@@ -83,5 +84,5 @@
 <script defer src="assets/js/moments.min.js"></script>
 <script defer src="assets/js/applait.finder.min.js"></script>
 <script defer src="assets/js/helper.js"></script>
+<script defer src="assets/js/audio.js"></script>
 <script defer src="assets/js/script.js"></script>
-<script defer src="assets/js/alarm.js"></script>

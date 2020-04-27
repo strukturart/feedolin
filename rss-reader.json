@@ -1,20 +1,20 @@
 [
-	
-		
-		{
-			"url":"https://www.tagesschau.de/xml/atom/",
-			"limit":"10",
-			"channel":"ard"
-		},
 
-		{
-			"url":"https://www.faz.net/rss/aktuell/politik/",
-			"limit":"2",
-			"channel":"FAZ"
-		}
 
-	
-	
+    {
+        "categorie": "news",
+        "url": "https://www.tagesschau.de/xml/atom/",
+        "limit": "10",
+        "channel": "ard"
+    },
+
+    {
+        "categorie": "news",
+        "url": "https://www.faz.net/rss/aktuell/politik/",
+        "limit": "2",
+        "channel": "FAZ"
+    }
+
+
+
 ]
-
-

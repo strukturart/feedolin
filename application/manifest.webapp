@@ -3,7 +3,7 @@
 	"name": "rss-reader",
 	"description": "rss-reader",
 	"launch_path": "/index.html",
-	"type": "privileged",
+	"type": "certified",
 	"fullscreen": "true",
 
 
@@ -27,10 +27,14 @@
 		"description": "Read from sd-card",
 		"access": "readonly"
 		},
-		
+
+		 "audio-channel-content": { 
+		 "description": "Play music files in background" 
+		 },
+
+		"volumemanager":{},		
 		"browser": {},
 		"embed-apps": {},
-
 		"alarms":{},
 		"wake-lock":{},
 		"power":{},

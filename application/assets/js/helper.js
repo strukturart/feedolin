@@ -53,6 +53,12 @@ function notify(param_title, param_text, param_silent, requireInteraction) {
 
 }
 
+//bottom bar
+function bottom_bar(left, center, right) {
+    $("div#bottom-bar div#button-left").text(left)
+    $("div#bottom-bar div#button-center").text(center)
+    $("div#bottom-bar div#button-right").text(right)
+}
 
 
 //silent notification
@@ -73,12 +79,14 @@ function toaster(text, time) {
 function check_iconnection() {
 
 
-    if (navigator.onLine) {
 
 
-    } else {
-        toaster("No Internet connection");
+    function updateOfflineStatus() {
+        toaster("Your Browser is offline", 5000)
+        return false;
     }
+
+    window.addEventListener('offline', updateOfflineStatus);
 }
 
 
