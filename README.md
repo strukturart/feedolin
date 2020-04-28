@@ -42,20 +42,18 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 + url = url of source
 + limit = How many articles should be downloaded
 + channel = Name of channel
-+ categorie = panel navigation
++ categorie = to use panel navigation
 
 
 ## How to use
 
 + Up/Down cursor
 + Enter to show full news
-+ Soft left to go back 
-+ Soft right go to url
++ Backspace to go back
 + visit source page: press key 2 to activate the auto scroll
++ #-key volume
 
 ## to do
-+ panels
-+ loading animation
 
 ## Donation
 
