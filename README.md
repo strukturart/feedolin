@@ -7,6 +7,8 @@ read you favorit rss/atom feeds and download or stream your podcasts.
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
 ![image-3](/images/image-3.png)
+![image-4](/images/image-4.png)
+
 
 
 ## Installation
@@ -47,13 +49,16 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 
 ## How to use
 
-+ Up/Down cursor
 + Enter to show full news
 + Backspace to go back
 + visit source page: press key 2 to activate the auto scroll
+Streaming Podcast
 + #-key volume
++ seeking: cursor left/right 
 
 ## to do
+
++ youtube rss
 
 ## Donation
 
