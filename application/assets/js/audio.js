@@ -13,12 +13,13 @@ var volume = navigator.volumeManager;
 function play_podcast() {
 
     if (player.currentSrc == "" || player.currentSrc != link_target) {
+        player.mozAudioChannelType = 'content';
 
         player.src = "";
         player.src = link_target;
         player.play();
+        alert(player.mozAudioChannelType)
         return false;
-
     }
 
 
@@ -39,7 +40,7 @@ function play_podcast() {
 
 function seeking(param) {
     var step = 10;
-    player.pause();
+    //player.pause();
     if (param == "backward") {
         player.currentTime = player.currentTime - step++
     }
@@ -48,7 +49,7 @@ function seeking(param) {
     if (param == "forward") {
         player.currentTime = player.currentTime + step++
     }
-    player.play();
+    //player.play();
 
 }
 
@@ -85,14 +86,32 @@ function volume_control(param) {
 
 
 
-function player_seeking_run() {
-    player.muted = true;
-    player.volume = 0;
-}
-
-
 
 $(document).ready(function() {
+
+    //time duration
+    $(player).on("loadedmetadata", function() {
+
+        setInterval(function() {
+            var time = player.duration - player.currentTime;
+            var minutes = parseInt(time / 60, 10);
+            var seconds_long = parseInt(time % 60, 10);
+            var seconds;
+            if (seconds_long < 10) {
+                seconds = "0" + seconds_long;
+            } else {
+                seconds = seconds_long;
+            }
+            var duration = minutes + ":" + seconds;
+
+            bottom_bar("pause", duration, "download")
+
+
+        }, 1000);
+
+
+    });
+
 
 
     player.onpause = function() {

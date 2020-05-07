@@ -24,8 +24,13 @@
 	{
 
 		"device-storage:sdcard": {
-		"description": "Read from sd-card",
-		"access": "readonly"
+		"description": "Read/Write from/to sd-card",
+		"access": "readwrite"
+		},
+
+		"device-storage:music": {
+		"description": "Read/Write from/to intern storage",
+		"access": "readwrite"
 		},
 
 		 "audio-channel-content": { 

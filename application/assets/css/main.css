@@ -117,6 +117,7 @@
      display: none;
      padding: 0 0 30px 0;
  }
+
  
  div#news-feed div#news-feed-list article div.podcast-icon {
      display: none;
@@ -130,6 +131,23 @@
  div#news-feed div#news-feed-list article.podcast div.podcast-icon img {
      max-width: 15px;
  }
+
+
+
+
+ div#news-feed div#news-feed-list article div.youtube-icon {
+    display: none;
+}
+
+div#news-feed div#news-feed-list article.youtube div.youtube-icon {
+    display: block;
+    max-width: 15px;
+}
+
+div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
+    max-width: 15px;
+}
+
  
  div#source-page {
      display: none;

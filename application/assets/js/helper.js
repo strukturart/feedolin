@@ -9,11 +9,6 @@ function notify(param_title, param_text, param_silent, requireInteraction) {
     }
 
 
-
-
-
-
-
     // Let's check if the browser supports notifications
     if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");
