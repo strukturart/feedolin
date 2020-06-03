@@ -58,7 +58,7 @@ Streaming Podcast
 
 ## to do
 
-+ youtube rss
++ youtube rss add media: group items titel and description
 
 ## Donation
 
