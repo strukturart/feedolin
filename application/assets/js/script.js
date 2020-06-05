@@ -128,6 +128,12 @@ $(document).ready(function() {
 
                         var item_title = $(this).find('title').text();
                         var item_summary = $(this).find('summary').text();
+                        //youtube
+                        var item_summary = $(this).find('media\\:description').text()
+                        var item_image = $(this).find('media\\:thumbnail').attr('url');
+                        var item_id = $(this).find('yt\\:videoId').text();
+
+
                         var item_link = $(this).find('link').attr("href");
                         var item_download = $(this).find('enclosure').attr('url')
                         var item_date_unix = Date.parse($(this).find('updated').text());
@@ -135,7 +141,7 @@ $(document).ready(function() {
                         item_date = item_date.toGMTString();
                         var item_type = $(this).find('enclosure').attr('type')
 
-                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type])
+                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type, item_image, item_id])
 
                     }
 
@@ -147,6 +153,7 @@ $(document).ready(function() {
                 $(data).find('item').each(function(index) {
                     if (index < param_limit) {
                         var item_title = $(this).find('title').text();
+
                         var item_summary = $(this).find('description').text();
                         var item_link = $(this).find('link').text();
                         var item_date_unix = Date.parse($(this).find('pubDate').text());
@@ -155,12 +162,11 @@ $(document).ready(function() {
                         var item_download = $(this).find('enclosure').attr('url');
                         var item_type = $(this).find('enclosure').attr('type')
 
+
                         content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type])
                     }
 
                 });
-
-
 
 
             }
@@ -227,6 +233,9 @@ $(document).ready(function() {
             var item_categorie = content_arr[i][6]
             var item_download = content_arr[i][7]
             var item_type = content_arr[i][8];
+            var item_image = content_arr[i][9];
+            var item_id = content_arr[i][10];
+
 
             var media = " rss";
 
@@ -242,8 +251,9 @@ $(document).ready(function() {
                 media = " podcast";
             }
 
-            if (item_link.includes("https://www.youtube.com") == true ) {
-            media = " youtube";
+            if (item_link.includes("https://www.youtube.com") == true) {
+                media = " youtube";
+                item_link = "https://www.youtube.com/embed/" + item_id + "?autoplay=1"
             }
 
 
@@ -267,12 +277,14 @@ $(document).ready(function() {
 
             if (alarm === false) {
                 var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
+                    '<div>' + media + '</div>' +
                     '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                     '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
                     '<div class="channel">' + param_channel + '</div>' +
                     '<time>' + item_date + '</time>' +
                     '<h1 class="title">' + item_title + '</h1>' +
-                    '<div class="summary">' + item_summary + '</div>' +
+                    '<div class="summary">' + item_summary +
+                    '<img src="' + item_image + '"></div>' +
                     '</article>'
                 $('div#news-feed-list').append(article);
                 $("div#news-feed-list article:first").focus()
@@ -560,8 +572,8 @@ $(document).ready(function() {
 
     function show_article() {
         $("div#navigation").css("display", "none");
-
         $("div#news-feed").css("padding", "5px 5px 30px 5px")
+
         var targetElement = article_array[pos_focus];
         link_target = $(targetElement).data('download');
         link_type = $(targetElement).data('audio-type');
@@ -576,7 +588,9 @@ $(document).ready(function() {
             }
 
 
-        } else {
+        }
+
+        if ($(":focus").hasClass("rss") || $(":focus").hasClass("youtube")) {
             bottom_bar("", "", "visit source")
         }
 
@@ -672,12 +686,32 @@ $(document).ready(function() {
 
 
 
-        } else {
+        }
+        if ($(":focus").hasClass("rss")) {
+            $('div.summary').css('display', 'none')
             $("div#source-page").css("display", "block")
             $("div#source-page iframe").attr("src", link_target)
             $('div#bottom-bar').css('display', 'none')
+            $("div#source-page div#iframe-wrapper").css("height", "1000vh")
+            $("div#source-page iframe").css("height", "1000vh")
             window_status = "source-page";
+
         }
+
+
+        if ($(":focus").hasClass("youtube")) {
+            $('div.summary').css('display', 'none')
+            $("div#source-page").css("display", "block")
+            $("div#source-page iframe").attr("src", link_target)
+            $('div#bottom-bar').css('display', 'none')
+            $("div#source-page div#iframe-wrapper").css("height", "100vh")
+            $("div#source-page iframe").css("height", "100vh")
+            window_status = "source-page";
+
+
+        }
+
+
 
     }
 

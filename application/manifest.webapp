@@ -33,9 +33,15 @@
 		"access": "readwrite"
 		},
 
-		 "audio-channel-content": { 
-		 "description": "Play music files in background" 
-		 },
+		"audio-channel-normal" : {
+      "description" : "Needed to play this app's audio content on the normal channel"
+    },
+    "audio-channel-content" : {
+      "description" : "Needed to play this app's audio content on the content channel"
+    },
+    "desktop-notification" : {
+      "description" : "Needed to fire system notifications"
+    },
 
 		"volumemanager":{},		
 		"browser": {},

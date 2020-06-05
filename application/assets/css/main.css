@@ -117,7 +117,6 @@
      display: none;
      padding: 0 0 30px 0;
  }
-
  
  div#news-feed div#news-feed-list article div.podcast-icon {
      display: none;
@@ -131,23 +130,19 @@
  div#news-feed div#news-feed-list article.podcast div.podcast-icon img {
      max-width: 15px;
  }
-
-
-
-
+ 
  div#news-feed div#news-feed-list article div.youtube-icon {
-    display: none;
-}
-
-div#news-feed div#news-feed-list article.youtube div.youtube-icon {
-    display: block;
-    max-width: 15px;
-}
-
-div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
-    max-width: 15px;
-}
-
+     display: none;
+ }
+ 
+ div#news-feed div#news-feed-list article.youtube div.youtube-icon {
+     display: block;
+     max-width: 15px;
+ }
+ 
+ div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
+     max-width: 15px;
+ }
  
  div#source-page {
      display: none;
@@ -168,7 +163,7 @@ div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
      height: 0;
      overflow: scroll;
      width: 100%;
-     height: 15000px;
+     //height: 15000px;
      overflow: scroll;
  }
  
@@ -177,7 +172,7 @@ div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
      top: 0;
      left: 0;
      width: 100%;
-     height: 15000px;
+     //height: 15000px;
      overflow: scroll;
  }
  

@@ -4,6 +4,8 @@ player.type = "audio/mpeg";
 player.preload = "none";
 var player_status = "";
 var volume = navigator.volumeManager;
+navigator.mozAudioChannelManager.volumeControlChannel = 'content';
+
 
 
 
@@ -13,12 +15,11 @@ var volume = navigator.volumeManager;
 function play_podcast() {
 
     if (player.currentSrc == "" || player.currentSrc != link_target) {
-        player.mozAudioChannelType = 'content';
+        player.mozaudiochannel = 'content';
 
         player.src = "";
         player.src = link_target;
         player.play();
-        alert(player.mozAudioChannelType)
         return false;
     }
 
