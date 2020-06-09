@@ -13,9 +13,10 @@ navigator.mozAudioChannelManager.volumeControlChannel = 'content';
 //PLAY
 //////////////////
 function play_podcast() {
+    player.mozaudiochannel = 'content';
+
 
     if (player.currentSrc == "" || player.currentSrc != link_target) {
-        player.mozaudiochannel = 'content';
 
         player.src = "";
         player.src = link_target;
@@ -90,10 +91,13 @@ function volume_control(param) {
 
 $(document).ready(function() {
 
+
+
     //time duration
     $(player).on("loadedmetadata", function() {
 
-        setInterval(function() {
+
+        var getduration = setInterval(function() {
             var time = player.duration - player.currentTime;
             var minutes = parseInt(time / 60, 10);
             var seconds_long = parseInt(time % 60, 10);
@@ -105,9 +109,8 @@ $(document).ready(function() {
             }
             var duration = minutes + ":" + seconds;
 
-            bottom_bar("pause", duration, "download")
 
-
+            $("div#bottom-bar div#button-center").text(duration)
         }, 1000);
 
 
@@ -116,8 +119,10 @@ $(document).ready(function() {
 
 
     player.onpause = function() {
+
         player_status = "pause";
         bottom_bar("play", "", "download")
+        toaster("pause", 3000)
     };
 
     player.onplay = function() {
@@ -125,6 +130,9 @@ $(document).ready(function() {
         $(":focus").addClass("audio-playing");
         player_status = "play";
         bottom_bar("pause", "", "download")
+        toaster("play", 3000)
+
+
     };
 
 })

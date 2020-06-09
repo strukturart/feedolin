@@ -15,7 +15,6 @@ var current_panel = 0;
 
 $(document).ready(function() {
 
-    check_iconnection();
 
     //get search feature settings
     var setting_status;
@@ -55,6 +54,12 @@ $(document).ready(function() {
 
         finder.search("rss-reader.json");
 
+        finder.on("searchComplete", function(needle, filematchcount) {
+            if (filematchcount == 0) {
+                $('#download').html("😴<br>No json file founded")
+            }
+        });
+
 
 
         finder.on("fileFound", function(file, fileinfo, storageName) {
@@ -74,7 +79,7 @@ $(document).ready(function() {
                 try {
                     data = JSON.parse(event.target.result);
                 } catch (e) {
-                    toaster("Json is not valid")
+                    $('#download').html("😴<br>Your json file is not valid")
                     return false;
                 }
 
@@ -85,8 +90,16 @@ $(document).ready(function() {
                     }
                     source_array.push([item.url, item.limit, item.channel, item.categorie]);
                 });
-                //start download loop
-                rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
+
+                //check if internet connection 
+                if (navigator.onLine) {
+                    //start download loop
+                    rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
+                } else {
+                    $('#download').html("😴<br>Your device is offline, please connect it to the internet ")
+                }
+
+
             };
             reader.readAsText(file)
         });
@@ -100,13 +113,14 @@ $(document).ready(function() {
 
 
 
+
     //////////////////////////////
     //httpRequest////
     //////////////////////////////
 
     function rss_fetcher(param_url, param_limit, param_channel, param_categorie) {
 
-
+        $('#download').html("downloading<br><br>" + param_channel)
         var xhttp = new XMLHttpRequest({ mozSystem: true });
 
         xhttp.open('GET', param_url, true)
@@ -253,7 +267,7 @@ $(document).ready(function() {
 
             if (item_link.includes("https://www.youtube.com") == true) {
                 media = " youtube";
-                item_link = "https://www.youtube.com/embed/" + item_id + "?autoplay=1"
+                item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
             }
 
 
@@ -276,8 +290,7 @@ $(document).ready(function() {
 
 
             if (alarm === false) {
-                var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
-                    '<div>' + media + '</div>' +
+                var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
                     '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                     '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
                     '<div class="channel">' + param_channel + '</div>' +
@@ -294,18 +307,16 @@ $(document).ready(function() {
 
         });
 
-
         sort_data();
 
 
-        $("div#message-box").css('display', 'none');
+
+        $("div#message-box").slideDown("400", function() {
+            $("div#message-box").css('display', 'none');
+        });
 
 
     }
-
-
-
-
 
 
     function set_tabindex() {
@@ -317,17 +328,12 @@ $(document).ready(function() {
         article_array = $('article').filter(':visible')
         $('body').find('article[tabindex = 0]').focus()
         $('article:last').css("margin", "0 0 30px 0")
-
-
-
-
     }
 
 
     function sort_data() {
 
         var $wrapper = $('div#news-feed-list');
-
         $wrapper.find('article').sort(function(a, b) {
                 return +b.dataset.order - +a.dataset.order;
             })
@@ -624,6 +630,9 @@ $(document).ready(function() {
 
 
     function show_article_list() {
+        navigator.spatialNavigationEnabled = false;
+        $("div#source-page div#iframe-wrapper").removeClass("video-view");
+
 
         $("div#navigation").css("display", "block");
         $("div#news-feed").css("padding", "35px 5px 30px 5px")
@@ -660,6 +669,46 @@ $(document).ready(function() {
 
 
 
+        if ($(":focus").hasClass("rss")) {
+            $('div.summary').css('display', 'none')
+            $("div#source-page").css("display", "block")
+            $("div#source-page iframe").attr("src", link_target)
+            $('div#bottom-bar').css('display', 'none')
+            $("div#source-page div#iframe-wrapper").css("height", "1000vh")
+            $("div#source-page iframe").css("height", "1000vh")
+            window_status = "source-page";
+            return;
+
+        }
+
+
+        if ($(":focus").hasClass("youtube")) {
+            $('div.summary').css('display', 'none')
+            $("div#source-page").css("display", "block")
+            $("div#source-page iframe").attr("src", link_target)
+            $('div#bottom-bar').css('display', 'none')
+            $("div#source-page div#iframe-wrapper").css("height", "100vh")
+            $("div#source-page iframe").css("height", "100vh")
+            bottom_bar("play", "", "")
+            window_status = "source-page";
+
+            $("div#source-page div#iframe-wrapper").addClass("video-view");
+
+
+
+
+            navigator.spatialNavigationEnabled = true;
+
+
+
+            return;
+
+
+
+        }
+
+
+
         if ($(":focus").hasClass("podcast")) {
             var finder = new Applait.Finder({ type: "music", debugMode: false });
 
@@ -683,33 +732,12 @@ $(document).ready(function() {
             });
 
 
+            return;
 
 
 
         }
-        if ($(":focus").hasClass("rss")) {
-            $('div.summary').css('display', 'none')
-            $("div#source-page").css("display", "block")
-            $("div#source-page iframe").attr("src", link_target)
-            $('div#bottom-bar').css('display', 'none')
-            $("div#source-page div#iframe-wrapper").css("height", "1000vh")
-            $("div#source-page iframe").css("height", "1000vh")
-            window_status = "source-page";
 
-        }
-
-
-        if ($(":focus").hasClass("youtube")) {
-            $('div.summary').css('display', 'none')
-            $("div#source-page").css("display", "block")
-            $("div#source-page iframe").attr("src", link_target)
-            $('div#bottom-bar').css('display', 'none')
-            $("div#source-page div#iframe-wrapper").css("height", "100vh")
-            $("div#source-page iframe").css("height", "100vh")
-            window_status = "source-page";
-
-
-        }
 
 
 
@@ -973,24 +1001,6 @@ $(document).ready(function() {
     document.addEventListener('keydown', handleKeyDown);
 
 
-    //////////////////////////
-    ////BUG OUTPUT////////////
-    /////////////////////////
-
-    if (debug) {
-        $(window).on("error", function(evt) {
-
-            console.log("jQuery error event:", evt);
-            var e = evt.originalEvent; // get the javascript event
-            console.log("original event:", e);
-            if (e.message) {
-                alert("Error:\n\t" + e.message + "\nLine:\n\t" + e.lineno + "\nFile:\n\t" + e.filename);
-            } else {
-                alert("Error:\n\t" + e.type + "\nElement:\n\t" + (e.srcElement || e.target));
-            }
-        });
-
-    }
 
 
 

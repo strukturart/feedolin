@@ -77,7 +77,7 @@ function check_iconnection() {
 
 
     function updateOfflineStatus() {
-        toaster("Your Browser is offline", 5000)
+        toaster("Your Browser is offline", 15000)
         return false;
     }
 

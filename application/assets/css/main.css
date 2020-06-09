@@ -163,8 +163,6 @@
      height: 0;
      overflow: scroll;
      width: 100%;
-     //height: 15000px;
-     overflow: scroll;
  }
  
  div#source-page iframe {
@@ -172,8 +170,21 @@
      top: 0;
      left: 0;
      width: 100%;
-     //height: 15000px;
      overflow: scroll;
+ }
+ 
+ div#source-page div.video-view>iframe {
+     width: 320px!Important;
+     height: 240px!Important;
+ }
+ 
+ div#source-page div.video-view {
+     transform: rotate(90deg);
+     position: relative!Important;
+     left: -40px!Important;
+     top: 40px!Important;
+     width: 320px!Important;
+     height: 240px!Important;
  }
  
  div#bottom-bar {
