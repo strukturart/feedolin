@@ -1,6 +1,6 @@
 ![logo](/images/logo.png) 
 
-## rss-reader and podcast downloader
+## KaiOs - rss-reader and podcast downloader
 
 - read you favorit rss/atom feeds 
 - download or stream your podcasts
