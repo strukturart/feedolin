@@ -5,6 +5,7 @@
 - read you favorit rss/atom feeds 
 - download or stream your podcasts
 - show youtube channels
+- read reddit.com
 
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
@@ -60,7 +61,7 @@ Streaming Podcast
 
 ## to do
 
-+ youtube iframe_api
++ youtube api
 
 ## Donation
 
