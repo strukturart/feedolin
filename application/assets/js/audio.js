@@ -7,8 +7,6 @@ var volume = navigator.volumeManager;
 navigator.mozAudioChannelManager.volumeControlChannel = 'content';
 
 
-
-
 //////////////////
 //PLAY
 //////////////////
@@ -51,7 +49,6 @@ function seeking(param) {
     if (param == "forward") {
         player.currentTime = player.currentTime + step++
     }
-    //player.play();
 
 }
 
@@ -62,12 +59,17 @@ function seeking(param) {
 
 
 function volume_control(param) {
+
     if (param == "up") {
         volume.requestUp()
-
         setTimeout(function() {
-            volume_status = "false";
-        }, 2000);
+            volume_status = false;
+
+            if ($(":focus").hasClass("youtube") && window_status == "source-page") {
+                navigator.spatialNavigationEnabled = true;
+            }
+
+        }, 3000);
     }
 
 
@@ -75,8 +77,13 @@ function volume_control(param) {
     if (param == "down") {
         volume.requestDown()
         setTimeout(function() {
-            volume_status = "false";
-        }, 2000);
+            volume_status = false;
+
+            if ($(":focus").hasClass("youtube") && window_status == "source-page") {
+                navigator.spatialNavigationEnabled = true;
+            }
+
+        }, 3000);
     }
 
 

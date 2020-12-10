@@ -10,6 +10,14 @@ var link_target;
 var k = 0;
 var panels = ["all"];
 var current_panel = 0;
+var log_data = [];
+var log = true;
+var activity = false;
+var volume_status = false
+var rss_title = "";
+
+
+
 
 
 
@@ -39,6 +47,19 @@ $(document).ready(function() {
 
     }
     get_settings()
+
+
+    //check if activity or not
+    setTimeout(() => {
+
+        if (activity === false) {
+            finder();
+
+        }
+
+    }, 4000);
+
+
 
 
     /////////////////////////
@@ -84,7 +105,6 @@ $(document).ready(function() {
                 }
 
                 $.each(data, function(i, item) {
-                    //rss_fetcher(item.url, item.limit, item.channel, item.categorie)
                     if (!item.categorie) {
                         item.categorie = 0;
                     }
@@ -99,17 +119,32 @@ $(document).ready(function() {
                     $('#download').html("😴<br>Your device is offline, please connect it to the internet ")
                 }
 
-
             };
             reader.readAsText(file)
         });
 
-
-
     }
 
 
-    finder();
+
+
+    navigator.mozSetMessageHandler('activity', function(activityRequest) {
+        var option = activityRequest.source;
+        activity = true;
+
+        //alert(option.data.url)
+        if (option.name == 'view') {
+            while (source_array.length > 0) {
+                source_array.pop();
+            }
+            source_array.push([option.data.url, 4, "", "all"]);
+            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
+            bottom_bar("add", "select", "")
+
+
+        }
+
+    })
 
 
 
@@ -120,32 +155,79 @@ $(document).ready(function() {
 
     function rss_fetcher(param_url, param_limit, param_channel, param_categorie) {
 
-        $('#download').html("downloading<br><br>" + param_channel)
+
+
         var xhttp = new XMLHttpRequest({ mozSystem: true });
 
         xhttp.open('GET', param_url, true)
         xhttp.withCredentials = true;
+        xhttp.timeout = 2000;
+        xhttp.setRequestHeader("Cache-control", "public, max-age=31536000")
+
+
         xhttp.responseType = 'document';
         xhttp.overrideMimeType('text/xml');
 
+        xhttp.send(null);
+
+
         $("div#message-box").css('display', 'block')
 
+        xhttp.addEventListener("load", transferComplete);
+        xhttp.addEventListener("error", transferFailed);
+        xhttp.addEventListener("loadend", loadEnd);
+
+
+        function transferComplete() {
+
+        }
+
+        function transferFailed() {
+            toaster("failed" + param_channel, 1000)
+
+        }
+
+
+
+
+
         xhttp.onload = function() {
+
+            log_data.push(["", xhttp.staus, param_channel, "\n"])
+
 
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
 
                 var data = xhttp.response;
-
+                rss_type = "";
                 //rss atom items
+                rss_title = $(data).find('title:first').text()
+
+                let count = k + " / " + source_array.length
+
+                $('#download').html("downloading<br><br>" + rss_title)
+                $('div#count').text(count)
+
                 $(data).find('entry').each(function(index) {
+                    rss_type = "atom"
+
                     if (index < param_limit) {
 
                         var item_title = $(this).find('title').text();
                         var item_summary = $(this).find('summary').text();
+
                         //youtube
-                        var item_summary = $(this).find('media\\:description').text()
-                        var item_image = $(this).find('media\\:thumbnail').attr('url');
-                        var item_id = $(this).find('yt\\:videoId').text();
+                        var item_image = "";
+                        var item_id = "";
+                        if (item_summary == "") {
+                            item_summary = $(this).find('media\\:description').text()
+                            item_image = $(this).find('media\\:thumbnail').attr('url');
+                            item_id = $(this).find('yt\\:videoId').text();
+                        }
+
+                        if (item_summary == "") {
+                            item_summary = $(this).find('content').text();
+                        }
 
 
                         var item_link = $(this).find('link').attr("href");
@@ -165,6 +247,7 @@ $(document).ready(function() {
 
                 //rss 2.0 items
                 $(data).find('item').each(function(index) {
+                    rss_type = "rss"
                     if (index < param_limit) {
                         var item_title = $(this).find('title').text();
 
@@ -183,10 +266,24 @@ $(document).ready(function() {
                 });
 
 
+
+
             }
 
             if (xhttp.status === 404) {
                 toaster(param_channel + " url not found", 3000);
+                log_data.push(["url not found", xhttp.staus, param_channel, "\n"]);
+
+            }
+
+            if (xhttp.status === 408) {
+                toaster(param_channel + "Time out", 3000);
+                log_data.push(["timeout", xhttp.staus, param_channel, "\n"]);
+
+            }
+
+            if (xhttp.status === 409) {
+                toaster(param_channel + "Conflict", 3000);
             }
 
             ////Redirection
@@ -197,34 +294,68 @@ $(document).ready(function() {
 
             }
 
+            xhttp.ontimeout = function(e) {
+                toaster(param_channel + "Time out", 3000);
+                log_data.push(["timeout", param_channel, "\n"]);
+
+            };
+
+
             if (xhttp.status === 0) {
                 toaster(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
             }
 
-            //download content from source
-            k++;
-            if (k < source_array.length) {
+            if (xhttp.status !== 200) {
+                log_data.push([xhttp.getResponseHeader('Location'), xhttp.staus, param_channel, "\n"]);
+            }
+
+
+        };
+
+
+        function loadEnd(e) {
+
+            if (rss_type == "" && activity === true) {
+
+                $('#download').html("The content is <br>not a valid rss feed <div style='font-size:2rem;margin:8px 0 0 0;color:white!Important;'>¯&#92;_(ツ)_/¯</div><br>")
+                return false;
+            }
+
+
+            //after download build html objects
+            if (k == source_array.length - 1) {
+                setTimeout(() => {
+                    build()
+
+
+                }, 1500);
+
+                if (log === true) {
+                    delete_file("rss_log.txt")
+                    setTimeout(() => {
+
+                        var d = new Date();
+                        var formatted = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes();
+                        write_file(log_data.toString() + formatted, "rss_log.txt")
+
+                    }, 2000);
+                }
+
+
+            }
+            if (k < source_array.length - 1) {
+                k++;
                 rss_fetcher(source_array[k][0], source_array[k][1], source_array[k][2], source_array[k][3])
             }
-            //after download build html objects
-            if (k == source_array.length) {
-                build()
-            }
-
-        };
 
 
 
-        xhttp.onerror = function() {
-            toaster(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
+
+        }
 
 
-        };
 
-        xhttp.send(null)
     }
-
-
 
 
 
@@ -265,7 +396,7 @@ $(document).ready(function() {
                 media = " podcast";
             }
 
-            if (item_link.includes("https://www.youtube.com") == true) {
+            if (item_link.includes("https://www.youtube.com") === true) {
                 media = " youtube";
                 item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
             }
@@ -422,17 +553,32 @@ $(document).ready(function() {
         if (window_status == "settings") {
             if (move == "+1" && pos_focus < settings_array.length - 1) {
                 pos_focus++
-                var $focused = $(':focus')[0];
                 var targetElement = settings_array[pos_focus];
                 targetElement.focus();
+
+                var focusedElement = $(':focus')[0].offsetTop + 20;
+
+
+                window.scrollTo({
+                    top: focusedElement,
+                    left: 100,
+                    behavior: 'smooth'
+                });
 
             }
 
             if (move == "-1" && pos_focus > 0) {
                 pos_focus--
-                var $focused = $(':focus')[0];
                 var targetElement = settings_array[pos_focus];
                 targetElement.focus();
+
+                var focusedElement = $(':focus')[0].offsetTop - 20;
+                window.scrollTo({
+                    top: focusedElement,
+                    left: 100,
+                    behavior: 'smooth'
+                });
+
             }
 
 
@@ -577,6 +723,8 @@ $(document).ready(function() {
 
 
     function show_article() {
+        navigator.spatialNavigationEnabled = false;
+
         $("div#navigation").css("display", "none");
         $("div#news-feed").css("padding", "5px 5px 30px 5px")
 
@@ -622,7 +770,7 @@ $(document).ready(function() {
         $('div#settings').css('display', 'block')
         bottom_bar("save", "", "back")
         $("div#bottom-bar").css("display", "block")
-        $("div#input-wrapper input#search").focus();
+        $("div#input-wrapper input#input-url").focus();
         window_status = "settings";
 
     }
@@ -652,7 +800,13 @@ $(document).ready(function() {
         $("div#source-page").css("display", "none")
         $("div#source-page iframe").attr("src", "")
 
-        bottom_bar("settings", "select", "")
+
+        if (!activity) {
+            bottom_bar("settings", "select", "")
+        } else {
+            bottom_bar("add", "select", "")
+        }
+
         window_status = "article-list";
         auto_scroll(30, "off");
     }
@@ -689,18 +843,10 @@ $(document).ready(function() {
             $('div#bottom-bar').css('display', 'none')
             $("div#source-page div#iframe-wrapper").css("height", "100vh")
             $("div#source-page iframe").css("height", "100vh")
-            bottom_bar("play", "", "")
-            window_status = "source-page";
-
             $("div#source-page div#iframe-wrapper").addClass("video-view");
-
-
-
-
             navigator.spatialNavigationEnabled = true;
-
-
-
+            window_status = "source-page";
+            player.src = "";
             return;
 
 
@@ -731,11 +877,7 @@ $(document).ready(function() {
                 }
             });
 
-
             return;
-
-
-
         }
 
 
@@ -870,8 +1012,6 @@ $(document).ready(function() {
 
                     save_settings();
 
-
-
                 }
                 break;
 
@@ -902,9 +1042,9 @@ $(document).ready(function() {
             case 'ArrowDown':
                 nav("+1");
                 if (window_status == "source-page") {
-                    auto_scroll(30, "off");
+                    //auto_scroll(30, "off");
                 }
-                if (volume_status == "true") {
+                if (volume_status === true) {
                     volume_control("down")
                 }
                 break;
@@ -913,9 +1053,9 @@ $(document).ready(function() {
             case 'ArrowUp':
                 nav("-1");
                 if (window_status == "source-page") {
-                    auto_scroll(30, "off");
+                    //auto_scroll(30, "off");
                 }
-                if (volume_status == "true") {
+                if (volume_status === true) {
                     volume_control("up")
                 }
 
@@ -924,14 +1064,21 @@ $(document).ready(function() {
 
             case '#':
                 volume.requestShow();
-
-                volume_status = "true";
+                volume_status = true;
+                navigator.spatialNavigationEnabled = false;
                 break;
 
 
             case 'SoftLeft':
                 if (window_status == "article-list") {
-                    show_settings()
+
+
+                    if (!activity) {
+                        show_settings()
+                    } else {
+                        toaster(source_array[0][0], 3000)
+                        add_source(source_array[0][0], 5, "all", rss_title)
+                    }
                     return;
 
                 }
@@ -1002,7 +1149,23 @@ $(document).ready(function() {
 
 
 
+    //////////////////////////
+    ////BUG OUTPUT////////////
+    /////////////////////////
+    if (debug) {
 
+        $(window).on("error", function(evt) {
+
+            console.log("jQuery error event:", evt);
+            var e = evt.originalEvent; // get the javascript event
+            console.log("original event:", e);
+            if (e.message) {
+                alert("Error:\n\t" + e.message + "\nLine:\n\t" + e.lineno + "\nFile:\n\t" + e.filename);
+            } else {
+                alert("Error:\n\t" + e.type + "\nElement:\n\t" + (e.srcElement || e.target));
+            }
+        });
+    }
 
 
 });

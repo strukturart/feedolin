@@ -10,6 +10,11 @@
      --color-seven: gainsboro;
  }
  
+ @font-face {
+     font-family: "Lato-Regular";
+     src: url("/assets/fonts/Lato-Regular.ttf");
+ }
+ 
  *,
  *:before,
  *:after {
@@ -27,6 +32,7 @@
  
  html,
  body {
+     font-family: "Lato-Regular";
      font-weight: 100;
      width: 90%;
      position: relative;
@@ -48,6 +54,10 @@
      height: auto;
      display: block;
  }
+ 
+ img[src=""] {
+     display: none;
+ }
  /*///////////////////////////
 ///HELPER////////////////*/
  
@@ -65,6 +75,11 @@
  }
  /*///////////////////////////
 ///FINDER////////////////*/
+ 
+ div#count {
+     font-size: 8px;
+     color: white;
+ }
  
  div#navigation {
      width: 100vw;
@@ -186,6 +201,9 @@
      width: 320px!Important;
      height: 240px!Important;
  }
+ /*
+ bottom bar
+ */
  
  div#bottom-bar {
      position: fixed;
@@ -276,39 +294,53 @@
          color: orange;
      }
  }
+ /*
+ SETTINGS
+ */
  
  div#settings {
      display: none;
      background: gray;
-     padding: 5px;
-     height: 100%;
+     padding: 5px 5px 50px 5px;
+     min-height: 100%;
  }
  
  div#settings div#text {
      margin: 0 0 20px 0;
  }
  
+ div#settings label {
+     min-width: 80%;
+     height: 30px;
+ }
+ 
+ div#settings input:focus {
+     border: 2px solid red;
+ }
+ 
+ div:focus-within {
+     background: yellow;
+ }
+ 
  div#settings div#input-wrapper {
      margin: 0 0 0px 0;
  }
  
- div#settings div#input-wrapper input {
+ div#settings input {
      width: 80%;
      height: 30px;
      font-size: 1.2rem;
      border: 2px solid black;
      margin: 0 0 15px 0;
      padding: 0 3px 0 3px;
- }
- 
- div#settings div#input-wrapper input:focus label {
-     background: pink;
+     display: block;
  }
  
  .switch {
      position: relative;
      display: inline-block;
      width: 52px;
+     min-width: 52px;
      height: 30px;
  }
  
