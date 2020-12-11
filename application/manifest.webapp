@@ -60,7 +60,6 @@
 		"volumemanager":{},		
 		"browser": {},
 		"embed-apps": {},
-		"alarms":{},
 		"wake-lock":{},
 		"power":{},
 		"desktop-notification":{},

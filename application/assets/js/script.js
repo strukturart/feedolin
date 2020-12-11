@@ -19,49 +19,28 @@ var rss_title = "";
 
 //caching or not caching
 
-
-
-
 $(document).ready(function() {
-
-
-    //get search feature settings
-    var setting_status;
-    var get_setting_status;
-    var get_interval;
-    var get_search;
-
-    function get_settings() {
-        get_search = localStorage.getItem('search');
-        get_interval = localStorage.getItem('interval');
-        get_setting_status = localStorage.getItem('status');
-
-        $("div#input-wrapper #search").val(get_search)
-        $("div#input-wrapper #time").val(get_interval)
-
-        if (get_setting_status == "true") {
-            $('input[type=checkbox]').prop('checked', true);
-        } else {
-            $('input[type=checkbox]').prop('checked', false);
-
-        }
-
-    }
-    get_settings()
 
 
     //check if activity or not
     setTimeout(() => {
 
         if (activity === false) {
-            alert(cache.getTime())
-            if (cache.getTime()) { finder() } else {
+
+            let a = localStorage.getItem('interval');
+            if (a == null) {
+                a = 0
+            }
+            if (cache.getTime(a)) {
+                finder()
+                toaster("download", 5000)
+
+
+            } else {
                 content_arr = cache.loadCache();
                 build();
-                toaster("load from cache")
+                toaster("load from cache", 5000)
             }
-
-
         }
 
     }, 4000);
@@ -147,8 +126,6 @@ $(document).ready(function() {
             source_array.push([option.data.url, 4, "", "all"]);
             rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
             bottom_bar("add", "select", "")
-
-
         }
 
     })
@@ -355,13 +332,7 @@ $(document).ready(function() {
                 k++;
                 rss_fetcher(source_array[k][0], source_array[k][1], source_array[k][2], source_array[k][3])
             }
-
-
-
-
         }
-
-
 
     }
 
@@ -410,39 +381,20 @@ $(document).ready(function() {
             }
 
 
+            var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
+                '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
+                '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
+                '<div class="channel">' + param_channel + '</div>' +
+                '<time>' + item_date + '</time>' +
+                '<h1 class="title">' + item_title + '</h1>' +
+                '<div class="summary">' + item_summary +
+                '<img src="' + item_image + '"></div>' +
+                '</article>'
+            $('div#news-feed-list').append(article);
+            $("div#news-feed-list article:first").focus()
+            article_array = $('div#news-feed-list article')
 
 
-            //search feature
-            //alarm === true mean tha app start in background
-            //and the html object must be not build
-            if (get_setting_status == "true" && alarm === true) {
-                var lc_get_search = get_search.toLowerCase();
-                var lc_item_title = item_title.toLowerCase();
-
-                var n = lc_item_title.search(lc_get_search);
-                if (n != -1) {
-                    notify("Rss-Reader", "The word/phrase you are looking for was found in one of the articles.", false, false);
-                    window.close();
-                }
-            }
-
-
-
-            if (alarm === false) {
-                var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
-                    '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
-                    '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
-                    '<div class="channel">' + param_channel + '</div>' +
-                    '<time>' + item_date + '</time>' +
-                    '<h1 class="title">' + item_title + '</h1>' +
-                    '<div class="summary">' + item_summary +
-                    '<img src="' + item_image + '"></div>' +
-                    '</article>'
-                $('div#news-feed-list').append(article);
-                $("div#news-feed-list article:first").focus()
-                article_array = $('div#news-feed-list article')
-
-            }
 
         });
 
@@ -711,19 +663,11 @@ $(document).ready(function() {
 
     function save_settings() {
 
-        var search = $("div#input-wrapper #search").val();
         var setting_interval = $("div#input-wrapper #time").val();
 
-        if (search != "" || setting_interval != "") {
-            localStorage.setItem('search', search);
+        if (setting_interval != "") {
             localStorage.setItem('interval', setting_interval);
-            localStorage.setItem('status', setting_status);
             toaster("saved", 3000)
-            if (setting_interval != "") {
-                setAlarm(setting_interval)
-
-            }
-
         } else {
             toaster("please fill in all fields", 3000)
         }
@@ -772,13 +716,17 @@ $(document).ready(function() {
     function show_settings() {
         $("div#navigation").css("display", "none");
         $("div#news-feed").css("padding", "5px 5px 30px 5px")
-
         pos_focus = 0;
         $('article').css('display', 'none')
         $('div#settings').css('display', 'block')
         bottom_bar("save", "", "back")
         $("div#bottom-bar").css("display", "block")
-        $("div#input-wrapper input#input-url").focus();
+        $("div#input-wrapper input#time").focus();
+        if (localStorage.getItem('interval') != null) {
+            document.getElementById("time").value = localStorage.getItem('interval')
+        }
+
+
         window_status = "settings";
 
     }
@@ -816,7 +764,7 @@ $(document).ready(function() {
         }
 
         window_status = "article-list";
-        auto_scroll(30, "off");
+        //auto_scroll(30, "off");
     }
 
 
@@ -890,101 +838,6 @@ $(document).ready(function() {
 
 
 
-
-    }
-
-
-
-
-    ///ALARM
-
-    //alarm listener
-    var alarm = false;
-    navigator.mozSetMessageHandler("alarm", function(mozAlarm) {
-        alarm = true;
-        removeAlarms();
-        setAlarm(get_interval);
-
-    });
-
-
-    //remove alarms
-    function removeAlarms() {
-        var request = navigator.mozAlarms.getAll();
-
-        request.onsuccess = function() {
-
-
-            this.result.forEach(function(alarm) {
-
-                navigator.mozAlarms.remove(alarm.id);
-
-
-            });
-            console.log('operation successful:' + this.result.length + 'alarms pending');
-        };
-
-        request.onerror = function() {
-            console.log("An error occurred: " + this.error.name);
-        };
-    }
-
-
-    //set alarm
-    function setAlarm(durration) {
-
-        durration = Number(durration);
-
-        //alarm 3min later
-        let alarmDate = moment().add(durration, 'm').format("MMMM D, YYYY HH:mm:ss");
-        //This the date to schedule the alarm
-        var myDate = new Date(alarmDate);
-
-        // This is arbitrary data pass to the alarm
-        var data = {
-            foo: "bar"
-        }
-
-        // The "honorTimezone" string is what make the alarm honoring it
-        var request = navigator.mozAlarms.add(alarmDate, 'honorTimezone');
-
-        request.onsuccess = function() {
-            toaster("The alarm has been scheduled", 10000);
-            // alarmId = this.result;
-
-        };
-
-        request.onerror = function() {
-            alert("An error occurred: " + this.error.name);
-        };
-
-    }
-
-
-
-
-
-    //get all alarms
-    function getAlarm() {
-
-        var request = navigator.mozAlarms.getAll();
-
-        request.onsuccess = function() {
-            alert(navigator.mozHasPendingMessage("alarm"))
-
-
-
-            this.result.forEach(function(alarm) {
-                console.log('Id: ' + alarm.id);
-                console.log('date: ' + alarm.date);
-                console.log('respectTimezone: ' + alarm.respectTimezone);
-                console.log('data: ' + JSON.stringify(alarm.data));
-            });
-        };
-
-        request.onerror = function() {
-            alert("An error occurred: " + this.error.name);
-        };
 
     }
 
@@ -1136,14 +989,14 @@ $(document).ready(function() {
 
                 if (window_status == "source-page") {
                     show_article_list();
-                    auto_scroll(30, "off");
+                    //auto_scroll(30, "off");
                     return;
                 }
 
                 break;
 
             case '2':
-                auto_scroll(30, "on");
+                //auto_scroll(30, "on");
                 break;
 
 
@@ -1174,6 +1027,7 @@ $(document).ready(function() {
             }
         });
     }
+
 
 
 });
