@@ -1,5 +1,5 @@
 var redirection_counter = -1;
-var debug = false;
+var debug = true;
 var page = 0;
 var pos_focus = 0
 var article_array;
@@ -17,6 +17,7 @@ var volume_status = false
 var rss_title = "";
 
 
+//caching or not caching
 
 
 
@@ -53,7 +54,13 @@ $(document).ready(function() {
     setTimeout(() => {
 
         if (activity === false) {
-            finder();
+            alert(cache.getTime())
+            if (cache.getTime()) { finder() } else {
+                content_arr = cache.loadCache();
+                build();
+                toaster("load from cache")
+            }
+
 
         }
 
@@ -326,6 +333,7 @@ $(document).ready(function() {
             if (k == source_array.length - 1) {
                 setTimeout(() => {
                     build()
+                    cache.saveCache(content_arr)
 
 
                 }, 1500);

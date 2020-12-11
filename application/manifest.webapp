@@ -3,7 +3,7 @@
 	"name": "rss-reader",
 	"description": "rss-reader",
 	"launch_path": "/index.html",
-	"type": "certified",
+	"type": "privileged",
 	"fullscreen": "true",
 
 

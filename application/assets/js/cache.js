@@ -10,7 +10,7 @@
                 localStorage.setItem("cache_time", timestamp);
 
             } else {
-                if (timestamp > (36000 + cache_time)) {
+                if (timestamp > (36000000 + cache_time)) {
                     localStorage.setItem("cache_time", timestamp);
                     return true
                 } else {
@@ -23,14 +23,14 @@
 
 
         let loadCache = function() {
+            return localStorage.getItem(JSON.parse(data));
+        }
+
+        let saveCache = function(data) {
+            localStorage.setItem("data", JSON.stringify(data));
+            //alert(localStorage.getItem("data"))
 
         }
 
-        let saveCache = function(data_arr) {
-            localStorage.setItem("data", data_arr);
-            alert(localStorage.getItem("data"))
-
-        }
-
-        return { getTime, saveCache };
+        return { getTime, saveCache, loadCache };
     })();
