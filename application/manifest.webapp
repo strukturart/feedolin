@@ -19,7 +19,7 @@
 		"url": "https://strukturart.com"
 	},
 
-"activities": {
+	"activities": {
        "view": {
             "filters": {
                 "type": "url",
@@ -28,7 +28,7 @@
                     "regexp":"/^https?:/"
                 }
             },
-			 "disposition": "inline",
+		"disposition": "inline",
       "returnValue": true,
       "href": "/index.html"
         }
@@ -38,33 +38,27 @@
 	{
 
 		"device-storage:sdcard": {
-		"description": "Read/Write from/to sd-card",
-		"access": "readwrite"
+			"description": "Read/Write from/to sd-card",
+			"access": "readwrite"
 		},
 
 		"device-storage:music": {
-		"description": "Read/Write from/to intern storage",
-		"access": "readwrite"
+			"description": "Read/Write from/to intern storage",
+			"access": "readwrite"
 		},
 
 		"audio-channel-normal" : {
-      "description" : "Needed to play this app's audio content on the normal channel"
-    },
-    "audio-channel-content" : {
-      "description" : "Needed to play this app's audio content on the content channel"
-    },
-    "desktop-notification" : {
-      "description" : "Needed to fire system notifications"
-    },
+      		"description" : "Needed to play this app's audio content on the normal channel"
+    	},
+		"audio-channel-content" : {
+			"description" : "Needed to play this app's audio content on the content channel"
+		},
+		"desktop-notification" : {
+			"description" : "Needed to fire system notifications"
+		},
 
 		"volumemanager":{},		
 		"browser": {},
-		"embed-apps": {},
-		"wake-lock":{},
-		"power":{},
-		"desktop-notification":{},
-
-
 		"spatialnavigation-app-manage": {
 		"navigator.spatialNavigationEnabled": false
 		},
@@ -76,12 +70,9 @@
 
 
  
-	},
+	}
 
 
-	  "messages": [
-     { "alarm": "/index.html" }
-  ]
 
 
  

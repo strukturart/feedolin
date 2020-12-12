@@ -13,9 +13,6 @@
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
 ![image-3](/images/image-3.png)
-![image-4](/images/image-4.png)
-
-
 
 ## Installation
 
@@ -61,6 +58,15 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 Streaming Podcast
 + #-key volume
 + seeking: cursor left/right 
+
+## Tips
+
+RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
++ https://danielmiessler.com/blog/rss-feed-youtube-channel/
++ http://tips.slaw.ca/2019/technology/rss-feed-for-a-youtube-channel-or-playlist/
++ https://rss.app/rss-feed/create-instagram-rss-feed
+
+
 
 ## to do
 

@@ -2,24 +2,18 @@
 <html>
 
 <head>
-
     <title>rss-reader</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;" />
     <meta charset="utf-8" />
     <link rel="manifest" href="manifest.webapp" type="application/x-web-app-manifest+json" />
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <link rel="stylesheet" href="assets/css/grid.css" />
-
-
-
 </head>
 
 <body>
     <div id="wrapper">
-        <div id="toast" class="width-100">
-
-        </div>
+        <div id="toast" class="width-100"></div>
         <!---------------->
         <!--news-feed-->
         <!---------------->
@@ -29,24 +23,20 @@
 
         <div id="news-feed" class="width-100 height-100 page">
             <div id="settings">
-                <div id="text">
-                    At what time interval would you like to update the content?
-                </div>
                 <div id="input-wrapper">
-                    <label for="time">search interval in minutes</label>
+                    <label for="time">In how many minutes should new content be downloaded.</label>
                     <input tabindex="1" type="tel" pattern="^[0-9]*$" id="time" name="time">
+                    <div id="nextdownload"></div>
                 </div>
-
-
             </div>
+            <div id="top"></div>
             <div id="news-feed-list">
             </div>
-            <div id="source-page" class=" width-100 height-100">
+            <div id="source-page" class="width-100 height-100">
                 <div id="iframe-wrapper">
-                    <iframe src="" scrolling="yes" frameborder=”0″ mozbrowser allowfullscreen></iframe>
+                    <iframe src=" " scrolling="yes" frameborder=”0″ mozbrowser allowfullscreen></iframe>
                 </div>
             </div>
-            <a id="download-button" class="podcast" href="" download>download</a>
             <div id="bottom-bar">
                 <div class="inner flex justify-content-spacebetween width-100">
                     <div id="button-left"></div>
@@ -55,31 +45,24 @@
                 </div>
             </div>
         </div>
-
-        <!--
-	///////////////
-	///DEBUG//////
-	//////////////
-	-->
-
         <div id="message-box" class="flex width-100 height-100 align-item-center">
-            <div id="download" class="text-center">Please wait<br> downloading rss-feeds</div>
+            <div id="download" class="width-100 text-center">Welcome</div>
             <div id="count" class="width-100 text-center"></div>
-
         </div>
-
-
     </div>
 
 </body>
 
 
-<script defer src="assets/js/jQuery-3.1.0.js"></script>
-<script defer src="assets/js/moments.min.js"></script>
-<script defer src="assets/js/applait.finder.min.js"></script>
-<script defer src="assets/js/helper.js"></script>
-<script defer src="assets/js/audio.js"></script>
-<script defer src="assets/js/cache.js"></script>
-<script defer src="assets/js/script.js"></script>
+<script defer src="assets/js/jQuery-3.1.0.js "></script>
+<script defer src="assets/js/IntersectionObserver-polyfill.js "></script>
+<script defer src="assets/js/moments.min.js "></script>
+<script defer src="assets/js/applait.finder.min.js "></script>
+<script defer src="assets/js/helper.js "></script>
+<script defer src="assets/js/audio.js "></script>
+<script defer src="assets/js/cache.js "></script>
+<script defer src="assets/js/lazyload.js "></script>
+<script defer src="assets/js/script.js "></script>
+
 
 </html>

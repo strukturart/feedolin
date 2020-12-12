@@ -3,23 +3,20 @@ var debug = true;
 var page = 0;
 var pos_focus = 0
 var article_array;
-var window_status = "article-list";
+var window_status = "intro";
 var content_arr = [];
 var source_array = [];
 var link_target;
 var k = 0;
 var panels = ["all"];
 var current_panel = 0;
-var log_data = [];
-var log = true;
 var activity = false;
 var volume_status = false
 var rss_title = "";
 
 
-//caching or not caching
 
-$(document).ready(function() {
+$(document).ready(function () {
 
 
     //check if activity or not
@@ -31,19 +28,17 @@ $(document).ready(function() {
             if (a == null) {
                 a = 0
             }
+            //download
             if (cache.getTime(a)) {
                 finder()
-                toaster("download", 5000)
-
-
+                //cache
             } else {
                 content_arr = cache.loadCache();
                 build();
-                toaster("load from cache", 5000)
             }
         }
 
-    }, 4000);
+    }, 3000);
 
 
 
@@ -51,17 +46,20 @@ $(document).ready(function() {
     /////////////////////////
     function finder() {
 
-        var finder = new Applait.Finder({ type: "sdcard", debugMode: false });
+        var finder = new Applait.Finder({
+            type: "sdcard",
+            debugMode: false
+        });
 
 
-        finder.on("empty", function(needle) {
+        finder.on("empty", function (needle) {
             toaster("no sdcard found");
             return;
         });
 
         finder.search("rss-reader.json");
 
-        finder.on("searchComplete", function(needle, filematchcount) {
+        finder.on("searchComplete", function (needle, filematchcount) {
             if (filematchcount == 0) {
                 $('#download').html("😴<br>No json file founded")
             }
@@ -69,17 +67,17 @@ $(document).ready(function() {
 
 
 
-        finder.on("fileFound", function(file, fileinfo, storageName) {
+        finder.on("fileFound", function (file, fileinfo, storageName) {
 
             var reader = new FileReader()
 
 
-            reader.onerror = function(event) {
+            reader.onerror = function (event) {
                 toaster('shit happens')
                 reader.abort();
             };
 
-            reader.onloadend = function(event) {
+            reader.onloadend = function (event) {
 
                 var data;
                 //check if json valid
@@ -90,7 +88,7 @@ $(document).ready(function() {
                     return false;
                 }
 
-                $.each(data, function(i, item) {
+                $.each(data, function (i, item) {
                     if (!item.categorie) {
                         item.categorie = 0;
                     }
@@ -114,18 +112,16 @@ $(document).ready(function() {
 
 
 
-    navigator.mozSetMessageHandler('activity', function(activityRequest) {
+    navigator.mozSetMessageHandler('activity', function (activityRequest) {
         var option = activityRequest.source;
         activity = true;
 
-        //alert(option.data.url)
         if (option.name == 'view') {
             while (source_array.length > 0) {
                 source_array.pop();
             }
             source_array.push([option.data.url, 4, "", "all"]);
             rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
-            bottom_bar("add", "select", "")
         }
 
     })
@@ -134,14 +130,16 @@ $(document).ready(function() {
 
 
     //////////////////////////////
-    //httpRequest////
+    //download content////
     //////////////////////////////
 
     function rss_fetcher(param_url, param_limit, param_channel, param_categorie) {
 
 
 
-        var xhttp = new XMLHttpRequest({ mozSystem: true });
+        var xhttp = new XMLHttpRequest({
+            mozSystem: true
+        });
 
         xhttp.open('GET', param_url, true)
         xhttp.withCredentials = true;
@@ -155,16 +153,12 @@ $(document).ready(function() {
         xhttp.send(null);
 
 
-        $("div#message-box").css('display', 'block')
+        document.getElementById("message-box").style.display = "block";
 
-        xhttp.addEventListener("load", transferComplete);
         xhttp.addEventListener("error", transferFailed);
         xhttp.addEventListener("loadend", loadEnd);
 
 
-        function transferComplete() {
-
-        }
 
         function transferFailed() {
             toaster("failed" + param_channel, 1000)
@@ -175,9 +169,8 @@ $(document).ready(function() {
 
 
 
-        xhttp.onload = function() {
+        xhttp.onload = function () {
 
-            log_data.push(["", xhttp.staus, param_channel, "\n"])
 
 
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
@@ -192,7 +185,7 @@ $(document).ready(function() {
                 $('#download').html("downloading<br><br>" + rss_title)
                 $('div#count').text(count)
 
-                $(data).find('entry').each(function(index) {
+                $(data).find('entry').each(function (index) {
                     rss_type = "atom"
 
                     if (index < param_limit) {
@@ -230,11 +223,10 @@ $(document).ready(function() {
 
 
                 //rss 2.0 items
-                $(data).find('item').each(function(index) {
+                $(data).find('item').each(function (index) {
                     rss_type = "rss"
                     if (index < param_limit) {
                         var item_title = $(this).find('title').text();
-
                         var item_summary = $(this).find('description').text();
                         var item_link = $(this).find('link').text();
                         var item_date_unix = Date.parse($(this).find('pubDate').text());
@@ -242,7 +234,6 @@ $(document).ready(function() {
                         item_date = item_date.toGMTString()
                         var item_download = $(this).find('enclosure').attr('url');
                         var item_type = $(this).find('enclosure').attr('type')
-
 
                         content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type])
                     }
@@ -256,13 +247,11 @@ $(document).ready(function() {
 
             if (xhttp.status === 404) {
                 toaster(param_channel + " url not found", 3000);
-                log_data.push(["url not found", xhttp.staus, param_channel, "\n"]);
 
             }
 
             if (xhttp.status === 408) {
                 toaster(param_channel + "Time out", 3000);
-                log_data.push(["timeout", xhttp.staus, param_channel, "\n"]);
 
             }
 
@@ -278,9 +267,8 @@ $(document).ready(function() {
 
             }
 
-            xhttp.ontimeout = function(e) {
+            xhttp.ontimeout = function (e) {
                 toaster(param_channel + "Time out", 3000);
-                log_data.push(["timeout", param_channel, "\n"]);
 
             };
 
@@ -289,9 +277,7 @@ $(document).ready(function() {
                 toaster(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
             }
 
-            if (xhttp.status !== 200) {
-                log_data.push([xhttp.getResponseHeader('Location'), xhttp.staus, param_channel, "\n"]);
-            }
+            if (xhttp.status !== 200) {}
 
 
         };
@@ -309,22 +295,18 @@ $(document).ready(function() {
             //after download build html objects
             if (k == source_array.length - 1) {
                 setTimeout(() => {
+
+                    content_arr = content_arr.sort(function (a, b) {
+                        return b[4] - a[4];
+                    });
+
                     build()
                     cache.saveCache(content_arr)
 
 
                 }, 1500);
 
-                if (log === true) {
-                    delete_file("rss_log.txt")
-                    setTimeout(() => {
 
-                        var d = new Date();
-                        var formatted = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes();
-                        write_file(log_data.toString() + formatted, "rss_log.txt")
-
-                    }, 2000);
-                }
 
 
             }
@@ -341,19 +323,23 @@ $(document).ready(function() {
 
     //sort content by date
     //build   
-
+    //write html
 
     function build() {
         $("div#navigation div").text(panels[0]);
 
+        bottom_bar("settings", "select", "share")
 
-        $.each(content_arr, function(i, item) {
-            var item_date_unix = content_arr[i][4];
-            var item_link = content_arr[i][2];
-            var param_channel = content_arr[i][5];
-            var item_date = content_arr[i][3];
+        if (activity == true) bottom_bar("add", "select", "")
+
+
+        $.each(content_arr, function (i) {
             var item_title = content_arr[i][0];
             var item_summary = content_arr[i][1];
+            var item_link = content_arr[i][2];
+            var item_date = content_arr[i][3];
+            var item_date_unix = content_arr[i][4];
+            var param_channel = content_arr[i][5];
             var item_categorie = content_arr[i][6]
             var item_download = content_arr[i][7]
             var item_type = content_arr[i][8];
@@ -380,6 +366,13 @@ $(document).ready(function() {
                 item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
             }
 
+            /*
+            if (item_link.includes("https://www.reddit.com") === true) {
+                media = " reddit";
+                item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
+            }*/
+
+
 
             var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
@@ -388,7 +381,7 @@ $(document).ready(function() {
                 '<time>' + item_date + '</time>' +
                 '<h1 class="title">' + item_title + '</h1>' +
                 '<div class="summary">' + item_summary +
-                '<img src="' + item_image + '"></div>' +
+                '<img class="lazyload" data-src="' + item_image + '" src=""></div>' +
                 '</article>'
             $('div#news-feed-list').append(article);
             $("div#news-feed-list article:first").focus()
@@ -398,13 +391,13 @@ $(document).ready(function() {
 
         });
 
-        sort_data();
 
+        set_tabindex()
+        lazyload.ll()
+        document.getElementById("message-box").style.display = "none"
+        $('div#bottom-bar').css('display', 'block')
 
-
-        $("div#message-box").slideDown("400", function() {
-            $("div#message-box").css('display', 'none');
-        });
+        window_status = "article-list";
 
 
     }
@@ -412,7 +405,7 @@ $(document).ready(function() {
 
     function set_tabindex() {
         $('article').removeAttr("tabindex")
-        $('article').filter(':visible').each(function(index) {
+        $('article').filter(':visible').each(function (index) {
             $(this).prop("tabindex", index);
 
         })
@@ -421,49 +414,6 @@ $(document).ready(function() {
         $('article:last').css("margin", "0 0 30px 0")
     }
 
-
-    function sort_data() {
-
-        var $wrapper = $('div#news-feed-list');
-        $wrapper.find('article').sort(function(a, b) {
-                return +b.dataset.order - +a.dataset.order;
-            })
-            .appendTo($wrapper);
-
-        article_array = $('div#news-feed-list article')
-        set_tabindex()
-    }
-
-
-
-
-    var running_autoscroll = false;
-    var interval = "";
-
-    function auto_scroll(param1, param2) {
-
-        if (window_status === "source-page" && running_autoscroll === false && param2 === "on")
-
-        {
-            running_autoscroll = true;
-            lock_screen("lock");
-            interval = setInterval(function() {
-                window.scrollBy(0, 1);
-            }, param1);
-            toaster("autoscroll on");
-            return;
-
-        }
-
-        if (running_autoscroll === true || param2 === "off") {
-            clearInterval(interval);
-            running_autoscroll = false;
-            lock_screen("unlock");
-        }
-
-
-
-    }
 
 
     function panels_list(panel) {
@@ -508,79 +458,45 @@ $(document).ready(function() {
 
     function nav(move) {
 
-        var settings_array = $("div#settings [tabIndex]")
 
-        if (window_status == "settings") {
-            if (move == "+1" && pos_focus < settings_array.length - 1) {
-                pos_focus++
-                var targetElement = settings_array[pos_focus];
+
+        if (move == "+1" && pos_focus < article_array.length - 1) {
+            pos_focus++
+
+            if (pos_focus <= article_array.length) {
+                var targetElement = article_array[pos_focus];
                 targetElement.focus();
-
-                var focusedElement = $(':focus')[0].offsetTop + 20;
-
-
-                window.scrollTo({
-                    top: focusedElement,
-                    left: 100,
-                    behavior: 'smooth'
+                //var focusedElement = $(':focus')[0].offsetTop + 25;
+                //toaster(focusedElement)
+                //window.scrollTo(0, focusedElement);
+                targetElement.scrollIntoView({
+                    behavior: "auto",
+                    block: "end"
                 });
 
+
             }
+        }
 
-            if (move == "-1" && pos_focus > 0) {
-                pos_focus--
-                var targetElement = settings_array[pos_focus];
+        if (move == "-1" && pos_focus > 0) {
+            pos_focus--
+            if (pos_focus >= 0) {
+                //toaster(focusedElement)
+
+                var targetElement = article_array[pos_focus];
                 targetElement.focus();
+                //var focusedElement = $(':focus')[0].offsetTop + 25;
 
-                var focusedElement = $(':focus')[0].offsetTop - 20;
-                window.scrollTo({
-                    top: focusedElement,
-                    left: 100,
-                    behavior: 'smooth'
+                targetElement.scrollIntoView({
+                    behavior: "auto",
+                    block: "start"
                 });
 
-            }
+                //window.scrollTo(0, focusedElement);
 
-
-        }
-        if (window_status == "article-list") {
-            var $focused = $(':focus')[0];
-
-
-
-            if (move == "+1" && pos_focus < article_array.length - 1) {
-                pos_focus++
-
-                if (pos_focus <= article_array.length) {
-
-                    var focusedElement = $(':focus')[0].offsetTop + 20;
-
-
-                    window.scrollTo({
-                        top: focusedElement,
-                        left: 100,
-                        behavior: 'smooth'
-                    });
-
-
-                    var targetElement = article_array[pos_focus];
-                    targetElement.focus();
-
-
-                }
-            }
-
-            if (move == "-1" && pos_focus > 0) {
-                pos_focus--
-                if (pos_focus >= 0) {
-                    var targetElement = article_array[pos_focus];
-                    targetElement.focus();
-                    var focusedElement = $(':focus')[0].offsetTop;
-                    window.scrollTo({ top: focusedElement + 20, behavior: 'smooth' });
-
-                }
             }
         }
+
 
 
     }
@@ -591,10 +507,12 @@ $(document).ready(function() {
 
 
 
-    //httpRequest
+    //download media
 
     function downloadFile(url, filetitle) {
-        var xhttp = new XMLHttpRequest({ mozSystem: true });
+        var xhttp = new XMLHttpRequest({
+            mozSystem: true
+        });
 
         xhttp.open('GET', url, true)
         xhttp.withCredentials = true;
@@ -602,23 +520,25 @@ $(document).ready(function() {
         toaster("download started", 3000);
 
 
-        xhttp.onload = function() {
+        xhttp.onload = function () {
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
 
                 var blob = xhttp.response;
 
                 var sdcard = navigator.getDeviceStorage("music");
-                var file = new Blob([blob], { type: "audio/mpeg" });
+                var file = new Blob([blob], {
+                    type: "audio/mpeg"
+                });
                 toaster("done", 3000);
 
                 var request = sdcard.addNamed(file, filetitle + ".mp3");
 
-                request.onsuccess = function() {
+                request.onsuccess = function () {
                     notify("RSS - Reader", "successfully wrote on the storage area", false, false)
                 }
 
                 // An error typically occur if a file with the same name already exist
-                request.onerror = function() {
+                request.onerror = function () {
                     alert('Unable to write the file: ' + this.error);
                 }
             }
@@ -638,7 +558,7 @@ $(document).ready(function() {
 
         };
 
-        xhttp.onerror = function() {
+        xhttp.onerror = function () {
             toaster(" status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
         };
 
@@ -675,14 +595,22 @@ $(document).ready(function() {
 
 
     function show_article() {
+
         navigator.spatialNavigationEnabled = false;
 
-        $("div#navigation").css("display", "none");
-        $("div#news-feed").css("padding", "5px 5px 30px 5px")
-
-        var targetElement = article_array[pos_focus];
+        var targetElement = document.activeElement
         link_target = $(targetElement).data('download');
         link_type = $(targetElement).data('audio-type');
+
+        $('div#settings').css('display', 'none')
+        $('article').css('display', 'none')
+        $(':focus').css('display', 'block')
+        $('div.summary').css('display', 'block')
+        $('div#bottom-bar').css('display', 'block')
+        $("div#navigation").css("display", "none");
+        $("div#news-feed").css("padding", "0px 0px 32px 0px");
+
+
 
         if ($(":focus").hasClass("podcast")) {
 
@@ -696,18 +624,23 @@ $(document).ready(function() {
 
         }
 
-        if ($(":focus").hasClass("rss") || $(":focus").hasClass("youtube")) {
+        if ($(":focus").hasClass("rss")) {
             bottom_bar("", "", "visit source")
         }
 
-        window.scrollTo(0, 0);
+        if ($(":focus").hasClass("youtube")) {
+            bottom_bar("", "", "open")
+        }
 
-        var $focused = $(':focus');
-        $('article').css('display', 'none')
-        $focused.css('display', 'block')
-        $('div.summary').css('display', 'block')
-        $('div#bottom-bar').css('display', 'block')
-        $('div#settings').css('display', 'none')
+
+
+
+        // window.scrollTo(0, $(targetElement).offset().top);
+        targetElement.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
         window_status = "single-article";
     }
 
@@ -715,7 +648,7 @@ $(document).ready(function() {
 
     function show_settings() {
         $("div#navigation").css("display", "none");
-        $("div#news-feed").css("padding", "5px 5px 30px 5px")
+        $("div#news-feed").css("padding", "0px 0px 30px 0px")
         pos_focus = 0;
         $('article').css('display', 'none')
         $('div#settings').css('display', 'block')
@@ -739,7 +672,7 @@ $(document).ready(function() {
 
 
         $("div#navigation").css("display", "block");
-        $("div#news-feed").css("padding", "35px 5px 30px 5px")
+        $("div#news-feed").css("padding", "30px 0px 30px 0px")
 
         $('article').css('display', 'block')
         $('div.summary').css('display', 'none')
@@ -755,6 +688,7 @@ $(document).ready(function() {
 
         $("div#source-page").css("display", "none")
         $("div#source-page iframe").attr("src", "")
+        $("div#bottom-bar").css("display", "block")
 
 
         if (!activity) {
@@ -764,7 +698,6 @@ $(document).ready(function() {
         }
 
         window_status = "article-list";
-        //auto_scroll(30, "off");
     }
 
 
@@ -786,6 +719,8 @@ $(document).ready(function() {
             $('div#bottom-bar').css('display', 'none')
             $("div#source-page div#iframe-wrapper").css("height", "1000vh")
             $("div#source-page iframe").css("height", "1000vh")
+            navigator.spatialNavigationEnabled = true;
+
             window_status = "source-page";
             return;
 
@@ -812,22 +747,25 @@ $(document).ready(function() {
 
 
         if ($(":focus").hasClass("podcast")) {
-            var finder = new Applait.Finder({ type: "music", debugMode: false });
+            var finder = new Applait.Finder({
+                type: "music",
+                debugMode: false
+            });
 
-            finder.on("empty", function(needle) {
+            finder.on("empty", function (needle) {
                 toaster("no sdcard found");
                 return;
             });
 
             finder.search(title);
 
-            finder.on("fileFound", function(file, fileinfo, storageName) {
+            finder.on("fileFound", function (file, fileinfo, storageName) {
 
                 toaster("The file is already available", 3000);
                 return false;
             });
 
-            finder.on("searchComplete", function(needle, filematchcount) {
+            finder.on("searchComplete", function (needle, filematchcount) {
                 if (filematchcount == 0) {
                     downloadFile(link_download, title);
                 }
@@ -851,74 +789,78 @@ $(document).ready(function() {
 
 
 
+
     function handleKeyDown(evt) {
 
         switch (evt.key) {
 
 
             case 'Enter':
-                if (window_status == "article-list") { show_article(); }
-
-
-                if (window_status == "settings" && $('input[type=checkbox]').is(":focus")) {
-                    if ($('input[type=checkbox]').is(':checked')) {
-                        $('input[type=checkbox]').prop('checked', false);
-                        setting_status = "false";
-                        removeAlarms();
-
-                    } else {
-                        $('input[type=checkbox]').prop('checked', true);
-                        setting_status = "true";
-                    }
-
-                    save_settings();
-
+                if (window_status == "article-list") {
+                    show_article();
                 }
                 break;
 
             case 'ArrowLeft':
                 if (window_status == "article-list") {
                     nav_panels("left")
+                    break;
+
+
                 }
 
                 if (window_status == "single-article") {
                     seeking("backward")
+                    break;
 
                 }
-
 
                 break;
 
             case 'ArrowRight':
                 if (window_status == "article-list") {
                     nav_panels("right")
+                    break;
+
                 }
 
                 if (window_status == "single-article") {
                     seeking("forward")
+                    break;
+
 
                 }
                 break;
 
             case 'ArrowDown':
-                nav("+1");
-                if (window_status == "source-page") {
-                    //auto_scroll(30, "off");
+                if (window_status == "article-list") {
+
+                    nav("+1");
                 }
+
+
                 if (volume_status === true) {
                     volume_control("down")
+                    break;
                 }
+
+
                 break;
 
 
             case 'ArrowUp':
-                nav("-1");
-                if (window_status == "source-page") {
-                    //auto_scroll(30, "off");
+
+                if (window_status == "article-list") {
+
+                    nav("-1");
+                    break
                 }
+
                 if (volume_status === true) {
                     volume_control("up")
+                    break;
                 }
+
 
 
                 break;
@@ -967,6 +909,11 @@ $(document).ready(function() {
                     show_article_list();
                     return;
                 }
+
+                if (window_status == "article-list") {
+                    share();
+                    return
+                }
                 break;
 
 
@@ -974,31 +921,25 @@ $(document).ready(function() {
                 evt.preventDefault();
                 if (window_status == "article-list") {
                     window.close();
-                    return;
+                    break;;
                 }
 
                 if (window_status == "settings") {
                     show_article_list();
-                    return;
+                    break;
                 }
 
                 if (window_status == "single-article") {
                     show_article_list();
-                    return;
+                    break;
                 }
 
                 if (window_status == "source-page") {
                     show_article_list();
-                    //auto_scroll(30, "off");
-                    return;
+                    break;
                 }
 
                 break;
-
-            case '2':
-                //auto_scroll(30, "on");
-                break;
-
 
         }
 
@@ -1010,12 +951,13 @@ $(document).ready(function() {
 
 
 
+
     //////////////////////////
     ////BUG OUTPUT////////////
     /////////////////////////
     if (debug) {
 
-        $(window).on("error", function(evt) {
+        $(window).on("error", function (evt) {
 
             console.log("jQuery error event:", evt);
             var e = evt.originalEvent; // get the javascript event
