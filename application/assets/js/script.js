@@ -1,5 +1,5 @@
 var redirection_counter = -1;
-var debug = true;
+var debug = false;
 var page = 0;
 var pos_focus = 0
 var article_array;
@@ -17,7 +17,6 @@ var volume_status = false
 var rss_title = "";
 
 
-//caching or not caching
 
 $(document).ready(function() {
 
@@ -31,11 +30,12 @@ $(document).ready(function() {
             if (a == null) {
                 a = 0
             }
+            //download
             if (cache.getTime(a)) {
                 finder()
                 toaster("download", 5000)
 
-
+                //cache
             } else {
                 content_arr = cache.loadCache();
                 build();
@@ -43,7 +43,7 @@ $(document).ready(function() {
             }
         }
 
-    }, 4000);
+    }, 3000);
 
 
 
@@ -118,7 +118,6 @@ $(document).ready(function() {
         var option = activityRequest.source;
         activity = true;
 
-        //alert(option.data.url)
         if (option.name == 'view') {
             while (source_array.length > 0) {
                 source_array.pop();
@@ -134,7 +133,7 @@ $(document).ready(function() {
 
 
     //////////////////////////////
-    //httpRequest////
+    //download content////
     //////////////////////////////
 
     function rss_fetcher(param_url, param_limit, param_channel, param_categorie) {
@@ -234,7 +233,6 @@ $(document).ready(function() {
                     rss_type = "rss"
                     if (index < param_limit) {
                         var item_title = $(this).find('title').text();
-
                         var item_summary = $(this).find('description').text();
                         var item_link = $(this).find('link').text();
                         var item_date_unix = Date.parse($(this).find('pubDate').text());
@@ -309,22 +307,18 @@ $(document).ready(function() {
             //after download build html objects
             if (k == source_array.length - 1) {
                 setTimeout(() => {
+
+                    content_arr = content_arr.sort(function(a, b) {
+                        return b[4] - a[4];
+                    });
+
                     build()
                     cache.saveCache(content_arr)
 
 
                 }, 1500);
 
-                if (log === true) {
-                    delete_file("rss_log.txt")
-                    setTimeout(() => {
 
-                        var d = new Date();
-                        var formatted = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes();
-                        write_file(log_data.toString() + formatted, "rss_log.txt")
-
-                    }, 2000);
-                }
 
 
             }
@@ -341,19 +335,19 @@ $(document).ready(function() {
 
     //sort content by date
     //build   
-
+    //write html
 
     function build() {
         $("div#navigation div").text(panels[0]);
 
 
         $.each(content_arr, function(i, item) {
-            var item_date_unix = content_arr[i][4];
-            var item_link = content_arr[i][2];
-            var param_channel = content_arr[i][5];
-            var item_date = content_arr[i][3];
             var item_title = content_arr[i][0];
             var item_summary = content_arr[i][1];
+            var item_link = content_arr[i][2];
+            var item_date = content_arr[i][3];
+            var item_date_unix = content_arr[i][4];
+            var param_channel = content_arr[i][5];
             var item_categorie = content_arr[i][6]
             var item_download = content_arr[i][7]
             var item_type = content_arr[i][8];
@@ -380,6 +374,13 @@ $(document).ready(function() {
                 item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
             }
 
+            /*
+            if (item_link.includes("https://www.reddit.com") === true) {
+                media = " reddit";
+                item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
+            }*/
+
+
 
             var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
@@ -388,7 +389,7 @@ $(document).ready(function() {
                 '<time>' + item_date + '</time>' +
                 '<h1 class="title">' + item_title + '</h1>' +
                 '<div class="summary">' + item_summary +
-                '<img src="' + item_image + '"></div>' +
+                '<img class="lazyload" data-src="' + item_image + '" src=""></div>' +
                 '</article>'
             $('div#news-feed-list').append(article);
             $("div#news-feed-list article:first").focus()
@@ -398,13 +399,10 @@ $(document).ready(function() {
 
         });
 
-        sort_data();
 
-
-
-        $("div#message-box").slideDown("400", function() {
-            $("div#message-box").css('display', 'none');
-        });
+        set_tabindex()
+        lazyload.ll()
+        document.getElementById("message-box").style.display = "none"
 
 
     }
@@ -421,49 +419,6 @@ $(document).ready(function() {
         $('article:last').css("margin", "0 0 30px 0")
     }
 
-
-    function sort_data() {
-
-        var $wrapper = $('div#news-feed-list');
-        $wrapper.find('article').sort(function(a, b) {
-                return +b.dataset.order - +a.dataset.order;
-            })
-            .appendTo($wrapper);
-
-        article_array = $('div#news-feed-list article')
-        set_tabindex()
-    }
-
-
-
-
-    var running_autoscroll = false;
-    var interval = "";
-
-    function auto_scroll(param1, param2) {
-
-        if (window_status === "source-page" && running_autoscroll === false && param2 === "on")
-
-        {
-            running_autoscroll = true;
-            lock_screen("lock");
-            interval = setInterval(function() {
-                window.scrollBy(0, 1);
-            }, param1);
-            toaster("autoscroll on");
-            return;
-
-        }
-
-        if (running_autoscroll === true || param2 === "off") {
-            clearInterval(interval);
-            running_autoscroll = false;
-            lock_screen("unlock");
-        }
-
-
-
-    }
 
 
     function panels_list(panel) {
@@ -591,7 +546,7 @@ $(document).ready(function() {
 
 
 
-    //httpRequest
+    //download media
 
     function downloadFile(url, filetitle) {
         var xhttp = new XMLHttpRequest({ mozSystem: true });
@@ -764,7 +719,6 @@ $(document).ready(function() {
         }
 
         window_status = "article-list";
-        //auto_scroll(30, "off");
     }
 
 
@@ -786,6 +740,8 @@ $(document).ready(function() {
             $('div#bottom-bar').css('display', 'none')
             $("div#source-page div#iframe-wrapper").css("height", "1000vh")
             $("div#source-page iframe").css("height", "1000vh")
+            navigator.spatialNavigationEnabled = true;
+
             window_status = "source-page";
             return;
 
@@ -902,9 +858,6 @@ $(document).ready(function() {
 
             case 'ArrowDown':
                 nav("+1");
-                if (window_status == "source-page") {
-                    //auto_scroll(30, "off");
-                }
                 if (volume_status === true) {
                     volume_control("down")
                 }
@@ -913,9 +866,6 @@ $(document).ready(function() {
 
             case 'ArrowUp':
                 nav("-1");
-                if (window_status == "source-page") {
-                    //auto_scroll(30, "off");
-                }
                 if (volume_status === true) {
                     volume_control("up")
                 }
@@ -974,31 +924,25 @@ $(document).ready(function() {
                 evt.preventDefault();
                 if (window_status == "article-list") {
                     window.close();
-                    return;
+                    break;;
                 }
 
                 if (window_status == "settings") {
                     show_article_list();
-                    return;
+                    break;
                 }
 
                 if (window_status == "single-article") {
                     show_article_list();
-                    return;
+                    break;
                 }
 
                 if (window_status == "source-page") {
                     show_article_list();
-                    //auto_scroll(30, "off");
-                    return;
+                    break;
                 }
 
                 break;
-
-            case '2':
-                //auto_scroll(30, "on");
-                break;
-
 
         }
 
