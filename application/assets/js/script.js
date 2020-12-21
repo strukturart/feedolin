@@ -16,7 +16,7 @@ var rss_title = "";
 
 
 
-$(document).ready(function () {
+$(document).ready(function() {
 
 
     //check if activity or not
@@ -31,7 +31,7 @@ $(document).ready(function () {
             //download
             if (cache.getTime(a)) {
                 finder()
-                //cache
+                    //cache
             } else {
                 content_arr = cache.loadCache();
                 build();
@@ -52,14 +52,14 @@ $(document).ready(function () {
         });
 
 
-        finder.on("empty", function (needle) {
+        finder.on("empty", function(needle) {
             toaster("no sdcard found");
             return;
         });
 
         finder.search("rss-reader.json");
 
-        finder.on("searchComplete", function (needle, filematchcount) {
+        finder.on("searchComplete", function(needle, filematchcount) {
             if (filematchcount == 0) {
                 $('#download').html("😴<br>No json file founded")
             }
@@ -67,17 +67,17 @@ $(document).ready(function () {
 
 
 
-        finder.on("fileFound", function (file, fileinfo, storageName) {
+        finder.on("fileFound", function(file, fileinfo, storageName) {
 
             var reader = new FileReader()
 
 
-            reader.onerror = function (event) {
+            reader.onerror = function(event) {
                 toaster('shit happens')
                 reader.abort();
             };
 
-            reader.onloadend = function (event) {
+            reader.onloadend = function(event) {
 
                 var data;
                 //check if json valid
@@ -88,7 +88,7 @@ $(document).ready(function () {
                     return false;
                 }
 
-                $.each(data, function (i, item) {
+                $.each(data, function(i, item) {
                     if (!item.categorie) {
                         item.categorie = 0;
                     }
@@ -112,7 +112,7 @@ $(document).ready(function () {
 
 
 
-    navigator.mozSetMessageHandler('activity', function (activityRequest) {
+    navigator.mozSetMessageHandler('activity', function(activityRequest) {
         var option = activityRequest.source;
         activity = true;
 
@@ -169,7 +169,7 @@ $(document).ready(function () {
 
 
 
-        xhttp.onload = function () {
+        xhttp.onload = function() {
 
 
 
@@ -185,7 +185,7 @@ $(document).ready(function () {
                 $('#download').html("downloading<br><br>" + rss_title)
                 $('div#count').text(count)
 
-                $(data).find('entry').each(function (index) {
+                $(data).find('entry').each(function(index) {
                     rss_type = "atom"
 
                     if (index < param_limit) {
@@ -223,7 +223,7 @@ $(document).ready(function () {
 
 
                 //rss 2.0 items
-                $(data).find('item').each(function (index) {
+                $(data).find('item').each(function(index) {
                     rss_type = "rss"
                     if (index < param_limit) {
                         var item_title = $(this).find('title').text();
@@ -267,7 +267,7 @@ $(document).ready(function () {
 
             }
 
-            xhttp.ontimeout = function (e) {
+            xhttp.ontimeout = function(e) {
                 toaster(param_channel + "Time out", 3000);
 
             };
@@ -296,7 +296,7 @@ $(document).ready(function () {
             if (k == source_array.length - 1) {
                 setTimeout(() => {
 
-                    content_arr = content_arr.sort(function (a, b) {
+                    content_arr = content_arr.sort(function(a, b) {
                         return b[4] - a[4];
                     });
 
@@ -333,7 +333,7 @@ $(document).ready(function () {
         if (activity == true) bottom_bar("add", "select", "")
 
 
-        $.each(content_arr, function (i) {
+        $.each(content_arr, function(i) {
             var item_title = content_arr[i][0];
             var item_summary = content_arr[i][1];
             var item_link = content_arr[i][2];
@@ -405,7 +405,7 @@ $(document).ready(function () {
 
     function set_tabindex() {
         $('article').removeAttr("tabindex")
-        $('article').filter(':visible').each(function (index) {
+        $('article').filter(':visible').each(function(index) {
             $(this).prop("tabindex", index);
 
         })
@@ -520,7 +520,7 @@ $(document).ready(function () {
         toaster("download started", 3000);
 
 
-        xhttp.onload = function () {
+        xhttp.onload = function() {
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
 
                 var blob = xhttp.response;
@@ -533,12 +533,12 @@ $(document).ready(function () {
 
                 var request = sdcard.addNamed(file, filetitle + ".mp3");
 
-                request.onsuccess = function () {
+                request.onsuccess = function() {
                     notify("RSS - Reader", "successfully wrote on the storage area", false, false)
                 }
 
                 // An error typically occur if a file with the same name already exist
-                request.onerror = function () {
+                request.onerror = function() {
                     alert('Unable to write the file: ' + this.error);
                 }
             }
@@ -558,7 +558,7 @@ $(document).ready(function () {
 
         };
 
-        xhttp.onerror = function () {
+        xhttp.onerror = function() {
             toaster(" status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
         };
 
@@ -752,20 +752,20 @@ $(document).ready(function () {
                 debugMode: false
             });
 
-            finder.on("empty", function (needle) {
+            finder.on("empty", function(needle) {
                 toaster("no sdcard found");
                 return;
             });
 
             finder.search(title);
 
-            finder.on("fileFound", function (file, fileinfo, storageName) {
+            finder.on("fileFound", function(file, fileinfo, storageName) {
 
                 toaster("The file is already available", 3000);
                 return false;
             });
 
-            finder.on("searchComplete", function (needle, filematchcount) {
+            finder.on("searchComplete", function(needle, filematchcount) {
                 if (filematchcount == 0) {
                     downloadFile(link_download, title);
                 }
@@ -911,7 +911,8 @@ $(document).ready(function () {
                 }
 
                 if (window_status == "article-list") {
-                    share();
+
+                    share(document.activeElement.getAttribute('data-link'));
                     return
                 }
                 break;
@@ -957,7 +958,7 @@ $(document).ready(function () {
     /////////////////////////
     if (debug) {
 
-        $(window).on("error", function (evt) {
+        $(window).on("error", function(evt) {
 
             console.log("jQuery error event:", evt);
             var e = evt.originalEvent; // get the javascript event
