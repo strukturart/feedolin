@@ -12,7 +12,22 @@ var panels = ["all"];
 var current_panel = 0;
 var activity = false;
 var volume_status = false
+
+
+
+//xml items
 var rss_title = "";
+var rss_type = "";
+var item_title = "";
+var item_summary = "";
+var item_link = "";
+var item_date_unix = "";
+var item_duration = "";
+var item_type = "";
+
+//youtube
+var item_image = "";
+var item_id = "";
 
 
 
@@ -38,7 +53,7 @@ $(document).ready(function () {
             }
         }
 
-    }, 3000);
+    }, 2500);
 
 
 
@@ -176,7 +191,6 @@ $(document).ready(function () {
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
 
                 var data = xhttp.response;
-                rss_type = "";
                 //rss atom items
                 rss_title = $(data).find('title:first').text()
 
@@ -185,21 +199,44 @@ $(document).ready(function () {
                 $('#download').html("downloading<br><br>" + rss_title)
                 $('div#count').text(count)
 
+                //
+                //atom
+                //
+
                 $(data).find('entry').each(function (index) {
                     rss_type = "atom"
+                    media = "rss"
+                    item_media = "rss"
+
 
                     if (index < param_limit) {
 
-                        var item_title = $(this).find('title').text();
-                        var item_summary = $(this).find('summary').text();
+                        item_title = $(this).find('title').text();
+                        item_summary = $(this).find('summary').text();
+                        item_link = $(this).find('link').attr("href");
+                        item_type = $(this).find('enclosure').attr('type')
+
 
                         //youtube
-                        var item_image = "";
-                        var item_id = "";
+
+                        if (item_type == "audio/mpeg" ||
+                            item_type == "audio/aac"
+                        ) {
+                            media = " podcast";
+                            item_media = " podcast";
+                        }
+
+
                         if (item_summary == "") {
                             item_summary = $(this).find('media\\:description').text()
                             item_image = $(this).find('media\\:thumbnail').attr('url');
                             item_id = $(this).find('yt\\:videoId').text();
+                        }
+
+                        if (item_link.includes("https://www.youtube.com") === true) {
+                            media = " youtube";
+                            item_media = " youtube";
+                            item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
                         }
 
                         if (item_summary == "") {
@@ -207,38 +244,58 @@ $(document).ready(function () {
                         }
 
 
-                        var item_link = $(this).find('link').attr("href");
                         var item_download = $(this).find('enclosure').attr('url')
                         var item_date_unix = Date.parse($(this).find('updated').text());
                         item_date = new Date(item_date_unix)
                         item_date = item_date.toGMTString();
-                        var item_type = $(this).find('enclosure').attr('type')
 
-                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type, item_image, item_id])
+                        if ($(this).find('itunes:\\duration') != undefined) {
+                            item_duration = $(this).find('itunes\\:duration').text()
+                            if (item_duration.includes(":") == false) item_duration = "";
+                        }
+
+
+
+                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type, item_image, item_id, item_duration, item_media])
 
                     }
 
                 })
 
 
-
+                //
                 //rss 2.0 items
+                //
                 $(data).find('item').each(function (index) {
                     rss_type = "rss"
+                    item_media = " rss";
+                    media = " rss";
+
+
                     if (index < param_limit) {
-                        var item_title = $(this).find('title').text();
-                        var item_summary = $(this).find('description').text();
-                        var item_link = $(this).find('link').text();
+                        item_title = $(this).find('title').text();
+                        item_summary = $(this).find('description').text();
+                        item_link = $(this).find('link').text();
                         var item_date_unix = Date.parse($(this).find('pubDate').text());
                         item_date = new Date(item_date_unix)
                         item_date = item_date.toGMTString()
                         var item_download = $(this).find('enclosure').attr('url');
                         var item_type = $(this).find('enclosure').attr('type')
+                        if ($(this).find('itunes:\\duration') != undefined) {
+                            item_duration = $(this).find('itunes\\:duration').text()
+                            if (item_duration.includes(":") == false) item_duration = "";
+                        }
 
-                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type])
+
+
+                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type, item_image, item_id, item_duration, item_media])
                     }
 
                 });
+
+
+
+
 
 
 
@@ -285,7 +342,7 @@ $(document).ready(function () {
 
         function loadEnd(e) {
 
-            if (rss_type == "" && activity === true) {
+            if (activity === true) {
 
                 $('#download').html("The content is <br>not a valid rss feed <div style='font-size:2rem;margin:8px 0 0 0;color:white!Important;'>¯&#92;_(ツ)_/¯</div><br><br>The app will be closed in 4sec")
                 setTimeout(() => {
@@ -348,9 +405,11 @@ $(document).ready(function () {
             var item_type = content_arr[i][8];
             var item_image = content_arr[i][9];
             var item_id = content_arr[i][10];
+            var item_duration = content_arr[i][11];
+            var item_media = content_arr[i][12];
 
 
-            var media = " rss";
+
 
             if (panels.includes(item_categorie) === false) {
                 if (item_categorie != 0) {
@@ -358,16 +417,7 @@ $(document).ready(function () {
                 }
             }
 
-            if (item_type == "audio/mpeg" ||
-                item_type == "audio/aac"
-            ) {
-                media = " podcast";
-            }
 
-            if (item_link.includes("https://www.youtube.com") === true) {
-                media = " youtube";
-                item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
-            }
 
             /*
             if (item_link.includes("https://www.reddit.com") === true) {
@@ -377,11 +427,12 @@ $(document).ready(function () {
 
 
 
-            var article = '<article class="' + item_categorie + media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
+            var article = '<article class="' + item_categorie + item_media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                 '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
                 '<div class="channel">' + param_channel + '</div>' +
                 '<time>' + item_date + '</time>' +
+                '<div class="duration">' + item_duration + '</div>' +
                 '<h1 class="title">' + item_title + '</h1>' +
                 '<div class="summary">' + item_summary +
                 '<img class="lazyload" data-src="' + item_image + '" src=""></div>' +
@@ -914,7 +965,10 @@ $(document).ready(function () {
             case 'Backspace':
                 evt.preventDefault();
                 if (window_status == "article-list") {
-                    window.close();
+                    //window.close();
+
+                    window.goodbye();
+
                     break;;
                 }
 
