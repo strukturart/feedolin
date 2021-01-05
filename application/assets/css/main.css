@@ -1,5 +1,5 @@
  /*GENERAL*/
- 
+
  :root {
      --color-one: black;
      --color-two: yellow;
@@ -9,12 +9,12 @@
      --color-six: rgb(78, 206, 144);
      --color-seven: gainsboro;
  }
- 
+
  @font-face {
      font-family: "Lato-Regular";
      src: url("../fonts/Lato-Regular.ttf");
  }
- 
+
  *,
  *:before,
  *:after {
@@ -23,13 +23,13 @@
      margin: 0px;
      box-sizing: border-box;
  }
- 
+
  *::-webkit-scrollbar {
-     width: 0!important;
-     background-color: transparent!Important;
-     display: none!Important;
+     width: 0 !important;
+     background-color: transparent !Important;
+     display: none !Important;
  }
- 
+
  html,
  body {
      font-family: "Lato-Regular";
@@ -46,23 +46,24 @@
      overflow-y: scroll;
      overflow-x: hidden;
  }
- 
+
  h1 {
      font-size: 1rem;
  }
- 
+
  img {
      max-width: 90vw;
      height: auto;
      display: block;
  }
- 
+
  img[src=""] {
      display: none;
  }
+
  /*///////////////////////////
 ///HELPER////////////////*/
- 
+
  div#toast {
      position: fixed;
      height: auto;
@@ -75,16 +76,17 @@
      padding: 5px;
      text-align: center;
  }
+
  /*///////////////////////////
 ///FINDER////////////////*/
- 
+
  div#count {
      font-size: 8px;
-     color: white!Important;
+     color: white !Important;
      position: fixed;
      bottom: 15px;
  }
- 
+
  div#navigation {
      width: 100vw;
      height: 25px;
@@ -95,7 +97,7 @@
      left: 0px;
      z-index: 6;
  }
- 
+
  div#navigation div {
      width: 100vw;
      height: 25px;
@@ -103,7 +105,7 @@
      color: white;
      text-align: center;
  }
- 
+
  div#news-feed {
      position: relative;
      background: white;
@@ -113,7 +115,7 @@
      width: 100vw;
      font-weight: normal;
  }
- 
+
  div#news-feed div#news-feed-list {
      max-height: 100vh;
      min-height: 100vh;
@@ -121,62 +123,81 @@
      min-width: 100%;
      padding: 0 0 50px 0;
  }
- 
+
  div#news-feed div#news-feed-list article {
      margin: 0 0 10px 0;
      padding: 2px;
      font-weight: normal;
  }
- 
+
  div#news-feed div#news-feed-list article:focus {
      background: silver;
  }
- 
+
  div#news-feed div#news-feed-list article h1 {
      font-size: 1rem;
      font-weight: bold;
  }
- 
+
  div#news-feed div#news-feed-list article time {
      font-size: 0.8rem;
  }
 
- div#news-feed div#news-feed-list article div.duration {
-    font-size: 0.8rem;
-}
+ div#news-feed div#news-feed-list article div.duration-filesize div {
+     font-size: 0.8rem;
 
- 
+ }
+
+ div#news-feed div#news-feed-list article div.duration {
+     margin: 0 10px 0 0;
+
+ }
+
+ div#news-feed div#news-feed-list article div.duration:empty {
+     display: none;
+ }
+
+ div#news-feed div#news-feed-list article div.filesize:empty {
+     display: none;
+ }
+
+ div#news-feed div#news-feed-list article div.filesize {
+     margin: 0 10px 0 0;
+
+ }
+
+
  div#news-feed div#news-feed-list article div.summary {
      display: none;
      padding: 0 0 30px 0;
  }
- 
+
  div#news-feed div#news-feed-list article div.podcast-icon {
      display: none;
  }
- 
+
  div#news-feed div#news-feed-list article.podcast div.podcast-icon {
      display: block;
      max-width: 15px;
  }
- 
+
  div#news-feed div#news-feed-list article.podcast div.podcast-icon img {
      max-width: 15px;
  }
- 
+
  div#news-feed div#news-feed-list article div.youtube-icon {
      display: none;
  }
- 
+
  div#news-feed div#news-feed-list article.youtube div.youtube-icon {
      display: block;
      max-width: 15px;
  }
- 
+
  div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
      max-width: 15px;
  }
- 
+
  div#source-page {
      display: none;
      position: absolute;
@@ -187,7 +208,7 @@
      min-height: 100vh;
      width: 101vw;
  }
- 
+
  div#source-page div#iframe-wrapper {
      position: relative;
      padding-bottom: 56.25%;
@@ -195,7 +216,7 @@
      height: 0;
      width: 100%;
  }
- 
+
  div#source-page iframe {
      position: absolute;
      top: 0;
@@ -203,24 +224,25 @@
      width: 100%;
      overflow: scroll;
  }
- 
+
  div#source-page div.video-view>iframe {
-     width: 320px!Important;
-     height: 240px!Important;
+     width: 320px !Important;
+     height: 240px !Important;
  }
- 
+
  div#source-page div.video-view {
      transform: rotate(90deg);
-     position: relative!Important;
-     left: -40px!Important;
-     top: 40px!Important;
-     width: 320px!Important;
-     height: 240px!Important;
+     position: relative !Important;
+     left: -40px !Important;
+     top: 40px !Important;
+     width: 320px !Important;
+     height: 240px !Important;
  }
+
  /*
  bottom bar
  */
- 
+
  div#bottom-bar {
      position: fixed;
      bottom: 10px;
@@ -230,17 +252,17 @@
      background: black;
      display: none;
  }
- 
+
  div#bottom-bar div#inner {
      position: relative;
  }
- 
+
  div#bottom-bar div {
      background: black;
      color: white;
      padding: 2px;
  }
- 
+
  div#bottom-bar div#button-center {
      background: black;
      color: white;
@@ -248,7 +270,7 @@
      width: 30%;
      text-align: center;
  }
- 
+
  div#bottom-bar div#button-left {
      background: black;
      color: white;
@@ -257,7 +279,7 @@
      text-align: left;
      width: 30%;
  }
- 
+
  div#bottom-bar div#button-right {
      background: black;
      color: white;
@@ -265,7 +287,7 @@
      width: 30%;
      text-align: right;
  }
- 
+
  div#message-box {
      display: block;
      position: fixed;
@@ -278,7 +300,7 @@
      z-index: 300000;
      display: block;
  }
- 
+
  div#message-box div {
      margin: 100px 0 0 0;
      animation-name: colorAnimation;
@@ -289,27 +311,30 @@
      max-width: 70%;
      text-align: center;
  }
- 
+
  @keyframes colorAnimation {
      0% {
          color: orange;
      }
+
      50% {
          color: yellow;
      }
+
      100% {
          color: orange;
      }
  }
+
  /*
  SETTINGS
  */
- 
+
  div#top {
      position: fixed;
      top: 0;
  }
- 
+
  div#settings {
      display: none;
      background: gray;
@@ -319,11 +344,11 @@
      position: fixed;
      top: 0;
  }
- 
+
  div#settings div#text {
      margin: 0 0 20px 0;
  }
- 
+
  div#settings div#nextdownload {
      position: fixed;
      z-index: 10;
@@ -332,17 +357,17 @@
      font-size: 8px;
      color: white;
  }
- 
+
  div#settings label {
      min-width: 80%;
      height: 30px;
      margin: 5px 5px 0 0;
  }
- 
+
  div#settings div#input-wrapper {
      margin: 0 0 0px 0;
  }
- 
+
  div#settings input {
      width: 80%;
      height: 30px;
@@ -352,63 +377,65 @@
      padding: 3px;
      display: block;
  }
+
  /* AUDIO */
- 
+
  .audio-playing {
-     background: rgba(109, 231, 119, 0.6)!Important;
+     background: rgba(109, 231, 119, 0.6) !Important;
  }
 
 
 
  #goodbye {
-    position: fixed;
-    z-index: 20000;
-    left: 0;
-    top: 0;
-    background: black;
-    color: white;
-    font-size: 18px;
-    padding: 70px 5px 5px 5px;
-    display: none;
-  }
-  
-  #ciao {
-    padding: 5px;
-    text-align: center;
-    display: none;
-  }
-  
-  #ciao ul {
-    margin: 20px 0 0px 0;
-  }
-  
-  #ciao ul li {
-    margin: 0 0 0px 0;
-    font-size: 14px;
-    list-style: none;
-  }
-  
-  #ciao ul li:first-child {
-    color: yellow;
-    margin: 0 0 5px 0;
-  }
-  
-  #donation {
-    padding: 5px;
-    text-align: center;
-    display: none;
-  }
+     position: fixed;
+     z-index: 20000;
+     left: 0;
+     top: 0;
+     background: black;
+     color: white;
+     font-size: 18px;
+     padding: 70px 5px 5px 5px;
+     display: none;
+ }
+
+ #ciao {
+     padding: 5px;
+     text-align: center;
+     display: none;
+ }
+
+ #ciao ul {
+     margin: 20px 0 0px 0;
+ }
+
+ #ciao ul li {
+     margin: 0 0 0px 0;
+     font-size: 14px;
+     list-style: none;
+ }
+
+ #ciao ul li:first-child {
+     color: yellow;
+     margin: 0 0 5px 0;
+ }
+
+ #donation {
+     padding: 5px;
+     text-align: center;
+     display: none;
+ }
 
 
 
-  
+
  /* KaiOS portrait devices (240x320) */
- 
+
  @media only screen and (orientation: portrait) {
      /* styles */
  }
+
  /* KaiOS landscape devices (320x240) */
- 
+
  @media screen and (orientation: landscape) {
      /* styles */
  }

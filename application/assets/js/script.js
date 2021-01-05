@@ -17,13 +17,15 @@ var volume_status = false
 
 //xml items
 var rss_title = "";
-var rss_type = "";
 var item_title = "";
 var item_summary = "";
 var item_link = "";
 var item_date_unix = "";
 var item_duration = "";
 var item_type = "";
+var item_filesize = "";
+var item_date_unix = "";
+var item_category = "";
 
 //youtube
 var item_image = "";
@@ -31,7 +33,7 @@ var item_id = "";
 
 
 
-$(document).ready(function () {
+$(document).ready(function() {
 
 
     //check if activity or not
@@ -44,7 +46,7 @@ $(document).ready(function () {
                 a = 0
             }
             //download
-            if (cache.getTime(a)) {
+            if (cache.getTime(a) && navigator.onLine) {
                 finder()
                 //cache
             } else {
@@ -67,14 +69,14 @@ $(document).ready(function () {
         });
 
 
-        finder.on("empty", function (needle) {
+        finder.on("empty", function(needle) {
             toaster("no sdcard found");
             return;
         });
 
         finder.search("rss-reader.json");
 
-        finder.on("searchComplete", function (needle, filematchcount) {
+        finder.on("searchComplete", function(needle, filematchcount) {
             if (filematchcount == 0) {
                 $('#download').html("😴<br>No json file founded")
             }
@@ -82,17 +84,17 @@ $(document).ready(function () {
 
 
 
-        finder.on("fileFound", function (file, fileinfo, storageName) {
+        finder.on("fileFound", function(file, fileinfo, storageName) {
 
             var reader = new FileReader()
 
 
-            reader.onerror = function (event) {
+            reader.onerror = function(event) {
                 toaster('shit happens')
                 reader.abort();
             };
 
-            reader.onloadend = function (event) {
+            reader.onloadend = function(event) {
 
                 var data;
                 //check if json valid
@@ -103,8 +105,8 @@ $(document).ready(function () {
                     return false;
                 }
 
-                $.each(data, function (i, item) {
-                    if (!item.categorie) {
+                $.each(data, function(i, item) {
+                    if (!item.categorie || item.categorie == "") {
                         item.categorie = 0;
                     }
                     source_array.push([item.url, item.limit, item.channel, item.categorie]);
@@ -127,7 +129,7 @@ $(document).ready(function () {
 
 
 
-    navigator.mozSetMessageHandler('activity', function (activityRequest) {
+    navigator.mozSetMessageHandler('activity', function(activityRequest) {
         var option = activityRequest.source;
         activity = true;
 
@@ -142,13 +144,23 @@ $(document).ready(function () {
     })
 
 
+    function formatFileSize(bytes, decimalPoint) {
+        if (bytes == 0) return '0 Bytes';
+        var k = 1000,
+            dm = decimalPoint || 2,
+            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+
 
 
     //////////////////////////////
     //download content////
     //////////////////////////////
 
-    function rss_fetcher(param_url, param_limit, param_channel, param_categorie) {
+    function rss_fetcher(param_url, param_limit, param_channel, param_category) {
 
 
 
@@ -184,7 +196,7 @@ $(document).ready(function () {
 
 
 
-        xhttp.onload = function () {
+        xhttp.onload = function() {
 
 
 
@@ -203,10 +215,10 @@ $(document).ready(function () {
                 //atom
                 //
 
-                $(data).find('entry').each(function (index) {
-                    rss_type = "atom"
-                    media = "rss"
-                    item_media = "rss"
+
+                $(data).find('entry').each(function(index) {
+                    item_media = " rss"
+                    item_type = "";
 
 
                     if (index < param_limit) {
@@ -222,7 +234,6 @@ $(document).ready(function () {
                         if (item_type == "audio/mpeg" ||
                             item_type == "audio/aac"
                         ) {
-                            media = " podcast";
                             item_media = " podcast";
                         }
 
@@ -234,7 +245,6 @@ $(document).ready(function () {
                         }
 
                         if (item_link.includes("https://www.youtube.com") === true) {
-                            media = " youtube";
                             item_media = " youtube";
                             item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
                         }
@@ -244,8 +254,14 @@ $(document).ready(function () {
                         }
 
 
-                        var item_download = $(this).find('enclosure').attr('url')
-                        var item_date_unix = Date.parse($(this).find('updated').text());
+                        if ($(this).find('enclosure').attr('length') != undefined) {
+                            item_filesize = $(this).find('enclosure').attr('length');
+                            item_filesize = formatFileSize(item_filesize, 2)
+                        }
+
+
+                        item_download = $(this).find('enclosure').attr('url')
+                        item_date_unix = Date.parse($(this).find('updated').text());
                         item_date = new Date(item_date_unix)
                         item_date = item_date.toGMTString();
 
@@ -254,9 +270,26 @@ $(document).ready(function () {
                             if (item_duration.includes(":") == false) item_duration = "";
                         }
 
+                        if (panels.includes(param_category) == false && param_category != 0) {
+                            panels.push(param_category);
+                        }
 
-
-                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type, item_image, item_id, item_duration, item_media])
+                        content_arr.push({
+                            title: item_title,
+                            summary: item_summary,
+                            link: item_link,
+                            date: item_date,
+                            dateunix: item_date_unix,
+                            channel: param_channel,
+                            category: param_category,
+                            download: item_download,
+                            type: item_type,
+                            image: item_image,
+                            id: item_id,
+                            duration: item_duration,
+                            media: item_media,
+                            filesize: item_filesize
+                        })
 
                     }
 
@@ -266,29 +299,59 @@ $(document).ready(function () {
                 //
                 //rss 2.0 items
                 //
-                $(data).find('item').each(function (index) {
-                    rss_type = "rss"
+                $(data).find('item').each(function(index) {
                     item_media = " rss";
-                    media = " rss";
-
+                    item_type = "";
 
                     if (index < param_limit) {
                         item_title = $(this).find('title').text();
                         item_summary = $(this).find('description').text();
                         item_link = $(this).find('link').text();
-                        var item_date_unix = Date.parse($(this).find('pubDate').text());
+                        item_date_unix = Date.parse($(this).find('pubDate').text());
                         item_date = new Date(item_date_unix)
                         item_date = item_date.toGMTString()
-                        var item_download = $(this).find('enclosure').attr('url');
-                        var item_type = $(this).find('enclosure').attr('type')
+                        item_download = $(this).find('enclosure').attr('url');
+                        item_type = $(this).find('enclosure').attr('type')
+
+                        if (item_type == "audio/mpeg" ||
+                            item_type == "audio/aac"
+                        ) {
+                            item_media = " podcast";
+                        }
+
+
+
                         if ($(this).find('itunes:\\duration') != undefined) {
                             item_duration = $(this).find('itunes\\:duration').text()
                             if (item_duration.includes(":") == false) item_duration = "";
                         }
 
+                        if ($(this).find('enclosure').attr('length') != undefined) {
+                            item_filesize = $(this).find('enclosure').attr('length');
+                            item_filesize = formatFileSize(item_filesize, 2)
+                        }
 
 
-                        content_arr.push([item_title, item_summary, item_link, item_date, item_date_unix, param_channel, param_categorie, item_download, item_type, item_image, item_id, item_duration, item_media])
+                        if (panels.includes(param_category) === false && param_category != 0) {
+                            panels.push(param_category);
+                        }
+
+                        content_arr.push({
+                            title: item_title,
+                            summary: item_summary,
+                            link: item_link,
+                            date: item_date,
+                            dateunix: item_date_unix,
+                            channel: param_channel,
+                            category: param_category,
+                            download: item_download,
+                            type: item_type,
+                            image: item_image,
+                            id: item_id,
+                            duration: item_duration,
+                            media: item_media,
+                            filesize: item_filesize
+                        })
                     }
 
                 });
@@ -324,7 +387,7 @@ $(document).ready(function () {
 
             }
 
-            xhttp.ontimeout = function (e) {
+            xhttp.ontimeout = function(e) {
                 toaster(param_channel + "Time out", 3000);
 
             };
@@ -356,7 +419,7 @@ $(document).ready(function () {
             if (k == source_array.length - 1) {
                 setTimeout(() => {
 
-                    content_arr = content_arr.sort(function (a, b) {
+                    content_arr = content_arr.sort(function(a, b) {
                         return b[4] - a[4];
                     });
 
@@ -393,49 +456,23 @@ $(document).ready(function () {
         if (activity == true) bottom_bar("add", "select", "")
 
 
-        $.each(content_arr, function (i) {
-            var item_title = content_arr[i][0];
-            var item_summary = content_arr[i][1];
-            var item_link = content_arr[i][2];
-            var item_date = content_arr[i][3];
-            var item_date_unix = content_arr[i][4];
-            var param_channel = content_arr[i][5];
-            var item_categorie = content_arr[i][6]
-            var item_download = content_arr[i][7]
-            var item_type = content_arr[i][8];
-            var item_image = content_arr[i][9];
-            var item_id = content_arr[i][10];
-            var item_duration = content_arr[i][11];
-            var item_media = content_arr[i][12];
+
+        $.each(content_arr, function(i) {
 
 
 
-
-            if (panels.includes(item_categorie) === false) {
-                if (item_categorie != 0) {
-                    panels.push(item_categorie);
-                }
-            }
-
-
-
-            /*
-            if (item_link.includes("https://www.reddit.com") === true) {
-                media = " reddit";
-                item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
-            }*/
-
-
-
-            var article = '<article class="' + item_categorie + item_media + ' all" data-order = "' + item_date_unix + '" data-link = "' + item_link + '" data-youtube-id= "' + item_id + '" data-download="' + item_download + '"data-audio-type="' + item_type + '">' +
+            var article = '<article class="' + content_arr[i].media + ' all" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                 '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
-                '<div class="channel">' + param_channel + '</div>' +
-                '<time>' + item_date + '</time>' +
-                '<div class="duration">' + item_duration + '</div>' +
-                '<h1 class="title">' + item_title + '</h1>' +
-                '<div class="summary">' + item_summary +
-                '<img class="lazyload" data-src="' + item_image + '" src=""></div>' +
+                '<div class="channel">' + content_arr[i].channel + '</div>' +
+                '<time>' + content_arr[i].date + '</time>' +
+                '<div class="flex duration-filesize">' +
+                '<div class="duration">' + content_arr[i].duration + '</div>' +
+                '<div class="filesize">' + content_arr[i].filesize + '</div>' +
+                '</div>' +
+                '<h1 class="title">' + content_arr[i].title + '</h1>' +
+                '<div class="summary">' + content_arr[i].summary +
+                '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
                 '</article>'
             $('div#news-feed-list').append(article);
             $("div#news-feed-list article:first").focus()
@@ -443,7 +480,11 @@ $(document).ready(function () {
 
 
 
+
         });
+
+
+
 
 
         set_tabindex()
@@ -459,12 +500,14 @@ $(document).ready(function () {
 
     function set_tabindex() {
         $('article').removeAttr("tabindex")
-        $('article').filter(':visible').each(function (index) {
+        $('article').filter(':visible').each(function(index) {
             $(this).prop("tabindex", index);
 
         })
         article_array = $('article').filter(':visible')
         $('body').find('article[tabindex = 0]').focus()
+        $('div#app-panels article').find([tabindex = "0"]).focus()
+
         $('article:last').css("margin", "0 0 30px 0")
     }
 
@@ -473,8 +516,7 @@ $(document).ready(function () {
     function panels_list(panel) {
 
         $("article").css("display", "none");
-        $("article." + panel).css("display", "block")
-        $('div#app-panels article').find([tabindex = "0"]).focus()
+        $("[data-category~=" + panel + "]").css("display", "block")
 
     }
 
@@ -555,77 +597,6 @@ $(document).ready(function () {
 
 
 
-    //download media
-
-    function downloadFile(url, filetitle) {
-        var xhttp = new XMLHttpRequest({
-            mozSystem: true
-        });
-
-        xhttp.open('GET', url, true)
-        xhttp.withCredentials = true;
-        xhttp.responseType = 'blob';
-        toaster("download started", 3000);
-
-
-        xhttp.onload = function () {
-            if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-
-                var blob = xhttp.response;
-
-                var sdcard = navigator.getDeviceStorage("music");
-                var file = new Blob([blob], {
-                    type: "audio/mpeg"
-                });
-                toaster("done", 3000);
-
-                var request = sdcard.addNamed(file, filetitle + ".mp3");
-
-                request.onsuccess = function () {
-                    notify("RSS - Reader", "successfully wrote on the storage area", false, false)
-                }
-
-                // An error typically occur if a file with the same name already exist
-                request.onerror = function () {
-                    alert('Unable to write the file: ' + this.error);
-                }
-            }
-
-            if (xhttp.status === 404) {
-                toaster(" url not found" + xhttp.getAllResponseHeaders(), 3000);
-            }
-
-            ////Redirection
-            if (xhttp.status === 301) {
-                toaster(" redirection", 3000);
-            }
-
-            if (xhttp.status === 0) {
-                toaster(" status: " + xhttp.status + xhttp.getAllResponseHeaders(), 30000);
-            }
-
-        };
-
-        xhttp.onerror = function () {
-            toaster(" status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
-        };
-
-        xhttp.addEventListener("progress", updateProgress);
-
-        function updateProgress(oEvent) {
-            if (oEvent.lengthComputable) {
-                var percentComplete = oEvent.loaded / oEvent.total * 100;
-                toaster(percentComplete, 1000)
-
-            } else {
-                toaster("loading....", 1000)
-            }
-        }
-
-        xhttp.send(null)
-    }
-
-
 
 
 
@@ -673,7 +644,7 @@ $(document).ready(function () {
         }
 
         if ($(":focus").hasClass("rss")) {
-            bottom_bar("", "", "visit source")
+            bottom_bar("", "", "visit")
         }
 
         if ($(":focus").hasClass("youtube")) {
@@ -702,7 +673,6 @@ $(document).ready(function () {
         if (localStorage.getItem('interval') != null) {
             document.getElementById("time").value = localStorage.getItem('interval')
         }
-
 
         window_status = "settings";
 
@@ -736,7 +706,7 @@ $(document).ready(function () {
 
 
         if (!activity) {
-            bottom_bar("settings", "select", "")
+            bottom_bar("settings", "select", "share")
         } else {
             bottom_bar("add", "select", "")
         }
@@ -796,22 +766,22 @@ $(document).ready(function () {
                 debugMode: false
             });
 
-            finder.on("empty", function (needle) {
+            finder.on("empty", function(needle) {
                 toaster("no sdcard found");
                 return;
             });
 
             finder.search(title);
 
-            finder.on("fileFound", function (file, fileinfo, storageName) {
+            finder.on("fileFound", function(file, fileinfo, storageName) {
 
                 toaster("The file is already available", 3000);
                 return false;
             });
 
-            finder.on("searchComplete", function (needle, filematchcount) {
+            finder.on("searchComplete", function(needle, filematchcount) {
                 if (filematchcount == 0) {
-                    downloadFile(link_download, title);
+                    download.downloadFile(link_download, title);
                 }
             });
 
@@ -965,10 +935,7 @@ $(document).ready(function () {
             case 'Backspace':
                 evt.preventDefault();
                 if (window_status == "article-list") {
-                    //window.close();
-
                     window.goodbye();
-
                     break;;
                 }
 
@@ -1005,7 +972,7 @@ $(document).ready(function () {
     /////////////////////////
     if (debug) {
 
-        $(window).on("error", function (evt) {
+        $(window).on("error", function(evt) {
 
             console.log("jQuery error event:", evt);
             var e = evt.originalEvent; // get the javascript event
