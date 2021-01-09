@@ -419,8 +419,8 @@ $(document).ready(function() {
             if (k == source_array.length - 1) {
                 setTimeout(() => {
 
-                    content_arr = content_arr.sort(function(a, b) {
-                        return b[4] - a[4];
+                    content_arr.sort((a, b) => {
+                        return b.dateunix - a.dateunix;
                     });
 
                     build()
