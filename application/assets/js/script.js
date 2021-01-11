@@ -13,6 +13,10 @@ var current_panel = 0;
 var activity = false;
 var volume_status = false
 
+//list of urls
+//from local json file
+//or online json file
+
 
 
 //xml items
@@ -39,6 +43,9 @@ $(document).ready(function() {
     //check if activity or not
     setTimeout(() => {
 
+
+
+
         if (activity === false) {
             //get update time; cache || download
             let a = localStorage.getItem('interval');
@@ -47,7 +54,12 @@ $(document).ready(function() {
             }
             //download
             if (cache.getTime(a) && navigator.onLine) {
-                finder()
+
+                if (localStorage["source"] && localStorage["source"] != "") {
+                    load_source()
+                } else {
+                    finder()
+                }
                 //cache
             } else {
                 content_arr = cache.loadCache();
@@ -56,6 +68,65 @@ $(document).ready(function() {
         }
 
     }, 2500);
+
+
+
+
+    let load_source = function() {
+        let source_url = localStorage.getItem('source')
+
+
+        var xhttp = new XMLHttpRequest({
+            mozSystem: true
+        });
+
+        xhttp.open('GET', source_url, true)
+        xhttp.timeout = 3000;
+        xhttp.onload = function() {
+
+
+            if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
+
+                let data = xhttp.response;
+
+                //check if json valid
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    $('#download').html("😴<br>Your json file is not valid")
+                    setTimeout(() => {
+
+                        document.getElementById("message-box").style.display = "none"
+                        $('div#bottom-bar').css('display', 'block')
+                        bottom_bar("settings", "select", "")
+                        window_status = "article-list";
+
+
+                    }, 3000);
+
+                    return false;
+                }
+
+                start_download_content(data)
+
+
+            }
+        }
+
+        if (xhttp.status == 0) {
+            $('#download').html("😴<br>the source file cannot be loaded")
+
+            setTimeout(() => {
+                document.getElementById("message-box").style.display = "none"
+                $('div#bottom-bar').css('display', 'block')
+                bottom_bar("settings", "select", "")
+                window_status = "article-list";
+            }, 3000);
+        }
+
+        xhttp.send();
+
+    }
 
 
 
@@ -78,7 +149,15 @@ $(document).ready(function() {
 
         finder.on("searchComplete", function(needle, filematchcount) {
             if (filematchcount == 0) {
-                $('#download').html("😴<br>No json file founded")
+                $('#download').html("😴<br>No rss-reader.json file founded,<br> please create a json file or set a url in the settings.")
+                setTimeout(() => {
+                    document.getElementById("message-box").style.display = "none"
+                    $('div#bottom-bar').css('display', 'block')
+                    bottom_bar("settings", "select", "")
+                    window_status = "article-list";
+
+                }, 3000);
+
             }
         });
 
@@ -87,8 +166,6 @@ $(document).ready(function() {
         finder.on("fileFound", function(file, fileinfo, storageName) {
 
             var reader = new FileReader()
-
-
             reader.onerror = function(event) {
                 toaster('shit happens')
                 reader.abort();
@@ -96,34 +173,50 @@ $(document).ready(function() {
 
             reader.onloadend = function(event) {
 
-                var data;
+                let data;
                 //check if json valid
                 try {
                     data = JSON.parse(event.target.result);
                 } catch (e) {
                     $('#download').html("😴<br>Your json file is not valid")
+                    setTimeout(() => {
+                        document.getElementById("message-box").style.display = "none"
+                        $('div#bottom-bar').css('display', 'block')
+                        bottom_bar("settings", "select", "")
+                        window_status = "article-list";
+
+                    }, 3000);
                     return false;
                 }
 
-                $.each(data, function(i, item) {
-                    if (!item.categorie || item.categorie == "") {
-                        item.categorie = 0;
-                    }
-                    source_array.push([item.url, item.limit, item.channel, item.categorie]);
-                });
-
-                //check if internet connection 
-                if (navigator.onLine) {
-                    //start download loop
-                    rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
-                } else {
-                    $('#download').html("😴<br>Your device is offline, please connect it to the internet ")
-                }
+                start_download_content(data)
 
             };
             reader.readAsText(file)
         });
 
+    }
+
+
+
+
+    let start_download_content = function(source_data) {
+
+
+        $.each(source_data, function(i, item) {
+            if (!item.categorie || item.categorie == "") {
+                item.categorie = 0;
+            }
+            source_array.push([item.url, item.limit, item.channel, item.categorie]);
+        });
+
+        //check if internet connection 
+        if (navigator.onLine) {
+            //start download loop
+            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
+        } else {
+            $('#download').html("😴<br>Your device is offline, please connect it to the internet ")
+        }
     }
 
 
@@ -169,9 +262,7 @@ $(document).ready(function() {
         });
 
         xhttp.open('GET', param_url, true)
-        xhttp.withCredentials = true;
         xhttp.timeout = 2000;
-        xhttp.setRequestHeader("Cache-control", "public, max-age=31536000")
 
 
         xhttp.responseType = 'document';
@@ -270,9 +361,11 @@ $(document).ready(function() {
                             if (item_duration.includes(":") == false) item_duration = "";
                         }
 
-                        if (panels.includes(param_category) == false && param_category != 0) {
-                            panels.push(param_category);
-                        }
+                        /*
+                                                if (panels.includes(param_category) === false && param_category != 0) {
+                                                    panels.push(param_category);
+                                                }
+                                                */
 
                         content_arr.push({
                             title: item_title,
@@ -331,10 +424,11 @@ $(document).ready(function() {
                             item_filesize = formatFileSize(item_filesize, 2)
                         }
 
-
-                        if (panels.includes(param_category) === false && param_category != 0) {
-                            panels.push(param_category);
-                        }
+                        /*
+                                                if (panels.includes(param_category) === false && param_category != 0) {
+                                                    panels.push(param_category);
+                                                }
+                                                */
 
                         content_arr.push({
                             title: item_title,
@@ -458,6 +552,12 @@ $(document).ready(function() {
 
 
         $.each(content_arr, function(i) {
+
+            //set panel category
+            if (panels.includes(content_arr[i].category) === false && content_arr[i].category != 0) {
+                panels.push(content_arr[i].category);
+            }
+
 
 
 
@@ -603,13 +703,22 @@ $(document).ready(function() {
     function save_settings() {
 
         var setting_interval = $("div#input-wrapper #time").val();
+        var setting_source = $("div#input-wrapper #source").val();
 
-        if (setting_interval != "") {
-            localStorage.setItem('interval', setting_interval);
-            toaster("saved", 3000)
-        } else {
-            toaster("please fill in all fields", 3000)
+        if (setting_source != "") {
+            if (!validate(setting_source)) {
+                alert("url not valid")
+                return false
+            }
+
         }
+
+
+        localStorage.setItem('interval', setting_interval);
+        localStorage.setItem('source', setting_source);
+
+        toaster("saved", 3000)
+        return true
     }
 
 
@@ -672,6 +781,10 @@ $(document).ready(function() {
         $("div#input-wrapper input#time").focus();
         if (localStorage.getItem('interval') != null) {
             document.getElementById("time").value = localStorage.getItem('interval')
+        }
+
+        if (localStorage.getItem('source') != null) {
+            document.getElementById("source").value = localStorage.getItem('source')
         }
 
         window_status = "settings";
@@ -858,6 +971,12 @@ $(document).ready(function() {
                     break;
                 }
 
+                if (window_status == "settings") {
+                    $("[tabindex=1]").focus()
+                    break;
+
+                }
+
 
                 break;
 
@@ -873,6 +992,12 @@ $(document).ready(function() {
                 if (volume_status === true) {
                     volume_control("up")
                     break;
+                }
+
+                if (window_status == "settings") {
+                    $("[tabindex=0]").focus()
+                    break;
+
                 }
 
 
@@ -934,6 +1059,12 @@ $(document).ready(function() {
 
             case 'Backspace':
                 evt.preventDefault();
+
+                if (window_status == "intro") {
+                    window.close();
+                    break;;
+                }
+
                 if (window_status == "article-list") {
                     window.goodbye();
                     break;;

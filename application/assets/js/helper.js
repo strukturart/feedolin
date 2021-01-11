@@ -1,6 +1,16 @@
 "use strict";
 
 
+function validate(url) {
+    var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    if (pattern.test(url)) {
+        return true;
+    }
+    return false;
+
+}
+
+
 
 
 function notify(param_title, param_text, param_silent, requireInteraction) {
