@@ -64,6 +64,8 @@ const qr = ((_) => {
 
     function stop_scan() {
         window_status = "settings";
+        document.getElementById("qr-screen").style.display = "none";
+
 
         const stream = video.srcObject;
         const tracks = stream.getTracks();

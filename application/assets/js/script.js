@@ -199,10 +199,10 @@ $(document).ready(function() {
 
 
         $.each(source_data, function(i, item) {
-            if (!item.categorie || item.categorie == "") {
-                item.categorie = 0;
+            if (!item.category || item.category == "") {
+                item.category = 0;
             }
-            source_array.push([item.url, item.limit, item.channel, item.categorie]);
+            source_array.push([item.url, item.limit, item.channel, item.category]);
         });
 
         //check if internet connection 
@@ -440,11 +440,7 @@ $(document).ready(function() {
                             item_filesize = formatFileSize(item_filesize, 2)
                         }
 
-                        /*
-                                                if (panels.includes(param_category) === false && param_category != 0) {
-                                                    panels.push(param_category);
-                                                }
-                                                */
+
 
                         content_arr.push({
                             title: item_title,
@@ -1113,7 +1109,6 @@ $(document).ready(function() {
 
                 if (window_status == "scan") {
                     qr.stop_scan()
-                    window_status = "settings"
                     break;
                 }
 

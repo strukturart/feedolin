@@ -1,0 +1,11 @@
+[{
+    "category": "news",
+    "url": "http://feeds.feedburner.com/euronews/en/home?format=xml",
+    "limit": "3",
+    "channel": "euronews"
+}, {
+    "category": "news",
+    "url": "https://www.theguardian.com/world/zimbabwe/rss",
+    "limit": "3",
+    "channel": "theguardian"
+}]
