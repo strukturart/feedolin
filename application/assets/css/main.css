@@ -43,8 +43,7 @@
      max-width: 100%;
      height: 100%;
      width: 100%;
-     overflow-y: scroll;
-     overflow-x: hidden;
+     overflow: auto;
  }
 
  h1 {
@@ -67,7 +66,6 @@
  div#toast {
      position: fixed;
      height: auto;
-     overflow: none;
      top: -100px;
      background: black;
      color: white;
@@ -114,20 +112,22 @@
      height: 90vh;
      width: 100vw;
      font-weight: normal;
+
  }
 
  div#news-feed div#news-feed-list {
-     max-height: 100vh;
      min-height: 100vh;
      width: 100%;
      min-width: 100%;
      padding: 0 0 50px 0;
+
  }
 
  div#news-feed div#news-feed-list article {
      margin: 0 0 10px 0;
      padding: 2px;
      font-weight: normal;
+
  }
 
  div#news-feed div#news-feed-list article:focus {
@@ -248,7 +248,7 @@
      bottom: 10px;
      left: 0px;
      height: 20px;
-     z-index: 20;
+     z-index: 2000;
      background: black;
      display: none;
  }
@@ -338,7 +338,7 @@
  div#settings {
      display: none;
      background: gray;
-     padding: 5px;
+     padding: 15px 5px 5px 5px;
      min-height: 100%;
      max-height: 100%;
      position: fixed;
@@ -371,9 +371,9 @@
  div#settings input {
      width: 80%;
      height: 30px;
-     font-size: 1.2rem;
+     font-size: 1rem;
      border: 2px solid black;
-     margin: 0 0 15px 0;
+     margin: 0 0 25px 0;
      padding: 3px;
      display: block;
  }

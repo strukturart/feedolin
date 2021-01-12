@@ -13,10 +13,6 @@ var current_panel = 0;
 var activity = false;
 var volume_status = false
 
-//list of urls
-//from local json file
-//or online json file
-
 
 
 //xml items
@@ -121,7 +117,7 @@ $(document).ready(function() {
                 $('div#bottom-bar').css('display', 'block')
                 bottom_bar("settings", "select", "")
                 window_status = "article-list";
-            }, 3000);
+            }, 4000);
         }
 
         xhttp.send();
@@ -151,7 +147,6 @@ $(document).ready(function() {
             if (filematchcount == 0) {
                 $('#download').html("😴<br>No rss-reader.json file founded,<br> please create a json file or set a url in the settings.")
                 setTimeout(() => {
-                    document.getElementById("message-box").style.display = "none"
                     $('div#bottom-bar').css('display', 'block')
                     bottom_bar("settings", "select", "")
                     window_status = "article-list";
@@ -245,6 +240,27 @@ $(document).ready(function() {
             i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
+
+
+
+    //qr scan listener
+    const qr_listener = document.querySelector("input#source");
+    let qrscan = false;
+    qr_listener.addEventListener("focus", (event) => {
+        bottom_bar("save", "qr", "back");
+        qrscan = true
+        toaster("press enter to open the qr-code-scanner, it is helpfull for a long url", 3000)
+
+
+    });
+
+    qr_listener.addEventListener("blur", (event) => {
+        bottom_bar("save", "", "back");
+        qrscan = false
+
+
+    });
+
 
 
 
@@ -925,23 +941,33 @@ $(document).ready(function() {
             case 'Enter':
                 if (window_status == "article-list") {
                     show_article();
+                    break;
+
                 }
+
+                if (window_status == "settings" && qrscan == true) {
+
+                    qr.start_scan(function(callback) {
+                        let slug = callback
+                        document.getElementById("source").value = slug
+                    });
+
+                    break;
+                }
+
                 break;
+
 
             case 'ArrowLeft':
                 if (window_status == "article-list") {
                     nav_panels("left")
                     break;
-
-
                 }
 
                 if (window_status == "single-article") {
                     seeking("backward")
                     break;
-
                 }
-
                 break;
 
             case 'ArrowRight':
@@ -960,9 +986,16 @@ $(document).ready(function() {
                 break;
 
             case 'ArrowDown':
-                if (window_status == "article-list") {
+                if (window_status == "settings") {
+                    $("input[tabindex=1]").focus()
 
+                    break;
+                }
+
+
+                if (window_status == "article-list") {
                     nav("+1");
+                    break
                 }
 
 
@@ -971,20 +1004,21 @@ $(document).ready(function() {
                     break;
                 }
 
-                if (window_status == "settings") {
-                    $("[tabindex=1]").focus()
-                    break;
-
-                }
-
-
                 break;
+
+
+
 
 
             case 'ArrowUp':
 
-                if (window_status == "article-list") {
+                if (window_status == "settings") {
+                    $("input[tabindex=0]").focus()
+                    break;
 
+                }
+
+                if (window_status == "article-list") {
                     nav("-1");
                     break
                 }
@@ -993,16 +1027,8 @@ $(document).ready(function() {
                     volume_control("up")
                     break;
                 }
-
-                if (window_status == "settings") {
-                    $("[tabindex=0]").focus()
-                    break;
-
-                }
-
-
-
                 break;
+
 
             case '#':
                 volume.requestShow();
@@ -1067,7 +1093,7 @@ $(document).ready(function() {
 
                 if (window_status == "article-list") {
                     window.goodbye();
-                    break;;
+                    break;
                 }
 
                 if (window_status == "settings") {
@@ -1084,6 +1110,13 @@ $(document).ready(function() {
                     show_article_list();
                     break;
                 }
+
+                if (window_status == "scan") {
+                    qr.stop_scan()
+                    window_status = "settings"
+                    break;
+                }
+
 
                 break;
 

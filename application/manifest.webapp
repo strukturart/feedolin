@@ -42,6 +42,10 @@
 			"access": "readwrite"
 		},
 
+		"video-capture": {
+			"description": "Reading Codes using the Camera"
+			},
+
 		"device-storage:music": {
 			"description": "Read/Write from/to intern storage",
 			"access": "readwrite"

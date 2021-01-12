@@ -1,76 +1,89 @@
-<!DOCTYPE html>
-<html>
+const qr = ((_) => {
+let video;
+let start_scan = function(callback) {
+window_status = "scan";
+bottom_bar("", "", "");
 
-<head>
+document.getElementById("qr-screen").style.display = "block";
 
-    <title>rss-reader</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;">
-    <meta charset="utf-8" />
-    <link rel="manifest" href="manifest.webapp" type="application/x-web-app-manifest+json" />
-    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/grid.css" />
+navigator.getUserMedia =
+navigator.getUserMedia ||
+navigator.webkitGetUserMedia ||
+navigator.mozGetUserMedia;
+
+if (navigator.getUserMedia) {
+navigator.getUserMedia({
+audio: false,
+video: {
+width: 400,
+height: 400
+}
+},
+function(stream) {
+video = document.querySelector("video");
+video.srcObject = stream;
+
+video.onloadedmetadata = function(e) {
+video.play();
+
+var barcodeCanvas = document.createElement("canvas");
+let intv = setInterval(() => {
+barcodeCanvas.width = video.videoWidth;
+barcodeCanvas.height = video.videoHeight;
+var barcodeContext = barcodeCanvas.getContext("2d");
+var imageWidth = video.videoWidth,
+imageHeight = video.videoHeight;
+barcodeContext.drawImage(video, 0, 0, imageWidth, imageHeight);
+
+var imageData = barcodeContext.getImageData(
+0,
+0,
+imageWidth,
+imageHeight
+);
+var idd = imageData.data;
+
+let code = jsQR(idd, imageWidth, imageHeight);
+
+if (code) {
+callback(code.data);
+stop_scan();
+}
+}, 1000);
+};
+},
+function(err) {
+console.log("The following error occurred: " + err.name);
+}
+);
+} else {
+console.log("getUserMedia not supported");
+}
+};
+
+function stop_scan() {
+window_status = "settings";
+
+const stream = video.srcObject;
+const tracks = stream.getTracks();
+
+tracks.forEach(function(track) {
+track.stop();
+document.getElementById("qr-screen").style.display = "none";
+});
+
+video.srcObject = null;
+}
+
+return {
+start_scan,
+stop_scan
+};
+})();
 
 
 
-</head>
-
-<body>
-    <div id="wrapper">
-        <div id="toast" class="width-100">
-
-        </div>
-        <!---------------->
-        <!--news-feed-->
-        <!---------------->
-        <div id="navigation" class="width-100">
-            <div></div>
-        </div>
-
-        <div id="news-feed" class="width-100 height-100 page">
-            <div id="settings">
-                <div id="text">
-
-                </div>
-                <div id="input-wrapper">
-                    <label for="time">At what time interval would you like to update the content?</label>
-                    <input tabindex="0" type="tel" pattern="^[0-9]*$" id="time" name="time">
-                    <label for="source">source url</label>
-                    <input tabindex="1" type="url" id="source" name="source">
-                </div>
-
-
-            </div>
-            <div id="news-feed-list">
-            </div>
-            <div id="source-page" class=" width-100 height-100">
-                <div id="iframe-wrapper">
-                    <iframe src="" scrolling="yes" frameborder=”0″ mozbrowser allowfullscreen></iframe>
-                </div>
-            </div>
-            <div id="bottom-bar">
-                <div class="inner flex justify-content-spacebetween width-100">
-                    <div id="button-left"></div>
-                    <div id="button-center"></div>
-                    <div id="button-right"></div>
-                </div>
-            </div>
-        </div>
-
-        <!--
-	///////////////
-	///DEBUG//////
-	//////////////
-	-->
-
-        <div id="message-box" class="flex width-100 height-100 align-item-center">
-            <div id="download" class="text-center">Please wait<br> downloading rss-feeds</div>
-            <div id="count" class="width-100 text-center"></div>
-
-        </div>
-
-
-    </div>
+</div>
 
 </body>
 
