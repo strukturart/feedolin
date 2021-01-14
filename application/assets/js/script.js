@@ -69,6 +69,7 @@ $(document).ready(function() {
 
 
     let load_source = function() {
+        toaster("source", 2000)
         let source_url = localStorage.getItem('source')
 
 
@@ -216,20 +217,22 @@ $(document).ready(function() {
 
 
 
+    if (navigator.mozSetMessageHandler) {
+        navigator.mozSetMessageHandler('activity', function(activityRequest) {
+            var option = activityRequest.source;
+            activity = true;
 
-    navigator.mozSetMessageHandler('activity', function(activityRequest) {
-        var option = activityRequest.source;
-        activity = true;
-
-        if (option.name == 'view') {
-            while (source_array.length > 0) {
-                source_array.pop();
+            if (option.name == 'view') {
+                while (source_array.length > 0) {
+                    source_array.pop();
+                }
+                source_array.push([option.data.url, 4, "", "all"]);
+                rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
             }
-            source_array.push([option.data.url, 4, "", "all"]);
-            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
-        }
 
-    })
+        })
+    }
+
 
 
     function formatFileSize(bytes, decimalPoint) {
@@ -662,13 +665,26 @@ $(document).ready(function() {
     }
 
 
-
+    let tab_index = 0
 
     function nav(move) {
 
+        if (window_status == "settings") {
+            if (move == "+1") {
+                tab_index++
+                document.querySelector('[tabindex="' + tab_index + '"]').focus();
+            }
+            if (move == "-1") {
+                tab_index--
+                document.querySelector('[tabindex="' + tab_index + '"]').focus();
+            }
 
 
-        if (move == "+1" && pos_focus < article_array.length - 1) {
+        }
+
+
+
+        if (move == "+1" && pos_focus < article_array.length - 1 && window_status == "article-list") {
             pos_focus++
 
             if (pos_focus <= article_array.length) {
@@ -684,7 +700,7 @@ $(document).ready(function() {
             }
         }
 
-        if (move == "-1" && pos_focus > 0) {
+        if (move == "-1" && pos_focus > 0 && window_status == "article-list") {
             pos_focus--
             if (pos_focus >= 0) {
 
@@ -942,6 +958,7 @@ $(document).ready(function() {
                 }
 
                 if (window_status == "settings" && qrscan == true) {
+                    window_status = "scan"
 
                     qr.start_scan(function(callback) {
                         let slug = callback
@@ -949,6 +966,10 @@ $(document).ready(function() {
                     });
 
                     break;
+                }
+
+                if (window_status == "settings" && document.activeElement.id == "open-os-settings") {
+                    open_os_settings()
                 }
 
                 break;
@@ -982,18 +1003,10 @@ $(document).ready(function() {
                 break;
 
             case 'ArrowDown':
-                if (window_status == "settings") {
-                    $("input[tabindex=1]").focus()
-
-                    break;
-                }
-
-
-                if (window_status == "article-list") {
+                if (window_status == "article-list" || window_status == "settings") {
                     nav("+1");
                     break
                 }
-
 
                 if (volume_status === true) {
                     volume_control("down")
@@ -1008,13 +1021,9 @@ $(document).ready(function() {
 
             case 'ArrowUp':
 
-                if (window_status == "settings") {
-                    $("input[tabindex=0]").focus()
-                    break;
 
-                }
 
-                if (window_status == "article-list") {
+                if (window_status == "article-list" || window_status == "settings") {
                     nav("-1");
                     break
                 }
@@ -1036,45 +1045,45 @@ $(document).ready(function() {
             case 'SoftLeft':
                 if (window_status == "article-list") {
 
-
                     if (!activity) {
                         show_settings()
                     } else {
                         toaster(source_array[0][0], 3000)
                         add_source(source_array[0][0], 5, "all", rss_title)
                     }
-                    return;
+                    break;
 
                 }
 
                 if (window_status == "single-article" && $(":focus").hasClass("podcast")) {
                     play_podcast();
-                    return;
+                    break;
 
                 }
 
                 if (window_status == "settings") {
                     save_settings()
-                    return;
+                    break;
 
                 }
 
                 break;
 
             case 'SoftRight':
+
                 if (window_status == "single-article") {
                     open_url();
-                    return
+                    break
                 }
                 if (window_status == "settings") {
                     show_article_list();
-                    return;
+                    break;
                 }
 
                 if (window_status == "article-list") {
 
                     share(document.activeElement.getAttribute('data-link'));
-                    return
+                    break
                 }
                 break;
 
@@ -1088,7 +1097,7 @@ $(document).ready(function() {
                 }
 
                 if (window_status == "article-list") {
-                    window.goodbye();
+                    goodbye();
                     break;
                 }
 

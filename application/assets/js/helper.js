@@ -34,8 +34,6 @@ function notify(param_title, param_text, param_silent, requireInteraction) {
         // If it's okay let's create a notification
         var notification = new Notification(param_title, options);
 
-
-
     }
 
     // Otherwise, we need to ask the user for permission
@@ -111,6 +109,24 @@ function share(url) {
 
     activity.onerror = function() {
         console.log("The activity encounter en error: " + this.error);
+    };
+}
+
+let open_os_settings = function() {
+    var act = new MozActivity({
+        name: "configure",
+        data: {
+            target: "networkAndConnectivity",
+            section: "bluetooth"
+        }
+    })
+
+    act.onsuccess = function() {
+
+    };
+
+    act.onerror = function() {
+        alert(JSON.stringify(this.error));
     };
 }
 

@@ -1,5 +1,6 @@
 const qr = ((_) => {
     let video;
+    let intv;
     let start_scan = function(callback) {
         window_status = "scan";
         bottom_bar("", "", "");
@@ -15,8 +16,8 @@ const qr = ((_) => {
             navigator.getUserMedia({
                     audio: false,
                     video: {
-                        width: 240,
-                        height: 320
+                        width: 200,
+                        height: 200
                     }
                 },
                 function(stream) {
@@ -27,12 +28,14 @@ const qr = ((_) => {
                         video.play();
 
                         var barcodeCanvas = document.createElement("canvas");
-                        let intv = setInterval(() => {
+                        intv = setInterval(() => {
                             barcodeCanvas.width = video.videoWidth;
                             barcodeCanvas.height = video.videoHeight;
                             var barcodeContext = barcodeCanvas.getContext("2d");
-                            var imageWidth = video.videoWidth,
-                                imageHeight = video.videoHeight;
+                            var imageWidth = Math.max(1, Math.floor(video.videoWidth)),
+                                imageHeight = Math.max(1, Math.floor(video.videoHeight));
+
+
                             barcodeContext.drawImage(video, 0, 0, imageWidth, imageHeight);
 
                             var imageData = barcodeContext.getImageData(
@@ -49,6 +52,7 @@ const qr = ((_) => {
                                 callback(code.data);
                                 stop_scan();
                                 clearInterval(intv);
+
                             }
                         }, 1000);
                     };
@@ -62,20 +66,27 @@ const qr = ((_) => {
         }
     };
 
-    function stop_scan() {
-        window_status = "settings";
-        document.getElementById("qr-screen").style.display = "none";
+    let stop_scan = function() {
+
 
 
         const stream = video.srcObject;
         const tracks = stream.getTracks();
 
+
         tracks.forEach(function(track) {
             track.stop();
             document.getElementById("qr-screen").style.display = "none";
+
         });
 
         video.srcObject = null;
+        window_status = "settings";
+
+        bottom_bar("save", "qr", "back");
+
+
+
     }
 
     return {
