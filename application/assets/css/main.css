@@ -22,6 +22,17 @@
      padding: 0px;
      margin: 0px;
      box-sizing: border-box;
+
+     /* Careful, this breaks the word wherever it is without a hyphen */
+     overflow-wrap: break-word;
+     word-wrap: break-word;
+
+     /* Adds a hyphen where the word breaks */
+     -webkit-hyphens: auto;
+     -ms-hyphens: auto;
+     -moz-hyphens: auto;
+     hyphens: auto;
+
  }
 
  *::-webkit-scrollbar {
