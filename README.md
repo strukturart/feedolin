@@ -16,7 +16,9 @@
 
 ## Installation
 
-Put on your sd card a file with the name rss-reader.json with the following structure:
+
+
+You have to save the list of urls in a .json file as in the example. in the settings you can set where the app should get this file from. it can be stored locally or online on a sever
 
 
 ```
@@ -47,17 +49,15 @@ Put on your sd card a file with the name rss-reader.json with the following stru
 + url = url of source
 + limit = How many articles should be downloaded
 + channel = Name of channel
-+ categorie = to use panel navigation
++ category = to use panel navigation
 
 
 ## How to use
 
 + Enter to show full news
 + Backspace to go back
-+ visit source page: press key 2 to activate the auto scroll
-Streaming Podcast
 + #-key volume
-+ seeking: cursor left/right 
++ streaming audio seeking: cursor left/right 
 
 ## Tips
 
