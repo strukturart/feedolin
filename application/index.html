@@ -37,11 +37,12 @@
                     <label for="time">In how many minutes should new content be downloaded.</label>
                     <input tabindex="0" type="tel" pattern="^[0-9]*$" id="time" name="time" />
 
-                    <label for="source">url</label>
-                    <input tabindex="1" type="url" id="source" />
+                    <div>where should the list of the rss feed be loaded from?</div>
+                    <label for="source"><strong>url</strong></label>
+                    <input tabindex="1" placeholder="https://" type="url" id="source" />
 
-                    <label for="source-local">local filename</label>
-                    <input tabindex="2" type="text" id="source-local" />
+                    <label for="source-local"><strong>local filename</strong></label>
+                    <input tabindex="2" placeholder="rss.json" type="text" id="source-local" />
                     <div id="nextdownload"></div>
                 </div>
             </div>
@@ -98,6 +99,7 @@
 
 
 <script src="assets/js/jQuery-3.1.0.js "></script>
+<script src="assets/js/downloader.js "></script>
 <script src="assets/js/IntersectionObserver-polyfill.js "></script>
 <script src="assets/js/moments.min.js "></script>
 <script src="assets/js/applait.finder.min.js "></script>

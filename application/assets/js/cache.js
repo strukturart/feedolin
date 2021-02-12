@@ -5,7 +5,7 @@
             let lastupdate = Number(localStorage.getItem("last_update"));
 
             let update_time = cache_buffer + lastupdate
-                //alert(timestamp + "/" + lastupdate + "/" + cache_buffer)
+            //alert(timestamp + "/" + lastupdate + "/" + cache_buffer)
             document.getElementById("nextdownload").innerText = moment(update_time * 60000).format("DD.MM.YYYY,hh:mm");
 
             if (lastupdate == null || timestamp > update_time) {
@@ -22,12 +22,22 @@
 
 
         let loadCache = function() {
-            return JSON.parse(localStorage.getItem("data"));
+            if (localStorage.getItem("data") == "" || localStorage.getItem("data") == undefined) {
+
+                return false;
+            } else {
+                return JSON.parse(localStorage.getItem("data"));
+
+            }
         }
 
         let saveCache = function(data) {
             localStorage.setItem("data", JSON.stringify(data));
         }
 
-        return { getTime, saveCache, loadCache };
+        return {
+            getTime,
+            saveCache,
+            loadCache
+        };
     })();

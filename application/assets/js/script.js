@@ -42,10 +42,10 @@ $(document).ready(function() {
 
         if (activity === false) {
 
-            //alert(localStorage['source_local'] + "" + localStorage['source'])
             //check if source file is set
             if (localStorage['source_local'] == undefined && localStorage['source'] == undefined) {
                 show_settings()
+                document.getElementById("message-box").style.display = "none"
                 return false;
             }
             //get update time; cache || download
@@ -59,20 +59,29 @@ $(document).ready(function() {
             if (cache.getTime(a) && navigator.onLine) {
                 if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) {
                     load_source()
+                    document.getElementById("message-box").style.display = "none"
 
                 } else {
                     load_local_file()
-
                 }
                 //load cache
             } else {
                 content_arr = cache.loadCache();
-                build();
+                if (content_arr) {
+                    build();
+                } else {
+                    show_settings()
+                    document.getElementById("message-box").style.display = "none"
+                    alert("no cached data available")
+
+                }
+
+
 
             }
         }
 
-    }, 2500);
+    }, 2000);
 
 
     ///////////
@@ -87,7 +96,9 @@ $(document).ready(function() {
         });
 
         xhttp.open('GET', source_url, true)
-        xhttp.timeout = 10000;
+        xhttp.timeout = 5000;
+
+
 
         xhttp.onload = function() {
 
@@ -104,9 +115,7 @@ $(document).ready(function() {
                     setTimeout(() => {
 
                         document.getElementById("message-box").style.display = "none"
-                        $('div#bottom-bar').css('display', 'block')
-                        bottom_bar("settings", "select", "")
-                        window_status = "article-list";
+                        show_settings()
 
                     }, 3000);
 
@@ -120,19 +129,18 @@ $(document).ready(function() {
         }
 
         if (xhttp.status == 0) {
-            alert("0")
 
         }
 
 
+
         xhttp.onerror = function() {
-            alert("error")
             $('#download').html("😴<br>the source file cannot be loaded")
 
             setTimeout(() => {
                 document.getElementById("message-box").style.display = "none"
                 show_settings()
-            }, 4000);
+            }, 2000);
         };
 
         xhttp.send();
@@ -147,21 +155,45 @@ $(document).ready(function() {
     /////////////////////////
     function load_local_file() {
 
-        alert(localStorage['source_local'])
+        let a = localStorage.getItem('source_local');
+
+
+
+        if (localStorage.getItem('source_local') == "" || localStorage.getItem('source_local') == null) {
+            document.getElementById("message-box").style.display = "none"
+            show_settings()
+            return false
+        }
+
+
 
         var finder = new Applait.Finder({
             type: "sdcard",
-            debugMode: false
+            debugMode: true
+        });
+
+
+        finder.search(a);
+
+
+
+
+        finder.on("searchBegin", function(needle) {
+            alert(needle)
         });
 
 
         finder.on("empty", function(needle) {
             toaster("no sdcard found");
+            document.getElementById("message-box").style.display = "none"
+            show_settings()
             return;
         });
 
 
-        finder.search(localStorage['source_local']);
+
+        finder.on("searchCancelled", function(message) {});
+
 
         finder.on("searchComplete", function(needle, filematchcount) {
             if (filematchcount == 0) {
@@ -175,6 +207,8 @@ $(document).ready(function() {
 
             }
         });
+
+        finder.on("error", function(message, err) {});
 
 
 
@@ -207,6 +241,8 @@ $(document).ready(function() {
             };
             reader.readAsText(file)
         });
+
+
 
     }
 
@@ -266,7 +302,7 @@ $(document).ready(function() {
     const qr_listener = document.querySelector("input#source");
     let qrscan = false;
     qr_listener.addEventListener("focus", (event) => {
-        bottom_bar("save", "qr", "back");
+        bottom_bar("save", "qr", "");
         qrscan = true
         toaster("press enter to open the qr-code-scanner, it is helpfull for a long url", 3000)
 
@@ -274,7 +310,7 @@ $(document).ready(function() {
     });
 
     qr_listener.addEventListener("blur", (event) => {
-        bottom_bar("save", "", "back");
+        bottom_bar("save", "", "");
         qrscan = false
 
 
@@ -318,14 +354,7 @@ $(document).ready(function() {
 
         }
 
-
-
-
-
         xhttp.onload = function() {
-
-
-
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
 
                 var data = xhttp.response;
@@ -659,50 +688,6 @@ $(document).ready(function() {
     }
 
 
-
-    /*
-        function nav(move) {
-
-
-
-            if (move == "+1" && pos_focus < article_array.length - 1) {
-                pos_focus++
-
-                if (pos_focus <= article_array.length) {
-                    var targetElement = article_array[pos_focus];
-                    targetElement.focus();
-
-                    targetElement.scrollIntoView({
-                        behavior: "auto",
-                        block: "end"
-                    });
-
-
-                }
-            }
-
-            if (move == "-1" && pos_focus > 0) {
-                pos_focus--
-                if (pos_focus >= 0) {
-
-                    var targetElement = article_array[pos_focus];
-                    targetElement.focus();
-                    targetElement.scrollIntoView({
-                        behavior: "auto",
-                        block: "start"
-                    });
-
-
-                }
-            }
-
-
-
-        }
-
-    */
-
-
     ////////////
     //TABINDEX NAVIGATION
     ///////////
@@ -714,13 +699,7 @@ $(document).ready(function() {
         // Setup siblings array and get the first sibling
         var siblings = [];
 
-
-
-
         var sibling = elem.parentNode.firstChild;
-
-
-
 
         // Loop through each sibling and push to the array
         while (sibling) {
@@ -733,14 +712,10 @@ $(document).ready(function() {
         }
 
 
-
         if (move == "+1" && tab_index < siblings.length - 1 && siblings.length > 1) {
 
             tab_index++
             siblings[tab_index].focus()
-
-
-            //window.scrollTo(0, siblings[tab_index].offsetBottom);
 
             document.activeElement.scrollIntoView({
                 behavior: "smooth",
@@ -755,10 +730,7 @@ $(document).ready(function() {
 
 
             tab_index--
-
             siblings[tab_index].focus()
-
-
             siblings[tab_index].scrollIntoView({
                 block: "start"
             });;
@@ -777,10 +749,14 @@ $(document).ready(function() {
 
     function save_settings() {
 
-        var setting_interval = $("div#input-wrapper #time").val();
-        var setting_source = $("div#input-wrapper #source").val();
-        var setting_source_local = $("div#input-wrapper #source-local").val();
+        var setting_interval = document.getElementById("time").value;
+        var setting_source = document.getElementById("source").value;
+        var setting_source_local = document.getElementById("source-local").value;
 
+        if (setting_source == "" && setting_source_local == "") {
+            toaster("please fill in the location of the source file", 3000)
+            return false;
+        }
 
         if (setting_source != "") {
             if (!validate(setting_source)) {
@@ -796,7 +772,10 @@ $(document).ready(function() {
         localStorage.setItem('source_local', setting_source_local);
 
 
-        toaster("saved", 3000)
+        toaster("saved, the app will now be closed, the settings will be active the next time it is started.", 8000)
+        setTimeout(() => {
+            window.close()
+        }, 7000);
         return true
     }
 
@@ -813,7 +792,6 @@ $(document).ready(function() {
         $('article').css('display', 'none')
         $(':focus').css('display', 'block')
         $('div.summary').css('display', 'block')
-        $('div#bottom-bar').css('display', 'block')
         $("div#navigation").css("display", "none");
         $("div#news-feed").css("padding", "0px 0px 32px 0px");
 
@@ -850,13 +828,16 @@ $(document).ready(function() {
 
 
     function show_settings() {
-        $("div#navigation").css("display", "none");
+        window_status = "settings";
+        tab_index = 0;
+        document.getElementById("navigation").style.display = "none";
+
         $("div#news-feed").css("padding", "0px 0px 30px 0px")
         pos_focus = 0;
         $('article').css('display', 'none')
         $('div#settings').css('display', 'block')
-        bottom_bar("save", "", "back")
-        $("div#input-wrapper input#time").focus();
+        bottom_bar("save", "", "")
+        document.getElementById("time").focus();
         if (localStorage.getItem('interval') != null) {
             document.getElementById("time").value = localStorage.getItem('interval')
         }
@@ -866,10 +847,8 @@ $(document).ready(function() {
         }
 
         if (localStorage.getItem('source_local') != null) {
-            document.getElementById("source_local").value = localStorage.getItem('source_local')
+            document.getElementById("source-local").value = localStorage.getItem('source_local')
         }
-        bottom_bar("save", "", "cancel")
-        window_status = "settings";
 
     }
 
@@ -878,8 +857,6 @@ $(document).ready(function() {
     function show_article_list() {
         navigator.spatialNavigationEnabled = false;
         $("div#source-page div#iframe-wrapper").removeClass("video-view");
-
-
         $("div#navigation").css("display", "block");
         $("div#news-feed").css("padding", "30px 0px 30px 0px")
 
@@ -897,7 +874,6 @@ $(document).ready(function() {
 
         $("div#source-page").css("display", "none")
         $("div#source-page iframe").attr("src", "")
-        $("div#bottom-bar").css("display", "block")
 
 
         if (!activity) {
@@ -913,12 +889,10 @@ $(document).ready(function() {
 
 
     function open_url() {
-        var targetElement = article_array[pos_focus];
-        var link_target = $(targetElement).data('link');
-        var link_download = $(targetElement).data('download');
-        var title = $(targetElement).find("h1.title").text();
+        let link_target = document.activeElement.getAttribute("data-link")
+        let link_download = document.activeElement.getAttribute("data-download")
+        let title = document.activeElement.querySelector("h1.title").textContent;
         title = title.replace(/\s/g, "-");
-
 
 
         if ($(":focus").hasClass("rss")) {
@@ -929,7 +903,6 @@ $(document).ready(function() {
             $("div#source-page div#iframe-wrapper").css("height", "1000vh")
             $("div#source-page iframe").css("height", "1000vh")
             navigator.spatialNavigationEnabled = true;
-
             window_status = "source-page";
             return;
 
@@ -948,9 +921,6 @@ $(document).ready(function() {
             window_status = "source-page";
             player.src = "";
             return;
-
-
-
         }
 
 
@@ -1114,19 +1084,19 @@ $(document).ready(function() {
                         toaster(source_array[0][0], 3000)
                         add_source(source_array[0][0], 5, "all", rss_title)
                     }
-                    return;
+                    break
 
                 }
 
                 if (window_status == "single-article" && $(":focus").hasClass("podcast")) {
                     play_podcast();
-                    return;
+                    break
 
                 }
 
                 if (window_status == "settings") {
                     save_settings()
-                    return;
+                    break
 
                 }
 
@@ -1136,17 +1106,17 @@ $(document).ready(function() {
             case 'm':
                 if (window_status == "single-article") {
                     open_url();
-                    return
+                    break
                 }
                 if (window_status == "settings") {
-                    show_article_list();
-                    return;
+                    //show_article_list();
+                    break
                 }
 
                 if (window_status == "article-list") {
 
                     share(document.activeElement.getAttribute('data-link'));
-                    return
+                    break
                 }
                 break;
 
@@ -1165,7 +1135,7 @@ $(document).ready(function() {
                 }
 
                 if (window_status == "settings") {
-                    show_article_list();
+                    window.close();
                     break;
                 }
 

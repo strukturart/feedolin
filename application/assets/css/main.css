@@ -132,7 +132,6 @@
      max-height: 90vh;
      width: 100vw;
      font-weight: normal;
-     //overflow: hidden;
 
  }
 
@@ -316,7 +315,6 @@
 
  div#top-bar {
      position: fixed;
-     z-index: 2000;
      top: 0px;
      left: 0px;
      height: 18px;

@@ -8,9 +8,8 @@ const download = (() => {
         });
 
         xhttp.open('GET', url, true)
-        xhttp.withCredentials = true;
         xhttp.responseType = 'blob';
-        toaster("download started", 3000);
+        top_bar("", "download started", "");
 
 
         xhttp.onload = function() {
@@ -22,7 +21,7 @@ const download = (() => {
                 var file = new Blob([blob], {
                     type: "audio/mpeg"
                 });
-                toaster("done", 3000);
+                top_bar("", "", "");
 
                 var request = sdcard.addNamed(file, filetitle + ".mp3");
 
@@ -60,10 +59,11 @@ const download = (() => {
         function updateProgress(oEvent) {
             if (oEvent.lengthComputable) {
                 var percentComplete = oEvent.loaded / oEvent.total * 100;
-                toaster(percentComplete, 1000)
+                top_bar("", percentComplete + "%", "")
 
             } else {
-                toaster("loading....", 1000)
+                top_bar("", "", "")
+
             }
         }
 
