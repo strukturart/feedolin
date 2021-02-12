@@ -26,14 +26,14 @@ You have to save the list of urls in a .json file as in the example. in the sett
 	
 		
 		{
-			"categorie":"news",
+			"category":"news",
 			"url":"https://rss-source-url/",
 			"limit":"10",
 			"channel":"channel name"
 		},
 
 		{
-			"categorie":"podcast",
+			"category":"podcast",
 			"url":"https://rss-source-url/",
 			"limit":"20",
 			"channel":"channel name"
