@@ -1,5 +1,5 @@
 var redirection_counter = -1;
-var debug = true;
+var debug = false;
 var page = 0;
 var pos_focus = 0
 var article_array;
@@ -14,7 +14,7 @@ var activity = false;
 var volume_status = false
 
 
-
+let tab_index = 0
 //xml items
 var rss_title = "";
 var item_title = "";
@@ -40,34 +40,44 @@ $(document).ready(function() {
     setTimeout(() => {
 
 
-
-
         if (activity === false) {
+
+            //alert(localStorage['source_local'] + "" + localStorage['source'])
+            //check if source file is set
+            if (localStorage['source_local'] == undefined && localStorage['source'] == undefined) {
+                show_settings()
+                return false;
+            }
             //get update time; cache || download
             let a = localStorage.getItem('interval');
             if (a == null) {
                 a = 0
             }
             //download
-            if (cache.getTime(a) && navigator.onLine) {
 
-                if (localStorage["source"] && localStorage["source"] != "") {
+
+            if (cache.getTime(a) && navigator.onLine) {
+                if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) {
                     load_source()
+
                 } else {
-                    finder()
+                    load_local_file()
+
                 }
-                //cache
+                //load cache
             } else {
                 content_arr = cache.loadCache();
                 build();
+
             }
         }
 
     }, 2500);
 
 
-
-
+    ///////////
+    ///load source file from online source
+    //////////
     let load_source = function() {
         let source_url = localStorage.getItem('source')
 
@@ -77,7 +87,8 @@ $(document).ready(function() {
         });
 
         xhttp.open('GET', source_url, true)
-        xhttp.timeout = 3000;
+        xhttp.timeout = 10000;
+
         xhttp.onload = function() {
 
 
@@ -97,7 +108,6 @@ $(document).ready(function() {
                         bottom_bar("settings", "select", "")
                         window_status = "article-list";
 
-
                     }, 3000);
 
                     return false;
@@ -110,25 +120,34 @@ $(document).ready(function() {
         }
 
         if (xhttp.status == 0) {
+            alert("0")
+
+        }
+
+
+        xhttp.onerror = function() {
+            alert("error")
             $('#download').html("😴<br>the source file cannot be loaded")
 
             setTimeout(() => {
                 document.getElementById("message-box").style.display = "none"
-                $('div#bottom-bar').css('display', 'block')
-                bottom_bar("settings", "select", "")
-                window_status = "article-list";
+                show_settings()
             }, 4000);
-        }
+        };
 
         xhttp.send();
 
     }
 
 
-
+    ///////////
+    ///load source file from local file
+    //////////
 
     /////////////////////////
-    function finder() {
+    function load_local_file() {
+
+        alert(localStorage['source_local'])
 
         var finder = new Applait.Finder({
             type: "sdcard",
@@ -141,16 +160,17 @@ $(document).ready(function() {
             return;
         });
 
-        finder.search("rss-reader.json");
+
+        finder.search(localStorage['source_local']);
 
         finder.on("searchComplete", function(needle, filematchcount) {
             if (filematchcount == 0) {
-                $('#download').html("😴<br>No rss-reader.json file founded,<br> please create a json file or set a url in the settings.")
-                setTimeout(() => {
-                    $('div#bottom-bar').css('display', 'block')
-                    bottom_bar("settings", "select", "")
-                    window_status = "article-list";
 
+                $('#download').html("😴<br>No source file founded,<br> please create a json file or set a url in the settings.")
+                setTimeout(() => {
+
+                    document.getElementById("message-box").style.display = "none"
+                    show_settings()
                 }, 3000);
 
             }
@@ -176,9 +196,7 @@ $(document).ready(function() {
                     $('#download').html("😴<br>Your json file is not valid")
                     setTimeout(() => {
                         document.getElementById("message-box").style.display = "none"
-                        $('div#bottom-bar').css('display', 'block')
-                        bottom_bar("settings", "select", "")
-                        window_status = "article-list";
+                        show_settings()
 
                     }, 3000);
                     return false;
@@ -216,20 +234,21 @@ $(document).ready(function() {
 
 
 
+    if (navigator.mozSetMessageHandler) {
+        navigator.mozSetMessageHandler('activity', function(activityRequest) {
+            var option = activityRequest.source;
+            activity = true;
 
-    navigator.mozSetMessageHandler('activity', function(activityRequest) {
-        var option = activityRequest.source;
-        activity = true;
-
-        if (option.name == 'view') {
-            while (source_array.length > 0) {
-                source_array.pop();
+            if (option.name == 'view') {
+                while (source_array.length > 0) {
+                    source_array.pop();
+                }
+                source_array.push([option.data.url, 4, "", "all"]);
+                rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
             }
-            source_array.push([option.data.url, 4, "", "all"]);
-            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
-        }
 
-    })
+        })
+    }
 
 
     function formatFileSize(bytes, decimalPoint) {
@@ -377,11 +396,6 @@ $(document).ready(function() {
                             if (item_duration.includes(":") == false) item_duration = "";
                         }
 
-                        /*
-                                                if (panels.includes(param_category) === false && param_category != 0) {
-                                                    panels.push(param_category);
-                                                }
-                                                */
 
                         content_arr.push({
                             title: item_title,
@@ -462,13 +476,6 @@ $(document).ready(function() {
 
                 });
 
-
-
-
-
-
-
-
             }
 
             if (xhttp.status === 404) {
@@ -503,8 +510,6 @@ $(document).ready(function() {
                 toaster(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
             }
 
-            if (xhttp.status !== 200) {}
-
 
         };
 
@@ -534,9 +539,6 @@ $(document).ready(function() {
 
 
                 }, 1500);
-
-
-
 
             }
             if (k < source_array.length - 1) {
@@ -570,9 +572,6 @@ $(document).ready(function() {
                 panels.push(content_arr[i].category);
             }
 
-
-
-
             var article = '<article class="' + content_arr[i].media + ' all" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                 '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
@@ -590,22 +589,13 @@ $(document).ready(function() {
             $("div#news-feed-list article:first").focus()
             article_array = $('div#news-feed-list article')
 
-
-
-
         });
-
-
-
-
 
         set_tabindex()
         lazyload.ll()
         document.getElementById("message-box").style.display = "none"
         $('div#bottom-bar').css('display', 'block')
-
         window_status = "article-list";
-
 
     }
 
@@ -659,53 +649,126 @@ $(document).ready(function() {
         panels_list(panels[current_panel]);
         set_tabindex();
         pos_focus = 0;
+
+        document.activeElement.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+            inline: "nearest"
+        });
+
     }
 
 
 
+    /*
+        function nav(move) {
 
+
+
+            if (move == "+1" && pos_focus < article_array.length - 1) {
+                pos_focus++
+
+                if (pos_focus <= article_array.length) {
+                    var targetElement = article_array[pos_focus];
+                    targetElement.focus();
+
+                    targetElement.scrollIntoView({
+                        behavior: "auto",
+                        block: "end"
+                    });
+
+
+                }
+            }
+
+            if (move == "-1" && pos_focus > 0) {
+                pos_focus--
+                if (pos_focus >= 0) {
+
+                    var targetElement = article_array[pos_focus];
+                    targetElement.focus();
+                    targetElement.scrollIntoView({
+                        behavior: "auto",
+                        block: "start"
+                    });
+
+
+                }
+            }
+
+
+
+        }
+
+    */
+
+
+    ////////////
+    //TABINDEX NAVIGATION
+    ///////////
     function nav(move) {
 
 
+        let elem = document.activeElement;
 
-        if (move == "+1" && pos_focus < article_array.length - 1) {
-            pos_focus++
-
-            if (pos_focus <= article_array.length) {
-                var targetElement = article_array[pos_focus];
-                targetElement.focus();
-
-                targetElement.scrollIntoView({
-                    behavior: "auto",
-                    block: "end"
-                });
+        // Setup siblings array and get the first sibling
+        var siblings = [];
 
 
+
+
+        var sibling = elem.parentNode.firstChild;
+
+
+
+
+        // Loop through each sibling and push to the array
+        while (sibling) {
+
+
+            if (sibling.tabIndex != null && sibling.tabIndex != undefined && sibling.tabIndex > -1) {
+                siblings.push(sibling);
             }
-        }
-
-        if (move == "-1" && pos_focus > 0) {
-            pos_focus--
-            if (pos_focus >= 0) {
-
-                var targetElement = article_array[pos_focus];
-                targetElement.focus();
-                targetElement.scrollIntoView({
-                    behavior: "auto",
-                    block: "start"
-                });
-
-
-            }
+            sibling = sibling.nextSibling;
         }
 
 
 
+        if (move == "+1" && tab_index < siblings.length - 1 && siblings.length > 1) {
+
+            tab_index++
+            siblings[tab_index].focus()
+
+
+            //window.scrollTo(0, siblings[tab_index].offsetBottom);
+
+            document.activeElement.scrollIntoView({
+                behavior: "smooth",
+                block: "end",
+                inline: "nearest"
+            });
+
+
+        }
+        if (move == "-1" && tab_index > 0) {
+
+
+
+            tab_index--
+
+            siblings[tab_index].focus()
+
+
+            siblings[tab_index].scrollIntoView({
+                block: "start"
+            });;
+
+        }
     }
 
 
 
-    bottom_bar("settings", "select", "")
+
 
 
 
@@ -716,6 +779,8 @@ $(document).ready(function() {
 
         var setting_interval = $("div#input-wrapper #time").val();
         var setting_source = $("div#input-wrapper #source").val();
+        var setting_source_local = $("div#input-wrapper #source-local").val();
+
 
         if (setting_source != "") {
             if (!validate(setting_source)) {
@@ -728,6 +793,8 @@ $(document).ready(function() {
 
         localStorage.setItem('interval', setting_interval);
         localStorage.setItem('source', setting_source);
+        localStorage.setItem('source_local', setting_source_local);
+
 
         toaster("saved", 3000)
         return true
@@ -789,7 +856,6 @@ $(document).ready(function() {
         $('article').css('display', 'none')
         $('div#settings').css('display', 'block')
         bottom_bar("save", "", "back")
-        $("div#bottom-bar").css("display", "block")
         $("div#input-wrapper input#time").focus();
         if (localStorage.getItem('interval') != null) {
             document.getElementById("time").value = localStorage.getItem('interval')
@@ -799,6 +865,10 @@ $(document).ready(function() {
             document.getElementById("source").value = localStorage.getItem('source')
         }
 
+        if (localStorage.getItem('source_local') != null) {
+            document.getElementById("source_local").value = localStorage.getItem('source_local')
+        }
+        bottom_bar("save", "", "cancel")
         window_status = "settings";
 
     }
@@ -930,7 +1000,6 @@ $(document).ready(function() {
 
 
     function handleKeyDown(evt) {
-
         switch (evt.key) {
 
 
@@ -984,8 +1053,7 @@ $(document).ready(function() {
 
             case 'ArrowDown':
                 if (window_status == "settings") {
-                    $("input[tabindex=1]").focus()
-
+                    nav("+1");
                     break;
                 }
 
@@ -1010,7 +1078,8 @@ $(document).ready(function() {
             case 'ArrowUp':
 
                 if (window_status == "settings") {
-                    $("input[tabindex=0]").focus()
+                    nav("-1");
+
                     break;
 
                 }
@@ -1035,6 +1104,7 @@ $(document).ready(function() {
 
 
             case 'SoftLeft':
+            case 'n':
                 if (window_status == "article-list") {
 
 
@@ -1063,6 +1133,7 @@ $(document).ready(function() {
                 break;
 
             case 'SoftRight':
+            case 'm':
                 if (window_status == "single-article") {
                     open_url();
                     return

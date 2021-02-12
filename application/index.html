@@ -37,8 +37,11 @@
                     <label for="time">In how many minutes should new content be downloaded.</label>
                     <input tabindex="0" type="tel" pattern="^[0-9]*$" id="time" name="time" />
 
-                    <label for="source">source url</label>
-                    <input tabindex="1" type="url" id="source" name="source" />
+                    <label for="source">url</label>
+                    <input tabindex="1" type="url" id="source" />
+
+                    <label for="source-local">local filename</label>
+                    <input tabindex="2" type="text" id="source-local" />
                     <div id="nextdownload"></div>
                 </div>
             </div>
@@ -54,6 +57,14 @@
                     <div id="button-left"></div>
                     <div id="button-center"></div>
                     <div id="button-right"></div>
+                </div>
+            </div>
+
+            <div id="top-bar">
+                <div class="inner flex justify-content-spacebetween width-100">
+                    <div class="button-left"></div>
+                    <div class="button-center"></div>
+                    <div class="button-right"></div>
                 </div>
             </div>
         </div>

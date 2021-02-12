@@ -35,11 +35,24 @@
 
  }
 
- *::-webkit-scrollbar {
-     width: 0 !important;
-     background-color: transparent !Important;
-     display: none !Important;
+ *,
+ *:before,
+ *:after {
+     border: 0px;
+     padding: 0px;
+     margin: 0px;
+     box-sizing: border-box;
+     -webkit-appearance: none;
  }
+
+ :focus {
+     outline: none;
+ }
+
+ ::-moz-focus-inner {
+     border: 0;
+ }
+
 
  html,
  body {
@@ -80,7 +93,7 @@
      top: -100px;
      background: black;
      color: white;
-     z-index: 5000;
+     z-index: 5;
      min-width: 100%;
      padding: 5px;
      text-align: center;
@@ -89,12 +102,7 @@
  /*///////////////////////////
 ///FINDER////////////////*/
 
- div#count {
-     font-size: 8px;
-     color: white !Important;
-     position: fixed;
-     bottom: 15px;
- }
+
 
  div#navigation {
      width: 100vw;
@@ -104,7 +112,7 @@
      position: fixed;
      top: 0px;
      left: 0px;
-     z-index: 6;
+     z-index: 2;
  }
 
  div#navigation div {
@@ -119,10 +127,12 @@
      position: relative;
      background: white;
      padding: 25x 0px 30px 0px;
+     margin: 30px 0 0 0;
      color: black;
-     height: 90vh;
+     max-height: 90vh;
      width: 100vw;
      font-weight: normal;
+     //overflow: hidden;
 
  }
 
@@ -214,7 +224,7 @@
      position: absolute;
      top: 0;
      left: 0;
-     z-index: 2000;
+     z-index: 3;
      background: white;
      min-height: 100vh;
      width: 101vw;
@@ -250,18 +260,19 @@
      height: 240px !Important;
  }
 
- /*
- bottom bar
- */
+ /*/////////////////
+///BOTTOM BAR////
+////////////////*/
 
  div#bottom-bar {
      position: fixed;
+     z-index: 2000;
      bottom: 10px;
      left: 0px;
-     height: 20px;
-     z-index: 2000;
+     height: 18px;
+     z-index: 4;
      background: black;
-     display: none;
+     min-width: 100vw;
  }
 
  div#bottom-bar div#inner {
@@ -299,6 +310,60 @@
      text-align: right;
  }
 
+
+ /*/////////////////
+///TOP-BAR///////*/
+
+ div#top-bar {
+     position: fixed;
+     z-index: 2000;
+     top: 0px;
+     left: 0px;
+     height: 18px;
+     z-index: 4;
+     background: black;
+     min-width: 100vw;
+     display: none;
+ }
+
+ div#top-bar div#inner {
+     position: relative;
+ }
+
+ div#top-bar div {
+     background: black;
+     color: white;
+     padding: 2px;
+ }
+
+ div#top-bar div#button-center {
+     background: black;
+     color: white;
+     padding: 2px;
+     width: 30%;
+     text-align: center;
+ }
+
+ div#top-bar div#button-left {
+     background: black;
+     color: white;
+     padding: 2px;
+     width: 20px;
+     text-align: left;
+     width: 30%;
+ }
+
+ div#top-bar div#button-right {
+     background: black;
+     color: white;
+     padding: 2px;
+     width: 30%;
+     text-align: right;
+ }
+
+
+ /*INTRO*/
+
  div#message-box {
      display: block;
      position: fixed;
@@ -308,7 +373,7 @@
      height: 100%;
      background: black;
      color: white;
-     z-index: 300000;
+     z-index: 5;
      display: block;
  }
 
@@ -322,6 +387,15 @@
      max-width: 70%;
      text-align: center;
  }
+
+ div#count {
+     font-size: 8px;
+     color: white !Important;
+     position: fixed;
+     bottom: 15px;
+ }
+
+
 
  @keyframes colorAnimation {
      0% {
@@ -354,6 +428,7 @@
      max-height: 100%;
      position: fixed;
      top: 0;
+     z-index: 3;
  }
 
  div#settings div#text {
@@ -399,7 +474,7 @@
 
  #goodbye {
      position: fixed;
-     z-index: 20000;
+     z-index: 5;
      left: 0;
      top: 0;
      background: black;
