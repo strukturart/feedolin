@@ -68,6 +68,7 @@
      height: 100%;
      width: 100%;
      overflow: auto;
+     background: silver;
  }
 
  h1 {
@@ -100,34 +101,14 @@
  }
 
  /*///////////////////////////
-///FINDER////////////////*/
+///FEED////////////////*/
 
 
 
- div#navigation {
-     width: 100vw;
-     height: 25px;
-     background: black;
-     color: white;
-     position: fixed;
-     top: 0px;
-     left: 0px;
-     z-index: 2;
- }
-
- div#navigation div {
-     width: 100vw;
-     height: 25px;
-     background: black;
-     color: white;
-     text-align: center;
- }
 
  div#news-feed {
      position: relative;
      background: white;
-     padding: 25x 0px 30px 0px;
-     margin: 30px 0 0 0;
      color: black;
      max-height: 90vh;
      width: 100vw;
@@ -139,14 +120,16 @@
      min-height: 100vh;
      width: 100%;
      min-width: 100%;
-     padding: 0 0 50px 0;
+     padding: 30px 0 50px 0;
 
  }
 
  div#news-feed div#news-feed-list article {
      margin: 0 0 10px 0;
-     padding: 2px;
+     padding: 5px;
      font-weight: normal;
+     background: white;
+
 
  }
 
@@ -163,6 +146,15 @@
      font-size: 0.8rem;
  }
 
+ div#news-feed div#news-feed-list article div.duration-filesize {
+     font-size: 0.8rem;
+     display: none;
+     ;
+
+
+ }
+
+
  div#news-feed div#news-feed-list article div.duration-filesize div {
      font-size: 0.8rem;
 
@@ -173,18 +165,19 @@
 
  }
 
- div#news-feed div#news-feed-list article div.duration:empty {
-     display: none;
- }
-
- div#news-feed div#news-feed-list article div.filesize:empty {
-     display: none;
- }
 
  div#news-feed div#news-feed-list article div.filesize {
      margin: 0 10px 0 0;
 
  }
+
+
+ article[data-media*="podcast"] div.duration-filesize {
+     display: block !Important;
+
+
+ }
+
 
 
  div#news-feed div#news-feed-list article div.summary {
@@ -196,12 +189,12 @@
      display: none;
  }
 
- div#news-feed div#news-feed-list article.podcast div.podcast-icon {
+ div#news-feed div#news-feed-list article[data-media*="podcast"] div.podcast-icon {
      display: block;
      max-width: 15px;
  }
 
- div#news-feed div#news-feed-list article.podcast div.podcast-icon img {
+ div#news-feed div#news-feed-list article[data-media*="podcast"] div.podcast-icon img {
      max-width: 15px;
  }
 
@@ -209,12 +202,12 @@
      display: none;
  }
 
- div#news-feed div#news-feed-list article.youtube div.youtube-icon {
+ div#news-feed div#news-feed-list article[data-media*="youtube"] div.youtube-icon {
      display: block;
      max-width: 15px;
  }
 
- div#news-feed div#news-feed-list article.youtube div.youtube-icon img {
+ div#news-feed div#news-feed-list article[data-media*="youtube"] div.youtube-icon img {
      max-width: 15px;
  }
 

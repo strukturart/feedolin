@@ -372,7 +372,7 @@ $(document).ready(function() {
 
 
                 $(data).find('entry').each(function(index) {
-                    item_media = " rss"
+                    item_media = "rss"
                     item_type = "";
 
 
@@ -389,7 +389,7 @@ $(document).ready(function() {
                         if (item_type == "audio/mpeg" ||
                             item_type == "audio/aac"
                         ) {
-                            item_media = " podcast";
+                            item_media = "podcast";
                         }
 
 
@@ -400,7 +400,7 @@ $(document).ready(function() {
                         }
 
                         if (item_link.includes("https://www.youtube.com") === true) {
-                            item_media = " youtube";
+                            item_media = "youtube";
                             item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
                         }
 
@@ -418,7 +418,9 @@ $(document).ready(function() {
                         item_download = $(this).find('enclosure').attr('url')
                         item_date_unix = Date.parse($(this).find('updated').text());
                         item_date = new Date(item_date_unix)
-                        item_date = item_date.toGMTString();
+                        item_date = item_date.toDateString();
+
+
 
                         if ($(this).find('itunes:\\duration') != undefined) {
                             item_duration = $(this).find('itunes\\:duration').text()
@@ -452,7 +454,7 @@ $(document).ready(function() {
                 //rss 2.0 items
                 //
                 $(data).find('item').each(function(index) {
-                    item_media = " rss";
+                    item_media = "rss";
                     item_type = "";
 
                     if (index < param_limit) {
@@ -461,14 +463,14 @@ $(document).ready(function() {
                         item_link = $(this).find('link').text();
                         item_date_unix = Date.parse($(this).find('pubDate').text());
                         item_date = new Date(item_date_unix)
-                        item_date = item_date.toGMTString()
+                        item_date = item_date.toDateString()
                         item_download = $(this).find('enclosure').attr('url');
                         item_type = $(this).find('enclosure').attr('type')
 
                         if (item_type == "audio/mpeg" ||
                             item_type == "audio/aac"
                         ) {
-                            item_media = " podcast";
+                            item_media = "podcast";
                         }
 
 
@@ -589,10 +591,7 @@ $(document).ready(function() {
         $("div#navigation div").text(panels[0]);
 
         bottom_bar("settings", "select", "share")
-
         if (activity == true) bottom_bar("add", "select", "")
-
-
 
         $.each(content_arr, function(i) {
 
@@ -601,7 +600,7 @@ $(document).ready(function() {
                 panels.push(content_arr[i].category);
             }
 
-            var article = '<article class="' + content_arr[i].media + ' all" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
+            var article = '<article class="all" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                 '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
                 '<div class="channel">' + content_arr[i].channel + '</div>' +
@@ -623,8 +622,9 @@ $(document).ready(function() {
         set_tabindex()
         lazyload.ll()
         document.getElementById("message-box").style.display = "none"
-        $('div#bottom-bar').css('display', 'block')
         window_status = "article-list";
+        top_bar("", "all", "")
+
 
     }
 
@@ -673,8 +673,8 @@ $(document).ready(function() {
             current_panel += panels.length;
         }
 
-
-        $("div#navigation div").text(panels[current_panel]);
+        top_bar("", panels[current_panel], "")
+        //$("div#navigation div").text(panels[current_panel]);
         panels_list(panels[current_panel]);
         set_tabindex();
         pos_focus = 0;
@@ -726,8 +726,6 @@ $(document).ready(function() {
 
         }
         if (move == "-1" && tab_index > 0) {
-
-
 
             tab_index--
             siblings[tab_index].focus()
@@ -792,12 +790,9 @@ $(document).ready(function() {
         $('article').css('display', 'none')
         $(':focus').css('display', 'block')
         $('div.summary').css('display', 'block')
-        $("div#navigation").css("display", "none");
-        $("div#news-feed").css("padding", "0px 0px 32px 0px");
+        document.getElementById("top-bar").style.display = "none"
 
-
-
-        if ($(":focus").hasClass("podcast")) {
+        if (document.activeElement.getAttribute("data-media") == " podcast") {
 
             if ($(":focus").hasClass("audio-playing")) {
                 bottom_bar("pause", "", "download")
@@ -809,11 +804,11 @@ $(document).ready(function() {
 
         }
 
-        if ($(":focus").hasClass("rss")) {
+        if (document.activeElement.getAttribute("data-media") == " rss") {
             bottom_bar("", "", "visit")
         }
 
-        if ($(":focus").hasClass("youtube")) {
+        if (document.activeElement.getAttribute("data-media") == " youtube") {
             bottom_bar("", "", "open")
         }
 
@@ -830,7 +825,7 @@ $(document).ready(function() {
     function show_settings() {
         window_status = "settings";
         tab_index = 0;
-        document.getElementById("navigation").style.display = "none";
+        document.getElementById("top-bar").style.display = "none"
 
         $("div#news-feed").css("padding", "0px 0px 30px 0px")
         pos_focus = 0;
@@ -857,8 +852,7 @@ $(document).ready(function() {
     function show_article_list() {
         navigator.spatialNavigationEnabled = false;
         $("div#source-page div#iframe-wrapper").removeClass("video-view");
-        $("div#navigation").css("display", "block");
-        $("div#news-feed").css("padding", "30px 0px 30px 0px")
+        document.getElementById("top-bar").style.display = "block"
 
         $('article').css('display', 'block')
         $('div.summary').css('display', 'none')
@@ -883,6 +877,13 @@ $(document).ready(function() {
         }
 
         window_status = "article-list";
+
+
+        document.activeElement.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+            inline: "nearest"
+        });
     }
 
 
