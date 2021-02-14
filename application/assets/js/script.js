@@ -467,9 +467,7 @@ $(document).ready(function() {
                         item_download = $(this).find('enclosure').attr('url');
                         item_type = $(this).find('enclosure').attr('type')
 
-                        if (item_type == "audio/mpeg" ||
-                            item_type == "audio/aac"
-                        ) {
+                        if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
                             item_media = "podcast";
                         }
 
@@ -738,13 +736,6 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
-
-
     function save_settings() {
 
         var setting_interval = document.getElementById("time").value;
@@ -786,13 +777,13 @@ $(document).ready(function() {
         link_target = $(targetElement).data('download');
         link_type = $(targetElement).data('audio-type');
 
-        $('div#settings').css('display', 'none')
         $('article').css('display', 'none')
         $(':focus').css('display', 'block')
         $('div.summary').css('display', 'block')
         document.getElementById("top-bar").style.display = "none"
+        document.getElementById("settings").style.display = "none"
 
-        if (document.activeElement.getAttribute("data-media") == " podcast") {
+        if (document.activeElement.getAttribute("data-media") == "podcast") {
 
             if ($(":focus").hasClass("audio-playing")) {
                 bottom_bar("pause", "", "download")
@@ -804,11 +795,11 @@ $(document).ready(function() {
 
         }
 
-        if (document.activeElement.getAttribute("data-media") == " rss") {
+        if (document.activeElement.getAttribute("data-media") == "rss") {
             bottom_bar("", "", "visit")
         }
 
-        if (document.activeElement.getAttribute("data-media") == " youtube") {
+        if (document.activeElement.getAttribute("data-media") == "youtube") {
             bottom_bar("", "", "open")
         }
 
@@ -830,7 +821,8 @@ $(document).ready(function() {
         $("div#news-feed").css("padding", "0px 0px 30px 0px")
         pos_focus = 0;
         $('article').css('display', 'none')
-        $('div#settings').css('display', 'block')
+        document.getElementById("settings").style.display = "block"
+
         bottom_bar("save", "", "")
         document.getElementById("time").focus();
         if (localStorage.getItem('interval') != null) {
@@ -896,7 +888,7 @@ $(document).ready(function() {
         title = title.replace(/\s/g, "-");
 
 
-        if ($(":focus").hasClass("rss")) {
+        if (document.activeElement.getAttribute("data-media") == "rss") {
             $('div.summary').css('display', 'none')
             $("div#source-page").css("display", "block")
             $("div#source-page iframe").attr("src", link_target)
@@ -910,7 +902,7 @@ $(document).ready(function() {
         }
 
 
-        if ($(":focus").hasClass("youtube")) {
+        if (document.activeElement.getAttribute("data-media") == "youtube") {
             $('div.summary').css('display', 'none')
             $("div#source-page").css("display", "block")
             $("div#source-page iframe").attr("src", link_target)
@@ -926,7 +918,7 @@ $(document).ready(function() {
 
 
 
-        if ($(":focus").hasClass("podcast")) {
+        if (document.activeElement.getAttribute("data-media") == "podcast") {
             var finder = new Applait.Finder({
                 type: "music",
                 debugMode: false
@@ -1075,9 +1067,7 @@ $(document).ready(function() {
 
 
             case 'SoftLeft':
-            case 'n':
                 if (window_status == "article-list") {
-
 
                     if (!activity) {
                         show_settings()
@@ -1089,7 +1079,7 @@ $(document).ready(function() {
 
                 }
 
-                if (window_status == "single-article" && $(":focus").hasClass("podcast")) {
+                if (window_status == "single-article" && document.activeElement.getAttribute("data-media") == "podcast") {
                     play_podcast();
                     break
 
@@ -1104,7 +1094,6 @@ $(document).ready(function() {
                 break;
 
             case 'SoftRight':
-            case 'm':
                 if (window_status == "single-article") {
                     open_url();
                     break

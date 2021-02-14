@@ -125,8 +125,7 @@
  }
 
  div#news-feed div#news-feed-list article {
-     margin: 0 0 10px 0;
-     padding: 5px;
+     padding: 5px 5px 10px 5px;
      font-weight: normal;
      background: white;
 
@@ -149,8 +148,6 @@
  div#news-feed div#news-feed-list article div.duration-filesize {
      font-size: 0.8rem;
      display: none;
-     ;
-
 
  }
 
@@ -173,9 +170,8 @@
 
 
  article[data-media*="podcast"] div.duration-filesize {
-     display: block !Important;
-
-
+     display: flex !Important;
+     display: -webkit-flex !Important;
  }
 
 
