@@ -5,6 +5,8 @@ player.preload = "none";
 var player_status = "";
 var volume = navigator.volumeManager;
 navigator.mozAudioChannelManager.volumeControlChannel = 'content';
+let active_element = "";
+let listened = [];
 
 
 //////////////////
@@ -51,6 +53,9 @@ function seeking(param) {
     }
 
 }
+
+
+
 
 ////////////////////////
 ////VOLUME CONTROL//////
@@ -138,7 +143,18 @@ $(document).ready(function() {
         player_status = "play";
         bottom_bar("pause", "", "download")
         toaster("play", 3000)
+        active_element = document.activeElement.getAttribute("data-id")
 
+
+    };
+
+    player.onended = function() {
+        if (localStorage.getItem("listened")) {
+            listened = JSON.parse(localStorage["listened"]);
+        }
+
+        listened.push(active_element)
+        localStorage.setItem("listened", JSON.stringify(listened));
 
     };
 

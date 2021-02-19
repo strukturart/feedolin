@@ -26,6 +26,7 @@ var item_type = "";
 var item_filesize = "";
 var item_date_unix = "";
 var item_category = "";
+var item_cid = "";
 
 //youtube
 var item_image = "";
@@ -364,7 +365,8 @@ $(document).ready(function() {
                 let count = k + " / " + source_array.length
 
                 $('#download').html("downloading<br><br>" + rss_title)
-                $('div#count').text(count)
+                //$('div#count').text(count)
+                bottom_bar("", count, "")
 
                 //
                 //atom
@@ -379,6 +381,7 @@ $(document).ready(function() {
                     if (index < param_limit) {
 
                         item_title = $(this).find('title').text();
+                        item_cid = hashCode(item_title)
                         item_summary = $(this).find('summary').text();
                         item_link = $(this).find('link').attr("href");
                         item_type = $(this).find('enclosure').attr('type')
@@ -417,8 +420,16 @@ $(document).ready(function() {
 
                         item_download = $(this).find('enclosure').attr('url')
                         item_date_unix = Date.parse($(this).find('updated').text());
-                        item_date = new Date(item_date_unix)
-                        item_date = item_date.toDateString();
+                        if (item_date_unix == "Invalid Date") {
+                            item_date = ""
+                        } else {
+
+                            item_date = new Date(item_date_unix)
+                            item_date = item_date.toDateString();
+
+                        }
+
+
 
 
 
@@ -442,7 +453,9 @@ $(document).ready(function() {
                             id: item_id,
                             duration: item_duration,
                             media: item_media,
-                            filesize: item_filesize
+                            filesize: item_filesize,
+                            cid: item_cid
+
                         })
 
                     }
@@ -459,11 +472,18 @@ $(document).ready(function() {
 
                     if (index < param_limit) {
                         item_title = $(this).find('title').text();
+                        item_cid = hashCode(item_title)
                         item_summary = $(this).find('description').text();
                         item_link = $(this).find('link').text();
                         item_date_unix = Date.parse($(this).find('pubDate').text());
-                        item_date = new Date(item_date_unix)
-                        item_date = item_date.toDateString()
+                        if (item_date_unix == "Invalid Date") {
+                            item_date = ""
+                        } else {
+
+                            item_date = new Date(item_date_unix)
+                            item_date = item_date.toDateString();
+
+                        }
                         item_download = $(this).find('enclosure').attr('url');
                         item_type = $(this).find('enclosure').attr('type')
 
@@ -499,7 +519,9 @@ $(document).ready(function() {
                             id: item_id,
                             duration: item_duration,
                             media: item_media,
-                            filesize: item_filesize
+                            filesize: item_filesize,
+                            cid: item_cid
+
                         })
                     }
 
@@ -585,23 +607,40 @@ $(document).ready(function() {
     //build   
     //write html
 
+    let listened_elements = JSON.parse(localStorage["listened"])
+
     function build() {
         $("div#navigation div").text(panels[0]);
-
         bottom_bar("settings", "select", "share")
+
+
+
         if (activity == true) bottom_bar("add", "select", "")
 
         $.each(content_arr, function(i) {
+
+            //set icon if the article has already been listened to
+            let icon = "";
+            let ti = content_arr[i].cid
+            ti.toString
+
+            for (let k = 0; k < listened_elements.length; k++) {
+                if (listened_elements[k] == ti) {
+                    icon = "  &#127812;"
+                }
+
+            }
+
 
             //set panel category
             if (panels.includes(content_arr[i].category) === false && content_arr[i].category != 0) {
                 panels.push(content_arr[i].category);
             }
 
-            var article = '<article class="all" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
+            var article = '<article class="all" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-id="' + content_arr[i].cid + '" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
                 '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
                 '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
-                '<div class="channel">' + content_arr[i].channel + '</div>' +
+                '<div class="channel">' + content_arr[i].channel + '<span>' + icon + '</span></div>' +
                 '<time>' + content_arr[i].date + '</time>' +
                 '<div class="flex duration-filesize">' +
                 '<div class="duration">' + content_arr[i].duration + '</div>' +
@@ -622,6 +661,10 @@ $(document).ready(function() {
         document.getElementById("message-box").style.display = "none"
         window_status = "article-list";
         top_bar("", "all", "")
+
+
+        //alert(hashCode("john"))
+
 
 
     }
@@ -770,16 +813,17 @@ $(document).ready(function() {
 
 
     function show_article() {
+        window_status = "single-article";
 
         navigator.spatialNavigationEnabled = false;
 
-        var targetElement = document.activeElement
-        link_target = $(targetElement).data('download');
-        link_type = $(targetElement).data('audio-type');
+        document.querySelector("div#news-feed").style.background = "silver";
+        link_target = document.activeElement.getAttribute('data-download');
+        link_type = document.activeElement.getAttribute('data-audio-type');
 
         $('article').css('display', 'none')
-        $(':focus').css('display', 'block')
         $('div.summary').css('display', 'block')
+        document.activeElement.style.display = "block"
         document.getElementById("top-bar").style.display = "none"
         document.getElementById("settings").style.display = "none"
 
@@ -803,45 +847,16 @@ $(document).ready(function() {
             bottom_bar("", "", "open")
         }
 
-        targetElement.scrollIntoView({
+        document.activeElement.scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
 
-        window_status = "single-article";
     }
-
-
-
-    function show_settings() {
-        window_status = "settings";
-        tab_index = 0;
-        document.getElementById("top-bar").style.display = "none"
-
-        $("div#news-feed").css("padding", "0px 0px 30px 0px")
-        pos_focus = 0;
-        $('article').css('display', 'none')
-        document.getElementById("settings").style.display = "block"
-
-        bottom_bar("save", "", "")
-        document.getElementById("time").focus();
-        if (localStorage.getItem('interval') != null) {
-            document.getElementById("time").value = localStorage.getItem('interval')
-        }
-
-        if (localStorage.getItem('source') != null) {
-            document.getElementById("source").value = localStorage.getItem('source')
-        }
-
-        if (localStorage.getItem('source_local') != null) {
-            document.getElementById("source-local").value = localStorage.getItem('source_local')
-        }
-
-    }
-
-
 
     function show_article_list() {
+        document.querySelector("div#news-feed").style.background = "white";
+
         navigator.spatialNavigationEnabled = false;
         $("div#source-page div#iframe-wrapper").removeClass("video-view");
         document.getElementById("top-bar").style.display = "block"
@@ -877,6 +892,38 @@ $(document).ready(function() {
             inline: "nearest"
         });
     }
+
+
+
+    function show_settings() {
+        window_status = "settings";
+        tab_index = 0;
+        document.getElementById("top-bar").style.display = "none"
+
+        $("div#news-feed").css("padding", "0px 0px 30px 0px")
+        pos_focus = 0;
+        $('article').css('display', 'none')
+        document.getElementById("settings").style.display = "block"
+
+        bottom_bar("save", "", "")
+        document.getElementById("time").focus();
+        if (localStorage.getItem('interval') != null) {
+            document.getElementById("time").value = localStorage.getItem('interval')
+        }
+
+        if (localStorage.getItem('source') != null) {
+            document.getElementById("source").value = localStorage.getItem('source')
+        }
+
+        if (localStorage.getItem('source_local') != null) {
+            document.getElementById("source-local").value = localStorage.getItem('source_local')
+        }
+
+    }
+
+
+
+
 
 
 

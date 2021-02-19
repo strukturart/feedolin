@@ -1,6 +1,15 @@
 "use strict";
 
 
+function hashCode(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = ~~(((hash << 5) - hash) + str.charCodeAt(i));
+    }
+    return hash;
+}
+
+
 function validate(url) {
     var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if (pattern.test(url)) {
@@ -140,9 +149,6 @@ function share(url) {
 
 //check if internet connection 
 function check_iconnection() {
-
-
-
 
     function updateOfflineStatus() {
         toaster("Your Browser is offline", 15000)
