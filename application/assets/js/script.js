@@ -1,5 +1,5 @@
 var redirection_counter = -1;
-var debug = false;
+var debug = true;
 var page = 0;
 var pos_focus = 0
 var article_array;
@@ -31,6 +31,14 @@ var item_cid = "";
 //youtube
 var item_image = "";
 var item_id = "";
+
+
+
+
+
+
+
+
 
 
 
@@ -175,9 +183,6 @@ $(document).ready(function() {
 
 
         finder.search(a);
-
-
-
 
         finder.on("searchBegin", function(needle) {
             alert(needle)
@@ -420,14 +425,11 @@ $(document).ready(function() {
 
                         item_download = $(this).find('enclosure').attr('url')
                         item_date_unix = Date.parse($(this).find('updated').text());
-                        if (item_date_unix == "Invalid Date") {
-                            item_date = ""
-                        } else {
 
-                            item_date = new Date(item_date_unix)
-                            item_date = item_date.toDateString();
+                        item_date = new Date(item_date_unix)
+                        item_date = item_date.toDateString();
 
-                        }
+
 
 
 
@@ -476,14 +478,11 @@ $(document).ready(function() {
                         item_summary = $(this).find('description').text();
                         item_link = $(this).find('link').text();
                         item_date_unix = Date.parse($(this).find('pubDate').text());
-                        if (item_date_unix == "Invalid Date") {
-                            item_date = ""
-                        } else {
 
-                            item_date = new Date(item_date_unix)
-                            item_date = item_date.toDateString();
+                        item_date = new Date(item_date_unix)
+                        item_date = item_date.toDateString();
 
-                        }
+
                         item_download = $(this).find('enclosure').attr('url');
                         item_type = $(this).find('enclosure').attr('type')
 
@@ -606,8 +605,15 @@ $(document).ready(function() {
     //sort content by date
     //build   
     //write html
+    let listened_elements = "";
+    if (localStorage["listened"]) {
+        listened_elements = JSON.parse(localStorage["listened"])
 
-    let listened_elements = JSON.parse(localStorage["listened"])
+    } else {
+        listened_elements = [];
+    }
+
+
 
     function build() {
         $("div#navigation div").text(panels[0]);
@@ -622,14 +628,14 @@ $(document).ready(function() {
             //set icon if the article has already been listened to
             let icon = "";
             let ti = content_arr[i].cid
-            ti.toString
-
+            ti.toString()
             for (let k = 0; k < listened_elements.length; k++) {
                 if (listened_elements[k] == ti) {
                     icon = "  &#127812;"
                 }
 
             }
+
 
 
             //set panel category
@@ -662,12 +668,13 @@ $(document).ready(function() {
         window_status = "article-list";
         top_bar("", "all", "")
 
-
-        //alert(hashCode("john"))
-
-
-
     }
+
+
+
+
+
+
 
 
     function set_tabindex() {
@@ -734,7 +741,6 @@ $(document).ready(function() {
     ///////////
     function nav(move) {
 
-
         let elem = document.activeElement;
 
         // Setup siblings array and get the first sibling
@@ -776,6 +782,13 @@ $(document).ready(function() {
 
         }
     }
+
+
+
+
+
+
+
 
 
 
@@ -919,6 +932,8 @@ $(document).ready(function() {
             document.getElementById("source-local").value = localStorage.getItem('source_local')
         }
 
+
+
     }
 
 
@@ -1000,8 +1015,6 @@ $(document).ready(function() {
 
 
 
-
-
     //////////////////////////
     ////KEYPAD TRIGGER////////////
     /////////////////////////
@@ -1010,6 +1023,7 @@ $(document).ready(function() {
 
 
     function handleKeyDown(evt) {
+
         switch (evt.key) {
 
 
@@ -1075,7 +1089,7 @@ $(document).ready(function() {
 
 
                 if (volume_status === true) {
-                    volume_control("down")
+                    audio_player.volume_control("down")
                     break;
                 }
 
@@ -1100,14 +1114,14 @@ $(document).ready(function() {
                 }
 
                 if (volume_status === true) {
-                    volume_control("up")
+                    audio_player.volume_control("up")
                     break;
                 }
                 break;
 
 
             case '#':
-                volume.requestShow();
+                navigator.volumeManager.requestShow();
                 volume_status = true;
                 navigator.spatialNavigationEnabled = false;
                 break;
@@ -1127,7 +1141,7 @@ $(document).ready(function() {
                 }
 
                 if (window_status == "single-article" && document.activeElement.getAttribute("data-media") == "podcast") {
-                    play_podcast();
+                    audio_player.play_podcast();
                     break
 
                 }
@@ -1167,6 +1181,7 @@ $(document).ready(function() {
                 }
 
                 if (window_status == "article-list") {
+                    bottom_bar("", "", "")
                     goodbye();
                     break;
                 }
@@ -1201,6 +1216,9 @@ $(document).ready(function() {
 
 
     document.addEventListener('keydown', handleKeyDown);
+
+
+
 
 
 

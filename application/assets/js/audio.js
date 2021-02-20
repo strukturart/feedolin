@@ -1,113 +1,112 @@
-var player = new Audio();
-player.mozAudioChannelType = 'content';
-player.type = "audio/mpeg";
-player.preload = "none";
-var player_status = "";
-var volume = navigator.volumeManager;
-navigator.mozAudioChannelManager.volumeControlChannel = 'content';
-let active_element = "";
-let listened = [];
+const audio_player = ((_) => {
+
+    let player = new Audio();
+    player.mozAudioChannelType = 'content';
+    player.type = "audio/mpeg";
+    player.preload = "none";
+    let player_status = "";
+    let volume = navigator.volumeManager;
+    navigator.mozAudioChannelManager.volumeControlChannel = 'content';
+    let active_element = "";
+    let listened = [];
 
 
-//////////////////
-//PLAY
-//////////////////
-function play_podcast() {
-    player.mozaudiochannel = 'content';
+    //////////////////
+    //PLAY
+    //////////////////
+    let play_podcast = function() {
+        player.mozaudiochannel = 'content';
 
 
-    if (player.currentSrc == "" || player.currentSrc != link_target) {
+        if (player.currentSrc == "" || player.currentSrc != link_target) {
 
-        player.src = "";
-        player.src = link_target;
-        player.play();
-        return false;
+            player.src = "";
+            player.src = link_target;
+            player.play();
+            return false;
+        }
+
+
+        if (player_status == "play") {
+            player.pause();
+            return false;
+        }
+
+        if (player_status == "pause") {
+            player.play();
+            return false;
+        }
     }
 
 
-    if (player_status == "play") {
-        player.pause();
-        return false;
-    }
-
-    if (player_status == "pause") {
-        player.play();
-        return false;
-    }
-}
+    ////SEEKING//////
 
 
-////SEEKING//////
+    let seeking = function(param) {
+        var step = 10;
+        //player.pause();
+        if (param == "backward") {
+            player.currentTime = player.currentTime - step++
+        }
 
 
-function seeking(param) {
-    var step = 10;
-    //player.pause();
-    if (param == "backward") {
-        player.currentTime = player.currentTime - step++
-    }
+        if (param == "forward") {
+            player.currentTime = player.currentTime + step++
+        }
 
-
-    if (param == "forward") {
-        player.currentTime = player.currentTime + step++
-    }
-
-}
-
-
-
-
-////////////////////////
-////VOLUME CONTROL//////
-///////////////////////
-
-
-
-function volume_control(param) {
-
-    if (param == "up") {
-        volume.requestUp()
-        setTimeout(function() {
-            volume_status = false;
-
-            if ($(":focus").hasClass("youtube") && window_status == "source-page") {
-                navigator.spatialNavigationEnabled = true;
-            }
-
-        }, 3000);
-    }
-
-
-
-    if (param == "down") {
-        volume.requestDown()
-        setTimeout(function() {
-            volume_status = false;
-
-            if ($(":focus").hasClass("youtube") && window_status == "source-page") {
-                navigator.spatialNavigationEnabled = true;
-            }
-
-        }, 3000);
     }
 
 
 
 
-
-}
-
-
-
+    ////////////////////////
+    ////VOLUME CONTROL//////
+    ///////////////////////
 
 
-$(document).ready(function() {
+
+    let volume_control = function(param) {
+
+        if (param == "up") {
+            navigator.volumeManager.requestUp()
+            setTimeout(function() {
+                volume_status = false;
+
+                if ($(":focus").hasClass("youtube") && window_status == "source-page") {
+                    navigator.spatialNavigationEnabled = true;
+                }
+
+            }, 3000);
+        }
+
+
+
+        if (param == "down") {
+            navigator.volumeManager.requestDown()
+            setTimeout(function() {
+                volume_status = false;
+
+                if ($(":focus").hasClass("youtube") && window_status == "source-page") {
+                    navigator.spatialNavigationEnabled = true;
+                }
+
+            }, 3000);
+        }
+
+
+
+
+
+    }
+
+
+
+
 
 
 
     //time duration
-    $(player).on("loadedmetadata", function() {
-
+    player.onloadedmetadata = function() {
 
         var getduration = setInterval(function() {
             var time = player.duration - player.currentTime;
@@ -121,12 +120,12 @@ $(document).ready(function() {
             }
             var duration = minutes + ":" + seconds;
 
+            bottom_bar("pause", duration, "download")
 
-            $("div#bottom-bar div#button-center").text(duration)
+
         }, 1000);
 
-
-    });
+    }
 
 
 
@@ -155,7 +154,14 @@ $(document).ready(function() {
 
         listened.push(active_element)
         localStorage.setItem("listened", JSON.stringify(listened));
+        bottom_bar("pause", "", "download")
 
     };
 
-})
+
+    return {
+        play_podcast,
+        seeking,
+        volume_control
+    };
+})();
