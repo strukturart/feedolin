@@ -357,222 +357,55 @@ $(document).ready(function() {
 
                 document.getElementById("download").innerText = rss_title
                 bottom_bar("", count, "")
-
-
-                ////////////
-                //ATOM
-                ///////////
-                feed_type = data.querySelector("feed").getAttribute("xmlns")
-
+                let test = data.querySelectorAll("entry")
                 /*
-                                data.querySelectorAll("entry").forEach(function(el, index) {
-                                    item_media = "rss";
-                                    item_type = "";
-
-                                    if (index < param_limit) {
-
-
-                                        item_title = el.querySelector("title").innerHTML;
-                                        item_summary = el.querySelector("summary").innerHTML;
-
-                                        item_cid = hashCode(item_title)
-                                        item_link = el.querySelector("link").getAttribute("href");
-                                        item_download = el.querySelector("link").getAttribute("href");
-
-
-
-                                        if (el.querySelector('updated').innerHTML == "") {
-                                            item_date_unix = new Date().valueOf();
-                                        } else {
-                                            item_date_unix = Date.parse(el.querySelector('updated').innerHTML)
-                                        }
-
-                                        item_date = new Date(item_date_unix)
-                                        item_date = item_date.toDateString()
-
-
-                                        if (item_summary == "") {
-                                            item_summary = el.querySelector('media\\:description').innerHTML
-                                            item_image = el.querySelector('media\\:thumbnail').getAttribute('url');
-                                            item_id = el.querySelector('yt\\:videoId').innerHTML;
-                                        }
-
-                                        if (item_link.includes("https://www.youtube.com") === true) {
-                                            item_media = "youtube";
-                                            item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
-                                        }
-
-                                        if (item_summary == "") {
-                                            item_summary = el.querySelector('content').innerHTML;
-                                        }
-
-                                        if (el.querySelector('itunes\\:duration') != undefined) {
-                                            item_duration = el.querySelector('itunes\\:duration').innerHTML
-                                            if (item_duration.includes(":") == false) item_duration = "";
-                                            console.log(item_duration)
-                                        }
-
-
-                                        content_arr.push({
-                                            title: item_title,
-                                            summary: item_summary,
-                                            link: item_link,
-                                            date: item_date,
-                                            dateunix: item_date_unix,
-                                            channel: param_channel,
-                                            category: param_category,
-                                            download: item_download,
-                                            type: item_type,
-                                            image: item_image,
-                                            id: item_id,
-                                            duration: item_duration,
-                                            media: item_media,
-                                            filesize: item_filesize,
-                                            cid: item_cid
-
-                                        })
-
-                                    }
-
-                                });
-                   
-
-                                ////////////
-                                //RSS
-                                ///////////
-
-
-                                data.querySelectorAll("item").forEach(function(el, index) {
-                                    item_media = "rss";
-                                    item_type = "";
-
-
-
-                                    if (index < param_limit) {
-
-
-
-                                        //rss
-                                        item_title = el.querySelector("title").innerHTML
-                                        item_cid = hashCode(item_title)
-                                        item_summary = el.querySelector("description").innerHTML;
-                                        item_link = el.querySelector("link").getAttribute("href");
-
-                                        //check valid date
-                                        if (el.querySelector("pubDate").innerHTML == "") {
-                                            item_date_unix = new Date().valueOf();
-                                        } else {
-                                            item_date_unix = Date.parse(el.querySelector("pubDate").innerHTML);
-                                        }
-
-                                        item_date = new Date(item_date_unix)
-                                        item_date = item_date.toDateString();
-
-                                        item_download = el.querySelector("enclosure").getAttribute("url");
-                                        item_type = el.querySelector("enclosure").getAttribute("type")
-
-                                        if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
-                                            item_media = "podcast";
-                                        }
-
-                                        if ($(this).find('itunes:\\duration') != undefined) {
-                                            item_duration = $(this).find('itunes\\:duration').text()
-                                            if (item_duration.includes(":") == false) item_duration = "";
-                                        }
-
-                                        if (el.querySelector('enclosure').getAttribute('length') != undefined && el.querySelector('enclosure').getAttribute('length') != "") {
-                                            item_filesize = el.querySelector('enclosure').getAttribute('length');
-                                            item_filesize = formatFileSize(item_filesize, 2)
-                                        }
-
-                                        content_arr.push({
-                                            title: item_title,
-                                            summary: item_summary,
-                                            link: item_link,
-                                            date: item_date,
-                                            dateunix: item_date_unix,
-                                            channel: param_channel,
-                                            category: param_category,
-                                            download: item_download,
-                                            type: item_type,
-                                            image: item_image,
-                                            id: item_id,
-                                            duration: item_duration,
-                                            media: item_media,
-                                            filesize: item_filesize,
-                                            cid: item_cid
-
-                                        })
-                                    }
-
-                                });
-
-                            }
-
-                            */
-
-
-                $(data).find('entry').each(function(index) {
-                    item_media = "rss"
+                test.forEach(function(el, index) {
+                    item_media = "rss";
                     item_type = "";
 
 
                     if (index < param_limit) {
 
-                        item_title = $(this).find('title').text();
+                        //rss
+                        item_title = el.querySelector("title").innerHTML
                         item_cid = hashCode(item_title)
-                        item_summary = $(this).find('summary').text();
-                        item_link = $(this).find('link').attr("href");
-                        item_type = $(this).find('enclosure').attr('type')
+                        item_summary = el.querySelector("summary").innerHTML;
+                        item_link = el.querySelector("link").getAttribute("href");
+
+                        console.log("hey")
 
 
-                        //youtube
-
-                        if (item_type == "audio/mpeg" ||
-                            item_type == "audio/aac"
-                        ) {
-                            item_media = "podcast";
-                        }
-
-
-                        if (item_summary == "") {
-                            item_summary = $(this).find('media\\:description').text()
-                            item_image = $(this).find('media\\:thumbnail').attr('url');
-                            item_id = $(this).find('yt\\:videoId').text();
-                        }
-
-                        if (item_link.includes("https://www.youtube.com") === true) {
-                            item_media = "youtube";
-                            item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
-                        }
-
-                        if (item_summary == "") {
-                            item_summary = $(this).find('content').text();
-                        }
-
-
-                        if ($(this).find('enclosure').attr('length') != undefined && $(this).find('enclosure').attr('length') != "") {
-                            item_filesize = $(this).find('enclosure').attr('length');
-                            item_filesize = formatFileSize(item_filesize, 2)
-                        }
-
-
-                        item_download = $(this).find('enclosure').attr('url')
-                        if ($(this).find('updated').text() == "") {
+                        //check valid date
+                        if (el.querySelector("updated").innerHTML == "") {
                             item_date_unix = new Date().valueOf();
                         } else {
-                            item_date_unix = Date.parse($(this).find('updated').text());
+                            item_date_unix = Date.parse(el.querySelector("updated").innerHTML);
                         }
 
-                        item_date = new Date(item_date_unix)
-                        item_date = item_date.toDateString()
+
+                       
+                                                item_date = new Date(item_date_unix)
+                                                item_date = item_date.toDateString();
+
+                                                item_download = el.querySelector("enclosure").getAttribute("url");
+                                                item_type = el.querySelector("enclosure").getAttribute("type")
+
+                                                if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
+                                                    item_media = "podcast";
+                                                }
+
+                                                if ($(this).find('itunes:\\duration') != undefined) {
+                                                    item_duration = $(this).find('itunes\\:duration').text()
+                                                    if (item_duration.includes(":") == false) item_duration = "";
+                                                }
+
+                                                if (el.querySelector('enclosure').getAttribute('length') != undefined && el.querySelector('enclosure').getAttribute('length') != "") {
+                                                    item_filesize = el.querySelector('enclosure').getAttribute('length');
+                                                    item_filesize = formatFileSize(item_filesize, 2)
+                                                }
 
 
-                        if ($(this).find('itunes:\\duration') != undefined) {
-                            item_duration = $(this).find('itunes\\:duration').text()
-                            if (item_duration.includes(":") == false) item_duration = "";
-                        }
-
+                        
 
                         content_arr.push({
                             title: item_title,
@@ -595,53 +428,58 @@ $(document).ready(function() {
 
                     }
 
-                })
+                });
+
+*/
 
 
-                $(data).find('item').each(function(index) {
+
+                ////////////
+                //RSS
+                ///////////
+
+                test = data.querySelectorAll("item")
+                test.forEach(function(el, index) {
                     item_media = "rss";
                     item_type = "";
 
 
 
                     if (index < param_limit) {
-                        item_title = $(this).find('title').text();
+
+
+                        //rss
+                        item_title = el.querySelector("title").innerHTML
                         item_cid = hashCode(item_title)
-                        item_summary = $(this).find('description').text();
-                        item_link = $(this).find('link').text();
+                        item_summary = el.querySelector("description").innerHTML;
+                        item_link = el.querySelector("link").getAttribute("href");
 
                         //check valid date
-                        if ($(this).find('pubDate').text() == "") {
+                        if (el.querySelector("pubDate").innerHTML == "") {
                             item_date_unix = new Date().valueOf();
                         } else {
-                            item_date_unix = Date.parse($(this).find('pubDate').text());
+                            item_date_unix = Date.parse(el.querySelector("pubDate").innerHTML);
                         }
 
                         item_date = new Date(item_date_unix)
                         item_date = item_date.toDateString();
 
-
-
-                        item_download = $(this).find('enclosure').attr('url');
-                        item_type = $(this).find('enclosure').attr('type')
+                        item_download = el.querySelector("enclosure").getAttribute("url");
+                        item_type = el.querySelector("enclosure").getAttribute("type")
 
                         if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
                             item_media = "podcast";
                         }
-
-
 
                         if ($(this).find('itunes:\\duration') != undefined) {
                             item_duration = $(this).find('itunes\\:duration').text()
                             if (item_duration.includes(":") == false) item_duration = "";
                         }
 
-                        if ($(this).find('enclosure').attr('length') != undefined && $(this).find('enclosure').attr('length') != "") {
-                            item_filesize = $(this).find('enclosure').attr('length');
+                        if (el.querySelector('enclosure').getAttribute('length') != undefined && el.querySelector('enclosure').getAttribute('length') != "") {
+                            item_filesize = el.querySelector('enclosure').getAttribute('length');
                             item_filesize = formatFileSize(item_filesize, 2)
                         }
-
-
 
                         content_arr.push({
                             title: item_title,
@@ -664,6 +502,10 @@ $(document).ready(function() {
                     }
 
                 });
+
+
+
+
 
             }
 
@@ -747,6 +589,8 @@ $(document).ready(function() {
     //build   
     //write html
     let listened_elements = "";
+
+
     if (localStorage["listened"]) {
         listened_elements = JSON.parse(localStorage["listened"])
 
