@@ -1,5 +1,4 @@
 var redirection_counter = -1;
-var debug = false;
 var page = 0;
 var article_array;
 var window_status = "intro";
@@ -321,8 +320,6 @@ $(document).ready(function() {
 
     let rss_fetcher = function(param_url, param_limit, param_channel, param_category) {
 
-
-
         var xhttp = new XMLHttpRequest({
             mozSystem: true
         });
@@ -354,16 +351,167 @@ $(document).ready(function() {
 
                 var data = xhttp.response;
 
-                alert("hey")
                 //rss atom items
-                rss_title = $(data).find('title:first').text()
+                rss_title = data.querySelector("title").innerHTML
                 let count = k + " / " + source_array.length
 
                 document.getElementById("download").innerText = rss_title
                 bottom_bar("", count, "")
-                //
-                //atom
-                //
+
+
+                ////////////
+                //ATOM
+                ///////////
+                feed_type = data.querySelector("feed").getAttribute("xmlns")
+
+                /*
+                                data.querySelectorAll("entry").forEach(function(el, index) {
+                                    item_media = "rss";
+                                    item_type = "";
+
+                                    if (index < param_limit) {
+
+
+                                        item_title = el.querySelector("title").innerHTML;
+                                        item_summary = el.querySelector("summary").innerHTML;
+
+                                        item_cid = hashCode(item_title)
+                                        item_link = el.querySelector("link").getAttribute("href");
+                                        item_download = el.querySelector("link").getAttribute("href");
+
+
+
+                                        if (el.querySelector('updated').innerHTML == "") {
+                                            item_date_unix = new Date().valueOf();
+                                        } else {
+                                            item_date_unix = Date.parse(el.querySelector('updated').innerHTML)
+                                        }
+
+                                        item_date = new Date(item_date_unix)
+                                        item_date = item_date.toDateString()
+
+
+                                        if (item_summary == "") {
+                                            item_summary = el.querySelector('media\\:description').innerHTML
+                                            item_image = el.querySelector('media\\:thumbnail').getAttribute('url');
+                                            item_id = el.querySelector('yt\\:videoId').innerHTML;
+                                        }
+
+                                        if (item_link.includes("https://www.youtube.com") === true) {
+                                            item_media = "youtube";
+                                            item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
+                                        }
+
+                                        if (item_summary == "") {
+                                            item_summary = el.querySelector('content').innerHTML;
+                                        }
+
+                                        if (el.querySelector('itunes\\:duration') != undefined) {
+                                            item_duration = el.querySelector('itunes\\:duration').innerHTML
+                                            if (item_duration.includes(":") == false) item_duration = "";
+                                            console.log(item_duration)
+                                        }
+
+
+                                        content_arr.push({
+                                            title: item_title,
+                                            summary: item_summary,
+                                            link: item_link,
+                                            date: item_date,
+                                            dateunix: item_date_unix,
+                                            channel: param_channel,
+                                            category: param_category,
+                                            download: item_download,
+                                            type: item_type,
+                                            image: item_image,
+                                            id: item_id,
+                                            duration: item_duration,
+                                            media: item_media,
+                                            filesize: item_filesize,
+                                            cid: item_cid
+
+                                        })
+
+                                    }
+
+                                });
+                   
+
+                                ////////////
+                                //RSS
+                                ///////////
+
+
+                                data.querySelectorAll("item").forEach(function(el, index) {
+                                    item_media = "rss";
+                                    item_type = "";
+
+
+
+                                    if (index < param_limit) {
+
+
+
+                                        //rss
+                                        item_title = el.querySelector("title").innerHTML
+                                        item_cid = hashCode(item_title)
+                                        item_summary = el.querySelector("description").innerHTML;
+                                        item_link = el.querySelector("link").getAttribute("href");
+
+                                        //check valid date
+                                        if (el.querySelector("pubDate").innerHTML == "") {
+                                            item_date_unix = new Date().valueOf();
+                                        } else {
+                                            item_date_unix = Date.parse(el.querySelector("pubDate").innerHTML);
+                                        }
+
+                                        item_date = new Date(item_date_unix)
+                                        item_date = item_date.toDateString();
+
+                                        item_download = el.querySelector("enclosure").getAttribute("url");
+                                        item_type = el.querySelector("enclosure").getAttribute("type")
+
+                                        if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
+                                            item_media = "podcast";
+                                        }
+
+                                        if ($(this).find('itunes:\\duration') != undefined) {
+                                            item_duration = $(this).find('itunes\\:duration').text()
+                                            if (item_duration.includes(":") == false) item_duration = "";
+                                        }
+
+                                        if (el.querySelector('enclosure').getAttribute('length') != undefined && el.querySelector('enclosure').getAttribute('length') != "") {
+                                            item_filesize = el.querySelector('enclosure').getAttribute('length');
+                                            item_filesize = formatFileSize(item_filesize, 2)
+                                        }
+
+                                        content_arr.push({
+                                            title: item_title,
+                                            summary: item_summary,
+                                            link: item_link,
+                                            date: item_date,
+                                            dateunix: item_date_unix,
+                                            channel: param_channel,
+                                            category: param_category,
+                                            download: item_download,
+                                            type: item_type,
+                                            image: item_image,
+                                            id: item_id,
+                                            duration: item_duration,
+                                            media: item_media,
+                                            filesize: item_filesize,
+                                            cid: item_cid
+
+                                        })
+                                    }
+
+                                });
+
+                            }
+
+                            */
+
+
                 $(data).find('entry').each(function(index) {
                     item_media = "rss"
                     item_type = "";
@@ -450,10 +598,6 @@ $(document).ready(function() {
                 })
 
 
-                //
-                //rss 2.0 items
-                //
-
                 $(data).find('item').each(function(index) {
                     item_media = "rss";
                     item_type = "";
@@ -522,6 +666,8 @@ $(document).ready(function() {
                 });
 
             }
+
+
 
             if (xhttp.status === 404) {
                 toaster(param_channel + " url not found", 3000);
@@ -620,6 +766,7 @@ $(document).ready(function() {
         if (activity == true) bottom_bar("add", "select", "")
 
         $.each(content_arr, function(i) {
+            console.log(content_arr[i].category)
 
             //set icon if the article has already been listened to
             let icon = "";
@@ -1252,24 +1399,6 @@ $(document).ready(function() {
 
 
 
-
-    //////////////////////////
-    ////BUG OUTPUT////////////
-    /////////////////////////
-    if (debug) {
-
-        $(window).on("error", function(evt) {
-
-            console.log("jQuery error event:", evt);
-            var e = evt.originalEvent; // get the javascript event
-            console.log("original event:", e);
-            if (e.message) {
-                alert("Error:\n\t" + e.message + "\nLine:\n\t" + e.lineno + "\nFile:\n\t" + e.filename);
-            } else {
-                alert("Error:\n\t" + e.type + "\nElement:\n\t" + (e.srcElement || e.target));
-            }
-        });
-    }
 
 
 
