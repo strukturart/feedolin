@@ -329,7 +329,7 @@ $(document).ready(function() {
 
 
         xhttp.responseType = 'document';
-        xhttp.overrideMimeType('text/xml');
+        //xhttp.overrideMimeType('text/xml');
 
         xhttp.send(null);
 
@@ -349,6 +349,12 @@ $(document).ready(function() {
         xhttp.onload = function() {
             if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
 
+
+
+                //youtube
+                item_image = "";
+                item_id = "";
+
                 var data = xhttp.response;
 
                 //rss atom items
@@ -357,55 +363,62 @@ $(document).ready(function() {
 
                 document.getElementById("download").innerText = rss_title
                 bottom_bar("", count, "")
-                let test = data.querySelectorAll("entry")
-                /*
-                test.forEach(function(el, index) {
+
+
+                el = data.querySelectorAll("entry")
+
+                for (let i = 0; i < el.length; i++) {
                     item_media = "rss";
                     item_type = "";
 
 
-                    if (index < param_limit) {
+                    if (i < param_limit) {
 
                         //rss
-                        item_title = el.querySelector("title").innerHTML
-                        item_cid = hashCode(item_title)
-                        item_summary = el.querySelector("summary").innerHTML;
-                        item_link = el.querySelector("link").getAttribute("href");
+                        if (el[i].querySelector("title")) item_title = el[i].querySelector("title").innerHTML
+                        if (el[i].querySelector("title")) item_cid = hashCode(item_title)
 
-                        console.log("hey")
-
+                        if (el[i].querySelector("summary")) item_summary = el[i].querySelector("summary").innerHTML;
+                        if (el[i].querySelector("content")) item_summary = el[i].querySelector("content").innerHTML;
+                        if (el[i].querySelector("link").getAttribute("href")) item_link = el[i].querySelector("link").getAttribute("href");
 
                         //check valid date
-                        if (el.querySelector("updated").innerHTML == "") {
+                        if (el[i].querySelector("updated").innerHTML == "") {
                             item_date_unix = new Date().valueOf();
                         } else {
-                            item_date_unix = Date.parse(el.querySelector("updated").innerHTML);
+                            item_date_unix = Date.parse(el[i].querySelector("updated").innerHTML);
+                        }
+                        item_date = new Date(item_date_unix)
+                        item_date = item_date.toDateString();
+
+                        if (item_summary == "") {
+                            if (el[i].querySelector('media\\:description') != null || el[i].querySelector('media\\:description') != undefined) {
+                                item_summary = el[i].querySelector('media\\:description').innerHTML
+                                item_image = el[i].querySelector('media\\:thumbnail').getAttribute('url');
+                                item_id = el[i].querySelector('yt\\:videoId').innerHTML;
+
+                            }
+
                         }
 
 
-                       
-                                                item_date = new Date(item_date_unix)
-                                                item_date = item_date.toDateString();
+                        if (item_link.includes("https://www.youtube.com") === true) {
+                            item_media = "youtube";
+                            //item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
+                        } else {
+                            item_media = "rss";
 
-                                                item_download = el.querySelector("enclosure").getAttribute("url");
-                                                item_type = el.querySelector("enclosure").getAttribute("type")
-
-                                                if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
-                                                    item_media = "podcast";
-                                                }
-
-                                                if ($(this).find('itunes:\\duration') != undefined) {
-                                                    item_duration = $(this).find('itunes\\:duration').text()
-                                                    if (item_duration.includes(":") == false) item_duration = "";
-                                                }
-
-                                                if (el.querySelector('enclosure').getAttribute('length') != undefined && el.querySelector('enclosure').getAttribute('length') != "") {
-                                                    item_filesize = el.querySelector('enclosure').getAttribute('length');
-                                                    item_filesize = formatFileSize(item_filesize, 2)
-                                                }
+                        }
 
 
-                        
+
+
+
+
+                        console.log("channel:" + param_channel,
+                            "title:" + item_title, "category:" + param_category, "youtube:" + item_id, "media:" + item_media)
+
+
 
                         content_arr.push({
                             title: item_title,
@@ -428,9 +441,9 @@ $(document).ready(function() {
 
                     }
 
-                });
+                };
 
-*/
+
 
 
 
@@ -438,48 +451,72 @@ $(document).ready(function() {
                 //RSS
                 ///////////
 
-                test = data.querySelectorAll("item")
-                test.forEach(function(el, index) {
+                el = data.querySelectorAll("item")
+
+                for (let i = 0; i < el.length; i++) {
+
                     item_media = "rss";
                     item_type = "";
 
-
-
-                    if (index < param_limit) {
+                    if (i < param_limit) {
 
 
                         //rss
-                        item_title = el.querySelector("title").innerHTML
+                        if (el[i].querySelector("title")) item_title = el[i].querySelector("title").innerHTML
                         item_cid = hashCode(item_title)
-                        item_summary = el.querySelector("description").innerHTML;
-                        item_link = el.querySelector("link").getAttribute("href");
+                        if (el[i].querySelector("description")) item_summary = el[i].querySelector("description").innerHTML;
+                        if (el[i].querySelector("link")) item_link = el[i].querySelector("link");
+
+
 
                         //check valid date
-                        if (el.querySelector("pubDate").innerHTML == "") {
-                            item_date_unix = new Date().valueOf();
-                        } else {
-                            item_date_unix = Date.parse(el.querySelector("pubDate").innerHTML);
+                        if (el[i].querySelector("pubDate") != null) {
+                            if (el[i].querySelector("pubDate").innerHTML == "") {
+                                item_date_unix = new Date().valueOf();
+                            } else {
+                                item_date_unix = Date.parse(el[i].querySelector("pubDate").innerHTML);
+                            }
+
+                            item_date = new Date(item_date_unix)
+                            item_date = item_date.toDateString();
                         }
 
-                        item_date = new Date(item_date_unix)
-                        item_date = item_date.toDateString();
 
-                        item_download = el.querySelector("enclosure").getAttribute("url");
-                        item_type = el.querySelector("enclosure").getAttribute("type")
 
-                        if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
-                            item_media = "podcast";
+                        if (el[i].querySelector("enclosure") != null || el[i].querySelector("enclosure") != undefined) {
+                            if (el[i].querySelector("enclosure").getAttribute("url")) item_download = el[i].querySelector("enclosure").getAttribute("url");
+                            if (el[i].querySelector("enclosure").getAttribute("type")) item_type = el[i].querySelector("enclosure").getAttribute("type")
+
+                            if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
+                                item_media = "podcast";
+                            }
                         }
 
-                        if ($(this).find('itunes:\\duration') != undefined) {
-                            item_duration = $(this).find('itunes\\:duration').text()
+
+
+
+                        if (el[i].querySelector('itunes\\:duration') != undefined || el[i].querySelector('itunes\\:duration') != null) {
+                            item_duration = el[i].querySelector('itunes\\:duration').innerHTML
                             if (item_duration.includes(":") == false) item_duration = "";
                         }
 
-                        if (el.querySelector('enclosure').getAttribute('length') != undefined && el.querySelector('enclosure').getAttribute('length') != "") {
-                            item_filesize = el.querySelector('enclosure').getAttribute('length');
+
+
+                        if (el[i].querySelector('enclosure') != undefined && el[i].querySelector('enclosure') != null) {
+                            item_filesize = 0
+                            item_filesize = el[i].querySelector('enclosure').getAttribute('length');
                             item_filesize = formatFileSize(item_filesize, 2)
                         }
+
+
+
+                        console.log("channel:" + param_channel,
+                            "title:" + item_title, "category:" + param_category, "youtube:" + item_id, "date:" + item_date, "media:" + item_media)
+
+
+
+
+
 
                         content_arr.push({
                             title: item_title,
@@ -501,7 +538,7 @@ $(document).ready(function() {
                         })
                     }
 
-                });
+                };
 
 
 
@@ -512,35 +549,35 @@ $(document).ready(function() {
 
 
             if (xhttp.status === 404) {
-                toaster(param_channel + " url not found", 3000);
+                console.log(param_channel + " url not found", 3000);
 
             }
 
             if (xhttp.status === 408) {
-                toaster(param_channel + "Time out", 3000);
+                console.log(param_channel + "Time out", 3000);
 
             }
 
             if (xhttp.status === 409) {
-                toaster(param_channel + "Conflict", 3000);
+                console.log(param_channel + "Conflict", 3000);
             }
 
             ////Redirection
             if (xhttp.status === 301) {
-                toaster(param_channel + " redirection", 3000);
+                console.log(param_channel + " redirection", 3000);
                 rss_fetcher(xhttp.getResponseHeader('Location'), param_limit, param_channel)
 
 
             }
 
             xhttp.ontimeout = function(e) {
-                toaster(param_channel + "Time out", 3000);
+                console.log(param_channel + "Time out", 3000);
 
             };
 
 
             if (xhttp.status === 0) {
-                toaster(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
+                console.log(param_channel + " status: " + xhttp.status + xhttp.getAllResponseHeaders(), 3000);
             }
 
 
@@ -562,10 +599,11 @@ $(document).ready(function() {
             //after download build html objects
             if (k == source_array.length - 1) {
                 setTimeout(() => {
-
-                    content_arr.sort((a, b) => {
-                        return b.dateunix - a.dateunix;
-                    });
+                    /*
+                                        content_arr.sort((a, b) => {
+                                            return b.dateunix - a.dateunix;
+                                        });
+                                        */
 
                     build()
                     cache.saveCache(content_arr)
@@ -601,6 +639,8 @@ $(document).ready(function() {
 
 
     function build() {
+
+        //console.log(JSON.stringify(content_arr))
         //$("div#navigation div").text(panels[0]);
         bottom_bar("settings", "select", "share")
         top_bar("", panels[0], "")
@@ -610,7 +650,6 @@ $(document).ready(function() {
         if (activity == true) bottom_bar("add", "select", "")
 
         $.each(content_arr, function(i) {
-            console.log(content_arr[i].category)
 
             //set icon if the article has already been listened to
             let icon = "";
@@ -661,21 +700,8 @@ $(document).ready(function() {
 
     }
 
-    /*
-            function set_tabindex() {
-                $('article').removeAttr("tabindex")
-                $('article').filter(':visible').each(function(index) {
-                    $(this).prop("tabindex", index);
 
-                })
-                article_array = $('article').filter(':visible')
-                $('body').find('article[tabindex = 0]').focus()
-                $('div#app-panels article').find([tabindex = "0"]).focus()
 
-                $('article:last').css("margin", "0 0 30px 0")
-            }
-
-               */
     let set_tabindex = function() {
         let divs = document.querySelectorAll('article')
         let t = -1;
