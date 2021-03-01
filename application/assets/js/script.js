@@ -98,6 +98,8 @@ $(document).ready(function() {
 
         xhttp.open('GET', source_url, true)
         xhttp.timeout = 5000;
+        xhttp.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
+
 
 
 
@@ -112,7 +114,7 @@ $(document).ready(function() {
                 try {
                     data = JSON.parse(data);
                 } catch (e) {
-                    $('#download').html("😴<br>Your json file is not valid")
+                    document.querySelector('#download').innerHTML = "😴<br>Your json file is not valid"
                     setTimeout(() => {
 
                         document.getElementById("message-box").style.display = "none"
@@ -134,7 +136,7 @@ $(document).ready(function() {
 
 
         xhttp.onerror = function() {
-            $('#download').html("😴<br>the source file cannot be loaded")
+            document.querySelector('#download').innerHTML = "😴<br>the source file cannot be loaded"
 
             setTimeout(() => {
                 document.getElementById("message-box").style.display = "none"
@@ -192,7 +194,7 @@ $(document).ready(function() {
         finder.on("searchComplete", function(needle, filematchcount) {
             if (filematchcount == 0) {
 
-                $('#download').html("😴<br>No source file founded,<br> please create a json file or set a url in the settings.")
+                document.querySelector('#download').innerHTML = "😴<br>No source file founded,<br> please create a json file or set a url in the settings."
                 setTimeout(() => {
 
                     document.getElementById("message-box").style.display = "none"
@@ -221,7 +223,7 @@ $(document).ready(function() {
                 try {
                     data = JSON.parse(event.target.result);
                 } catch (e) {
-                    $('#download').html("😴<br>Your json file is not valid")
+                    document.querySelector('#download').innerHTML = "😴<br>Your json file is not valid"
                     setTimeout(() => {
                         document.getElementById("message-box").style.display = "none"
                         show_settings()
@@ -245,20 +247,30 @@ $(document).ready(function() {
 
     let start_download_content = function(source_data) {
 
-
-        $.each(source_data, function(i, item) {
-            if (!item.category || item.category == "") {
-                item.category = 0;
+        for (let i = 0; i < source_data.length; i++) {
+            if (!source_data[i].category || source_data[i].category == "") {
+                source_data[i].category = 0;
             }
-            source_array.push([item.url, item.limit, item.channel, item.category]);
-        });
+            source_array.push([source_data[i].url, source_data[i].limit, source_data[i].channel, source_data[i].category]);
+
+        }
+
+        /*
+                $.each(source_data, function(i, item) {
+                    if (!item.category || item.category == "") {
+                        item.category = 0;
+                    }
+                    source_array.push([item.url, item.limit, item.channel, item.category]);
+
+                });
+        */
 
         //check if internet connection 
         if (navigator.onLine) {
             //start download loop
             rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
         } else {
-            $('#download').html("😴<br>Your device is offline, please connect it to the internet ")
+            document.querySelector('#download').innerHTML = "😴<br>Your device is offline, please connect it to the internet "
         }
     }
 
@@ -282,12 +294,14 @@ $(document).ready(function() {
 
 
     function formatFileSize(bytes, decimalPoint) {
-        if (bytes == 0) return false;
-        var k = 1000,
-            dm = decimalPoint || 2,
-            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-            i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
+            var k = 1000,
+
+                dm = decimalPoint || 2,
+                sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
     }
 
 
@@ -326,10 +340,7 @@ $(document).ready(function() {
 
         xhttp.open('GET', param_url, true)
         xhttp.timeout = 2000;
-
-
         xhttp.responseType = 'document';
-        //xhttp.overrideMimeType('text/xml');
 
         xhttp.send(null);
 
@@ -411,12 +422,8 @@ $(document).ready(function() {
                         }
 
 
-
-
-
-
-                        console.log("channel:" + param_channel,
-                            "title:" + item_title, "category:" + param_category, "youtube:" + item_id, "media:" + item_media)
+                        // console.log("channel:" + param_channel,
+                        // "title:" + item_title, "category:" + param_category, "youtube:" + item_id, "media:" + item_media)
 
 
 
@@ -503,15 +510,17 @@ $(document).ready(function() {
 
 
                         if (el[i].querySelector('enclosure') != undefined && el[i].querySelector('enclosure') != null) {
-                            item_filesize = 0
-                            item_filesize = el[i].querySelector('enclosure').getAttribute('length');
-                            item_filesize = formatFileSize(item_filesize, 2)
+                            if (el[i].querySelector('enclosure').getAttribute('length') != undefined || el[i].querySelector('enclosure').getAttribute('length') != null || el[i].querySelector('enclosure').getAttribute('length') != "") {
+                                let en_length = el[i].querySelector('enclosure').getAttribute('length');
+                                console.log(en_length)
+                                item_filesize = formatFileSize(en_length, 2)
+                            }
                         }
 
 
 
-                        console.log("channel:" + param_channel,
-                            "title:" + item_title, "category:" + param_category, "youtube:" + item_id, "date:" + item_date, "media:" + item_media)
+                        //console.log("channel:" + param_channel,
+                        //"title:" + item_title, "category:" + param_category, "youtube:" + item_id, "date:" + item_date, "media:" + item_media)
 
 
 
@@ -599,11 +608,11 @@ $(document).ready(function() {
             //after download build html objects
             if (k == source_array.length - 1) {
                 setTimeout(() => {
-                    /*
-                                        content_arr.sort((a, b) => {
-                                            return b.dateunix - a.dateunix;
-                                        });
-                                        */
+
+                    content_arr.sort((a, b) => {
+                        return b.dateunix - a.dateunix;
+                    });
+
 
                     build()
                     cache.saveCache(content_arr)
