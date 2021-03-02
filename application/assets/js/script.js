@@ -422,9 +422,13 @@ $(document).ready(function() {
                         }
 
 
+
                         // console.log("channel:" + param_channel,
                         // "title:" + item_title, "category:" + param_category, "youtube:" + item_id, "media:" + item_media)
 
+                        if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
+                            console.log(el[i].querySelector('itunes\\:duration').innerHTML)
+                        }
 
 
                         content_arr.push({
@@ -501,31 +505,28 @@ $(document).ready(function() {
 
 
 
-
                         if (el[i].querySelector('itunes\\:duration') != undefined || el[i].querySelector('itunes\\:duration') != null) {
                             item_duration = el[i].querySelector('itunes\\:duration').innerHTML
-                            if (item_duration.includes(":") == false) item_duration = "";
+                            //if (item_duration.includes(":") == false) item_duration = "";
+                            console.log(item_duration)
                         }
 
 
 
                         if (el[i].querySelector('enclosure') != undefined && el[i].querySelector('enclosure') != null) {
-                            if (el[i].querySelector('enclosure').getAttribute('length') != undefined || el[i].querySelector('enclosure').getAttribute('length') != null || el[i].querySelector('enclosure').getAttribute('length') != "") {
+                            if (el[i].querySelector('enclosure').getAttribute('length') > 0) {
                                 let en_length = el[i].querySelector('enclosure').getAttribute('length');
-                                console.log(en_length)
                                 item_filesize = formatFileSize(en_length, 2)
                             }
                         }
 
+                        if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
+                            console.log(el[i].querySelector('itunes\\:duration').innerHTML)
+                        }
 
 
                         //console.log("channel:" + param_channel,
                         //"title:" + item_title, "category:" + param_category, "youtube:" + item_id, "date:" + item_date, "media:" + item_media)
-
-
-
-
-
 
                         content_arr.push({
                             title: item_title,
@@ -763,7 +764,6 @@ $(document).ready(function() {
         }
 
         top_bar("", panels[current_panel], "")
-        //$("div#navigation div").text(panels[current_panel]);
         panels_list(panels[current_panel]);
         set_tabindex();
         tab_index = 0;
