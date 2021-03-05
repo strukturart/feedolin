@@ -1,4 +1,3 @@
-var redirection_counter = -1;
 var page = 0;
 var article_array;
 var window_status = "intro";
@@ -9,10 +8,10 @@ var k = 0;
 var panels = ["all"];
 var current_panel = 0;
 var activity = false;
-var volume_status = false
+var volume_status = false;
 
 
-let tab_index = 0
+let tab_index = 0;
 //xml items
 var rss_title = "";
 var item_title = "";
@@ -95,8 +94,6 @@ let load_source = function() {
     xhttp.open('GET', source_url, true)
     xhttp.timeout = 5000;
     xhttp.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
-
-
 
 
     xhttp.onload = function() {
@@ -676,9 +673,8 @@ function build() {
             '</article>'
         //$('div#news-feed-list').append(article);
         document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
-        document.querySelector("div#news-feed-list article").firstChild.focus()
+        //document.querySelector("div#news-feed-list article").firstChild.focus()
         article_array = document.querySelectorAll('article')
-        //$('div#news-feed-list article')
 
     };
 
@@ -769,6 +765,9 @@ function nav_panels(left_right) {
         inline: "nearest"
     });
 
+    document.activeElement.classList.remove("overscrolling")
+
+
 
 
 
@@ -796,6 +795,10 @@ function nav(move) {
     }
 
 
+    setTimeout(() => {
+        document.activeElement.classList.remove("overscrolling")
+
+    }, 400);
 
 
 
@@ -803,13 +806,18 @@ function nav(move) {
 
     if (move == "+1") {
 
+
         document.activeElement.classList.remove("overscrolling")
 
         tab_index++
         console.log(tab_index, siblings.length)
         if (tab_index == siblings.length || tab_index >= siblings.length) {
+
+
             document.activeElement.classList.add("overscrolling")
             tab_index = siblings.length - 1
+
+
             return true
 
         }
@@ -982,9 +990,8 @@ let show_article_list = function() {
         inline: "nearest"
     });
 
-    set_tabindex();
 
-    tabIndex = document.activeElement.getAttribute("tabIndex")
+    tab_index = document.activeElement.getAttribute("tabIndex")
 
 
 }
