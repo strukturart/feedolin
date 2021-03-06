@@ -5,8 +5,9 @@ const audio_player = ((_) => {
     player.type = "audio/mpeg";
     player.preload = "none";
     let player_status = "";
-    let volume = navigator.volumeManager;
-    navigator.mozAudioChannelManager.volumeControlChannel = 'content';
+    if (navigator.mozAudioChannelManager) {
+        navigator.mozAudioChannelManager.volumeControlChannel = 'content';
+    }
     let active_element = "";
     let listened = [];
 
@@ -93,16 +94,7 @@ const audio_player = ((_) => {
             }, 3000);
         }
 
-
-
-
-
     }
-
-
-
-
-
 
 
     //time duration
@@ -137,8 +129,12 @@ const audio_player = ((_) => {
     };
 
     player.onplay = function() {
-        $("article").removeClass("audio-playing");
-        $(":focus").addClass("audio-playing");
+        let articles = document.querySelectorAll("article");
+        for (var i = 0; i < articles.length; i++) {
+            articles[i].classList.remove("audio-playing");
+
+        }
+        document.activeElement.classList.add("audio-playing");
         player_status = "play";
         bottom_bar("pause", "", "download")
         toaster("play", 3000)
