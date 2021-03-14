@@ -83,23 +83,23 @@ setTimeout(() => {
 ///////////
 ///load source file from online source
 //////////
+
+
 let load_source = function() {
     let source_url = localStorage.getItem('source')
-
-
-    var xhttp = new XMLHttpRequest({
+    let xhttp = new XMLHttpRequest({
         mozSystem: true
     });
 
-    xhttp.open('GET', source_url, true)
+    xhttp.open('GET', source_url + "?test=1&time=12345", true)
     xhttp.timeout = 5000;
-    xhttp.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
-
-
     xhttp.onload = function() {
 
 
         if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
+
+            //alert(this.getResponseHeader("Last-Modified"));
+
 
             let data = xhttp.response;
 
@@ -120,10 +120,6 @@ let load_source = function() {
 
             start_download_content(data)
         }
-    }
-
-    if (xhttp.status == 0) {
-
     }
 
 
@@ -454,10 +450,17 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                     //rss
-                    if (el[i].querySelector("title")) item_title = el[i].querySelector("title").innerHTML
+                    if (el[i].querySelector("title")) {
+                        item_title = el[i].querySelector("title").innerHTML
+                        item_title = item_title.replace("<![CDATA[", "")
+                        item_title = item_title.replace("]]>", "")
+                        console.log(item_title)
+                    }
                     item_cid = hashCode(item_title)
                     if (el[i].querySelector("description")) item_summary = el[i].querySelector("description").childNodes[0].textContent;
-                    if (el[i].querySelector("link")) item_link = el[i].querySelector("link");
+                    if (el[i].querySelector("link")) {
+                        item_link = el[i].querySelector("link");
+                    }
 
 
 
@@ -861,11 +864,6 @@ function nav(move) {
 
 
 
-
-
-
-
-
 let save_settings = function() {
 
     var setting_interval = document.getElementById("time").value;
@@ -1145,7 +1143,7 @@ function handleKeyDown(evt) {
             }
 
             if (window_status == "single-article") {
-                seeking("backward")
+                audio_player.seeking("backward")
                 break;
             }
             break;
@@ -1158,7 +1156,7 @@ function handleKeyDown(evt) {
             }
 
             if (window_status == "single-article") {
-                seeking("forward")
+                audio_player.seeking("forward")
                 break;
 
 
