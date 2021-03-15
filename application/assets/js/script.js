@@ -365,12 +365,45 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                 if (i < param_limit) {
 
                     //rss
-                    if (el[i].querySelector("title")) item_title = el[i].querySelector("title").innerHTML
-                    if (el[i].querySelector("title")) item_cid = hashCode(item_title)
 
-                    if (el[i].querySelector("summary")) item_summary = el[i].querySelector("summary").childNodes[0].textContent;
-                    if (el[i].querySelector("content")) item_summary = el[i].querySelector("content").childNodes[0].textContent;
-                    if (el[i].querySelector("link").getAttribute("href")) item_link = el[i].querySelector("link").getAttribute("href");
+                    item_link = ""
+                    item_summary = ""
+                    item_title = ""
+
+                    item_title = el[i].querySelector("title").innerHTML
+                    item_cid = hashCode(item_title)
+
+
+                    var elem = el[i].querySelector("summary");
+                    if (elem) {
+                        item_summary = el[i].querySelector("summary").childNodes[0].textContent;
+                    }
+
+                    elem = el[i].querySelector("content");
+                    if (elem) {
+                        if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").childNodes[0].textContent;
+                    }
+
+
+
+                    elem = el[i].querySelector("link");
+
+                    if (elem) {
+                        if (el[i].querySelector("link").getAttribute("href") != undefined) {
+                            item_link = el[i].querySelector("link").getAttribute("href");
+                            console.log(el[i].querySelector("link").getAttribute("href"))
+                        }
+
+                    }
+
+
+                    //console.log(el[i].querySelector('media\\:description').innerHTML)
+
+
+
+
+
+
 
                     //check valid date
                     if (el[i].querySelector("updated").innerHTML == "") {
@@ -381,15 +414,15 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     item_date = new Date(item_date_unix)
                     item_date = item_date.toDateString();
 
-                    if (item_summary == "") {
-                        if (el[i].querySelector('media\\:description') != null || el[i].querySelector('media\\:description') != undefined) {
-                            item_summary = el[i].querySelector('media\\:description').innerHTML
-                            item_image = el[i].querySelector('media\\:thumbnail').getAttribute('url');
-                            item_id = el[i].querySelector('yt\\:videoId').innerHTML;
 
-                        }
+                    if (el[i].querySelector('media\\:description') != null || el[i].querySelector('media\\:description') != undefined) {
+                        item_summary = el[i].querySelector('media\\:description').innerHTML
+                        item_image = el[i].querySelector('media\\:thumbnail').getAttribute('url');
+                        item_id = el[i].querySelector('yt\\:videoId').innerHTML;
 
                     }
+
+
 
 
                     if (item_link.includes("https://www.youtube.com") === true) {
@@ -401,11 +434,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     }
 
 
-
-
-                    if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                        console.log(el[i].querySelector('itunes\\:duration').innerHTML)
-                    }
+                    //if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {}
 
 
                     content_arr.push({
@@ -454,10 +483,24 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         item_title = el[i].querySelector("title").innerHTML
                         item_title = item_title.replace("<![CDATA[", "")
                         item_title = item_title.replace("]]>", "")
-                        console.log(item_title)
                     }
                     item_cid = hashCode(item_title)
-                    if (el[i].querySelector("description")) item_summary = el[i].querySelector("description").childNodes[0].textContent;
+                    if (el[i].querySelector("description")) {
+
+                        const searchRegExp = /\s/g;
+
+
+
+
+                        item_summary = el[i].querySelector("description").innerHTML;
+                        item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
+                        //item_summary = item_summary.replace("]]>", "")
+                        item_summary = item_summary.replace(/(]]>)/g, "")
+
+
+
+                    }
+                    i
                     if (el[i].querySelector("link")) {
                         item_link = el[i].querySelector("link");
                     }
@@ -491,8 +534,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                     if (el[i].querySelector('itunes\\:duration') != undefined || el[i].querySelector('itunes\\:duration') != null) {
                         item_duration = el[i].querySelector('itunes\\:duration').innerHTML
-                        //if (item_duration.includes(":") == false) item_duration = "";
-                        console.log(item_duration)
                     }
 
 
@@ -674,9 +715,7 @@ function build() {
             '<div class="summary">' + content_arr[i].summary +
             '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
             '</article>'
-        //$('div#news-feed-list').append(article);
         document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
-        //document.querySelector("div#news-feed-list article").firstChild.focus()
         article_array = document.querySelectorAll('article')
 
     };
