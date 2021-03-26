@@ -397,13 +397,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     }
 
 
-                    //console.log(el[i].querySelector('media\\:description').innerHTML)
-
-
-
-
-
-
 
                     //check valid date
                     if (el[i].querySelector("updated").innerHTML == "") {
@@ -417,6 +410,12 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                     if (el[i].querySelector('media\\:description') != null || el[i].querySelector('media\\:description') != undefined) {
                         item_summary = el[i].querySelector('media\\:description').innerHTML
+                        //item_summary = el[i].querySelector('media\\:description').childNodes[0].textContent;
+                        //item_summary = el[i].querySelector('media\\:description').textContent;
+
+                        item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
+                        item_summary = item_summary.replace(/(]]>)/g, "")
+
                         item_image = el[i].querySelector('media\\:thumbnail').getAttribute('url');
                         item_id = el[i].querySelector('yt\\:videoId').innerHTML;
 
@@ -487,17 +486,12 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     item_cid = hashCode(item_title)
                     if (el[i].querySelector("description")) {
 
-                        const searchRegExp = /\s/g;
-
-
-
-
+                        //item_summary = el[i].querySelector("description").childNodes[0].textContent;
+                        //item_summary = el[i].querySelector("description").textContent;
                         item_summary = el[i].querySelector("description").innerHTML;
+
                         item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
-                        //item_summary = item_summary.replace("]]>", "")
                         item_summary = item_summary.replace(/(]]>)/g, "")
-
-
 
                     }
                     i
@@ -669,6 +663,15 @@ if (localStorage["listened"]) {
 }
 
 
+function renderHello() {
+    var template = document.getElementById("template").innerHTML;
+    var rendered = Mustache.render(template, {
+        data: content_arr
+    });
+    document.getElementById("news-feed-list").innerHTML = rendered;
+}
+
+
 
 function build() {
 
@@ -702,34 +705,57 @@ function build() {
             panels.push(content_arr[i].category);
         }
 
-        let article = '<article class="all" tabindex="' + i + '" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-id="' + content_arr[i].cid + '" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
-            '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
-            '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
-            '<div class="channel">' + content_arr[i].channel + '<span>' + icon + '</span></div>' +
-            '<time>' + content_arr[i].date + '</time>' +
-            '<div class="flex duration-filesize">' +
-            '<div class="duration">' + content_arr[i].duration + '</div>' +
-            '<div class="filesize">' + content_arr[i].filesize + '</div>' +
-            '</div>' +
-            '<h1 class="title">' + content_arr[i].title + '</h1>' +
-            '<div class="summary">' + content_arr[i].summary +
-            '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
-            '</article>'
-        document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
-        article_array = document.querySelectorAll('article')
+
+        /*
+
+                let article = '<article class="all" tabindex="' + i + '" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-id="' + content_arr[i].cid + '" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
+                    '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
+                    '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
+                    '<div class="channel">' + content_arr[i].channel + '<span>' + icon + '</span></div>' +
+                    '<time>' + content_arr[i].date + '</time>' +
+                    '<div class="flex duration-filesize">' +
+                    '<div class="duration">' + content_arr[i].duration + '</div>' +
+                    '<div class="filesize">' + content_arr[i].filesize + '</div>' +
+                    '</div>' +
+                    '<h1 class="title">' + content_arr[i].title + '</h1>' +
+                    '<div class="summary">' + content_arr[i].summary +
+                    '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
+                    '</article>'
+                document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
+                article_array = document.querySelectorAll('article')
+
+        */
 
     };
+
+
+    renderHello()
+
+
 
     //set_tabindex()
     lazyload.ll();
     document.getElementById("message-box").style.display = "none"
     window_status = "article-list";
     top_bar("", "all", "")
+    setTimeout(() => {
+        article_array = document.querySelectorAll('article')
 
-    let p = document.querySelectorAll('article')
-    p[0].focus()
 
-    $('article:last').css("margin", "0 0 30px 0")
+        article_array[10].focus()
+
+        $('article:last').css("margin", "0 0 30px 0")
+
+        //document.querySelector('article[tabindex="0"]').focus()
+
+        //document.getElementById("news-feed-list").firstChild.innerText = "hello"
+
+
+        console.log("hey")
+
+
+    }, 10000);
+
 }
 
 
@@ -753,6 +779,8 @@ let set_tabindex = function() {
 
     document.querySelector('article[tabIndex="0"]').focus()
     tab_index = 0;
+
+
 }
 
 
@@ -852,14 +880,11 @@ function nav(move) {
         document.activeElement.classList.remove("overscrolling")
 
         tab_index++
-        console.log(tab_index, siblings.length)
         if (tab_index == siblings.length || tab_index >= siblings.length) {
 
 
             document.activeElement.classList.add("overscrolling")
             tab_index = siblings.length - 1
-
-
             return true
 
         }

@@ -47,6 +47,26 @@
             </div>
             <div id="top"></div>
             <div id="news-feed-list"></div>
+
+            <script id="template" type="x-tmpl-mustache">
+                {{#data}}
+                    <article class="all" data-media="{{media}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}">
+                        <div class="flex grid-col-10">
+                            <div class="podcast-icon"><img src="assets/image/podcast.png"></div>
+                            <div class="youtube-icon"><img src="assets/image/youtube.png"></div>
+                        </div>
+                        <div class="channel">{{channel}}<span></span></div>
+                        <time>{{date}}</time>
+                        <div class="flex duration-filesize">
+
+                        </div>
+                        <h1 class="title">{{title}}</h1>
+                        <div class="summary">{{summary}}
+                            <img class="lazyload" data-src="{{image}}" src="">
+                        </div>
+                    </article>
+                {{/data}}
+            </script>
             <div id="source-page" class="width-100 height-100">
                 <div id="iframe-wrapper">
                     <iframe src=" " scrolling="yes" frameborder="”0″" mozbrowser allowfullscreen></iframe>
@@ -96,6 +116,8 @@
 
 
 
+
+
 <script src="assets/js/jQuery-3.1.0.js "></script>
 <script src="assets/js/audio.js "></script>
 <script src="assets/js/downloader.js "></script>
@@ -103,11 +125,11 @@
 <script src="assets/js/moments.min.js "></script>
 <script src="assets/js/applait.finder.min.js "></script>
 <script src="assets/js/helper.js "></script>
+<script src="assets/js/mustache.js"></script>
 <script src="assets/js/cache.js "></script>
 <script src="assets/js/lazyload.js "></script>
 <script src="assets/js/exclude-js/jsQR.js"></script>
 <script src="assets/js/scan.js"></script>
 <script src="assets/js/script.js "></script>
-
 
 </html>
