@@ -43,9 +43,12 @@ setTimeout(() => {
 
         //check if source file is set
         if (localStorage['source_local'] == undefined && localStorage['source'] == undefined) {
-            show_settings()
+            //show_settings()
+            localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
             document.getElementById("message-box").style.display = "none"
-            return false;
+            load_source()
+
+            //return false;
         }
         //get update time; cache || download
         let a = localStorage.getItem('interval');
