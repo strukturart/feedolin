@@ -43,12 +43,12 @@ setTimeout(() => {
 
         //check if source file is set
         if (localStorage['source_local'] == undefined && localStorage['source'] == undefined) {
-            //show_settings()
-            localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
+            show_settings()
+            //localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
             document.getElementById("message-box").style.display = "none"
-            load_source()
+            //load_source()
 
-            //return false;
+            return false;
         }
         //get update time; cache || download
         let a = localStorage.getItem('interval');
@@ -708,27 +708,6 @@ function build() {
             panels.push(content_arr[i].category);
         }
 
-
-        /*
-
-                let article = '<article class="all" tabindex="' + i + '" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-id="' + content_arr[i].cid + '" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
-                    '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
-                    '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
-                    '<div class="channel">' + content_arr[i].channel + '<span>' + icon + '</span></div>' +
-                    '<time>' + content_arr[i].date + '</time>' +
-                    '<div class="flex duration-filesize">' +
-                    '<div class="duration">' + content_arr[i].duration + '</div>' +
-                    '<div class="filesize">' + content_arr[i].filesize + '</div>' +
-                    '</div>' +
-                    '<h1 class="title">' + content_arr[i].title + '</h1>' +
-                    '<div class="summary">' + content_arr[i].summary +
-                    '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
-                    '</article>'
-                document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
-                article_array = document.querySelectorAll('article')
-
-        */
-
     };
 
 
@@ -743,20 +722,7 @@ function build() {
     top_bar("", "all", "")
     setTimeout(() => {
         article_array = document.querySelectorAll('article')
-
-
-        article_array[10].focus()
-
-        $('article:last').css("margin", "0 0 30px 0")
-
-        //document.querySelector('article[tabindex="0"]').focus()
-
-        //document.getElementById("news-feed-list").firstChild.innerText = "hello"
-
-
-        console.log("hey")
-
-
+        article_array[0].focus()
     }, 10000);
 
 }
