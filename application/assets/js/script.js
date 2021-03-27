@@ -10,7 +10,6 @@ var current_panel = 0;
 var activity = false;
 var volume_status = false;
 
-
 let tab_index = 0;
 //xml items
 var rss_title = "";
@@ -295,15 +294,11 @@ qr_listener.addEventListener("focus", (event) => {
     bottom_bar("save", "qr", "");
     qrscan = true
     toaster("press enter to open the qr-code-scanner, it is helpfull for a long url", 3000)
-
-
 });
 
 qr_listener.addEventListener("blur", (event) => {
     bottom_bar("save", "", "");
     qrscan = false
-
-
 });
 
 
@@ -346,8 +341,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             var data = xhttp.response;
 
             //rss atom items
-            rss_title = data.querySelector("title").innerHTML
-            let count = k + " / " + source_array.length - 1
+            rss_title = data.querySelector("title").innerText
+            let count = k + " / " + source_array.length
 
             document.getElementById("download").innerText = rss_title
             bottom_bar("", count, "")
