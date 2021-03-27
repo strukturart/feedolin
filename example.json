@@ -1,7 +1,7 @@
 [{
         "category": "all",
         "url": "https://rss.bhackers.uber.space/introduction.xml",
-        "limit": "1",
+        "limit": "2",
         "channel": "introduction"
     },
 
@@ -14,13 +14,13 @@
     {
         "category": "forum",
         "url": "https://forum.getkirby.com/latest.rss",
-        "limit": "3",
+        "limit": "1",
         "channel": "getKirby"
     },
     {
         "category": "podcast",
         "url": "https://feeds.br.de/breitengrad/feed.xml",
-        "limit": "3",
+        "limit": "1",
         "channel": "Breitengrad"
     },
     {

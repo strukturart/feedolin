@@ -341,8 +341,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             var data = xhttp.response;
 
             //rss atom items
-            rss_title = data.querySelector("title").innerText
-            let count = k + " / " + source_array.length
+            rss_title = data.querySelector("title").innerHTML
+            let count = k + " / " + (source_array.length - 1)
 
             document.getElementById("download").innerText = rss_title
             bottom_bar("", count, "")
@@ -369,12 +369,16 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                     var elem = el[i].querySelector("summary");
                     if (elem) {
-                        item_summary = el[i].querySelector("summary").childNodes[0].textContent;
+                        //item_summary = el[i].querySelector("summary").childNodes[0].textContent;
+                        item_summary = el[i].querySelector("summary").innerHTML;
+
                     }
 
                     elem = el[i].querySelector("content");
                     if (elem) {
-                        if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").childNodes[0].textContent;
+                        //if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").childNodes[0].textContent;
+                        if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").innerHTML;
+
                     }
 
 
@@ -513,13 +517,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_media = "podcast";
                         }
                     }
-
-
-
-                    if (el[i].querySelector('itunes\\:duration') != undefined || el[i].querySelector('itunes\\:duration') != null) {
-                        item_duration = el[i].querySelector('itunes\\:duration').innerHTML
-                    }
-
 
 
                     if (el[i].querySelector('enclosure') != undefined && el[i].querySelector('enclosure') != null) {
@@ -708,9 +705,8 @@ function build() {
     top_bar("", "all", "")
     setTimeout(() => {
         article_array = document.querySelectorAll('article')
-
-        document.getElementById("news-feed-list").firstChild.style.background = "red"
-    }, 1000);
+        set_tabindex()
+    }, 1500);
 
 }
 
