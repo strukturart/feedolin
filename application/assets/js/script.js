@@ -43,12 +43,12 @@ setTimeout(() => {
 
         //check if source file is set
         if (localStorage['source_local'] == undefined && localStorage['source'] == undefined) {
-            show_settings()
-            //localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
+            //show_settings()
+            localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
             document.getElementById("message-box").style.display = "none"
-            //load_source()
+            load_source()
 
-            return false;
+            //return false;
         }
         //get update time; cache || download
         let a = localStorage.getItem('interval');
@@ -333,17 +333,12 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
     xhttp.addEventListener("loadend", loadEnd);
 
 
-
     function transferFailed() {
         toaster("failed" + param_channel, 1000)
-
     }
 
     xhttp.onload = function() {
         if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-
-
-
             //youtube
             item_image = "";
             item_id = "";
@@ -352,7 +347,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
             //rss atom items
             rss_title = data.querySelector("title").innerHTML
-            let count = k + " / " + source_array.length
+            let count = k + " / " + source_array.length - 1
 
             document.getElementById("download").innerText = rss_title
             bottom_bar("", count, "")
@@ -429,14 +424,14 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                     if (item_link.includes("https://www.youtube.com") === true) {
                         item_media = "youtube";
-                        //item_link = "https://www.youtube.com/embed/" + item_id + "?enablejsapi=1&autoplay=1"
                     } else {
                         item_media = "rss";
-
                     }
 
 
-                    //if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {}
+                    if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
+                        item_duration = el[i].querySelector('itunes\\:duration').innerText
+                    }
 
 
                     content_arr.push({
@@ -461,9 +456,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                 }
 
             };
-
-
-
 
 
             ////////////
@@ -543,7 +535,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     }
 
                     if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                        console.log(el[i].querySelector('itunes\\:duration').innerHTML)
+                        el[i].querySelector('itunes\\:duration').innerText
                     }
 
 
@@ -678,8 +670,7 @@ function renderHello() {
 
 function build() {
 
-    //console.log(JSON.stringify(content_arr))
-    //$("div#navigation div").text(panels[0]);
+
     bottom_bar("settings", "select", "share")
     top_bar("", panels[0], "")
 
@@ -722,8 +713,9 @@ function build() {
     top_bar("", "all", "")
     setTimeout(() => {
         article_array = document.querySelectorAll('article')
-        article_array[0].focus()
-    }, 10000);
+
+        document.getElementById("news-feed-list").firstChild.style.background = "red"
+    }, 1000);
 
 }
 
@@ -869,12 +861,6 @@ function nav(move) {
 
     }
 
-
-
-
-
-
-
     if (move == "-1" && tab_index > 0) {
         document.activeElement.classList.remove("overscrolling")
 
@@ -960,7 +946,7 @@ let show_article = function() {
             bottom_bar("pause", "", "download")
 
         } else {
-            bottom_bar("play", "", "download")
+            bottom_bar("play", "", "")
         }
 
 
@@ -1100,36 +1086,36 @@ function open_url() {
     }
 
 
+    /*
+        if (document.activeElement.getAttribute("data-media") == "podcast") {
+            var finder = new Applait.Finder({
+                type: "music",
+                debugMode: false
+            });
 
-    if (document.activeElement.getAttribute("data-media") == "podcast") {
-        var finder = new Applait.Finder({
-            type: "music",
-            debugMode: false
-        });
+            finder.on("empty", function(needle) {
+                toaster("no sdcard found");
+                return;
+            });
 
-        finder.on("empty", function(needle) {
-            toaster("no sdcard found");
+            finder.search(title);
+
+            finder.on("fileFound", function(file, fileinfo, storageName) {
+
+                toaster("The file is already available", 3000);
+                return false;
+            });
+
+            finder.on("searchComplete", function(needle, filematchcount) {
+                if (filematchcount == 0) {
+                    download.downloadFile(link_download, title);
+                }
+            });
+
             return;
-        });
+        }
 
-        finder.search(title);
-
-        finder.on("fileFound", function(file, fileinfo, storageName) {
-
-            toaster("The file is already available", 3000);
-            return false;
-        });
-
-        finder.on("searchComplete", function(needle, filematchcount) {
-            if (filematchcount == 0) {
-                download.downloadFile(link_download, title);
-            }
-        });
-
-        return;
-    }
-
-
+    */
 
 
 }

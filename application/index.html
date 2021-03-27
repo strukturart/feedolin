@@ -4,14 +4,10 @@
 <head>
     <title>rss-reader</title>
     <meta charset="utf-8" />
-
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <link rel="stylesheet" href="assets/css/grid.css" />
     <link rel="stylesheet" href="assets/css/qr-reader.css" />
-
-
-
 </head>
 
 <body>
@@ -50,7 +46,7 @@
 
             <script id="template" type="x-tmpl-mustache">
                 {{#data}}
-                    <article class="all" data-media="{{media}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}">
+                    <article tabIndex=0 class="all" data-media="{{media}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}">
                         <div class="flex grid-col-10">
                             <div class="podcast-icon"><img src="assets/image/podcast.png"></div>
                             <div class="youtube-icon"><img src="assets/image/youtube.png"></div>

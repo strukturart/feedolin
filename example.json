@@ -1,11 +1,38 @@
 [{
-    "category": "news",
-    "url": "http://feeds.feedburner.com/euronews/en/home?format=xml",
-    "limit": "3",
-    "channel": "euronews"
-}, {
-    "category": "news",
-    "url": "https://www.theguardian.com/world/zimbabwe/rss",
-    "limit": "3",
-    "channel": "theguardian"
-}]
+        "category": "all",
+        "url": "https://rss.bhackers.uber.space/introduction.xml",
+        "limit": "3",
+        "channel": "introduction"
+    },
+
+    {
+        "category": "forum",
+        "url": "https://www.reddit.com/r/KaiOS/.rss",
+        "limit": "3",
+        "channel": "ZReddit - kaios"
+    },
+    {
+        "category": "forum",
+        "url": "https://forum.getkirby.com/latest.rss",
+        "limit": "3",
+        "channel": "getKirby"
+    },
+    {
+        "category": "podcast",
+        "url": "https://feeds.br.de/breitengrad/feed.xml",
+        "limit": "5",
+        "channel": "Breitengrad"
+    },
+    {
+        "category": "news",
+        "url": "https://rss.bhackers.uber.space/btc.php",
+        "limit": "100",
+        "channel": "BTC"
+    },
+    {
+        "category": "weather",
+        "url": "https://rss.bhackers.uber.space/weather.php?lat=47&lng=7&units=metric",
+        "limit": "3",
+        "channel": "weather"
+    }
+]
