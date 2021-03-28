@@ -377,7 +377,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     elem = el[i].querySelector("content");
                     if (elem) {
                         //if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").childNodes[0].textContent;
-                        if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").innerHTML;
+                        //if (el[i].querySelector("content").childNodes[0] != undefined) item_summary = el[i].querySelector("content").innerHTML;
 
                     }
 
@@ -417,8 +417,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         item_id = el[i].querySelector('yt\\:videoId').innerHTML;
 
                     }
-
-
 
 
                     if (item_link.includes("https://www.youtube.com") === true) {
@@ -527,7 +525,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     }
 
                     if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                        el[i].querySelector('itunes\\:duration').innerText
+                        item_duration = el[i].querySelector('itunes\\:duration').innerText
                     }
 
 
@@ -934,7 +932,7 @@ let show_article = function() {
     if (document.activeElement.getAttribute("data-media") == "podcast") {
 
         if (document.activeElement.classList.contains("audio-playing")) {
-            bottom_bar("pause", "", "download")
+            bottom_bar("pause", "", "")
 
         } else {
             bottom_bar("play", "", "")
@@ -1274,6 +1272,7 @@ function handleKeyDown(evt) {
             evt.preventDefault();
 
             if (window_status == "intro") {
+                bottom_bar("", "", "")
                 window.close();
                 break;;
             }
