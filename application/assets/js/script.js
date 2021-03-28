@@ -369,7 +369,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                         var elem = el[i].querySelector("summary");
                         if (elem) {
-                            item_summary = el[i].querySelector("summary").innerHTML;
+                            //item_summary = el[i].querySelector("summary").innerHTML;
+                            item_summary = el[i].querySelector("summary").textContent;
+
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
@@ -381,7 +383,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                         elem = el[i].querySelector("content");
                         if (elem) {
-                            item_summary = el[i].querySelector("content").innerHTML;
+                            //item_summary = el[i].querySelector("content").innerHTML;
+                            item_summary = el[i].querySelector("content").textContent;
+
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
@@ -712,6 +716,24 @@ function build() {
             panels.push(content_arr[i].category);
         }
 
+        /*
+
+                let article = '<article class="all" tabindex="' + i + '" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-id="' + content_arr[i].cid + '" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
+                    '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
+                    '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
+                    '<div class="channel">' + content_arr[i].channel + '<span>' + icon + '</span></div>' +
+                    '<time>' + content_arr[i].date + '</time>' +
+                    '<div class="flex duration-filesize">' +
+                    '<div class="duration">' + content_arr[i].duration + '</div>' +
+                    '<div class="filesize">' + content_arr[i].filesize + '</div>' +
+                    '</div>' +
+                    '<h1 class="title">' + content_arr[i].title + '</h1>' +
+                    '<div class="summary">' + content_arr[i].summary +
+                    '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
+                    '</article>'
+                document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
+                article_array = document.querySelectorAll('article')
+        */
     };
 
 
