@@ -34,5 +34,12 @@
         "url": "https://rss.bhackers.uber.space/weather.php?lat=47&lng=7&units=metric",
         "limit": "1",
         "channel": "weather"
-    }
+    },
+ {
+        "category": "news",
+        "url": "https://blog.bananahackers.net/farooqkz/feed/",
+        "limit": "3",
+        "channel": "https://blog.bananahackers.net/"
+         
+ }
 ]
