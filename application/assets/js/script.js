@@ -1,5 +1,5 @@
 var page = 0;
-var article_array;
+let article_array;
 var window_status = "intro";
 var content_arr = [];
 var source_array = [];
@@ -388,7 +388,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     if (elem) {
                         if (el[i].querySelector("link").getAttribute("href") != undefined) {
                             item_link = el[i].querySelector("link").getAttribute("href");
-                            console.log(el[i].querySelector("link").getAttribute("href"))
+                            item_download = el[i].querySelector("link").getAttribute("href")
                         }
 
                     }
@@ -429,7 +429,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                     if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                        item_duration = el[i].querySelector('itunes\\:duration').innerText
+                        item_duration = el[i].querySelector('itunes\\:duration').innerHTML
+                        console.log(item_duration)
                     }
 
 
@@ -491,6 +492,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     i
                     if (el[i].querySelector("link")) {
                         item_link = el[i].querySelector("link");
+                        item_download = el[i].querySelector("link");
+
                     }
 
 
@@ -527,7 +530,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     }
 
                     if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                        el[i].querySelector('itunes\\:duration').innerText
+                        item_duration = el[i].querySelector('itunes\\:duration').innerHTML
+                        console.log(item_duration)
                     }
 
 
@@ -656,6 +660,7 @@ function renderHello() {
         data: content_arr
     });
     document.getElementById("news-feed-list").innerHTML = rendered;
+
 }
 
 
@@ -704,9 +709,13 @@ function build() {
     window_status = "article-list";
     top_bar("", "all", "")
     setTimeout(() => {
+
         article_array = document.querySelectorAll('article')
-        set_tabindex()
-    }, 1500);
+        article_array[0].focus()
+
+
+
+    }, 2500);
 
 }
 
