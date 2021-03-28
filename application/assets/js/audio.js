@@ -112,7 +112,7 @@ const audio_player = ((_) => {
             }
             var duration = minutes + ":" + seconds;
 
-            bottom_bar("pause", duration, "download")
+            bottom_bar("pause", duration, "")
 
 
         }, 1000);
@@ -124,7 +124,7 @@ const audio_player = ((_) => {
     player.onpause = function() {
 
         player_status = "pause";
-        bottom_bar("play", "", "download")
+        bottom_bar("play", "", "")
         toaster("pause", 3000)
     };
 
@@ -136,7 +136,7 @@ const audio_player = ((_) => {
         }
         document.activeElement.classList.add("audio-playing");
         player_status = "play";
-        bottom_bar("pause", "", "download")
+        bottom_bar("pause", "", "")
         toaster("play", 3000)
         active_element = document.activeElement.getAttribute("data-id")
 
@@ -150,7 +150,7 @@ const audio_player = ((_) => {
 
         listened.push(active_element)
         localStorage.setItem("listened", JSON.stringify(listened));
-        bottom_bar("pause", "", "download")
+        bottom_bar("pause", "", "")
 
     };
 
