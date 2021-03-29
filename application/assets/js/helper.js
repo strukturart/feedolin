@@ -104,27 +104,35 @@ function top_bar(left, center, right) {
 
 
 //silent notification
-function toaster(text, time, height) {
+function toaster(text, time) {
+    document.querySelector("div#toast").innerHTML = text;
+    var elem = document.querySelector("div#toast");
+    var pos = -100;
+    var id = setInterval(down, 5);
+    var id2;
 
+    function down() {
+        if (pos == 0) {
+            clearInterval(id);
+            setTimeout(() => {
+                id2 = setInterval(up, 5);
+            }, time);
+        } else {
+            pos++;
+            elem.style.top = pos + "px";
+        }
+    }
 
-    $("div#toast").html(text)
-
-    $("div#toast").animate({
-        top: "0px"
-    }, 1000, "linear", function() {
-        $("div#toast").delay(time).animate({
-            top: "-110vh"
-        }, 1000);
-
-        $("div#toast").css("height", height)
-
-
-
-    });
-
-
-
+    function up() {
+        if (pos == -1000) {
+            clearInterval(id2);
+        } else {
+            pos--;
+            elem.style.top = pos + "px";
+        }
+    }
 }
+
 
 
 

@@ -42,7 +42,6 @@ setTimeout(() => {
 
         //check if source file is set
         if (localStorage['source_local'] == undefined && localStorage['source'] == undefined) {
-            //show_settings()
             localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
             document.getElementById("message-box").style.display = "none"
             load_source()
@@ -217,7 +216,7 @@ let load_local_file = function() {
                 document.querySelector('#download').innerHTML = "😴<br>Your json file is not valid"
                 setTimeout(() => {
                     document.getElementById("message-box").style.display = "none"
-                    show_settings()
+                    show_settings
 
                 }, 3000);
                 return false;
@@ -902,7 +901,6 @@ function nav(move) {
 
 
 let save_settings = function() {
-
     var setting_interval = document.getElementById("time").value;
     var setting_source = document.getElementById("source").value;
     var setting_source_local = document.getElementById("source-local").value;
@@ -930,6 +928,9 @@ let save_settings = function() {
     setTimeout(() => {
         window.close()
     }, 7000);
+
+    console.log("save")
+
     return true
 }
 
@@ -1038,7 +1039,7 @@ let show_settings = function() {
     tab_index = 0;
     document.getElementById("top-bar").style.display = "none"
 
-    $("div#news-feed").css("padding", "0px 0px 30px 0px")
+    //$("div#news-feed").css("padding", "0px 0px 30px 0px")
 
     let elem = document.querySelectorAll("article");
     for (let i = 0; i < elem.length; i++) {
@@ -1221,9 +1222,6 @@ function handleKeyDown(evt) {
             break;
 
 
-
-
-
         case 'ArrowUp':
 
             if (window_status == "settings") {
@@ -1272,6 +1270,7 @@ function handleKeyDown(evt) {
             }
 
             if (window_status == "settings") {
+                console.log("save settings")
                 save_settings()
                 break
 
