@@ -318,6 +318,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
     xhttp.open('GET', param_url, true)
     xhttp.timeout = 2000;
     xhttp.responseType = 'document';
+    xhttp.overrideMimeType('text/xml');
+
 
     xhttp.send(null);
 
@@ -395,12 +397,11 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                         }
 
-                        console.log(item_summary)
 
 
 
                         if (el[i].querySelector('media\\:description') != null || el[i].querySelector('media\\:description') != undefined) {
-                            item_summary = el[i].querySelector('media\\:description').innerHTML
+                            item_summary = el[i].querySelector('media\\:description').textContent;
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
@@ -437,8 +438,12 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             }
                         }
 
+
+
                         if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                            item_duration = el[i].querySelector('itunes\\:duration').innerText
+                            item_duration = el[i].querySelector('itunes\\:duration').textContent
+                            console.log(el[i].querySelector('itunes\\:duration').textContent)
+
                         }
 
 
@@ -450,9 +455,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
                         item_date = new Date(item_date_unix)
                         item_date = item_date.toDateString();
-
-
-
 
 
                         if (item_link.includes("https://www.youtube.com") === true) {
@@ -509,7 +511,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
                         item_cid = hashCode(item_title)
                         if (el[i].querySelector("description")) {
-                            item_summary = el[i].querySelector("description").innerHTML;
+                            item_summary = el[i].querySelector("description").textContent;
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
 
@@ -555,8 +557,11 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
                         if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                            item_duration = el[i].querySelector('itunes\\:duration').innerText
+                            console.log(el[i].querySelector('itunes\\:duration').textContent)
+
+                            item_duration = el[i].querySelector('itunes\\:duration').textContent
                         }
+
 
 
                         content_arr.push({
@@ -709,31 +714,11 @@ function build() {
 
         }
 
-
-
         //set panel category
         if (panels.includes(content_arr[i].category) === false && content_arr[i].category != 0) {
             panels.push(content_arr[i].category);
         }
 
-        /*
-
-                let article = '<article class="all" tabindex="' + i + '" data-media="' + content_arr[i].media + '" data-order = "' + content_arr[i].dateunix + '" data-category = "' + content_arr[i].category + ' all" data-id="' + content_arr[i].cid + '" data-link = "' + content_arr[i].link + '" data-youtube-id= "' + content_arr[i].id + '" data-download="' + content_arr[i].download + '"data-audio-type="' + content_arr[i].type + '">' +
-                    '<div class="flex grid-col-10"><div class="podcast-icon"><img src="assets/image/podcast.png"></div>' +
-                    '<div class="youtube-icon"><img src="assets/image/youtube.png"></div></div>' +
-                    '<div class="channel">' + content_arr[i].channel + '<span>' + icon + '</span></div>' +
-                    '<time>' + content_arr[i].date + '</time>' +
-                    '<div class="flex duration-filesize">' +
-                    '<div class="duration">' + content_arr[i].duration + '</div>' +
-                    '<div class="filesize">' + content_arr[i].filesize + '</div>' +
-                    '</div>' +
-                    '<h1 class="title">' + content_arr[i].title + '</h1>' +
-                    '<div class="summary">' + content_arr[i].summary +
-                    '<img class="lazyload" data-src="' + content_arr[i].image + '" src=""></div>' +
-                    '</article>'
-                document.getElementById('news-feed-list').insertAdjacentHTML('beforeend', article)
-                article_array = document.querySelectorAll('article')
-        */
     };
 
 
