@@ -27,8 +27,16 @@ var item_cid = "";
 //youtube
 var item_image = "";
 var item_id = "";
+let listened_elem = "";
+if (localStorage.getItem("listened") != null) {
+    const str = localStorage.getItem("listened")
+    //listened_elem = str.split(',');
+    listened_elem = localStorage.getItem("listened")
+    //console.log(listened_elem[0])
+} else {
+    console.log("not def")
 
-
+}
 
 
 
@@ -36,8 +44,6 @@ var item_id = "";
 
 //check if activity or not
 setTimeout(() => {
-
-
     if (activity === false) {
 
         //check if source file is set
@@ -45,8 +51,6 @@ setTimeout(() => {
             localStorage.setItem("source", "https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json")
             document.getElementById("message-box").style.display = "none"
             load_source()
-
-            //return false;
         }
         //get update time; cache || download
         let a = localStorage.getItem('interval');
@@ -54,8 +58,6 @@ setTimeout(() => {
             a = 0
         }
         //download
-
-
         if (cache.getTime(a) && navigator.onLine) {
             if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) {
                 load_source()
@@ -73,12 +75,14 @@ setTimeout(() => {
                 show_settings()
                 document.getElementById("message-box").style.display = "none"
                 alert("no cached data available")
-
             }
         }
     }
 
-}, 2000);
+    document.querySelector("#news-feed-list").style.background = "white"
+}, 1500);
+
+
 
 
 ///////////
@@ -232,7 +236,23 @@ let load_local_file = function() {
 
 }
 
+//when open single xml frome browser
 
+if (navigator.mozSetMessageHandler) {
+    navigator.mozSetMessageHandler('activity', function(activityRequest) {
+        var option = activityRequest.source;
+        activity = true;
+
+        if (option.name == 'view') {
+            while (source_array.length > 0) {
+                source_array.pop();
+            }
+            source_array.push([option.data.url, 4, "", "all"]);
+            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
+        }
+
+    })
+}
 
 
 let start_download_content = function(source_data) {
@@ -256,21 +276,7 @@ let start_download_content = function(source_data) {
 
 
 
-if (navigator.mozSetMessageHandler) {
-    navigator.mozSetMessageHandler('activity', function(activityRequest) {
-        var option = activityRequest.source;
-        activity = true;
 
-        if (option.name == 'view') {
-            while (source_array.length > 0) {
-                source_array.pop();
-            }
-            source_array.push([option.data.url, 4, "", "all"]);
-            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3])
-        }
-
-    })
-}
 
 
 function formatFileSize(bytes, decimalPoint) {
@@ -370,9 +376,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                         var elem = el[i].querySelector("summary");
                         if (elem) {
-                            //item_summary = el[i].querySelector("summary").innerHTML;
                             item_summary = el[i].querySelector("summary").textContent;
-
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
@@ -384,22 +388,17 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                         elem = el[i].querySelector("content");
                         if (elem) {
-                            //item_summary = el[i].querySelector("content").innerHTML;
                             item_summary = el[i].querySelector("content").textContent;
-
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]&gt;)/g, "")
-
-
-
                         }
 
 
 
 
-                        if (el[i].querySelector('media\\:description') != null || el[i].querySelector('media\\:description') != undefined) {
+                        if (el[i].getElementsByTagNameNS("*", "description").length > 0) {
                             item_summary = el[i].querySelector('media\\:description').textContent;
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
@@ -439,11 +438,12 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
 
-                        if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                            item_duration = el[i].querySelector('itunes\\:duration').textContent
-                            console.log(el[i].querySelector('itunes\\:duration').textContent)
-
+                        if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
+                            item_duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
+                            item_duration = item_duration.split(":")
+                            item_duration = item_duration[0] + ":" + item_duration[1]
                         }
+
 
 
                         //check valid date
@@ -462,6 +462,13 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_media = "rss";
                         }
 
+                        //listened tracks icon
+                        listened_track = ""
+                        if (listened_elem.indexOf(item_cid) > -1) {
+                            listened_track = " &#127812;"
+                        }
+
+
 
                         content_arr.push({
                             title: item_title,
@@ -478,7 +485,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             duration: item_duration,
                             media: item_media,
                             filesize: item_filesize,
-                            cid: item_cid
+                            cid: item_cid,
+                            listened: listened_track
+
 
                         })
 
@@ -555,11 +564,22 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             }
                         }
 
-                        if (el[i].querySelector('itunes\\:duration') != null || el[i].querySelector('itunes\\:duration') != undefined) {
-                            console.log(el[i].querySelector('itunes\\:duration').textContent)
 
-                            item_duration = el[i].querySelector('itunes\\:duration').textContent
+                        if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
+                            item_duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
+                            item_duration = item_duration.split(":")
+                            item_duration = item_duration[0] + ":" + item_duration[1]
+
                         }
+
+
+                        //listened tracks icon
+                        listened_track = ""
+                        if (listened_elem.indexOf(item_cid) > -1) {
+                            listened_track = " &#127812;"
+                        }
+
+
 
 
 
@@ -578,7 +598,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             duration: item_duration,
                             media: item_media,
                             filesize: item_filesize,
-                            cid: item_cid
+                            cid: item_cid,
+                            listened: listened_track
 
                         })
                     }
@@ -1028,6 +1049,8 @@ let show_article_list = function() {
 
 
     tab_index = document.activeElement.getAttribute("tabIndex")
+
+
 
 
 }

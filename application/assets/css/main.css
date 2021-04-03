@@ -68,7 +68,7 @@
      height: 100%;
      width: 100%;
      overflow: auto;
-     background: silver;
+     background: black;
  }
 
  h1 {
@@ -108,7 +108,7 @@
 
  div#news-feed {
      position: relative;
-     background: white;
+     background: black;
      color: black;
      max-height: 90vh;
      width: 100vw;
@@ -165,6 +165,7 @@
 
  div#news-feed div#news-feed-list article div.filesize {
      margin: 0 10px 0 0;
+     display: none;
 
  }
 
@@ -174,7 +175,10 @@
      display: -webkit-flex !Important;
  }
 
-
+ article[data-media*="podcast"] div.duration-filesize::before {
+     content: "⏱";
+     padding: 0 5px 0 0;
+ }
 
  div#news-feed div#news-feed-list article div.summary {
      display: none;

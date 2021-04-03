@@ -35,11 +35,18 @@
         "limit": "1",
         "channel": "weather"
     },
- {
+    {
         "category": "news",
         "url": "https://blog.bananahackers.net/farooqkz/feed/",
         "limit": "3",
         "channel": "https://blog.bananahackers.net/"
-         
- }
+
+    },
+
+    {
+        "category": "youtube",
+        "url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLukmsaXDPJieeGOZ5Wp7yrHyHoiBkp6TR",
+        "limit": "1",
+        "channel": "Radioa Head - KidA"
+    }
 ]
