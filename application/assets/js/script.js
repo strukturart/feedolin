@@ -397,17 +397,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
 
-
-                        if (el[i].getElementsByTagNameNS("*", "description").length > 0) {
-                            item_summary = el[i].querySelector('media\\:description').textContent;
-                            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
-                            item_summary = item_summary.replace(/(]]>)/g, "")
-                            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
-                            item_summary = item_summary.replace(/(]]&gt;)/g, "")
-
-                            item_image = el[i].querySelector('media\\:thumbnail').getAttribute('url');
-                            item_id = el[i].querySelector('yt\\:videoId').innerHTML;
-
+                        if (el[i].getElementsByTagNameNS("*", "thumbnail").length > 0) {
+                            item_image = el[i].getElementsByTagNameNS("*", "thumbnail").item(0).getAttribute('url')
+                            item_summary = el[i].getElementsByTagNameNS("*", "description").item(0).textContent
                         }
 
 
