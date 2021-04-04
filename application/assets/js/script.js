@@ -431,9 +431,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                         if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-                            item_duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
-                            item_duration = item_duration.split(":")
-                            item_duration = item_duration[0] + ":" + item_duration[1]
+                            var duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
+                            item_duration = moment(duration, "hh:mm:ss").format("HH:mm")
+                            if (item_duration == "Invalid date") item_duration = ""
                         }
 
 
@@ -558,9 +558,10 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                         if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-                            item_duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
-                            item_duration = item_duration.split(":")
-                            item_duration = item_duration[0] + ":" + item_duration[1]
+                            var duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
+                            item_duration = moment(duration, "hh:mm:ss").format("HH:mm")
+                            if (item_duration == "Invalid date") item_duration = ""
+
 
                         }
 
