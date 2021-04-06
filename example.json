@@ -48,5 +48,13 @@
         "url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLukmsaXDPJieeGOZ5Wp7yrHyHoiBkp6TR",
         "limit": "1",
         "channel": "Radioa Head - KidA"
+    },
+    {
+        "category": "tech",
+        "url": "https://media.ccc.de/podcast-audio-only.xml",
+        "limit": "3",
+        "channel": "CCC"
     }
+
+
 ]

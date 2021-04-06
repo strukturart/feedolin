@@ -175,6 +175,10 @@
      display: -webkit-flex !Important;
  }
 
+ article[data-media*="podcast"] div.duration-filesize:empty {
+     display: none;
+ }
+
  article[data-media*="podcast"] div.duration-filesize::before {
      content: "⏱";
      padding: 0 5px 0 0;
