@@ -10,6 +10,9 @@ var current_panel = 0;
 var activity = false;
 var volume_status = false;
 
+//store all used article ids
+let all_cid = []
+
 let tab_index = 0;
 //xml items
 var rss_title = "";
@@ -34,8 +37,18 @@ if (localStorage.getItem("listened") != null) {
     listened_elem = localStorage.getItem("listened")
     //console.log(listened_elem[0])
 } else {
-    console.log("not def")
+    console.log("listened not def")
 
+}
+
+
+let readed_elem = "";
+
+if (localStorage.getItem("readed") != null) {
+    readed_elem = localStorage.getItem("readed")
+
+} else {
+    console.log("readed not def")
 }
 
 
@@ -344,8 +357,15 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             //youtube
             item_image = "";
             item_id = "";
+            item_summary = ""
+            item_link = ""
+            item_summary = ""
+            item_title = ""
+            item_type = "";
+            item_media = "rss";
 
-            var data = xhttp.response;
+
+            let data = xhttp.response;
 
             //ATOM
             rss_title = data.querySelector("title").innerHTML
@@ -358,17 +378,12 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             el = data.querySelectorAll("entry")
             if (el.length > 0) {
                 for (let i = 0; i < el.length; i++) {
-                    item_media = "rss";
-                    item_type = "";
 
 
                     if (i < param_limit) {
 
                         //rss
 
-                        item_link = ""
-                        item_summary = ""
-                        item_title = ""
 
                         item_title = el[i].querySelector("title").innerHTML
                         item_cid = hashCode(item_title)
@@ -461,7 +476,10 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             listened_track = " &#127812;"
                         }
 
+                        item_readed = "not-readed"
+                        if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
 
+                        all_cid.push(item_cid)
 
                         content_arr.push({
                             title: item_title,
@@ -479,9 +497,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             media: item_media,
                             filesize: item_filesize,
                             cid: item_cid,
-                            listened: listened_track
-
-
+                            listened: listened_track,
+                            readed: item_readed
                         })
 
                     }
@@ -498,11 +515,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             if (el.length > 0) {
                 for (let i = 0; i < el.length; i++) {
 
-                    item_media = "rss";
-                    item_type = "";
-
                     if (i < param_limit) {
-
 
                         //rss
                         if (el[i].querySelector("title")) {
@@ -515,7 +528,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_summary = el[i].querySelector("description").textContent;
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]>)/g, "")
-
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]&gt;)/g, "")
 
@@ -526,7 +538,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_download = el[i].querySelector("link");
 
                         }
-
 
 
                         //check valid date
@@ -574,8 +585,10 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
+                        item_readed = "not-readed"
+                        if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
 
-
+                        all_cid.push(item_cid)
 
                         content_arr.push({
                             title: item_title,
@@ -593,7 +606,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             media: item_media,
                             filesize: item_filesize,
                             cid: item_cid,
-                            listened: listened_track
+                            listened: listened_track,
+                            readed: item_readed
 
                         })
                     }
@@ -702,6 +716,26 @@ function renderHello() {
 
 }
 
+//https://www.tutsmake.com/comparing-two-arrays-in-javascript-returning-differences/
+
+
+function arrayDifference(arr1, arr2) {
+    var arr = [];
+    arr1 = arr1.toString().split(',').map(Number);
+    arr2 = arr2.toString().split(',').map(Number);
+    // for array1
+    for (var i in arr1) {
+        if (arr2.indexOf(arr1[i]) === -1)
+            arr.push(arr1[i]);
+    }
+    // for array2
+    for (i in arr2) {
+        if (arr1.indexOf(arr2[i]) === -1)
+            arr.push(arr2[i]);
+    }
+    return arr.sort((x, y) => x - y);
+}
+
 
 
 function build() {
@@ -710,10 +744,13 @@ function build() {
     bottom_bar("settings", "select", "share")
     top_bar("", panels[0], "")
 
+    console.log(JSON.stringify(all_cid))
+    console.log(JSON.stringify(readed_elem))
 
+
+    console.log("not in:" + arrayDifference(all_cid, readed_elem)); // [5, 5, 6, 7, 50, 50, 60, 70]
 
     if (activity == true) bottom_bar("add", "select", "")
-
 
     for (let i = 0; i < content_arr.length; i++) {
 
@@ -725,7 +762,6 @@ function build() {
             if (listened_elements[k] == ti) {
                 icon = "  &#127812;"
             }
-
         }
 
         //set panel category
@@ -738,19 +774,15 @@ function build() {
 
     renderHello()
 
-
-
     //set_tabindex()
     lazyload.ll();
     document.getElementById("message-box").style.display = "none"
     window_status = "article-list";
     top_bar("", "all", "")
     setTimeout(() => {
-
         article_array = document.querySelectorAll('article')
         article_array[0].focus()
     }, 1500);
-
 }
 
 
@@ -773,6 +805,18 @@ let set_tabindex = function() {
     document.querySelector('article[tabIndex="0"]').focus()
     tab_index = 0;
 
+}
+
+let readed = [];
+let mark_as_readed = function() {
+
+    if (localStorage.getItem("readed")) {
+        readed = JSON.parse(localStorage["readed"]);
+    }
+
+    readed.push(document.activeElement.getAttribute("data-id"))
+    localStorage.setItem("readed", JSON.stringify(readed));
+    document.activeElement.setAttribute("data-readed", "readed")
 
 }
 
@@ -815,8 +859,6 @@ function nav_panels(left_right) {
         current_panel += panels.length;
     }
 
-
-
     top_bar("", panels[current_panel], "")
     panels_list(panels[current_panel]);
 
@@ -829,10 +871,6 @@ function nav_panels(left_right) {
     });
 
     document.activeElement.classList.remove("overscrolling")
-
-
-
-
 
 }
 
@@ -852,9 +890,6 @@ function nav(move) {
             siblings.push(sibling);
         }
         sibling = sibling.nextSibling;
-
-
-
     }
 
 
@@ -868,8 +903,6 @@ function nav(move) {
 
 
     if (move == "+1") {
-
-
         document.activeElement.classList.remove("overscrolling")
 
         tab_index++
@@ -945,12 +978,12 @@ let save_settings = function() {
     }, 7000);
 
     console.log("save")
-
     return true
 }
 
 
 let show_article = function() {
+    mark_as_readed()
     window_status = "single-article";
     navigator.spatialNavigationEnabled = false;
 
@@ -969,6 +1002,8 @@ let show_article = function() {
         elem[i].style.display = "block";
     }
 
+    document.activeElement.style.fontStyle = "normal"
+    document.activeElement.style.color = "black"
 
     document.activeElement.style.display = "block"
     document.getElementById("top-bar").style.display = "none"
@@ -982,8 +1017,6 @@ let show_article = function() {
         } else {
             bottom_bar("play", "", "")
         }
-
-
     }
 
     if (document.activeElement.getAttribute("data-media") == "rss") {
@@ -1011,6 +1044,13 @@ let show_article_list = function() {
     let elem = document.querySelectorAll("article");
     for (let i = 0; i < elem.length; i++) {
         elem[i].style.display = "block";
+
+        let rd = elem[i].getAttribute("data-readed")
+
+        if (rd == "readed") {
+            document.activeElement.style.fontStyle = "italic"
+            document.activeElement.style.color = "gray"
+        }
     }
 
     elem = document.querySelectorAll("div.summary");
@@ -1044,9 +1084,6 @@ let show_article_list = function() {
 
     tab_index = document.activeElement.getAttribute("tabIndex")
 
-
-
-
 }
 
 
@@ -1055,8 +1092,6 @@ let show_settings = function() {
     window_status = "settings";
     tab_index = 0;
     document.getElementById("top-bar").style.display = "none"
-
-    //$("div#news-feed").css("padding", "0px 0px 30px 0px")
 
     let elem = document.querySelectorAll("article");
     for (let i = 0; i < elem.length; i++) {

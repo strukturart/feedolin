@@ -128,8 +128,18 @@
      padding: 5px 5px 10px 5px;
      font-weight: normal;
      background: white;
+ }
 
 
+ div#news-feed div#news-feed-list article[data-readed="readed"] {
+
+     font-style: italic;
+     color: gray;
+ }
+
+ div#news-feed div#news-feed-list article[data-readed="not-readed"] {
+
+     background: white;
  }
 
  div#news-feed div#news-feed-list article:focus {
@@ -180,6 +190,10 @@
  }
 
  article[data-media*="podcast"] div.duration-filesize::before {}
+
+
+
+
 
  div#news-feed div#news-feed-list article div.summary {
      display: none;
