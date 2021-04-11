@@ -100,10 +100,13 @@
      text-align: center;
  }
 
+
  /*///////////////////////////
 ///FEED////////////////*/
 
-
+ div#options {
+     display: none;
+ }
 
 
  div#news-feed {
@@ -429,12 +432,13 @@
  div#settings {
      display: none;
      background: gray;
-     padding: 15px 5px 5px 5px;
-     min-height: 100%;
-     max-height: 100%;
+     padding: 15px 5px 85px 5px;
+     margin: 0 0 50px 0;
+     height: 100%;
      position: fixed;
      top: 0;
      z-index: 3;
+     overflow: scroll !important;
  }
 
  div#settings div#text {

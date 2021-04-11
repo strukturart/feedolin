@@ -45,11 +45,12 @@ if (localStorage.getItem("listened") != null) {
 let readed_elem = "";
 
 if (localStorage.getItem("readed") != null) {
-    readed_elem = localStorage.getItem("readed")
+    readed_elem = JSON.parse(localStorage.getItem("readed"))
 
 } else {
     console.log("readed not def")
 }
+
 
 
 
@@ -477,9 +478,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
                         item_readed = "not-readed"
-                        if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
+                        //if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
 
-                        all_cid.push(item_cid)
 
                         content_arr.push({
                             title: item_title,
@@ -586,9 +586,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                         item_readed = "not-readed"
-                        if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
+                        //if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
 
-                        all_cid.push(item_cid)
+
 
                         content_arr.push({
                             title: item_title,
@@ -716,39 +716,46 @@ function renderHello() {
 
 }
 
-//https://www.tutsmake.com/comparing-two-arrays-in-javascript-returning-differences/
 
+let readed_articles = function() {
 
-function arrayDifference(arr1, arr2) {
-    var arr = [];
-    arr1 = arr1.toString().split(',').map(Number);
-    arr2 = arr2.toString().split(',').map(Number);
-    // for array1
-    for (var i in arr1) {
-        if (arr2.indexOf(arr1[i]) === -1)
-            arr.push(arr1[i]);
-    }
-    // for array2
-    for (i in arr2) {
-        if (arr1.indexOf(arr2[i]) === -1)
-            arr.push(arr2[i]);
-    }
-    return arr.sort((x, y) => x - y);
+    //if element in readed list  
+    //mark article as readed
+    content_arr.forEach(function(index) {
+        all_cid.push(index.cid)
+        index.readed = "not-readed"
+        readed_elem.forEach(function(iindex) {
+            if (iindex == index.cid) index.readed = "readed"
+        })
+    })
+
 }
+
+
+let clean_localstorage = function() {
+
+    for (let i = 0; i < readed_elem.length; i++) {
+
+        if (all_cid.indexOf(readed_elem[i]) == -1) {
+            readed_elem.slice(i, 1)
+        }
+    }
+    localStorage.setItem("readed", JSON.stringify(readed_elem));
+}
+
+console.log(readed_elem.length)
+
+
+
 
 
 
 function build() {
-
-
+    readed_articles()
+    clean_localstorage()
     bottom_bar("settings", "select", "share")
     top_bar("", panels[0], "")
 
-    console.log(JSON.stringify(all_cid))
-    console.log(JSON.stringify(readed_elem))
-
-
-    console.log("not in:" + arrayDifference(all_cid, readed_elem)); // [5, 5, 6, 7, 50, 50, 60, 70]
 
     if (activity == true) bottom_bar("add", "select", "")
 
@@ -893,6 +900,7 @@ function nav(move) {
     }
 
 
+
     setTimeout(() => {
         document.activeElement.classList.remove("overscrolling")
 
@@ -906,6 +914,7 @@ function nav(move) {
         document.activeElement.classList.remove("overscrolling")
 
         tab_index++
+
         if (tab_index == siblings.length || tab_index >= siblings.length) {
 
 
@@ -914,6 +923,7 @@ function nav(move) {
             return true
 
         }
+
 
         siblings[tab_index].focus()
 
@@ -942,6 +952,9 @@ function nav(move) {
         document.activeElement.classList.add("overscrolling")
     }
 
+
+
+    console.log(siblings.length + "/" + tab_index)
 }
 
 
