@@ -50,7 +50,7 @@
 
             <script id="template" type="x-tmpl-mustache">
                 {{#data}}
-                    <article tabIndex=0 class="all" data-media="{{media}}" data-readed="{{readed}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}">
+                    <article tabIndex=0 class="all" data-media="{{media}}" data-read="{{read}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}">
                         <div class="flex grid-col-10">
                             <div class="podcast-icon"><img src="assets/image/podcast.png"></div>
                             <div class="youtube-icon"><img src="assets/image/youtube.png"></div>
@@ -85,8 +85,8 @@
 
             <div id="options" class="width-100 height-100">
                 <ul>
-                    <li tabindex="0">unread</li>
-                    <li tabindex="1">sleep mode</li>
+                    <li data-function="unread" tabindex="0">mark as unread</li>
+                    <li data-function="sleepmode" tabindex="1">activate sleep mode</li>
                 </ul>
             </div>
 
@@ -110,6 +110,7 @@
     <div id="goodbye" class="flex justify-content-center align-item-center width-100 height-100">
         <div id="donation">
             please support my work, <br />make a donation<br />
+            <br>paypal.me/strukturart<br>
             Thank you!
         </div>
         <div id="ciao">

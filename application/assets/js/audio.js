@@ -39,6 +39,10 @@ const audio_player = ((_) => {
         }
     }
 
+    let pause = function() {
+        player.pause();
+    }
+
 
     ////SEEKING//////
 
@@ -112,7 +116,7 @@ const audio_player = ((_) => {
             }
             var duration = minutes + ":" + seconds;
 
-            bottom_bar("pause", duration, "")
+            bottom_bar("pause", duration, "options")
 
 
         }, 1000);
@@ -124,7 +128,7 @@ const audio_player = ((_) => {
     player.onpause = function() {
 
         player_status = "pause";
-        bottom_bar("play", "", "")
+        bottom_bar("play", "", "options")
         toaster("pause", 3000)
     };
 
@@ -136,7 +140,7 @@ const audio_player = ((_) => {
         }
         document.activeElement.classList.add("audio-playing");
         player_status = "play";
-        bottom_bar("pause", "", "")
+        bottom_bar("pause", "", "options")
         toaster("play", 3000)
         active_element = document.activeElement.getAttribute("data-id")
 
@@ -150,7 +154,7 @@ const audio_player = ((_) => {
 
         listened.push(active_element)
         localStorage.setItem("listened", JSON.stringify(listened));
-        bottom_bar("pause", "", "")
+        bottom_bar("pause", "", "options")
 
     };
 
@@ -158,6 +162,7 @@ const audio_player = ((_) => {
     return {
         play_podcast,
         seeking,
-        volume_control
+        volume_control,
+        pause
     };
 })();

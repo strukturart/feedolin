@@ -94,7 +94,7 @@
      top: -100px;
      background: black;
      color: white;
-     z-index: 5;
+     z-index: 6;
      min-width: 100%;
      padding: 5px;
      text-align: center;
@@ -106,8 +106,26 @@
 
  div#options {
      display: none;
+     background: var(--color-four);
+     position: fixed;
+     top: 0;
+     z-index: 4;
  }
 
+ div#options ul li {
+     background: var(--color-three);
+     color: white;
+     padding: 5px;
+     margin: 0 0 10px 0;
+
+ }
+
+
+ div#options ul li:focus {
+     color: black;
+
+
+ }
 
  div#news-feed {
      position: relative;
@@ -133,16 +151,21 @@
      background: white;
  }
 
+ div#news-feed div#news-feed-list article div.summary img {
+     max-width: 220px !important;
+ }
 
- div#news-feed div#news-feed-list article[data-readed="readed"] {
+
+ div#news-feed div#news-feed-list article[data-read="read"] {
 
      font-style: italic;
      color: gray;
  }
 
- div#news-feed div#news-feed-list article[data-readed="not-readed"] {
+ div#news-feed div#news-feed-list article[data-read="not-read"] {
 
-     background: white;
+     font-style: normal;
+
  }
 
  div#news-feed div#news-feed-list article:focus {
@@ -191,10 +214,6 @@
  article[data-media*="podcast"] div.duration-filesize:empty {
      display: none;
  }
-
- article[data-media*="podcast"] div.duration-filesize::before {}
-
-
 
 
 
@@ -432,9 +451,9 @@
  div#settings {
      display: none;
      background: gray;
-     padding: 15px 5px 85px 5px;
-     margin: 0 0 50px 0;
-     height: 100%;
+     padding: 15px 5px 185px 5px;
+     margin: 0 0 150px 0;
+     height: 92%;
      position: fixed;
      top: 0;
      z-index: 3;

@@ -9,6 +9,7 @@ var panels = ["all"];
 var current_panel = 0;
 var activity = false;
 var volume_status = false;
+let current_article;
 
 //store all used article ids
 let all_cid = []
@@ -31,27 +32,30 @@ var item_cid = "";
 var item_image = "";
 var item_id = "";
 let listened_elem = "";
+
+
+
+
+
+//read and listened articles/podcasts
 if (localStorage.getItem("listened") != null) {
     const str = localStorage.getItem("listened")
-    //listened_elem = str.split(',');
     listened_elem = localStorage.getItem("listened")
-    //console.log(listened_elem[0])
 } else {
-    console.log("listened not def")
-
+    localStorage.setItem("listened", "")
 }
 
 
-let readed_elem = "";
+let read_elem = "";
 
-if (localStorage.getItem("readed") != null) {
-    readed_elem = JSON.parse(localStorage.getItem("readed"))
+if (localStorage.getItem("read") != null) {
+    read_elem = JSON.parse(localStorage.getItem("read"))
 
 } else {
-    console.log("readed not def")
+    localStorage.setItem("read", "")
 }
 
-
+console.log(read_elem.length)
 
 
 
@@ -477,8 +481,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             listened_track = " &#127812;"
                         }
 
-                        item_readed = "not-readed"
-                        //if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
+                        item_read = "not-read"
 
 
                         content_arr.push({
@@ -498,7 +501,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             filesize: item_filesize,
                             cid: item_cid,
                             listened: listened_track,
-                            readed: item_readed
+                            read: item_read
                         })
 
                     }
@@ -585,8 +588,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
-                        item_readed = "not-readed"
-                        //if (readed_elem.indexOf(item_cid) > -1) item_readed = "readed"
+                        item_read = "not-read"
 
 
 
@@ -607,7 +609,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             filesize: item_filesize,
                             cid: item_cid,
                             listened: listened_track,
-                            readed: item_readed
+                            read: item_read
 
                         })
                     }
@@ -707,6 +709,43 @@ if (localStorage["listened"]) {
 }
 
 
+
+let read_articles = function() {
+
+    //if element in read list  
+    //mark article as read
+    content_arr.forEach(function(index) {
+        all_cid.push(index.cid)
+        index.read = "not-read"
+        if (read_elem.length > 0) {
+            read_elem.forEach(function(iindex) {
+                if (iindex == index.cid) {
+                    console.log("yeah")
+                    index.read = "read"
+                }
+            })
+
+        }
+
+    })
+
+}
+
+
+let clean_localstorage = function() {
+
+    for (let i = 0; i < read_elem.length; i++) {
+
+        if (all_cid.indexOf(read_elem[i]) == -1) {
+            read_elem.slice(i, 1)
+        }
+    }
+    localStorage.setItem("read", JSON.stringify(read_elem));
+}
+
+
+
+
 function renderHello() {
     var template = document.getElementById("template").innerHTML;
     var rendered = Mustache.render(template, {
@@ -717,41 +756,13 @@ function renderHello() {
 }
 
 
-let readed_articles = function() {
-
-    //if element in readed list  
-    //mark article as readed
-    content_arr.forEach(function(index) {
-        all_cid.push(index.cid)
-        index.readed = "not-readed"
-        readed_elem.forEach(function(iindex) {
-            if (iindex == index.cid) index.readed = "readed"
-        })
-    })
-
-}
-
-
-let clean_localstorage = function() {
-
-    for (let i = 0; i < readed_elem.length; i++) {
-
-        if (all_cid.indexOf(readed_elem[i]) == -1) {
-            readed_elem.slice(i, 1)
-        }
-    }
-    localStorage.setItem("readed", JSON.stringify(readed_elem));
-}
-
-console.log(readed_elem.length)
-
 
 
 
 
 
 function build() {
-    readed_articles()
+    read_articles()
     clean_localstorage()
     bottom_bar("settings", "select", "share")
     top_bar("", panels[0], "")
@@ -814,17 +825,33 @@ let set_tabindex = function() {
 
 }
 
-let readed = [];
-let mark_as_readed = function() {
+let read = [];
+let mark_as_read = function(un_read) {
 
-    if (localStorage.getItem("readed")) {
-        readed = JSON.parse(localStorage["readed"]);
+
+    if (localStorage.getItem("read")) {
+        read = JSON.parse(localStorage["read"]);
     }
 
-    readed.push(document.activeElement.getAttribute("data-id"))
-    localStorage.setItem("readed", JSON.stringify(readed));
-    document.activeElement.setAttribute("data-readed", "readed")
+    if (un_read == true) {
+        document.activeElement.setAttribute("data-read", "read")
+        read.push(document.activeElement.getAttribute("data-id"))
+        localStorage.setItem("read", JSON.stringify(read));
+    }
 
+    if (un_read == false) {
+
+        let kk = document.querySelector("[data-id ='" + current_article + "']").getAttribute("data-id")
+
+        let test = []
+        for (var i = 0; i < read.length; i++) {
+
+            if (read[i] != kk) test.push(read[i])
+
+        }
+        localStorage.setItem("read", JSON.stringify(test));
+        toaster("article marked as not read", 2000)
+    }
 }
 
 
@@ -908,8 +935,6 @@ function nav(move) {
 
 
 
-
-
     if (move == "+1") {
         document.activeElement.classList.remove("overscrolling")
 
@@ -952,9 +977,6 @@ function nav(move) {
         document.activeElement.classList.add("overscrolling")
     }
 
-
-
-    console.log(siblings.length + "/" + tab_index)
 }
 
 
@@ -965,6 +987,8 @@ let save_settings = function() {
     var setting_interval = document.getElementById("time").value;
     var setting_source = document.getElementById("source").value;
     var setting_source_local = document.getElementById("source-local").value;
+    var setting_sleeptime = document.getElementById("sleep-mode").value;
+
 
     if (setting_source == "" && setting_source_local == "") {
         toaster("please fill in the location of the source file", 3000)
@@ -983,6 +1007,8 @@ let save_settings = function() {
     localStorage.setItem('interval', setting_interval);
     localStorage.setItem('source', setting_source);
     localStorage.setItem('source_local', setting_source_local);
+    localStorage.setItem('sleep_time', setting_sleeptime);
+
 
 
     toaster("saved, the app will now be closed, the settings will be active the next time it is started.", 8000)
@@ -990,13 +1016,15 @@ let save_settings = function() {
         window.close()
     }, 7000);
 
-    console.log("save")
     return true
 }
 
 
 let show_article = function() {
-    mark_as_readed()
+
+    mark_as_read(true)
+    document.querySelector("div#source-page").style.display = "none"
+
     window_status = "single-article";
     navigator.spatialNavigationEnabled = false;
 
@@ -1025,25 +1053,28 @@ let show_article = function() {
     if (document.activeElement.getAttribute("data-media") == "podcast") {
 
         if (document.activeElement.classList.contains("audio-playing")) {
-            bottom_bar("pause", "", "")
+            bottom_bar("pause", "", "options")
 
         } else {
-            bottom_bar("play", "", "")
+            bottom_bar("play", "", "options")
         }
     }
 
     if (document.activeElement.getAttribute("data-media") == "rss") {
-        bottom_bar("", "", "visit")
+        bottom_bar("visit", "", "options")
     }
 
     if (document.activeElement.getAttribute("data-media") == "youtube") {
-        bottom_bar("", "", "open")
+        bottom_bar("open", "", "options")
     }
 
     document.activeElement.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
+
+    current_article = document.activeElement.getAttribute('data-id');
+
 
 }
 
@@ -1058,9 +1089,9 @@ let show_article_list = function() {
     for (let i = 0; i < elem.length; i++) {
         elem[i].style.display = "block";
 
-        let rd = elem[i].getAttribute("data-readed")
+        let rd = elem[i].getAttribute("data-read")
 
-        if (rd == "readed") {
+        if (rd == "read") {
             document.activeElement.style.fontStyle = "italic"
             document.activeElement.style.color = "gray"
         }
@@ -1126,6 +1157,10 @@ let show_settings = function() {
         document.getElementById("source-local").value = localStorage.getItem('source_local')
     }
 
+    if (localStorage.getItem('sleep_time') != null) {
+        document.getElementById("sleep-mode").value = localStorage.getItem('sleep_time')
+    }
+
 }
 
 
@@ -1133,15 +1168,12 @@ let show_settings = function() {
 function open_url() {
     let link_target = document.activeElement.getAttribute("data-link")
     let link_download = document.activeElement.getAttribute("data-download")
+
     let title = document.activeElement.querySelector("h1.title").textContent;
     title = title.replace(/\s/g, "-");
     bottom_bar("", "", "")
 
 
-    let elem = document.querySelectorAll("div.summary");
-    for (let i = 0; i < elem.length; i++) {
-        elem[i].style.display = "none";
-    }
     document.querySelector("div#source-page").style.display = "block"
     document.querySelector("div#source-page div#iframe-wrapper").style.height = "100vh"
 
@@ -1168,6 +1200,8 @@ function open_url() {
         player.src = "";
         return;
     }
+
+
 
 
     /*
@@ -1204,6 +1238,34 @@ function open_url() {
 
 }
 
+let open_options = function() {
+    window_status = "options";
+    document.getElementById("options").style.display = "block"
+    document.querySelectorAll("div#options ul li")[0].focus()
+}
+
+
+
+let start_options = function() {
+
+    if (document.activeElement.getAttribute("data-function") == "unread") {
+        mark_as_read(false)
+    }
+    if (document.activeElement.getAttribute("data-function") == "sleepmode") {
+        sleep_mode()
+    }
+}
+
+let sleep_mode = function() {
+    let st = localStorage.getItem("sleep_time")
+    st = (st * 60) * 1000
+
+    toaster("sleepmode activ", 3000)
+    setTimeout(() => {
+        audio_player.pause();
+    }, st);
+
+}
 
 
 //////////////////////////
@@ -1221,6 +1283,13 @@ function handleKeyDown(evt) {
         case 'Enter':
             if (window_status == "article-list") {
                 show_article();
+                break;
+
+            }
+
+
+            if (window_status == "options") {
+                start_options();
                 break;
 
             }
@@ -1278,6 +1347,11 @@ function handleKeyDown(evt) {
                 break
             }
 
+            if (window_status == "options") {
+                nav("+1");
+                break
+            }
+
 
             if (volume_status === true) {
                 audio_player.volume_control("down")
@@ -1290,6 +1364,12 @@ function handleKeyDown(evt) {
         case 'ArrowUp':
 
             if (window_status == "settings") {
+                nav("-1");
+                break;
+            }
+
+
+            if (window_status == "options") {
                 nav("-1");
 
                 break;
@@ -1334,8 +1414,13 @@ function handleKeyDown(evt) {
 
             }
 
+            if (window_status == "single-article") {
+                open_url();
+                break
+
+            }
+
             if (window_status == "settings") {
-                console.log("save settings")
                 save_settings()
                 break
 
@@ -1345,7 +1430,7 @@ function handleKeyDown(evt) {
 
         case 'SoftRight':
             if (window_status == "single-article") {
-                open_url();
+                open_options()
                 break
             }
             if (window_status == "settings") {
@@ -1362,6 +1447,7 @@ function handleKeyDown(evt) {
 
 
         case 'Backspace':
+
             evt.preventDefault();
 
             if (window_status == "intro") {
@@ -1388,6 +1474,15 @@ function handleKeyDown(evt) {
 
             if (window_status == "source-page") {
                 show_article_list();
+                break;
+            }
+
+
+            if (window_status == "options") {
+                console.log(current_article)
+                document.getElementById("options").style.display = "none"
+                show_article_list();
+                document.querySelector("[data-id ='" + current_article + "']").focus()
                 break;
             }
 
