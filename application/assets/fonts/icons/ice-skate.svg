@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>ice-skate</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-708.000000, -555.000000)">
+            <g id="216" transform="translate(708.000000, 555.000000)">
+                <path d="M23.5,21.5 L4.5,21.5 C2.29128628,21.5 0.5,20.2046438 0.5,18 C0.5,15.790861 2.29323768,14.5 4.5,14.5" id="Skate" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"></path>
+                <rect id="Trim" stroke="#333333" stroke-width="2" x="14" y="3" width="9" height="3" rx="1"></rect>
+                <path d="M7,14.5 C7,12.5670034 8.56147182,11 10.5089165,11 L13.0018986,11 C14.1054196,11 15,10.1061002 15,8.9951185 L15,6 L22,6 L22,15.9914698 C22,17.1007504 21.1066027,18 20.0081158,18 L10.4979027,18 C8.56606439,18 7,16.4290634 7,14.5 L7,14.5 Z" id="Boot" stroke="#333333" stroke-width="2" stroke-linecap="square"></path>
+                <path d="M20.5,13 C18.5670034,13 17,14.5670034 17,16.5" id="Heel" stroke="#333333" stroke-width="2" opacity="0.5" stroke-linecap="square"></path>
+                <path d="M11,19 L12,19 L12,22 L11,22 L11,19 Z M18,19 L19,19 L19,22 L18,22 L18,19 Z" id="Supports" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

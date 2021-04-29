@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>glass-cocktail</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-356.000000, -291.000000)">
+            <g id="88" transform="translate(356.000000, 291.000000)">
+                <ellipse id="Rim" stroke="#333333" stroke-width="2" cx="12" cy="3" rx="9" ry="2"></ellipse>
+                <path d="M5.68083792,4.5 L2.6000061,4.5 L11,12 L11,21.0046024 C11,21.5543453 10.5621186,22.0625545 10.0119176,22.1411546 L4.50342274,22.9280825 C4.22539004,22.9678014 4,23.2319336 4,23.5 C4,23.7761424 4.22618103,24 4.4963932,24 L19.5036068,24 C19.7777572,24 20,23.7680664 20,23.5 C20,23.2238576 19.782828,22.9689754 19.4965773,22.9280825 L13.9880824,22.1411546 C13.4423796,22.0631971 13,21.5443356 13,21.0046024 L13,12 L21.3999939,4.5 L18.2861911,4.5 L13.4920651,8.69602724 C12.6593993,9.42481255 11.3160734,9.43083241 10.4796486,8.69896045 L5.68083792,4.5 Z" id="Body" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

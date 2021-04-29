@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>anchor</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-840.000000, -203.000000)" stroke="#333333" stroke-width="2">
+            <g id="59" transform="translate(840.000000, 203.000000)">
+                <circle id="Oval-60" cx="12" cy="5" r="2"></circle>
+                <path d="M12,7 L12,21.1421356" id="Path-139"></path>
+                <path d="M9,11 L15.0207973,11" id="Path-140" stroke-linecap="round"></path>
+                <path d="M4,15 C5.56983294,18.4677886 7.94582125,21 12,21 C16.0565604,21 18.4315035,18.4710658 20,15" id="Oval-61" stroke-linecap="round" stroke-linejoin="round"></path>
+                <polygon id="Path-142" stroke-linecap="round" stroke-linejoin="round" points="20.5 17 20 15 18 15.5"></polygon>
+                <polygon id="Path-142" stroke-linecap="round" stroke-linejoin="round" transform="translate(4.750000, 16.000000) scale(-1, 1) translate(-4.750000, -16.000000) " points="6 17 5.5 15 3.5 15.5"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

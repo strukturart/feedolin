@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>plug</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-620.000000, -819.000000)" stroke="#333333" stroke-width="2">
+            <g id="334" transform="translate(620.000000, 819.000000)">
+                <path d="M9,7 L9,3" id="Pin-1" stroke-linecap="round"></path>
+                <path d="M13,7 L13,3" id="Pin-2" stroke-linecap="round"></path>
+                <path d="M11,16 C11,17.5 11.5,19 13,20 C14.5,21 16,21 18,21" id="Cable" stroke-linecap="round"></path>
+                <path d="M11,15 C13.7614237,15 16,12.7614237 16,10 C16,8.83768953 16,7 16,7 L6,7 L6,10 C6,12.7614237 8.23857625,15 11,15 Z" id="Plug" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

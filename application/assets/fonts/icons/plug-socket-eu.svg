@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>plug-socket-eu</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-400.000000, -819.000000)">
+            <g id="329" transform="translate(400.000000, 819.000000)">
+                <rect id="Body" stroke="#333333" stroke-width="2" x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle id="Inset" fill="#333333" opacity="0.200000003" cx="12" cy="12" r="6"></circle>
+                <path d="M14.5,13.5 C13.6715729,13.5 13,12.8284271 13,12 C13,11.1715729 13.6715729,10.5 14.5,10.5 C15.3284271,10.5 16,11.1715729 16,12 C16,12.8284271 15.3284271,13.5 14.5,13.5 Z M9.5,13.5 C8.67157288,13.5 8,12.8284271 8,12 C8,11.1715729 8.67157288,10.5 9.5,10.5 C10.3284271,10.5 11,11.1715729 11,12 C11,12.8284271 10.3284271,13.5 9.5,13.5 Z" id="Socket" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

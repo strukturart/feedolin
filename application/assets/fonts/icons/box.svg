@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>box</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-136.000000, -643.000000)">
+            <g id="243" transform="translate(136.000000, 643.000000)">
+                <rect id="Box" stroke="#333333" stroke-width="2" stroke-linejoin="round" x="3" y="7" width="18" height="14" rx="2"></rect>
+                <path d="M3,9 L3,8 C3,7.44771525 3.31387329,6.68612671 3.70591205,6.29408795 L6.29408795,3.70591205 C6.68395241,3.31604759 7.4556644,3 7.99539757,3 L16.0046024,3 C16.5543453,3 17.3138733,3.31387329 17.7059121,3.70591205 L20.2940879,6.29408795 C20.6839524,6.68395241 21,7.44386482 21,8 L21,9" id="Top" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <polygon id="Tape" fill="#333333" opacity="0.300000012" points="10.5 4 13.5 4 14 6 14 12 13 11 12.5 12 12 11 11 12 10 12.5 10 6"></polygon>
+                <path d="M12,4 L12,6" id="Gap" stroke="#333333" opacity="0.75"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>flashlight</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-576.000000, -643.000000)">
+            <g id="253" transform="translate(576.000000, 643.000000)">
+                <path d="M6.5998845,6.79984599 C6.26857744,6.35810325 6,5.55664682 6,4.9906311 L6,3.0093689 C6,2.45190985 6.45576096,2 7.00247329,2 L16.9975267,2 C17.5511774,2 18,2.44335318 18,3.0093689 L18,4.9906311 C18,5.54809015 17.73377,6.35497332 17.4001155,6.79984599 L15.5998845,9.20015401 C15.2685774,9.64189675 15,10.455761 15,11.0024733 L15,20.9975267 C15,21.5511774 14.5490248,22 14.009222,22 L9.99077797,22 C9.44358641,22 9,21.544239 9,20.9975267 L9,11.0024733 C9,10.4488226 8.73377001,9.64502668 8.4001155,9.20015401 L6.5998845,6.79984599 Z" id="Body" stroke="#333333" stroke-width="2" stroke-linejoin="round"></path>
+                <path d="M6,6 L18,6" id="Top" stroke="#333333" stroke-width="2"></path>
+                <path d="M9,10 L15,10" id="Mid" stroke="#333333" stroke-width="2"></path>
+                <rect id="Switch" fill="#333333" x="11" y="13" width="2" height="4" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

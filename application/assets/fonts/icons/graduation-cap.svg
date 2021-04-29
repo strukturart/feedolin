@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>graduation-cap</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-796.000000, -511.000000)">
+            <g id="198" transform="translate(796.000000, 511.000000)">
+                <path d="M1.79652125,10.8982606 C0.804329959,10.402165 0.805987179,9.59700641 1.79652125,9.10173938 L11.0980496,4.45097518 C11.5961831,4.20190847 12.3992615,4.19963074 12.9019504,4.45097518 L22.2034788,9.10173938 C23.19567,9.59783502 23.1940128,10.4029936 22.2034788,10.8982606 L12.9019504,15.5490248 C12.4038169,15.7980915 11.6007385,15.8003693 11.0980496,15.5490248 L1.79652125,10.8982606 Z" id="Top" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M6,12.5 L6,17.9986199 C6,18.5516669 6.42708635,19.1307325 6.96172553,19.2785558 C6.96172553,19.2785558 9,20 12,20 C15,20 17.0583801,19.2732544 17.0583801,19.2732544 C17.5784224,19.1223402 18,18.5532287 18,17.9986199 L18,12.5" id="Rim" stroke="#333333" stroke-width="2"></path>
+                <ellipse id="Centre" fill="#333333" cx="12" cy="10" rx="2" ry="1"></ellipse>
+                <polyline id="Ribbon" stroke="#333333" stroke-linejoin="round" points="12 10 21.5 11 21.5 16"></polyline>
+                <polygon id="Tassel" stroke="#333333" stroke-width="2" stroke-linejoin="round" points="21.5 16 21 18 22 18"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>crop</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-312.000000, -687.000000)" fill-rule="nonzero" fill="#333333">
+            <g id="267" transform="translate(312.000000, 687.000000)">
+                <path d="M6,3 L6,7 C6,7.55228475 6.44771525,8 7,8 C7.55228475,8 8,7.55228475 8,7 L8,3 C8,2.44771525 7.55228475,2 7,2 C6.44771525,2 6,2.44771525 6,3 Z M8,9 L6,9 L6,17.0078106 C6,17.560286 6.44801283,18.0080802 7.00048816,18.0078105 L21.0004882,17.9999999 C21.5527728,17.9997303 22.0002695,17.5517965 21.9999999,16.9995118 C21.9997303,16.4472272 21.5517965,15.9997305 20.9995118,16.0000001 L8,16.0073223 L8,9 Z" id="Left"></path>
+                <path d="M18,21 L18,19 L16,19 L16,21 C16,21.5522847 16.4477153,22 17,22 C17.5522847,22 18,21.5522847 18,21 Z M16,17 C16,17.5522847 16.4477153,18 17,18 C17.5522847,18 18,17.5522847 18,17 L18,7 C18,6.44771525 17.5522847,6 17,6 L3,6 C2.44771525,6 2,6.44771525 2,7 C2,7.55228475 2.44771525,8 3,8 L16,8 L16,17 Z" id="Right"></path>
+            </g>
+        </g>
+    </g>
+</svg>

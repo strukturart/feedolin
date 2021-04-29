@@ -89,7 +89,7 @@ function bottom_bar(left, center, right) {
 
 //top bar
 function top_bar(left, center, right) {
-    document.querySelector("div#top-bar div.button-left").textContent = left;
+    document.querySelector("div#top-bar div.button-left").innerHTML = left;
     document.querySelector(
         "div#top-bar div.button-center"
     ).textContent = center;

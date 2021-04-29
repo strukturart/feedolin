@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>rotation-lock-on</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-92.000000, -467.000000)">
+            <g id="162" transform="translate(92.000000, 467.000000)">
+                <path d="M21,12 L19,12 C19,7.581722 15.418278,4 11,4 C6.581722,4 3,7.581722 3,12 C3,16.418278 6.581722,20 11,20 C13.4637309,20 15.6673408,18.8862894 17.1348489,17.1348489 L18.5534769,18.5534769 C16.7200083,20.6648956 14.0159193,22 11,22 C5.4771525,22 1,17.5228475 1,12 C1,6.4771525 5.4771525,2 11,2 C16.5228475,2 21,6.4771525 21,12 Z M16,12 L24,12 L20,16 L16,12 Z" id="Arrow" fill="#333333"></path>
+                <rect id="Body" stroke="#333333" stroke-width="2" x="9" y="12" width="4" height="3" rx="1"></rect>
+                <path d="M9.5,12.5 L9.5,10 C9.5,9.17157288 10.1715729,8.5 11,8.5 C11.8284271,8.5 12.5,9.17157288 12.5,10 L12.5,12.5 L9.5,12.5 Z" id="Lock" stroke="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

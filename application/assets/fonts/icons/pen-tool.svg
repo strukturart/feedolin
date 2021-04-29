@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>pen-tool</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-532.000000, -687.000000)" stroke="#333333" stroke-width="2">
+            <g id="272" transform="translate(531.000000, 687.000000)">
+                <g id="pen-tool" transform="translate(12.474344, 12.574381) rotate(-315.000000) translate(-12.474344, -12.574381) translate(5.474344, 2.074381)">
+                    <path d="M7,22.5 C7,22.5 12,11 13,10 C12,9 10,3 10,3 L4,3 C4,3 2,9 1,10 C2,11 7,22.5 7,22.5 Z" id="Path-208" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <rect id="Rectangle-194" stroke-linecap="round" stroke-linejoin="round" x="3" y="0" width="8" height="3"></rect>
+                    <path d="M7,21 L7,10" id="Path-209"></path>
+                    <circle id="Oval-150" cx="7" cy="10" r="1"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

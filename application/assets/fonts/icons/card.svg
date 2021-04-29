@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>card</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-796.000000, -247.000000)">
+            <g id="78" transform="translate(796.000000, 247.000000)">
+                <rect id="Card" stroke="#333333" stroke-width="2" stroke-linejoin="round" x="2" y="4" width="20" height="16" rx="1"></rect>
+                <rect id="Magnetic-Strip" fill="#333333" x="2" y="7" width="20" height="2"></rect>
+                <path d="M5,11 L13,11 L13,13 L5,13 L5,11 Z M15,11 L19,11 L19,12 L15,12 L15,11 Z M16,12 L19,12 L19,13 L16,13 L16,12 Z" id="Info" fill="#333333" opacity="0.5"></path>
+            </g>
+        </g>
+    </g>
+</svg>

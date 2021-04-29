@@ -183,19 +183,42 @@
 
  div#news-feed div#news-feed-list article div.duration-filesize {
      font-size: 0.8rem;
-     display: none;
+     max-height: 20px !important;
 
  }
 
 
  div#news-feed div#news-feed-list article div.duration-filesize div {
      font-size: 0.8rem;
+     max-height: 20px;
 
  }
 
  div#news-feed div#news-feed-list article div.duration {
      margin: 0 10px 0 0;
 
+
+
+ }
+
+ div#news-feed div#news-feed-list article div.duration-filesize div.duration:before {
+
+     background-image: url('/assets/fonts/icons/clock.svg');
+     background-size: 14px 14px;
+     display: inline-block;
+     width: 14px;
+     height: 14px;
+     content: "";
+     margin: 5px 5px 0 0;
+ }
+
+ img.sleepmode {
+     max-width: 3px;
+     max-height: 3px;
+ }
+
+ div#news-feed div#news-feed-list article div.duration-filesize div.duration:empty:before {
+     display: none;
  }
 
 
@@ -352,6 +375,12 @@
      background: black;
      min-width: 100vw;
      display: none;
+ }
+
+ div#top-bar img {
+     margin: 3px 0 0 5px;
+     max-height: 15px;
+     color: white;
  }
 
  div#top-bar div#inner {

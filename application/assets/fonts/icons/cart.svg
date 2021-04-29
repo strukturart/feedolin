@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>cart</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-400.000000, -599.000000)">
+            <g id="229" transform="translate(400.000000, 599.000000)">
+                <path d="M19,22 C17.8954305,22 17,21.1045695 17,20 C17,18.8954305 17.8954305,18 19,18 C20.1045695,18 21,18.8954305 21,20 C21,21.1045695 20.1045695,22 19,22 Z M9,22 C7.8954305,22 7,21.1045695 7,20 C7,18.8954305 7.8954305,18 9,18 C10.1045695,18 11,18.8954305 11,20 C11,21.1045695 10.1045695,22 9,22 Z" id="Wheels" fill="#333333"></path>
+                <polyline id="Frame" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="20 16 8 16 4 4 2 4"></polyline>
+                <polyline id="Body" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="7.5 13 20 13 22 6 5 6"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

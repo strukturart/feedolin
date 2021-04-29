@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>book</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Artboard-4" transform="translate(-884.000000, -203.000000)" stroke="#333333">
+            <g id="60" transform="translate(884.000000, 203.000000)">
+                <path d="M2,5.0068455 C2,3.80374257 3.03799922,2.9787234 4.20752254,3.27110423 L12,5.21922356 L12,21.2807764 L3.72245134,19.2113896 C2.74224228,18.9663373 2,18.0067797 2,16.9931549 L2,5.0068455 Z M12,5.21922364 L19.7924774,3.27110423 C20.9604115,2.97912072 22,3.80328805 22,5.00684547 L22,16.9931545 C22,18.0066201 21.2590506,18.9660137 20.2775487,19.2113892 L12,21.2807762 L12,5.21922364 Z" id="Pages" stroke-width="2" stroke-linejoin="round"></path>
+                <path d="M5,8 L9,9" id="Path-144" stroke-linejoin="round"></path>
+                <path d="M5,11 L9,12" id="Path-144" stroke-linejoin="round"></path>
+                <path d="M5,14 L9,15" id="Path-144" stroke-linejoin="round"></path>
+                <path d="M15,9 L19,8" id="Path-148"></path>
+                <path d="M15,12 L19,11" id="Path-148"></path>
+                <path d="M15,15 L19,14" id="Path-148"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>airdrop</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-884.000000, -423.000000)">
+            <g id="160" transform="translate(884.000000, 423.000000)">
+                <path d="M17.4369971,19.1727208 C19.601945,17.5291218 21,14.9278275 21,12 C21,7.02943725 16.9705627,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,14.9318445 4.40189385,17.5362591 6.57191804,19.1794803" id="3" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M15.775673,16.6633323 C17.1326432,15.5632992 18,13.8829406 18,12 C18,8.6862915 15.3137085,6 12,6 C8.6862915,6 6,8.6862915 6,12 C6,13.8858968 6.87008239,15.568575 8.23072187,16.6685092" id="2" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M14.0961356,14.1462114 C14.6538098,13.6014687 15,12.8411629 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,12.840157 9.34536273,13.5996503 9.90186476,14.1442563" id="1" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <ellipse id="0" fill="#333333" cx="12" cy="12.0183973" rx="1" ry="1.00183973"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

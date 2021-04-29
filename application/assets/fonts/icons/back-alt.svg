@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>back-alt</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-444.000000, -1090.000000)" stroke="#333333" stroke-width="2">
+            <g id="Extras" transform="translate(48.000000, 1046.000000)">
+                <g id="back" transform="translate(396.000000, 44.000000)">
+                    <circle id="Circle" cx="12" cy="12" r="10"></circle>
+                    <polyline id="Arrow" stroke-linecap="round" stroke-linejoin="round" transform="translate(11.500000, 12.000000) scale(-1, 1) translate(-11.500000, -12.000000) " points="10 9 13 12 10 15"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

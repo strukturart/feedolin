@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>filter-ios</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-796.000000, -291.000000)">
+            <g id="98" transform="translate(796.000000, 291.000000)">
+                <circle id="Circle" stroke="#333333" stroke-width="2" cx="12" cy="12" r="10"></circle>
+                <path d="M6,9 C6,8.44771525 6.45576096,8 7.00247329,8 L16.9975267,8 C17.5511774,8 18,8.44386482 18,9 C18,9.55228475 17.544239,10 16.9975267,10 L7.00247329,10 C6.44882258,10 6,9.55613518 6,9 Z M8,13 C8,12.4477153 8.45303631,12 8.99703014,12 L15.0029699,12 C15.5536144,12 16,12.4438648 16,13 C16,13.5522847 15.5469637,14 15.0029699,14 L8.99703014,14 C8.4463856,14 8,13.5561352 8,13 Z M10,17 C10,16.4477153 10.4433532,16 11.0093689,16 L12.9906311,16 C13.5480902,16 14,16.4438648 14,17 C14,17.5522847 13.5566468,18 12.9906311,18 L11.0093689,18 C10.4519098,18 10,17.5561352 10,17 Z" id="Lines" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

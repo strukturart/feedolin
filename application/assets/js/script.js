@@ -34,7 +34,7 @@ var item_id = "";
 let listened_elem = "";
 
 
-
+let sleepmode = false;
 
 
 //read and listened articles/podcasts
@@ -368,6 +368,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             item_title = ""
             item_type = "";
             item_media = "rss";
+            item_duration = ""
 
 
             let data = xhttp.response;
@@ -401,9 +402,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_summary = item_summary.replace(/(]]>)/g, "")
                             item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
                             item_summary = item_summary.replace(/(]]&gt;)/g, "")
-
-
-
                         }
 
                         elem = el[i].querySelector("content");
@@ -438,7 +436,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             if (el[i].querySelector("enclosure").getAttribute("url")) item_download = el[i].querySelector("enclosure").getAttribute("url");
                             if (el[i].querySelector("enclosure").getAttribute("type")) item_type = el[i].querySelector("enclosure").getAttribute("type")
 
-                            if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
+                            if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg" || item_type == "audio/mp3") {
                                 item_media = "podcast";
                             }
 
@@ -449,11 +447,10 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
-
                         if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
                             var duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
-                            item_duration = "&#9201; " + moment(duration, "hh:mm:ss").format("HH:mm")
-                            if (item_duration == "&#9201; Invalid date") item_duration = ""
+                            item_duration = moment(duration, "hh:mm:ss").format("HH:mm")
+                            if (item_duration == "Invalid date") item_duration = ""
 
                         }
 
@@ -561,7 +558,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             if (el[i].querySelector("enclosure").getAttribute("url")) item_download = el[i].querySelector("enclosure").getAttribute("url");
                             if (el[i].querySelector("enclosure").getAttribute("type")) item_type = el[i].querySelector("enclosure").getAttribute("type")
 
-                            if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg") {
+                            if (item_type == "audio/mpeg" || item_type == "audio/aac" || item_type == "audio/x-mpeg" || item_type == "audio/mp3") {
                                 item_media = "podcast";
                             }
 
@@ -571,13 +568,10 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             }
                         }
 
-
                         if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
                             var duration = el[i].getElementsByTagNameNS("*", "duration").item(0).textContent
-                            item_duration = "&#9201; " + moment(duration, "hh:mm:ss").format("HH:mm")
-                            if (item_duration == "&#9201; Invalid date") item_duration = ""
-
-
+                            item_duration = moment(duration, "hh:mm:ss").format("HH:mm")
+                            if (item_duration == "Invalid date") item_duration = ""
                         }
 
 
@@ -720,7 +714,6 @@ let read_articles = function() {
         if (read_elem.length > 0) {
             read_elem.forEach(function(iindex) {
                 if (iindex == index.cid) {
-                    console.log("yeah")
                     index.read = "read"
                 }
             })
@@ -792,7 +785,6 @@ function build() {
 
     renderHello()
 
-    //set_tabindex()
     lazyload.ll();
     document.getElementById("message-box").style.display = "none"
     window_status = "article-list";
@@ -894,6 +886,7 @@ function nav_panels(left_right) {
     }
 
     top_bar("", panels[current_panel], "")
+    if (sleepmode) top_bar("<img src='/assets/fonts/icons/timer.svg'>", panels[current_panel], "")
     panels_list(panels[current_panel]);
 
     set_tabindex();
@@ -1011,10 +1004,8 @@ let save_settings = function() {
 
 
 
-    toaster("saved, the app will now be closed, the settings will be active the next time it is started.", 8000)
-    setTimeout(() => {
-        window.close()
-    }, 7000);
+    toaster("saved, the settings will be active the next time tha app is started.", 8000)
+
 
     return true
 }
@@ -1108,6 +1099,10 @@ let show_article_list = function() {
     article_array[tab_index];
     document.querySelector("div#source-page").style.display = "none"
     document.querySelector("div#source-page iframe").setAttribute("src", "")
+    bottom_bar("settings", "select", "share")
+
+    if (sleepmode) top_bar("<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>", panels[current_panel], "")
+
 
 
     if (!activity) {
@@ -1133,6 +1128,10 @@ let show_article_list = function() {
 
 
 let show_settings = function() {
+    bottom_bar("save", "", "back")
+
+    current_article = document.activeElement.getAttribute('data-id');
+
     window_status = "settings";
     tab_index = 0;
     document.getElementById("top-bar").style.display = "none"
@@ -1143,7 +1142,6 @@ let show_settings = function() {
     }
     document.getElementById("settings").style.display = "block"
 
-    bottom_bar("save", "", "")
     document.getElementById("time").focus();
     if (localStorage.getItem('interval') != null) {
         document.getElementById("time").value = localStorage.getItem('interval')
@@ -1260,9 +1258,12 @@ let sleep_mode = function() {
     let st = localStorage.getItem("sleep_time")
     st = (st * 60) * 1000
 
+    sleepmode = true;
+
     toaster("sleepmode activ", 3000)
     setTimeout(() => {
         audio_player.pause();
+        sleepmode = false;
     }, st);
 
 }
@@ -1434,7 +1435,7 @@ function handleKeyDown(evt) {
                 break
             }
             if (window_status == "settings") {
-                //show_article_list();
+                show_article_list();
                 break
             }
 
@@ -1463,7 +1464,10 @@ function handleKeyDown(evt) {
             }
 
             if (window_status == "settings") {
-                window.close();
+                show_article_list();
+
+
+
                 break;
             }
 
