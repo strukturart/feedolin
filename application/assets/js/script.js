@@ -36,13 +36,13 @@ let listened_elem = "";
 
 let sleepmode = false;
 
-
 //read and listened articles/podcasts
 if (localStorage.getItem("listened") != null) {
-    const str = localStorage.getItem("listened")
-    listened_elem = localStorage.getItem("listened")
+    let str = localStorage.getItem("listened")
+    console.log(str)
+    listened_elem = JSON.parse(localStorage.getItem("listened"))
 } else {
-    localStorage.setItem("listened", "")
+    localStorage.setItem("listened", "{}")
 }
 
 
@@ -55,7 +55,6 @@ if (localStorage.getItem("read") != null) {
     localStorage.setItem("read", "")
 }
 
-console.log(read_elem.length)
 
 
 
@@ -369,6 +368,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             item_type = "";
             item_media = "rss";
             item_duration = ""
+            listened_track = "false"
 
 
             let data = xhttp.response;
@@ -472,11 +472,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_media = "rss";
                         }
 
-                        //listened tracks icon
-                        listened_track = ""
-                        if (listened_elem.indexOf(item_cid) > -1) {
-                            listened_track = " &#127812;"
-                        }
 
                         item_read = "not-read"
 
@@ -575,11 +570,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
-                        //listened tracks icon
-                        listened_track = ""
-                        if (listened_elem.indexOf(item_cid) > -1) {
-                            listened_track = " &#127812;"
-                        }
+
 
 
                         item_read = "not-read"
@@ -725,6 +716,37 @@ let read_articles = function() {
 }
 
 
+
+let listened_articles = function() {
+
+
+    content_arr.forEach(function(index) {
+        //  all_cid.push(index.cid)
+        index.listened = "false"
+
+        if (listened_elem.length > 0) {
+            for (t = 0; t < listened_elem.length; t++) {
+                console.log(listened_elem[t])
+
+                if (listened_elem[t] == index.cid) {
+                    index.listened = "true"
+                }
+            }
+
+
+            /*
+                            
+                            */
+
+
+        }
+
+
+    })
+
+}
+
+
 let clean_localstorage = function() {
 
     for (let i = 0; i < read_elem.length; i++) {
@@ -756,6 +778,7 @@ function renderHello() {
 
 function build() {
     read_articles()
+    listened_articles()
     clean_localstorage()
     bottom_bar("settings", "select", "share")
     top_bar("", panels[0], "")

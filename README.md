@@ -1,6 +1,6 @@
 ![logo](/images/logo.png) 
 
-## KaiOs - rss-reader and podcast downloader
+## KaiOs - RSS/Atom reader and Podcastplayer
 
 - read you favorit rss/atom feeds 
 - download or stream your podcasts
@@ -13,6 +13,8 @@
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
 ![image-3](/images/image-3.png)
+![image-4](/images/image-4.jpg)
+
 
 ## Installation
 You have to save the list of urls in a .json file as in the example. 
@@ -77,8 +79,6 @@ RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
 ## to do
 
 + youtube api
-+ mustache.js
-
 
 ## Donation
 If you use the app often, please donate an amount to me.

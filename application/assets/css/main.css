@@ -271,6 +271,29 @@
      max-width: 15px;
  }
 
+
+
+ div#news-feed div#news-feed-list article div.listened-icon {
+     position: fixed;
+     opacity: 0;
+
+
+ }
+
+
+ div#news-feed div#news-feed-list article div.listened-icon img {
+     height: 15px;
+     margin: 2px 0 0 10px;
+
+
+ }
+
+ div#news-feed div#news-feed-list article[data-listened*="true"] div.listened-icon {
+     position: relative;
+     opacity: 1;
+
+ }
+
  div#source-page {
      display: none;
      position: absolute;
