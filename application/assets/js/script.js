@@ -32,14 +32,14 @@ var item_cid = "";
 var item_image = "";
 var item_id = "";
 let listened_elem = "";
-
-
 let sleepmode = false;
+
+
+
 
 //read and listened articles/podcasts
 if (localStorage.getItem("listened") != null) {
     let str = localStorage.getItem("listened")
-    console.log(str)
     listened_elem = JSON.parse(localStorage.getItem("listened"))
 } else {
     localStorage.setItem("listened", "{}")
@@ -374,7 +374,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             let data = xhttp.response;
 
             //ATOM
-            rss_title = data.querySelector("title").innerHTML
+            rss_title = data.querySelector("title").textContent
+            item_image = data.querySelector("image").getElementsByTagName("url")[0].textContent;
             let count = k + " / " + (source_array.length - 1)
 
             document.getElementById("download").innerText = rss_title
@@ -387,9 +388,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                     if (i < param_limit) {
-
-                        //rss
-
 
                         item_title = el[i].querySelector("title").innerHTML
                         item_cid = hashCode(item_title)
@@ -419,6 +417,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_image = el[i].getElementsByTagNameNS("*", "thumbnail").item(0).getAttribute('url')
                             item_summary = el[i].getElementsByTagNameNS("*", "description").item(0).textContent
                         }
+
+
 
 
 
@@ -473,7 +473,14 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
+                        if (el[i].getElementsByTagNameNS("*", "image").length > 0) {
+                            item_image = el[i].getElementsByTagNameNS("*", "image").item(0).textContent
+
+                        }
+
+
                         item_read = "not-read"
+                        console.log(item_image)
 
 
                         content_arr.push({
@@ -512,7 +519,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
                     if (i < param_limit) {
 
-                        //rss
                         if (el[i].querySelector("title")) {
                             item_title = el[i].querySelector("title").innerHTML
                             item_title = item_title.replace("<![CDATA[", "")
@@ -569,7 +575,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             if (item_duration == "Invalid date") item_duration = ""
                         }
 
-
+                        console.log(item_image)
 
 
 
@@ -726,18 +732,11 @@ let listened_articles = function() {
 
         if (listened_elem.length > 0) {
             for (t = 0; t < listened_elem.length; t++) {
-                console.log(listened_elem[t])
 
                 if (listened_elem[t] == index.cid) {
                     index.listened = "true"
                 }
             }
-
-
-            /*
-                            
-                            */
-
 
         }
 
@@ -780,7 +779,7 @@ function build() {
     read_articles()
     listened_articles()
     clean_localstorage()
-    bottom_bar("settings", "select", "share")
+    bottom_bar("settings", "select", "options")
     top_bar("", panels[0], "")
 
 
@@ -1093,7 +1092,10 @@ let show_article = function() {
 }
 
 let show_article_list = function() {
+    bottom_bar("settings", "select", "options")
+    top_bar("", panels[current_panel], "")
 
+    document.getElementById("audio-player").style.display = "none"
     document.querySelector("div#news-feed").style.background = "white";
     navigator.spatialNavigationEnabled = false;
     document.querySelector("div#source-page div#iframe-wrapper").classList.remove("video-view");
@@ -1122,14 +1124,14 @@ let show_article_list = function() {
     article_array[tab_index];
     document.querySelector("div#source-page").style.display = "none"
     document.querySelector("div#source-page iframe").setAttribute("src", "")
-    bottom_bar("settings", "select", "share")
+    bottom_bar("settings", "select", "options")
 
     if (sleepmode) top_bar("<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>", panels[current_panel], "")
 
 
 
     if (!activity) {
-        bottom_bar("settings", "select", "share")
+        bottom_bar("settings", "select", "options")
     } else {
         bottom_bar("add", "select", "")
     }
@@ -1198,18 +1200,9 @@ function open_url() {
     document.querySelector("div#source-page").style.display = "block"
     document.querySelector("div#source-page div#iframe-wrapper").style.height = "100vh"
 
-
-
-
     if (document.activeElement.getAttribute("data-media") == "rss") {
-        document.querySelector("div#source-page iframe").setAttribute("src", link_target)
-        document.querySelector('div#bottom-bar').style.display = "none"
-        document.querySelector("div#source-page div#iframe-wrapper").style.height = "1000vh"
-        document.querySelector("div#source-page iframe").style.height = "1000vh"
-        navigator.spatialNavigationEnabled = true;
-        window_status = "source-page";
+        window.open(link_target);
         return;
-
     }
 
 
@@ -1275,6 +1268,22 @@ let start_options = function() {
     if (document.activeElement.getAttribute("data-function") == "sleepmode") {
         sleep_mode()
     }
+
+    if (document.activeElement.getAttribute("data-function") == "share") {
+        share(document.activeElement.getAttribute('data-link'));
+    }
+
+    if (document.activeElement.getAttribute("data-function") == "audio-player") {
+        open_player()
+    }
+
+    if (document.activeElement.getAttribute("data-function") == "volume") {
+        navigator.volumeManager.requestShow();
+        volume_status = true;
+        navigator.spatialNavigationEnabled = false;
+    }
+
+
 }
 
 let sleep_mode = function() {
@@ -1288,6 +1297,34 @@ let sleep_mode = function() {
         audio_player.pause();
         sleepmode = false;
     }, st);
+
+}
+
+
+
+
+
+let open_player = function() {
+
+    document.getElementById("audio-player").style.display = "block"
+    window_status = "audio-player"
+    document.getElementById("options").style.display = "none"
+    document.getElementById("image").style.backgroundImage = "url(" + document.activeElement.getAttribute("data-image") + ")";
+
+    top_bar("", "", "")
+
+    let container_block = document.getElementById('background-pattern');
+
+
+    for (let i = 0; i < 115; i++) {
+
+        var block_to_insert = document.createElement('div');
+        block_to_insert.style.width = "40px"
+        block_to_insert.style.height = "40px"
+        block_to_insert.style.backgroundColor = "#" + intToRGB(content_arr[getRandomInteger(0, content_arr.length)].cid)
+        container_block.appendChild(block_to_insert);
+    }
+
 
 }
 
@@ -1338,7 +1375,7 @@ function handleKeyDown(evt) {
                 break;
             }
 
-            if (window_status == "single-article") {
+            if (window_status == "audio-player") {
                 audio_player.seeking("backward")
                 break;
             }
@@ -1351,7 +1388,7 @@ function handleKeyDown(evt) {
 
             }
 
-            if (window_status == "single-article") {
+            if (window_status == "audio-player") {
                 audio_player.seeking("forward")
                 break;
 
@@ -1433,6 +1470,7 @@ function handleKeyDown(evt) {
             }
 
             if (window_status == "single-article" && document.activeElement.getAttribute("data-media") == "podcast") {
+                open_player()
                 audio_player.play_podcast();
                 break
 
@@ -1446,6 +1484,15 @@ function handleKeyDown(evt) {
 
             if (window_status == "settings") {
                 save_settings()
+                break
+
+
+
+            }
+
+
+            if (window_status == "audio-player") {
+                audio_player.play_podcast();
                 break
 
             }
@@ -1463,8 +1510,8 @@ function handleKeyDown(evt) {
             }
 
             if (window_status == "article-list") {
+                open_options()
 
-                share(document.activeElement.getAttribute('data-link'));
                 break
             }
             break;
@@ -1499,6 +1546,11 @@ function handleKeyDown(evt) {
                 break;
             }
 
+            if (window_status == "audio-player") {
+                show_article_list();
+                break;
+            }
+
             if (window_status == "source-page") {
                 show_article_list();
                 break;
@@ -1506,7 +1558,6 @@ function handleKeyDown(evt) {
 
 
             if (window_status == "options") {
-                console.log(current_article)
                 document.getElementById("options").style.display = "none"
                 show_article_list();
                 document.querySelector("[data-id ='" + current_article + "']").focus()

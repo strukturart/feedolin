@@ -91,7 +91,7 @@ const audio_player = ((_) => {
             setTimeout(function() {
                 volume_status = false;
 
-                if ($(":focus").hasClass("youtube") && window_status == "source-page") {
+                if (window_status == "source-page") {
                     navigator.spatialNavigationEnabled = true;
                 }
 
@@ -106,6 +106,10 @@ const audio_player = ((_) => {
 
         var getduration = setInterval(function() {
             var time = player.duration - player.currentTime;
+            let percent = (player.currentTime / player.duration) * 100
+
+            document.querySelector("div#progress-bar div").style.width = percent + "%"
+
             var minutes = parseInt(time / 60, 10);
             var seconds_long = parseInt(time % 60, 10);
             var seconds;
@@ -115,8 +119,7 @@ const audio_player = ((_) => {
                 seconds = seconds_long;
             }
             var duration = minutes + ":" + seconds;
-
-            bottom_bar("pause", duration, "options")
+            if (window_status == "audio-player") bottom_bar("pause", duration, "")
 
 
         }, 1000);
@@ -128,7 +131,7 @@ const audio_player = ((_) => {
     player.onpause = function() {
 
         player_status = "pause";
-        bottom_bar("play", "", "options")
+        bottom_bar("play", "", "")
         toaster("pause", 3000)
     };
 
@@ -140,9 +143,10 @@ const audio_player = ((_) => {
         }
         document.activeElement.classList.add("audio-playing");
         player_status = "play";
-        bottom_bar("pause", "", "options")
+        bottom_bar("pause", "", "")
         toaster("play", 3000)
         active_element = document.activeElement.getAttribute("data-id")
+        document.getElementById("audio-title").innerText = document.activeElement.getAttribute("data-title")
 
 
     };
@@ -154,7 +158,6 @@ const audio_player = ((_) => {
 
         listened.push(active_element)
         localStorage.setItem("listened", JSON.stringify(listened));
-        bottom_bar("pause", "", "options")
 
     };
 

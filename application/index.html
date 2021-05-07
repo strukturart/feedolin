@@ -14,6 +14,16 @@
     <div id="wrapper">
         <div id="toast" class="width-100"></div>
 
+        <div id="audio-player" class="width-100 height-100">
+            <div id="audio-title"></div>
+            <div id="image" class="width-100 height-100">hh</div>
+            <div id="background-pattern" class="flex justify-content-start width-100 height-100">
+            </div>
+            <div id="progress-bar" class="width-100">
+                <div></div>
+            </div>
+        </div>
+
         <div id="qr-screen">
             <video id="video"></video>
             <div id="corner-nw"></div>
@@ -50,13 +60,11 @@
 
             <script id="template" type="x-tmpl-mustache">
                 {{#data}}
-                    <article tabIndex=0 class="all" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}">
+                    <article tabIndex=0 class="all" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-order="{{dateunix}}" data-category="{{category}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                         <div class="flex grid-col-10">
                             <div class="podcast-icon"><img src="assets/image/podcast.png"></div>
                             <div class="youtube-icon"><img src="assets/image/youtube.png"></div>
                             <div class="listened-icon"><img src="assets/fonts/icons/diamond.svg"></div>
-
-
                         </div>
                         <div class="channel">{{channel}}<span></span></div>
                         <time>{{date}}</time>
@@ -71,6 +79,7 @@
                     </article>
                 {{/data}}
             </script>
+
             <div id="source-page" class="width-100 height-100">
                 <div id="iframe-wrapper">
                     <iframe src=" " scrolling="yes" frameborder="”0″" mozbrowser allowfullscreen></iframe>
@@ -88,7 +97,11 @@
                 <ul>
                     <li data-function="unread" tabindex="0">mark as unread</li>
                     <li data-function="sleepmode" tabindex="1">activate sleep mode</li>
+                    <li data-function="audio-player" tabindex="2">open audioplayer</li>
+                    <li data-function="volume" tabindex="3">volume</li>
+                    <li data-function="share" tabindex="4">share</li>
                 </ul>
+
             </div>
 
             <div id="top-bar">

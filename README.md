@@ -3,17 +3,20 @@
 ## KaiOs - RSS/Atom reader and Podcastplayer
 
 - read you favorit rss/atom feeds 
-- download or stream your podcasts
+- stream your podcasts
 - show youtube/soundcloud channels
 - listen spotify->rss podcasts
 - read reddit.com ->rss
 - open rss feedlink
 - offline use (caching)
 
+![image-4](/images/image-4.jpg)
+![image-5](/images/image-5.jpg)
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
 ![image-3](/images/image-3.png)
-![image-4](/images/image-4.jpg)
+
+
 
 
 ## Installation
