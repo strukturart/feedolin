@@ -9,11 +9,10 @@ const goodbye = (() => {
         localStorage.clickcount = 1;
     }
 
-    if (localStorage.clickcount == 3) {
+    if (localStorage.clickcount > 3) {
         document.getElementById("donation").style.display = "block";
         setTimeout(function() {
             localStorage.clickcount = 1;
-
             window.close();
         }, 6000)
     } else {
@@ -22,6 +21,8 @@ const goodbye = (() => {
             window.close();
         }, 4000);
     }
+
+
 
 
 }

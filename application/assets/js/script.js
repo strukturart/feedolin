@@ -480,7 +480,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                         item_read = "not-read"
-                        console.log(item_image)
 
 
                         content_arr.push({
@@ -575,7 +574,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             if (item_duration == "Invalid date") item_duration = ""
                         }
 
-                        console.log(item_image)
 
 
 
@@ -1328,6 +1326,8 @@ let open_player = function() {
 
 }
 
+console.log(localStorage.clickcount)
+
 
 //////////////////////////
 ////KEYPAD TRIGGER////////////
@@ -1535,9 +1535,6 @@ function handleKeyDown(evt) {
 
             if (window_status == "settings") {
                 show_article_list();
-
-
-
                 break;
             }
 
@@ -1568,7 +1565,6 @@ function handleKeyDown(evt) {
                 qr.stop_scan()
                 break;
             }
-
 
             break;
 
