@@ -296,11 +296,11 @@
 
  div#source-page {
      display: none;
-     position: absolute;
+     position: fixed;
      top: 0;
      left: 0;
-     z-index: 3;
-     background: white;
+     z-index: 5;
+     background: black;
      min-height: 100vh;
      width: 101vw;
  }
@@ -322,14 +322,14 @@
  }
 
  div#source-page div.video-view>iframe {
-     width: 320px !Important;
-     height: 240px !Important;
+     width: 100% !Important;
+     height: 100% !Important;
  }
 
  div#source-page div.video-view {
      transform: rotate(90deg);
      position: relative !Important;
-     left: -40px !Important;
+     left: -50px !Important;
      top: 40px !Important;
      width: 320px !Important;
      height: 240px !Important;

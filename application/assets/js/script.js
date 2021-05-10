@@ -368,6 +368,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             item_type = "";
             item_media = "rss";
             item_duration = ""
+            item_filesize = ""
             listened_track = "false"
 
 
@@ -375,7 +376,9 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
             //ATOM
             rss_title = data.querySelector("title").textContent
-            item_image = data.querySelector("image").getElementsByTagName("url")[0].textContent;
+            if (data.querySelector("image")) {
+                item_image = data.querySelector("image").getElementsByTagName("url")[0].textContent;
+            }
             let count = k + " / " + (source_array.length - 1)
 
             document.getElementById("download").innerText = rss_title
@@ -383,6 +386,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
             el = data.querySelectorAll("entry")
+
+
             if (el.length > 0) {
                 for (let i = 0; i < el.length; i++) {
 
@@ -419,18 +424,14 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
+                        if (el[i].querySelector("link")) {
 
-
-
-                        elem = el[i].querySelector("link");
-
-                        if (elem) {
-                            if (el[i].querySelector("link").getAttribute("href") != undefined) {
-                                item_link = el[i].querySelector("link").getAttribute("href");
-                                item_download = el[i].querySelector("link").getAttribute("href")
-                            }
+                            item_link = el[i].querySelector("link").getAttribute("href");
+                            item_download = el[i].querySelector("link").getAttribute("href")
 
                         }
+
+
 
                         if (el[i].querySelector("enclosure") != null || el[i].querySelector("enclosure") != undefined) {
                             if (el[i].querySelector("enclosure").getAttribute("url")) item_download = el[i].querySelector("enclosure").getAttribute("url");
@@ -470,12 +471,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_media = "youtube";
                         } else {
                             item_media = "rss";
-                        }
-
-
-                        if (el[i].getElementsByTagNameNS("*", "image").length > 0) {
-                            item_image = el[i].getElementsByTagNameNS("*", "image").item(0).textContent
-
                         }
 
 
@@ -532,12 +527,18 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_summary = item_summary.replace(/(]]&gt;)/g, "")
 
                         }
-                        i
+
                         if (el[i].querySelector("link")) {
-                            item_link = el[i].querySelector("link");
+                            item_link = el[i].querySelector("link").textContent;
                             item_download = el[i].querySelector("link");
 
                         }
+
+
+
+
+
+
 
 
                         //check valid date
@@ -578,7 +579,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
 
 
                         item_read = "not-read"
-
 
 
                         content_arr.push({
@@ -1199,6 +1199,7 @@ function open_url() {
     document.querySelector("div#source-page div#iframe-wrapper").style.height = "100vh"
 
     if (document.activeElement.getAttribute("data-media") == "rss") {
+        show_article_list()
         window.open(link_target);
         return;
     }
@@ -1251,6 +1252,7 @@ function open_url() {
 }
 
 let open_options = function() {
+    current_article = document.activeElement.getAttribute('data-id')
     window_status = "options";
     document.getElementById("options").style.display = "block"
     document.querySelectorAll("div#options ul li")[0].focus()
@@ -1268,7 +1270,8 @@ let start_options = function() {
     }
 
     if (document.activeElement.getAttribute("data-function") == "share") {
-        share(document.activeElement.getAttribute('data-link'));
+        var k = document.querySelector("[data-id='" + current_article + "']").getAttribute('data-link')
+        share(k);
     }
 
     if (document.activeElement.getAttribute("data-function") == "audio-player") {
@@ -1326,7 +1329,6 @@ let open_player = function() {
 
 }
 
-console.log(localStorage.clickcount)
 
 
 //////////////////////////
