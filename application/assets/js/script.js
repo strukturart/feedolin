@@ -11,6 +11,9 @@ var activity = false;
 var volume_status = false;
 let current_article;
 
+let read = [];
+
+
 //store all used article ids
 let all_cid = []
 
@@ -108,7 +111,7 @@ setTimeout(() => {
 
 
 let load_source = function() {
-    let source_url = localStorage.getItem('source')
+    let source_url = localStorage.getItem('source') + "?q=123"
     let xhttp = new XMLHttpRequest({
         mozSystem: true
     });
@@ -370,6 +373,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             item_duration = ""
             item_filesize = ""
             listened_track = "false"
+            item_cid = ""
 
 
             let data = xhttp.response;
@@ -408,6 +412,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
                         elem = el[i].querySelector("content");
+
                         if (elem) {
                             item_summary = el[i].querySelector("content").textContent;
                             item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
@@ -417,19 +422,34 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         }
 
 
+                        var elem = el[i].querySelector("description");
+                        if (elem) {
+                            item_summary = el[i].querySelector("description").textContent;
+                            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "")
+                            item_summary = item_summary.replace(/(]]>)/g, "")
+                            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "")
+                            item_summary = item_summary.replace(/(]]&gt;)/g, "")
+                        }
+
+
+
+
 
                         if (el[i].getElementsByTagNameNS("*", "thumbnail").length > 0) {
                             item_image = el[i].getElementsByTagNameNS("*", "thumbnail").item(0).getAttribute('url')
-                            item_summary = el[i].getElementsByTagNameNS("*", "description").item(0).textContent
+                            //item_summary = el[i].getElementsByTagNameNS("*", "description").item(0).textContent
                         }
 
 
-                        if (el[i].querySelector("link")) {
+                        if (el[i].querySelector("link") !== null) {
 
-                            item_link = el[i].querySelector("link").getAttribute("href");
-                            item_download = el[i].querySelector("link").getAttribute("href")
+                            //item_link = el[i].querySelector("link").getAttribute("href");
+                            item_link = el[i].querySelector("link").textContent;
+
+                            //item_download = el[i].querySelector("link").getAttribute("href")
 
                         }
+
 
 
 
@@ -467,7 +487,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         item_date = item_date.toDateString();
 
 
-                        if (item_link.includes("https://www.youtube.com") === true) {
+                        if (item_link !== null && item_link.includes("https://www.youtube.com") === true) {
                             item_media = "youtube";
                         } else {
                             item_media = "rss";
@@ -533,11 +553,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                             item_download = el[i].querySelector("link");
 
                         }
-
-
-
-
-
 
 
 
@@ -837,18 +852,33 @@ let set_tabindex = function() {
 
 }
 
-let read = [];
+
+/*
+let read_elem = "";
+
+if (localStorage.getItem("read") != null) {
+    read_elem = JSON.parse(localStorage.getItem("read"))
+
+} else {
+    localStorage.setItem("read", "")
+}
+*/
+console.log(read_elem)
+
 let mark_as_read = function(un_read) {
 
 
     if (localStorage.getItem("read")) {
-        read = JSON.parse(localStorage["read"]);
+        //read = JSON.parse(localStorage["read"]);
+        //console.log(read)
     }
 
     if (un_read == true) {
+        //console.log(document.activeElement.getAttribute("data-id"))
         document.activeElement.setAttribute("data-read", "read")
-        read.push(document.activeElement.getAttribute("data-id"))
-        localStorage.setItem("read", JSON.stringify(read));
+        read_elem.push(document.activeElement.getAttribute("data-id"))
+        localStorage.setItem("read", JSON.stringify(read_elem));
+        console.log(JSON.stringify(read_elem))
     }
 
     if (un_read == false) {
@@ -856,12 +886,14 @@ let mark_as_read = function(un_read) {
         let kk = document.querySelector("[data-id ='" + current_article + "']").getAttribute("data-id")
 
         let test = []
-        for (var i = 0; i < read.length; i++) {
+        for (var i = 0; i < read_elem.length; i++) {
 
-            if (read[i] != kk) test.push(read[i])
+            if (read_elem[i] != kk) test.push(read_elem[i])
 
         }
         localStorage.setItem("read", JSON.stringify(test));
+        document.activeElement.setAttribute("data-read", "not-read")
+
         toaster("article marked as not read", 2000)
     }
 }

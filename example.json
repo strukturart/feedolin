@@ -54,7 +54,14 @@
         "url": "https://media.ccc.de/podcast-audio-only.xml",
         "limit": "3",
         "channel": "CCC"
+    },
+    {
+        "category": "bhAckers-store",
+        "url": "https://rss.bhackers.uber.space/store.php",
+        "limit": "100",
+        "channel": "bhackers-store"
     }
+
 
 
 ]

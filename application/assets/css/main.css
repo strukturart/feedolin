@@ -85,6 +85,14 @@
      display: none;
  }
 
+ img[src=" "] {
+     display: none;
+ }
+
+ img[src=' '] {
+     display: none;
+ }
+
  /*///////////////////////////
 ///HELPER////////////////*/
 
