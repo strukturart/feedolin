@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<opml version="1.0">
+    <head>
+        <title>feedly Cloud</title>
+    </head>
+    <body>
+     
+ 
+        <outline text="Forum" title="Forum">
+            <outline type="rss" text="KaiOs Reddit" title="KaiOs Reddit" xmlUrl="https://www.reddit.com/r/KaiOS/.rss" htmlUrl=""/>
+            <outline type="rss" text="KaiOs Reddit" title="KaiOs Reddit" xmlUrl="https://www.reddit.com/r/KaiOS/.rss" htmlUrl=""/>
+            <outline type="rss" text="KaiOs Reddit" title="KaiOs Reddit" xmlUrl="https://www.reddit.com/r/KaiOS/.rss" htmlUrl=""/>
+        </outline>
+       
+     
+        
+    </body>
+</opml>

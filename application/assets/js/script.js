@@ -52,6 +52,10 @@ if (localStorage.getItem("read") != null) {
   localStorage.setItem("read", "");
 }
 
+if (localStorage.getItem("epsiodes_download") != null) {
+  epsiodes_download = localStorage.getItem("epsiodes_download");
+}
+
 //check if activity or not
 setTimeout(() => {
   if (activity === false) {
@@ -79,7 +83,14 @@ setTimeout(() => {
         localStorage["source"] != "" &&
         localStorage["source"] != undefined
       ) {
-        load_source();
+        let str = localStorage["source"];
+        if (str.includes(".json")) {
+          load_source();
+        }
+        if (str.includes(".opml")) {
+          load_source_opml();
+        }
+
         document.getElementById("message-box").style.display = "none";
       } else {
         load_local_file();
@@ -227,6 +238,72 @@ let load_local_file = function () {
   });
 };
 
+///////////
+///load source opml file from online source
+//////////
+let load_source_opml = function () {
+  let source_url = localStorage.getItem("source") + "?q=123";
+  let xhttp = new XMLHttpRequest({
+    mozSystem: true,
+  });
+
+  xhttp.open("GET", source_url + "?test=1&time=12345", true);
+  xhttp.timeout = 5000;
+  xhttp.onload = function () {
+    if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
+      let data = xhttp.response;
+
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(data, "text/xml");
+      let content = xmlDoc.getElementsByTagName("body")[0];
+
+      console.log(content.querySelectorAll("outline").length);
+      let m = content.querySelectorAll("outline");
+      for (var i = 0; i < m.length; i++) {
+        console.log(m[i].getAttribute("text"));
+
+        var nested = m[i].querySelectorAll("outline");
+
+        if (nested.length > 0) {
+          for (var z = 0; z < nested.length; z++) {
+            console.log(nested[z].getAttribute("xmlUrl"));
+
+            source_array.push([
+              nested[z].getAttribute("xmlUrl"),
+              3,
+              "test",
+              "test",
+            ]);
+          }
+        }
+      }
+
+      //console.log(JSON.stringify(source_array));
+    }
+
+    rss_fetcher(
+      source_array[0][0],
+      source_array[0][1],
+      source_array[0][2],
+      source_array[0][3]
+    );
+  };
+
+  xhttp.onerror = function () {
+    document.querySelector("#download").innerHTML =
+      "😴<br>the source file cannot be loaded";
+
+    setTimeout(() => {
+      document.getElementById("message-box").style.display = "none";
+      show_settings();
+    }, 2000);
+  };
+
+  xhttp.send();
+};
+
+load_source_opml();
+
 //when open single xml frome browser
 
 if (navigator.mozSetMessageHandler) {
@@ -291,7 +368,7 @@ function formatFileSize(bytes, decimalPoint) {
 const qr_listener = document.querySelector("input#source");
 let qrscan = false;
 qr_listener.addEventListener("focus", (event) => {
-  bottom_bar("save", "qr", "");
+  bottom_bar("save", "qr", "back");
   qrscan = true;
   toaster(
     "press enter to open the qr-code-scanner, it is helpfull for a long url",
@@ -300,7 +377,7 @@ qr_listener.addEventListener("focus", (event) => {
 });
 
 qr_listener.addEventListener("blur", (event) => {
-  bottom_bar("save", "", "");
+  bottom_bar("save", "", "back");
   qrscan = false;
 });
 
@@ -799,7 +876,6 @@ if (localStorage.getItem("read") != null) {
     localStorage.setItem("read", "")
 }
 */
-console.log(read_elem);
 
 let mark_as_read = function (un_read) {
   if (un_read == true) {
@@ -942,6 +1018,8 @@ let save_settings = function () {
   var setting_source = document.getElementById("source").value;
   var setting_source_local = document.getElementById("source-local").value;
   var setting_sleeptime = document.getElementById("sleep-mode").value;
+  var setting_episodes_download = document.getElementById("episodes-download")
+    .value;
 
   if (setting_source == "" && setting_source_local == "") {
     toaster("please fill in the location of the source file", 3000);
@@ -959,6 +1037,7 @@ let save_settings = function () {
   localStorage.setItem("source", setting_source);
   localStorage.setItem("source_local", setting_source_local);
   localStorage.setItem("sleep_time", setting_sleeptime);
+  localStorage.setItem("episodes_download", setting_episodes_download);
 
   toaster(
     "saved, the settings will be active the next time tha app is started.",
@@ -1115,6 +1194,12 @@ let show_settings = function () {
   if (localStorage.getItem("sleep_time") != null) {
     document.getElementById("sleep-mode").value = localStorage.getItem(
       "sleep_time"
+    );
+  }
+
+  if (localStorage.getItem("episodes_download") != null) {
+    document.getElementById("episodes-download").value = localStorage.getItem(
+      "episodes_download"
     );
   }
 };
