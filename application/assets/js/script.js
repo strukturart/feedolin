@@ -110,8 +110,8 @@ setTimeout(() => {
       }
     }
   }
-  document.getElementById("message-box").style.display = "none";
-  document.querySelector("#news-feed-list").style.background = "white";
+  //document.getElementById("message-box").style.display = "none";
+  //document.querySelector("#news-feed-list").style.background = "white";
 }, 1500);
 
 ///////////
@@ -954,16 +954,7 @@ let set_tabindex = function () {
   tab_index = 0;
 };
 
-/*
-let read_elem = "";
 
-if (localStorage.getItem("read") != null) {
-    read_elem = JSON.parse(localStorage.getItem("read"))
-
-} else {
-    localStorage.setItem("read", "")
-}
-*/
 
 let mark_as_read = function (un_read) {
   if (un_read == true) {
