@@ -10,7 +10,7 @@ var current_panel = 0;
 var activity = false;
 var volume_status = false;
 let current_article;
-
+let epsiodes_download = 3;
 let read = [];
 
 //store all used article ids
@@ -53,7 +53,7 @@ if (localStorage.getItem("read") != null) {
 }
 
 if (localStorage.getItem("epsiodes_download") != null) {
-  epsiodes_download = localStorage.getItem("epsiodes_download");
+  epsiodes_download = localStorage.getItem("episodes_download");
 }
 
 //check if activity or not
@@ -90,10 +90,14 @@ setTimeout(() => {
         if (str.includes(".opml")) {
           load_source_opml();
         }
-
-        document.getElementById("message-box").style.display = "none";
       } else {
-        load_local_file();
+        let str = localStorage["source_local"];
+        if (str.includes(".json")) {
+          load_local_file();
+        }
+        if (str.includes(".opml")) {
+          load_local_file_opml();
+        }
       }
       //load cache
     } else {
@@ -102,12 +106,11 @@ setTimeout(() => {
         build();
       } else {
         show_settings();
-        document.getElementById("message-box").style.display = "none";
         alert("no cached data available");
       }
     }
   }
-
+  document.getElementById("message-box").style.display = "none";
   document.querySelector("#news-feed-list").style.background = "white";
 }, 1500);
 
@@ -239,6 +242,98 @@ let load_local_file = function () {
 };
 
 ///////////
+///load source opml file from local source
+//////////
+
+let load_local_file_opml = function () {
+  let a = localStorage.getItem("source_local");
+
+  if (
+    localStorage.getItem("source_local") == "" ||
+    localStorage.getItem("source_local") == null
+  ) {
+    document.getElementById("message-box").style.display = "none";
+    show_settings();
+    return false;
+  }
+
+  var finder = new Applait.Finder({
+    type: "sdcard",
+    debugMode: true,
+  });
+
+  finder.search(a);
+
+  finder.on("searchBegin", function (needle) {
+    alert(needle);
+  });
+
+  finder.on("empty", function (needle) {
+    toaster("no sdcard found");
+    document.getElementById("message-box").style.display = "none";
+    show_settings();
+    return;
+  });
+
+  finder.on("searchCancelled", function (message) {});
+
+  finder.on("searchComplete", function (needle, filematchcount) {
+    if (filematchcount == 0) {
+      document.querySelector("#download").innerHTML =
+        "😴<br>No source file founded,<br> please create a json file or set a url in the settings.";
+      setTimeout(() => {
+        document.getElementById("message-box").style.display = "none";
+        show_settings();
+      }, 3000);
+    }
+  });
+
+  finder.on("error", function (message, err) {});
+
+  finder.on("fileFound", function (file, fileinfo, storageName) {
+    var reader = new FileReader();
+    reader.onerror = function (event) {
+      toaster("shit happens");
+      reader.abort();
+    };
+
+    reader.onloadend = function (event) {
+      let data = event.target.result;
+
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(data, "text/xml");
+      let content = xmlDoc.getElementsByTagName("body")[0];
+
+      let m = content.querySelectorAll("outline");
+      for (var i = 0; i < m.length; i++) {
+        var nested = m[i].querySelectorAll("outline");
+
+        if (nested.length > 0) {
+          for (var z = 0; z < nested.length; z++) {
+            console.log(m[i].getAttribute("text"));
+
+            source_array.push([
+              nested[z].getAttribute("xmlUrl"),
+              epsiodes_download,
+              m[i].getAttribute("text"),
+              m[i].getAttribute("text"),
+            ]);
+          }
+        }
+      }
+
+      rss_fetcher(
+        source_array[0][0],
+        source_array[0][1],
+        source_array[0][2],
+        source_array[0][3]
+      );
+    };
+    reader.readAsText(file);
+  });
+};
+
+///////////
 ///load source opml file from online source
 //////////
 let load_source_opml = function () {
@@ -257,28 +352,23 @@ let load_source_opml = function () {
       var xmlDoc = parser.parseFromString(data, "text/xml");
       let content = xmlDoc.getElementsByTagName("body")[0];
 
-      console.log(content.querySelectorAll("outline").length);
       let m = content.querySelectorAll("outline");
       for (var i = 0; i < m.length; i++) {
-        console.log(m[i].getAttribute("text"));
-
         var nested = m[i].querySelectorAll("outline");
 
         if (nested.length > 0) {
           for (var z = 0; z < nested.length; z++) {
-            console.log(nested[z].getAttribute("xmlUrl"));
-
             source_array.push([
               nested[z].getAttribute("xmlUrl"),
-              3,
-              "test",
-              "test",
+              epsiodes_download,
+              m[i].getAttribute("text"),
+              m[i].getAttribute("text"),
             ]);
           }
         }
       }
 
-      //console.log(JSON.stringify(source_array));
+      console.log(JSON.stringify(source_array));
     }
 
     rss_fetcher(
@@ -302,9 +392,7 @@ let load_source_opml = function () {
   xhttp.send();
 };
 
-load_source_opml();
-
-//when open single xml frome browser
+//when open single xml from browser
 
 if (navigator.mozSetMessageHandler) {
   navigator.mozSetMessageHandler("activity", function (activityRequest) {
@@ -879,11 +967,9 @@ if (localStorage.getItem("read") != null) {
 
 let mark_as_read = function (un_read) {
   if (un_read == true) {
-    //console.log(document.activeElement.getAttribute("data-id"))
     document.activeElement.setAttribute("data-read", "read");
     read_elem.push(document.activeElement.getAttribute("data-id"));
     localStorage.setItem("read", JSON.stringify(read_elem));
-    console.log(JSON.stringify(read_elem));
   }
 
   if (un_read == false) {
@@ -1040,7 +1126,7 @@ let save_settings = function () {
   localStorage.setItem("episodes_download", setting_episodes_download);
 
   toaster(
-    "saved, the settings will be active the next time tha app is started.",
+    "saved, the settings will be active the next time the app is started.",
     8000
   );
 
