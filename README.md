@@ -1,6 +1,8 @@
 ![logo](/images/logo.png)
 
-## KaiOs - RSS/Atom reader and Podcastplayer
+# Feddolin
+
+## RSS/Atom reader and Podcastplayer for KaiOs
 
 - read you favorit rss/atom feeds
 - stream your podcasts

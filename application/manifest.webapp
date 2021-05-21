@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
-	"name": "rss-reader",
-	"description": "rss-reader",
+	"name": "feedolin",
+	"description": "feed-reader",
 	"launch_path": "/index.html",
 	"type": "privileged",
 	"fullscreen": "true",

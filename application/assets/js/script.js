@@ -56,6 +56,10 @@ if (localStorage.getItem("epsiodes_download") != null) {
   epsiodes_download = localStorage.getItem("episodes_download");
 }
 
+setTimeout(() => {
+  document.getElementById("intro").style.display = "none";
+  navigator.minimizeMemoryUsage();
+}, 3500);
 //check if activity or not
 setTimeout(() => {
   if (activity === false) {
@@ -110,8 +114,6 @@ setTimeout(() => {
       }
     }
   }
-  //document.getElementById("message-box").style.display = "none";
-  //document.querySelector("#news-feed-list").style.background = "white";
 }, 1500);
 
 ///////////
@@ -569,14 +571,11 @@ let rss_fetcher = function (
                 .getElementsByTagNameNS("*", "thumbnail")
                 .item(0)
                 .getAttribute("url");
-              //item_summary = el[i].getElementsByTagNameNS("*", "description").item(0).textContent
             }
 
             if (el[i].querySelector("link") !== null) {
-              //item_link = el[i].querySelector("link").getAttribute("href");
-              item_link = el[i].querySelector("link").textContent;
+              item_link = el[i].querySelector("link").getAttribute("href");
 
-              //item_download = el[i].querySelector("link").getAttribute("href")
             }
 
             if (
@@ -954,8 +953,6 @@ let set_tabindex = function () {
   tab_index = 0;
 };
 
-
-
 let mark_as_read = function (un_read) {
   if (un_read == true) {
     document.activeElement.setAttribute("data-read", "read");
@@ -1300,6 +1297,7 @@ function open_url() {
   }
 
   if (document.activeElement.getAttribute("data-media") == "youtube") {
+    console.log("youtube");
     document
       .querySelector("div#source-page iframe")
       .setAttribute("src", link_target);
