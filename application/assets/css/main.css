@@ -99,6 +99,11 @@ div#intro {
   height: 100%;
 }
 
+div#intro img {
+  width: 150px;
+  height: auto;
+}
+
 /*///////////////////////////
 ///HELPER////////////////*/
 
@@ -595,6 +600,11 @@ div#settings input {
   margin: 0 0 25px 0;
   padding: 3px;
   display: block;
+}
+
+div#settings input:focus {
+  outline: 2px solid red;
+  background: rgb(255, 240, 240);
 }
 
 /* AUDIO */

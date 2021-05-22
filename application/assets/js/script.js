@@ -460,10 +460,6 @@ let qrscan = false;
 qr_listener.addEventListener("focus", (event) => {
   bottom_bar("save", "qr", "back");
   qrscan = true;
-  toaster(
-    "press enter to open the qr-code-scanner, it is helpfull for a long url",
-    3000
-  );
 });
 
 qr_listener.addEventListener("blur", (event) => {
@@ -575,7 +571,6 @@ let rss_fetcher = function (
 
             if (el[i].querySelector("link") !== null) {
               item_link = el[i].querySelector("link").getAttribute("href");
-
             }
 
             if (
@@ -1066,9 +1061,14 @@ function nav(move) {
 
     document.activeElement.scrollIntoView({
       behavior: "smooth",
-      block: "end",
+      block: "center",
       inline: "nearest",
     });
+  }
+  console.log(tab_index);
+
+  if (move == "-1" && tab_index == 1) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (move == "-1" && tab_index > 0) {
@@ -1077,7 +1077,7 @@ function nav(move) {
     tab_index--;
     siblings[tab_index].focus();
     siblings[tab_index].scrollIntoView({
-      block: "start",
+      block: "center",
     });
     return true;
   }
@@ -1115,7 +1115,7 @@ let save_settings = function () {
 
   toaster(
     "saved, the settings will be active the next time the app is started.",
-    8000
+    5000
   );
 
   return true;
@@ -1239,7 +1239,7 @@ let show_settings = function () {
   bottom_bar("save", "", "back");
 
   current_article = document.activeElement.getAttribute("data-id");
-
+  console.log(current_article);
   window_status = "settings";
   tab_index = 0;
   document.getElementById("top-bar").style.display = "none";
@@ -1559,6 +1559,11 @@ function handleKeyDown(evt) {
       }
       if (window_status == "settings") {
         show_article_list();
+
+        setTimeout(() => {
+          article_array = document.querySelectorAll("article");
+          article_array[0].focus();
+        }, 1000);
         break;
       }
 
@@ -1585,7 +1590,7 @@ function handleKeyDown(evt) {
       }
 
       if (window_status == "settings") {
-        show_article_list();
+        //show_article_list();
         break;
       }
 
