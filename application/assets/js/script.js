@@ -1061,7 +1061,7 @@ function nav(move) {
 
     document.activeElement.scrollIntoView({
       behavior: "smooth",
-      block: "center",
+      block: "start",
       inline: "nearest",
     });
   }
@@ -1077,7 +1077,7 @@ function nav(move) {
     tab_index--;
     siblings[tab_index].focus();
     siblings[tab_index].scrollIntoView({
-      block: "center",
+      block: "end",
     });
     return true;
   }
