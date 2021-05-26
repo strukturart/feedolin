@@ -11,10 +11,15 @@ var activity = false;
 var volume_status = false;
 let current_article;
 let epsiodes_download = 3;
-let read = [];
 
 //store all used article ids
 let all_cid = [];
+
+let read = [];
+let recently_played = [];
+let listened_elements = "";
+let read_elem = "";
+
 
 let tab_index = 0;
 //xml items
@@ -38,18 +43,17 @@ let sleepmode = false;
 
 //read and listened articles/podcasts
 if (localStorage.getItem("listened") != null) {
-  let str = localStorage.getItem("listened");
   listened_elem = JSON.parse(localStorage.getItem("listened"));
-} else {
-  localStorage.setItem("listened", "{}");
 }
 
-let read_elem = "";
+if (localStorage.getItem("recentlyplayed") != null) {
+  recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
+  console.log(recently_played);
+}
+
 
 if (localStorage.getItem("read") != null) {
   read_elem = JSON.parse(localStorage.getItem("read"));
-} else {
-  localStorage.setItem("read", "");
 }
 
 if (localStorage.getItem("epsiodes_download") != null) {
@@ -511,6 +515,7 @@ let rss_fetcher = function (
       item_duration = "";
       item_filesize = "";
       listened_track = "false";
+      play_track = "false";
       item_cid = "";
 
       let data = xhttp.response;
@@ -650,6 +655,7 @@ let rss_fetcher = function (
               filesize: item_filesize,
               cid: item_cid,
               listened: listened_track,
+              play: play_track,
               read: item_read,
             });
           }
@@ -754,6 +760,7 @@ let rss_fetcher = function (
               filesize: item_filesize,
               cid: item_cid,
               listened: listened_track,
+              play: play_track,
               read: item_read,
             });
           }
@@ -835,13 +842,6 @@ let rss_fetcher = function (
 //sort content by date
 //build
 //write html
-let listened_elements = "";
-
-if (localStorage["listened"]) {
-  listened_elements = JSON.parse(localStorage["listened"]);
-} else {
-  listened_elements = [];
-}
 
 let read_articles = function () {
   //if element in read list
@@ -859,9 +859,9 @@ let read_articles = function () {
   });
 };
 
+//end to listen
 let listened_articles = function () {
   content_arr.forEach(function (index) {
-    //  all_cid.push(index.cid)
     index.listened = "false";
 
     if (listened_elem.length > 0) {
@@ -874,6 +874,23 @@ let listened_articles = function () {
   });
 };
 
+//started to listen
+let listened_podcast_articles = function () {
+  content_arr.forEach(function (index) {
+    index.play = "false";
+    let t = 0;
+    if (recently_played.length > 0) {
+      for (t = 0; t < recently_played.length; t++) {
+        if (recently_played[t] == index.cid) {
+          index.play = "recently-played";
+        }
+      }
+    }
+  });
+};
+
+//clear local storage
+
 let clean_localstorage = function () {
   for (let i = 0; i < read_elem.length; i++) {
     if (all_cid.indexOf(read_elem[i]) == -1) {
@@ -881,7 +898,16 @@ let clean_localstorage = function () {
     }
   }
   localStorage.setItem("read", JSON.stringify(read_elem));
+//recently played
+  for (let i = 0; i < read_elem.length; i++) {
+    if (all_cid.indexOf(read_elem[i]) == -1) {
+      read_elem.slice(i, 1);
+    }
+  }
+  localStorage.setItem("read", JSON.stringify(read_elem));
 };
+
+//render html
 
 function renderHello() {
   var template = document.getElementById("template").innerHTML;
@@ -893,6 +919,7 @@ function renderHello() {
 
 function build() {
   read_articles();
+  listened_podcast_articles();
   listened_articles();
   clean_localstorage();
   bottom_bar("settings", "select", "options");
@@ -918,6 +945,7 @@ function build() {
     ) {
       panels.push(content_arr[i].category);
     }
+    panels.push("recently-played")
   }
 
   renderHello();
@@ -1061,11 +1089,9 @@ function nav(move) {
 
     document.activeElement.scrollIntoView({
       behavior: "smooth",
-      block: "start",
-      inline: "nearest",
+      block: "end",
     });
   }
-  console.log(tab_index);
 
   if (move == "-1" && tab_index == 1) {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1077,7 +1103,8 @@ function nav(move) {
     tab_index--;
     siblings[tab_index].focus();
     siblings[tab_index].scrollIntoView({
-      block: "end",
+      behavior: "smooth",
+      block: "start",
     });
     return true;
   }
