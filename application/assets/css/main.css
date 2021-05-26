@@ -610,7 +610,6 @@ div#settings input:focus {
 /* AUDIO */
 
 .audio-playing {
-  background: rgba(109, 231, 119, 0.6) !important;
 }
 
 #goodbye {

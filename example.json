@@ -20,8 +20,16 @@
     {
         "category": "podcast",
         "url": "https://feeds.br.de/breitengrad/feed.xml",
-        "limit": "1",
+        "limit": "2",
         "channel": "Breitengrad"
+    },
+
+
+    {
+        "category": "podcast",
+        "url": "https://podcasts.files.bbci.co.uk/b006qjxt.rss",
+        "limit": "1",
+        "channel": "bbc news"
     },
     {
         "category": "news",
@@ -60,7 +68,14 @@
         "url": "https://rss.bhackers.uber.space/store.php",
         "limit": "100",
         "channel": "bhackers-store"
+    },
+    {
+        "category": "coding",
+        "url": "https://blog.bananahackers.net/read/feed/",
+        "limit": "4",
+        "channel": "bHackers blog"
     }
+
 
 
 

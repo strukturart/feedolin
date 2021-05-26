@@ -122,18 +122,14 @@ const audio_player = ((_) => {
       "audio-title"
     ).innerText = document.activeElement.getAttribute("data-title");
 
-
     //add recently played tracks in list
     if (localStorage.getItem("recentlyplayed")) {
       recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
     }
 
-    console.log(recently_played.indexOf(active_element));
-
     if (recently_played.indexOf(active_element) == -1) {
-      recently_played.push(active_element);
-      console.log(recently_played);
-
+      recently_played.unshift(active_element);
+      if (recently_played.length > 4) recently_played.splice(-1, 1);
       localStorage.setItem("recentlyplayed", JSON.stringify(recently_played));
     }
   };

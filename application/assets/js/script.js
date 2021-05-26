@@ -20,7 +20,6 @@ let recently_played = [];
 let listened_elements = "";
 let read_elem = "";
 
-
 let tab_index = 0;
 //xml items
 var rss_title = "";
@@ -50,7 +49,6 @@ if (localStorage.getItem("recentlyplayed") != null) {
   recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
   console.log(recently_played);
 }
-
 
 if (localStorage.getItem("read") != null) {
   read_elem = JSON.parse(localStorage.getItem("read"));
@@ -130,7 +128,9 @@ let load_source = function () {
     mozSystem: true,
   });
 
-  xhttp.open("GET", source_url + "?test=1&time=12345", true);
+  let nocaching = Math.floor(Date.now() / 1000);
+
+  xhttp.open("GET", source_url + "?time=" + nocaching, true);
   xhttp.timeout = 5000;
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
@@ -595,7 +595,8 @@ let rss_fetcher = function (
                 item_type == "audio/mpeg" ||
                 item_type == "audio/aac" ||
                 item_type == "audio/x-mpeg" ||
-                item_type == "audio/mp3"
+                item_type == "audio/mp3" ||
+                item_type == "audio/x-m4a"
               ) {
                 item_media = "podcast";
               }
@@ -607,13 +608,14 @@ let rss_fetcher = function (
                 item_filesize = formatFileSize(en_length, 2);
               }
             }
-
-            if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-              var duration = el[i]
-                .getElementsByTagNameNS("*", "duration")
-                .item(0).textContent;
-              item_duration = moment(duration, "hh:mm:ss").format("HH:mm");
-              if (item_duration == "Invalid date") item_duration = "";
+            if (item_media == "podcast") {
+              if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
+                var duration = el[i]
+                  .getElementsByTagNameNS("*", "duration")
+                  .item(0).textContent;
+                item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
+                if (item_duration == "Invalid date") item_duration = "";
+              }
             }
 
             //check valid date
@@ -655,7 +657,8 @@ let rss_fetcher = function (
               filesize: item_filesize,
               cid: item_cid,
               listened: listened_track,
-              play: play_track,
+              recently_played: null,
+              recently_order: null,
               read: item_read,
             });
           }
@@ -720,7 +723,8 @@ let rss_fetcher = function (
                 item_type == "audio/mpeg" ||
                 item_type == "audio/aac" ||
                 item_type == "audio/x-mpeg" ||
-                item_type == "audio/mp3"
+                item_type == "audio/mp3" ||
+                item_type == "audio/x-m4a"
               ) {
                 item_media = "podcast";
               }
@@ -732,13 +736,14 @@ let rss_fetcher = function (
                 item_filesize = formatFileSize(en_length, 2);
               }
             }
-
-            if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-              var duration = el[i]
-                .getElementsByTagNameNS("*", "duration")
-                .item(0).textContent;
-              item_duration = moment(duration, "hh:mm:ss").format("HH:mm");
-              if (item_duration == "Invalid date") item_duration = "";
+            if (item_media == "podcast") {
+              if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
+                var duration = el[i]
+                  .getElementsByTagNameNS("*", "duration")
+                  .item(0).textContent;
+                item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
+                if (item_duration == "Invalid date") item_duration = "";
+              }
             }
 
             item_read = "not-read";
@@ -760,7 +765,8 @@ let rss_fetcher = function (
               filesize: item_filesize,
               cid: item_cid,
               listened: listened_track,
-              play: play_track,
+              recently_played: null,
+              recently_order: null,
               read: item_read,
             });
           }
@@ -819,10 +825,6 @@ let rss_fetcher = function (
     //after download build html objects
     if (k == source_array.length - 1) {
       setTimeout(() => {
-        content_arr.sort((a, b) => {
-          return b.dateunix - a.dateunix;
-        });
-
         build();
         cache.saveCache(content_arr);
       }, 1500);
@@ -877,14 +879,24 @@ let listened_articles = function () {
 //started to listen
 let listened_podcast_articles = function () {
   content_arr.forEach(function (index) {
-    index.play = "false";
+    index.recently_played = "";
+    index.recently_order = "";
     let t = 0;
     if (recently_played.length > 0) {
       for (t = 0; t < recently_played.length; t++) {
         if (recently_played[t] == index.cid) {
-          index.play = "recently-played";
+          index.recently_played = "recently-played";
+          index.recently_order = t;
+        } else {
+          index.recently_order = -1;
         }
       }
+    }
+  });
+
+  content_arr.forEach(function (index) {
+    if (index.recently_played != "") {
+      console.log(index.recently_played);
     }
   });
 };
@@ -898,26 +910,43 @@ let clean_localstorage = function () {
     }
   }
   localStorage.setItem("read", JSON.stringify(read_elem));
-//recently played
-  for (let i = 0; i < read_elem.length; i++) {
-    if (all_cid.indexOf(read_elem[i]) == -1) {
-      read_elem.slice(i, 1);
+  //recently played
+  for (let i = 0; i < recently_played.length; i++) {
+    if (all_cid.indexOf(recently_played[i]) == -1) {
+      recently_played.slice(i, 1);
     }
   }
-  localStorage.setItem("read", JSON.stringify(read_elem));
+  localStorage.setItem("read", JSON.stringify(recently_played));
 };
 
 //render html
 
-function renderHello() {
+function renderHello(arr) {
   var template = document.getElementById("template").innerHTML;
   var rendered = Mustache.render(template, {
-    data: content_arr,
+    data: arr,
   });
   document.getElementById("news-feed-list").innerHTML = rendered;
 }
+let heroArray = [];
+
+let filter_data = function (cat) {
+  heroArray.length = 0;
+  for (let i = 0; i < content_arr.length; i++) {
+    if (content_arr[i].category == cat) {
+      heroArray.push(content_arr[i]);
+    }
+  }
+};
+
+let sort_array = function (arr) {
+  arr.sort((a, b) => {
+    return b.dateunix - a.dateunix;
+  });
+};
 
 function build() {
+  sort_array(content_arr);
   read_articles();
   listened_podcast_articles();
   listened_articles();
@@ -945,10 +974,10 @@ function build() {
     ) {
       panels.push(content_arr[i].category);
     }
-    panels.push("recently-played")
   }
+  panels.push("recently-played");
 
-  renderHello();
+  renderHello(content_arr);
 
   lazyload.ll();
   document.getElementById("message-box").style.display = "none";
@@ -962,18 +991,20 @@ function build() {
 
 let set_tabindex = function () {
   let divs = document.querySelectorAll("article");
+
   let t = -1;
   for (let i = 0; i < divs.length; i++) {
     divs[i].removeAttribute("tabindex");
 
-    if (divs[i].style.display === "block") {
-      t++;
-      divs[i].tabIndex = t;
-    }
+    t++;
+    divs[i].tabIndex = t;
   }
 
   document.querySelector('article[tabIndex="0"]').focus();
   tab_index = 0;
+
+  article_array = document.querySelectorAll("article");
+  article_array[0].focus();
 };
 
 let mark_as_read = function (un_read) {
@@ -999,6 +1030,7 @@ let mark_as_read = function (un_read) {
   }
 };
 
+/*
 function panels_list(panel) {
   let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
@@ -1010,6 +1042,19 @@ function panels_list(panel) {
     elem[i].style.display = "block";
   }
 }
+let sort_recently_played = function () {
+  if (panels[current_panel] == "recently-played") {
+    //to do
+    for (let i = 0; i < content_arr.length; i++) {
+      if (content_arr[i].recently_order > 0) {
+        heroArray.push(content_arr[i]);
+      }
+    }
+  }
+  //renderHello(heroArray);
+};
+
+*/
 
 ////////////////////////
 //NAVIGATION
@@ -1036,7 +1081,45 @@ function nav_panels(left_right) {
       panels[current_panel],
       ""
     );
-  panels_list(panels[current_panel]);
+
+  setTimeout(() => {
+    article_array = document.querySelectorAll("article");
+    article_array[0].focus();
+  }, 500);
+
+  //filter data
+  if (panels[current_panel] == "recently-played") {
+    //to do
+    heroArray.length = 0;
+    for (let i = 0; i < content_arr.length; i++) {
+      if (
+        content_arr[i].recently_order > -1 &&
+        content_arr[i].recently_order != null
+      ) {
+        heroArray.push(content_arr[i]);
+      }
+    }
+
+    heroArray.sort((a, b) => {
+      return b.recently_order - a.recently_order;
+    });
+
+    renderHello(heroArray);
+  }
+
+  if (panels[current_panel] == "all") {
+    renderHello(content_arr);
+  }
+
+  if (
+    panels[current_panel] != "all" &&
+    panels[current_panel] != "recently-played"
+  ) {
+    filter_data(panels[current_panel]);
+    sort_array(heroArray);
+
+    renderHello(heroArray);
+  }
 
   set_tabindex();
 
@@ -1078,7 +1161,6 @@ function nav(move) {
     document.activeElement.classList.remove("overscrolling");
 
     tab_index++;
-
     if (tab_index == siblings.length || tab_index >= siblings.length) {
       document.activeElement.classList.add("overscrolling");
       tab_index = siblings.length - 1;
@@ -1200,6 +1282,9 @@ let show_article = function () {
   mark_as_read(true);
 };
 
+/////////////////
+//show article list
+//////////////////
 let show_article_list = function () {
   bottom_bar("settings", "select", "options");
   top_bar("", panels[current_panel], "");
@@ -1230,19 +1315,18 @@ let show_article_list = function () {
   }
 
   document.querySelector("div#settings").style.display = "none";
-  panels_list(panels[current_panel]);
-
   article_array[tab_index];
   document.querySelector("div#source-page").style.display = "none";
   document.querySelector("div#source-page iframe").setAttribute("src", "");
   bottom_bar("settings", "select", "options");
 
-  if (sleepmode)
+  if (sleepmode) {
     top_bar(
       "<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>",
       panels[current_panel],
       ""
     );
+  }
 
   if (!activity) {
     bottom_bar("settings", "select", "options");
@@ -1251,7 +1335,6 @@ let show_article_list = function () {
   }
 
   window_status = "article-list";
-
   document.activeElement.focus();
   document.activeElement.scrollIntoView({
     behavior: "smooth",
