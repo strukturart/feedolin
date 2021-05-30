@@ -127,11 +127,10 @@ const audio_player = ((_) => {
       recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
     }
 
-    if (recently_played.indexOf(active_element) == -1) {
       recently_played.unshift(active_element);
       if (recently_played.length > 4) recently_played.splice(-1, 1);
       localStorage.setItem("recentlyplayed", JSON.stringify(recently_played));
-    }
+    
   };
 
   player.onended = function () {

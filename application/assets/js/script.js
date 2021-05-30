@@ -47,7 +47,6 @@ if (localStorage.getItem("listened") != null) {
 
 if (localStorage.getItem("recentlyplayed") != null) {
   recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
-  console.log(recently_played);
 }
 
 if (localStorage.getItem("read") != null) {
@@ -62,6 +61,7 @@ setTimeout(() => {
   document.getElementById("intro").style.display = "none";
   navigator.minimizeMemoryUsage();
 }, 3500);
+
 //check if activity or not
 setTimeout(() => {
   if (activity === false) {
@@ -117,6 +117,13 @@ setTimeout(() => {
     }
   }
 }, 1500);
+
+/////////////////////////////
+////////////////////////////
+//GET URL LIST/////////////
+//from local file or online source
+//////////////////////////
+//////////////////////////
 
 ///////////
 ///load source file from online source
@@ -457,19 +464,6 @@ function formatFileSize(bytes, decimalPoint) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
 }
-
-//qr scan listener
-const qr_listener = document.querySelector("input#source");
-let qrscan = false;
-qr_listener.addEventListener("focus", (event) => {
-  bottom_bar("save", "qr", "back");
-  qrscan = true;
-});
-
-qr_listener.addEventListener("blur", (event) => {
-  bottom_bar("save", "", "back");
-  qrscan = false;
-});
 
 //////////////////////////////
 //download content////
@@ -813,9 +807,9 @@ let rss_fetcher = function (
 
   function loadEnd(e) {
     if (activity === true) {
-      $("#download").html(
-        "The content is <br>not a valid rss feed <div style='font-size:2rem;margin:8px 0 0 0;color:white!Important;'>¯&#92;_(ツ)_/¯</div><br><br>The app will be closed in 4sec"
-      );
+      document.querySelector("#download").innerHTML =
+        "The content is <br>not a valid rss feed <div style='font-size:2rem;margin:8px 0 0 0;color:white!Important;'>¯&#92;_(ツ)_/¯</div><br><br>The app will be closed in 4sec";
+
       setTimeout(() => {
         window.close();
       }, 4000);
@@ -881,22 +875,15 @@ let listened_podcast_articles = function () {
   content_arr.forEach(function (index) {
     index.recently_played = "";
     index.recently_order = "";
-    let t = 0;
+    //let t = 0;
     if (recently_played.length > 0) {
-      for (t = 0; t < recently_played.length; t++) {
+      for (let t = 0; t < recently_played.length; t++) {
         if (recently_played[t] == index.cid) {
           index.recently_played = "recently-played";
           index.recently_order = t;
-        } else {
-          index.recently_order = -1;
+          console.log(t);
         }
       }
-    }
-  });
-
-  content_arr.forEach(function (index) {
-    if (index.recently_played != "") {
-      console.log(index.recently_played);
     }
   });
 };
@@ -945,28 +932,8 @@ let sort_array = function (arr) {
   });
 };
 
-function build() {
-  sort_array(content_arr);
-  read_articles();
-  listened_podcast_articles();
-  listened_articles();
-  clean_localstorage();
-  bottom_bar("settings", "select", "options");
-  top_bar("", panels[0], "");
-
-  if (activity == true) bottom_bar("add", "select", "");
-
+let tabs = function () {
   for (let i = 0; i < content_arr.length; i++) {
-    //set icon if the article has already been listened to
-    let icon = "";
-    let ti = content_arr[i].cid;
-    ti.toString();
-    for (let k = 0; k < listened_elements.length; k++) {
-      if (listened_elements[k] == ti) {
-        icon = "  &#127812;";
-      }
-    }
-
     //set panel category
     if (
       panels.includes(content_arr[i].category) === false &&
@@ -975,6 +942,19 @@ function build() {
       panels.push(content_arr[i].category);
     }
   }
+};
+
+function build() {
+  sort_array(content_arr);
+  read_articles();
+  listened_articles();
+  tabs();
+  clean_localstorage();
+  bottom_bar("settings", "select", "options");
+  top_bar("", panels[0], "");
+
+  if (activity == true) bottom_bar("add", "select", "");
+
   panels.push("recently-played");
 
   renderHello(content_arr);
@@ -982,11 +962,7 @@ function build() {
   lazyload.ll();
   document.getElementById("message-box").style.display = "none";
   window_status = "article-list";
-  top_bar("", "all", "");
-  setTimeout(() => {
-    article_array = document.querySelectorAll("article");
-    article_array[0].focus();
-  }, 1500);
+  set_tabindex();
 }
 
 let set_tabindex = function () {
@@ -1030,32 +1006,6 @@ let mark_as_read = function (un_read) {
   }
 };
 
-/*
-function panels_list(panel) {
-  let elem = document.querySelectorAll("article");
-  for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = "none";
-  }
-
-  elem = document.querySelectorAll("[data-category~=" + panel + "]");
-  for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = "block";
-  }
-}
-let sort_recently_played = function () {
-  if (panels[current_panel] == "recently-played") {
-    //to do
-    for (let i = 0; i < content_arr.length; i++) {
-      if (content_arr[i].recently_order > 0) {
-        heroArray.push(content_arr[i]);
-      }
-    }
-  }
-  //renderHello(heroArray);
-};
-
-*/
-
 ////////////////////////
 //NAVIGATION
 /////////////////////////
@@ -1091,17 +1041,16 @@ function nav_panels(left_right) {
   if (panels[current_panel] == "recently-played") {
     //to do
     heroArray.length = 0;
+    listened_podcast_articles();
+
     for (let i = 0; i < content_arr.length; i++) {
-      if (
-        content_arr[i].recently_order > -1 &&
-        content_arr[i].recently_order != null
-      ) {
+      if (content_arr[i].recently_played == "recently-played") {
         heroArray.push(content_arr[i]);
       }
     }
 
     heroArray.sort((a, b) => {
-      return b.recently_order - a.recently_order;
+      return a.recently_order - b.recently_order;
     });
 
     renderHello(heroArray);
@@ -1519,6 +1468,18 @@ let open_player = function () {
   }
 };
 
+//qr scan listener
+const qr_listener = document.querySelector("input#source");
+let qrscan = false;
+qr_listener.addEventListener("focus", (event) => {
+  bottom_bar("save", "qr", "back");
+  qrscan = true;
+});
+
+qr_listener.addEventListener("blur", (event) => {
+  bottom_bar("save", "", "back");
+  qrscan = false;
+});
 //////////////////////////
 ////KEYPAD TRIGGER////////////
 /////////////////////////
