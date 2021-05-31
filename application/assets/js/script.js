@@ -40,6 +40,8 @@ var item_id = "";
 let listened_elem = "";
 let sleepmode = false;
 
+let lock = window.navigator.requestWakeLock("screen");
+
 //read and listened articles/podcasts
 if (localStorage.getItem("listened") != null) {
   listened_elem = JSON.parse(localStorage.getItem("listened"));
@@ -66,6 +68,7 @@ setTimeout(() => {
 setTimeout(() => {
   if (activity === false) {
     //check if source file is set
+
     if (
       localStorage["source_local"] == undefined &&
       localStorage["source"] == undefined
@@ -945,6 +948,7 @@ let tabs = function () {
 };
 
 function build() {
+  lock.unlock();
   sort_array(content_arr);
   read_articles();
   listened_articles();
