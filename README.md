@@ -1,6 +1,6 @@
 ![logo](/images/logo.png)
 
-# Feddolin
+# Feedolin
 
 ## RSS/Atom reader and Podcastplayer for KaiOs
 
