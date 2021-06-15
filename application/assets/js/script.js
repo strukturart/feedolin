@@ -40,7 +40,10 @@ var item_id = "";
 let listened_elem = "";
 let sleepmode = false;
 
-let lock = window.navigator.requestWakeLock("screen");
+let lock;
+if (window.navigator.requestWakeLock) {
+  lock = window.navigator.requestWakeLock("screen");
+}
 
 //read and listened articles/podcasts
 if (localStorage.getItem("listened") != null) {
@@ -61,7 +64,7 @@ if (localStorage.getItem("epsiodes_download") != null) {
 
 setTimeout(() => {
   document.getElementById("intro").style.display = "none";
-  navigator.minimizeMemoryUsage();
+  if (window.navigator) navigator.minimizeMemoryUsage();
 }, 3500);
 
 //check if activity or not
@@ -486,8 +489,9 @@ let rss_fetcher = function (
   xhttp.timeout = 2000;
   xhttp.responseType = "document";
   xhttp.overrideMimeType("text/xml");
+  xhttp.send();
 
-  xhttp.send(null);
+  console.log(param_url);
 
   document.getElementById("message-box").style.display = "block";
 
@@ -495,12 +499,11 @@ let rss_fetcher = function (
   xhttp.addEventListener("loadend", loadEnd);
 
   function transferFailed() {
-    toaster("failed" + param_channel, 1000);
+    console.log("failed" + param_channel, 1000);
   }
 
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-      //youtube
       item_image = "";
       item_id = "";
       item_summary = "";
@@ -517,8 +520,8 @@ let rss_fetcher = function (
 
       let data = xhttp.response;
 
-      //ATOM
-      rss_title = data.querySelector("title").textContent;
+      //Channel
+      rss_title = data.querySelector("title").innerHTML;
       if (data.querySelector("image")) {
         item_image = data.querySelector("image").getElementsByTagName("url")[0]
           .textContent;
@@ -528,12 +531,14 @@ let rss_fetcher = function (
       document.getElementById("download").innerText = rss_title;
       bottom_bar("", count, "");
 
+      //ATOM
       el = data.querySelectorAll("entry");
 
       if (el.length > 0) {
         for (let i = 0; i < el.length; i++) {
           if (i < param_limit) {
             item_title = el[i].querySelector("title").innerHTML;
+            console.log(rss_title + ":" + item_title);
             item_cid = hashCode(item_title);
 
             var elem = el[i].querySelector("summary");
@@ -671,7 +676,10 @@ let rss_fetcher = function (
         for (let i = 0; i < el.length; i++) {
           if (i < param_limit) {
             if (el[i].querySelector("title")) {
-              item_title = el[i].querySelector("title").innerHTML;
+              item_title = el[i].querySelector("title").textContent;
+
+              console.log(rss_title + ":" + item_title);
+
               item_title = item_title.replace("<![CDATA[", "");
               item_title = item_title.replace("]]>", "");
             }
@@ -770,6 +778,8 @@ let rss_fetcher = function (
         }
       }
     }
+
+    console.log(xhttp.status);
 
     if (xhttp.status === 404) {
       console.log(param_channel + " url not found", 3000);
@@ -948,7 +958,8 @@ let tabs = function () {
 };
 
 function build() {
-  lock.unlock();
+  if (window.navigator) lock.unlock();
+
   sort_array(content_arr);
   read_articles();
   listened_articles();
@@ -1360,6 +1371,7 @@ function open_url() {
   }
 
   if (document.activeElement.getAttribute("data-media") == "youtube") {
+    yt_player.onYouTubeIframeAPIReady("M7lc1UVf-VE");
     console.log("youtube");
     document
       .querySelector("div#source-page iframe")
@@ -1372,37 +1384,6 @@ function open_url() {
     player.src = "";
     return;
   }
-
-  /*
-        if (document.activeElement.getAttribute("data-media") == "podcast") {
-            var finder = new Applait.Finder({
-                type: "music",
-                debugMode: false
-            });
-
-            finder.on("empty", function(needle) {
-                toaster("no sdcard found");
-                return;
-            });
-
-            finder.search(title);
-
-            finder.on("fileFound", function(file, fileinfo, storageName) {
-
-                toaster("The file is already available", 3000);
-                return false;
-            });
-
-            finder.on("searchComplete", function(needle, filematchcount) {
-                if (filematchcount == 0) {
-                    download.downloadFile(link_download, title);
-                }
-            });
-
-            return;
-        }
-
-    */
 }
 
 let open_options = function () {
