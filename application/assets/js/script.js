@@ -64,7 +64,9 @@ if (localStorage.getItem("epsiodes_download") != null) {
 
 setTimeout(() => {
   document.getElementById("intro").style.display = "none";
-  if (window.navigator) navigator.minimizeMemoryUsage();
+  if (window.navigator) {
+  }
+  //navigator.minimizeMemoryUsage();
 }, 3500);
 
 //check if activity or not
@@ -521,149 +523,151 @@ let rss_fetcher = function (
       let data = xhttp.response;
 
       //Channel
-      rss_title = data.querySelector("title").innerHTML;
-      if (data.querySelector("image")) {
-        item_image = data.querySelector("image").getElementsByTagName("url")[0]
-          .textContent;
-      }
+      rss_title = data.querySelector("title").textContent || "unknow";
       let count = k + " / " + (source_array.length - 1);
 
       document.getElementById("download").innerText = rss_title;
       bottom_bar("", count, "");
 
+      if (
+        data.querySelector("image") &&
+        data.querySelector("image").getElementsByTagName("url")[0]
+      ) {
+        item_image = data.querySelector("image").getElementsByTagName("url")[0]
+          .textContent;
+      }
+
       //ATOM
       el = data.querySelectorAll("entry");
 
       if (el.length > 0) {
-        for (let i = 0; i < el.length; i++) {
-          if (i < param_limit) {
-            item_title = el[i].querySelector("title").innerHTML;
-            console.log(rss_title + ":" + item_title);
-            item_cid = hashCode(item_title);
+        for (let i = 0; i < param_limit; i++) {
+          //if (i < param_limit) {
+          item_title = el[i].querySelector("title").innerHTML;
+          console.log("atom: " + rss_title + ":" + item_title);
+          item_cid = hashCode(item_title);
 
-            var elem = el[i].querySelector("summary");
-            if (elem) {
-              item_summary = el[i].querySelector("summary").textContent;
-              item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]>)/g, "");
-              item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]&gt;)/g, "");
-            }
-
-            elem = el[i].querySelector("content");
-
-            if (elem) {
-              item_summary = el[i].querySelector("content").textContent;
-              item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]>)/g, "");
-              item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]&gt;)/g, "");
-            }
-
-            var elem = el[i].querySelector("description");
-            if (elem) {
-              item_summary = el[i].querySelector("description").textContent;
-              item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]>)/g, "");
-              item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]&gt;)/g, "");
-            }
-
-            if (el[i].getElementsByTagNameNS("*", "thumbnail").length > 0) {
-              item_image = el[i]
-                .getElementsByTagNameNS("*", "thumbnail")
-                .item(0)
-                .getAttribute("url");
-            }
-
-            if (el[i].querySelector("link") !== null) {
-              item_link = el[i].querySelector("link").getAttribute("href");
-            }
-
-            if (
-              el[i].querySelector("enclosure") != null ||
-              el[i].querySelector("enclosure") != undefined
-            ) {
-              if (el[i].querySelector("enclosure").getAttribute("url"))
-                item_download = el[i]
-                  .querySelector("enclosure")
-                  .getAttribute("url");
-              if (el[i].querySelector("enclosure").getAttribute("type"))
-                item_type = el[i]
-                  .querySelector("enclosure")
-                  .getAttribute("type");
-
-              if (
-                item_type == "audio/mpeg" ||
-                item_type == "audio/aac" ||
-                item_type == "audio/x-mpeg" ||
-                item_type == "audio/mp3" ||
-                item_type == "audio/x-m4a"
-              ) {
-                item_media = "podcast";
-              }
-
-              if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
-                let en_length = el[i]
-                  .querySelector("enclosure")
-                  .getAttribute("length");
-                item_filesize = formatFileSize(en_length, 2);
-              }
-            }
-            if (item_media == "podcast") {
-              if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-                var duration = el[i]
-                  .getElementsByTagNameNS("*", "duration")
-                  .item(0).textContent;
-                item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
-                if (item_duration == "Invalid date") item_duration = "";
-              }
-            }
-
-            //check valid date
-            if (el[i].querySelector("updated").innerHTML == "") {
-              item_date_unix = new Date().valueOf();
-            } else {
-              item_date_unix = Date.parse(
-                el[i].querySelector("updated").innerHTML
-              );
-            }
-            item_date = new Date(item_date_unix);
-            item_date = item_date.toDateString();
-
-            if (
-              item_link !== null &&
-              item_link.includes("https://www.youtube.com") === true
-            ) {
-              item_media = "youtube";
-            } else {
-              item_media = "rss";
-            }
-
-            item_read = "not-read";
-
-            content_arr.push({
-              title: item_title,
-              summary: item_summary,
-              link: item_link,
-              date: item_date,
-              dateunix: item_date_unix,
-              channel: param_channel,
-              category: param_category,
-              download: item_download,
-              type: item_type,
-              image: item_image,
-              id: item_id,
-              duration: item_duration,
-              media: item_media,
-              filesize: item_filesize,
-              cid: item_cid,
-              listened: listened_track,
-              recently_played: null,
-              recently_order: null,
-              read: item_read,
-            });
+          var elem = el[i].querySelector("summary");
+          if (elem) {
+            item_summary = el[i].querySelector("summary").textContent;
+            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]>)/g, "");
+            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]&gt;)/g, "");
           }
+
+          elem = el[i].querySelector("content");
+
+          if (elem) {
+            item_summary = el[i].querySelector("content").textContent;
+            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]>)/g, "");
+            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]&gt;)/g, "");
+          }
+
+          var elem = el[i].querySelector("description");
+          if (elem) {
+            item_summary = el[i].querySelector("description").textContent;
+            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]>)/g, "");
+            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]&gt;)/g, "");
+          }
+
+          if (el[i].getElementsByTagNameNS("*", "thumbnail").length > 0) {
+            item_image = el[i]
+              .getElementsByTagNameNS("*", "thumbnail")
+              .item(0)
+              .getAttribute("url");
+          }
+
+          if (el[i].querySelector("link") !== null) {
+            item_link = el[i].querySelector("link").getAttribute("href");
+          }
+
+          if (
+            el[i].querySelector("enclosure") != null ||
+            el[i].querySelector("enclosure") != undefined
+          ) {
+            if (el[i].querySelector("enclosure").getAttribute("url"))
+              item_download = el[i]
+                .querySelector("enclosure")
+                .getAttribute("url");
+            if (el[i].querySelector("enclosure").getAttribute("type"))
+              item_type = el[i].querySelector("enclosure").getAttribute("type");
+
+            if (
+              item_type == "audio/mpeg" ||
+              item_type == "audio/aac" ||
+              item_type == "audio/x-mpeg" ||
+              item_type == "audio/mp3" ||
+              item_type == "audio/x-m4a"
+            ) {
+              item_media = "podcast";
+            }
+
+            if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
+              let en_length = el[i]
+                .querySelector("enclosure")
+                .getAttribute("length");
+              item_filesize = formatFileSize(en_length, 2);
+            }
+          }
+          if (item_media == "podcast") {
+            if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
+              var duration = el[i]
+                .getElementsByTagNameNS("*", "duration")
+                .item(0).textContent;
+              item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
+              if (item_duration == "Invalid date") item_duration = "";
+            }
+          }
+
+          //check valid date
+          if (el[i].querySelector("updated").innerHTML == "") {
+            item_date_unix = new Date().valueOf();
+          } else {
+            item_date_unix = Date.parse(
+              el[i].querySelector("updated").innerHTML
+            );
+          }
+          item_date = new Date(item_date_unix);
+          item_date = item_date.toDateString();
+
+          if (
+            item_link !== null &&
+            item_link.includes("https://www.youtube.com") === true
+          ) {
+            item_media = "youtube";
+          } else {
+            item_media = "rss";
+          }
+
+          item_read = "not-read";
+
+          content_arr.push({
+            title: item_title,
+            summary: item_summary,
+            link: item_link,
+            date: item_date,
+            dateunix: item_date_unix,
+            channel: param_channel,
+            category: param_category,
+            download: item_download,
+            type: item_type,
+            image: item_image,
+            id: item_id,
+            duration: item_duration,
+            media: item_media,
+            filesize: item_filesize,
+            cid: item_cid,
+            listened: listened_track,
+            recently_played: null,
+            recently_order: null,
+            read: item_read,
+          });
+          //}
         }
       }
 
@@ -673,108 +677,109 @@ let rss_fetcher = function (
 
       el = data.querySelectorAll("item");
       if (el.length > 0) {
-        for (let i = 0; i < el.length; i++) {
-          if (i < param_limit) {
-            if (el[i].querySelector("title")) {
-              item_title = el[i].querySelector("title").textContent;
+        for (let i = 0; i < param_limit; i++) {
+          //if (i < param_limit) {
+          if (
+            el[i].querySelector("title") &&
+            el[i].querySelector("title") != undefined
+          ) {
+            item_title = el[i].querySelector("title").innerHTML;
 
-              console.log(rss_title + ":" + item_title);
+            console.log(rss_title + ":" + item_title);
 
-              item_title = item_title.replace("<![CDATA[", "");
-              item_title = item_title.replace("]]>", "");
+            item_title = item_title.replace("<![CDATA[", "");
+            item_title = item_title.replace("]]>", "");
+          }
+          item_cid = hashCode(item_title);
+          if (el[i].querySelector("description")) {
+            item_summary = el[i].querySelector("description").textContent;
+            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]>)/g, "");
+            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]&gt;)/g, "");
+          }
+
+          if (el[i].querySelector("link")) {
+            item_link = el[i].querySelector("link").textContent;
+            item_download = el[i].querySelector("link");
+          }
+
+          //check valid date
+          if (el[i].querySelector("pubDate") != null) {
+            if (el[i].querySelector("pubDate").innerHTML == "") {
+              item_date_unix = new Date().valueOf();
+            } else {
+              item_date_unix = Date.parse(
+                el[i].querySelector("pubDate").innerHTML
+              );
             }
-            item_cid = hashCode(item_title);
-            if (el[i].querySelector("description")) {
-              item_summary = el[i].querySelector("description").textContent;
-              item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]>)/g, "");
-              item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
-              item_summary = item_summary.replace(/(]]&gt;)/g, "");
-            }
 
-            if (el[i].querySelector("link")) {
-              item_link = el[i].querySelector("link").textContent;
-              item_download = el[i].querySelector("link");
-            }
+            item_date = new Date(item_date_unix);
+            item_date = item_date.toDateString();
+          }
 
-            //check valid date
-            if (el[i].querySelector("pubDate") != null) {
-              if (el[i].querySelector("pubDate").innerHTML == "") {
-                item_date_unix = new Date().valueOf();
-              } else {
-                item_date_unix = Date.parse(
-                  el[i].querySelector("pubDate").innerHTML
-                );
-              }
-
-              item_date = new Date(item_date_unix);
-              item_date = item_date.toDateString();
-            }
+          if (
+            el[i].querySelector("enclosure") != null ||
+            el[i].querySelector("enclosure") != undefined
+          ) {
+            if (el[i].querySelector("enclosure").getAttribute("url"))
+              item_download = el[i]
+                .querySelector("enclosure")
+                .getAttribute("url");
+            if (el[i].querySelector("enclosure").getAttribute("type"))
+              item_type = el[i].querySelector("enclosure").getAttribute("type");
 
             if (
-              el[i].querySelector("enclosure") != null ||
-              el[i].querySelector("enclosure") != undefined
+              item_type == "audio/mpeg" ||
+              item_type == "audio/aac" ||
+              item_type == "audio/x-mpeg" ||
+              item_type == "audio/mp3" ||
+              item_type == "audio/x-m4a"
             ) {
-              if (el[i].querySelector("enclosure").getAttribute("url"))
-                item_download = el[i]
-                  .querySelector("enclosure")
-                  .getAttribute("url");
-              if (el[i].querySelector("enclosure").getAttribute("type"))
-                item_type = el[i]
-                  .querySelector("enclosure")
-                  .getAttribute("type");
-
-              if (
-                item_type == "audio/mpeg" ||
-                item_type == "audio/aac" ||
-                item_type == "audio/x-mpeg" ||
-                item_type == "audio/mp3" ||
-                item_type == "audio/x-m4a"
-              ) {
-                item_media = "podcast";
-              }
-
-              if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
-                let en_length = el[i]
-                  .querySelector("enclosure")
-                  .getAttribute("length");
-                item_filesize = formatFileSize(en_length, 2);
-              }
-            }
-            if (item_media == "podcast") {
-              if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-                var duration = el[i]
-                  .getElementsByTagNameNS("*", "duration")
-                  .item(0).textContent;
-                item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
-                if (item_duration == "Invalid date") item_duration = "";
-              }
+              item_media = "podcast";
             }
 
-            item_read = "not-read";
-
-            content_arr.push({
-              title: item_title,
-              summary: item_summary,
-              link: item_link,
-              date: item_date,
-              dateunix: item_date_unix,
-              channel: param_channel,
-              category: param_category,
-              download: item_download,
-              type: item_type,
-              image: item_image,
-              id: item_id,
-              duration: item_duration,
-              media: item_media,
-              filesize: item_filesize,
-              cid: item_cid,
-              listened: listened_track,
-              recently_played: null,
-              recently_order: null,
-              read: item_read,
-            });
+            if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
+              let en_length = el[i]
+                .querySelector("enclosure")
+                .getAttribute("length");
+              item_filesize = formatFileSize(en_length, 2);
+            }
           }
+          if (item_media == "podcast") {
+            if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
+              var duration = el[i]
+                .getElementsByTagNameNS("*", "duration")
+                .item(0).textContent;
+              item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
+              if (item_duration == "Invalid date") item_duration = "";
+            }
+          }
+
+          item_read = "not-read";
+
+          content_arr.push({
+            title: item_title,
+            summary: item_summary,
+            link: item_link,
+            date: item_date,
+            dateunix: item_date_unix,
+            channel: param_channel,
+            category: param_category,
+            download: item_download,
+            type: item_type,
+            image: item_image,
+            id: item_id,
+            duration: item_duration,
+            media: item_media,
+            filesize: item_filesize,
+            cid: item_cid,
+            listened: listened_track,
+            recently_played: null,
+            recently_order: null,
+            read: item_read,
+          });
+          //}
         }
       }
     }
@@ -958,7 +963,7 @@ let tabs = function () {
 };
 
 function build() {
-  if (window.navigator) lock.unlock();
+  // if (window.navigator) lock.unlock();
 
   sort_array(content_arr);
   read_articles();
