@@ -13,12 +13,12 @@ const audio_player = ((_) => {
   //////////////////
   //PLAY
   //////////////////
-  let play_podcast = function () {
+  let play_podcast = function (src) {
+    console.log(src);
     player.mozaudiochannel = "content";
-
-    if (player.currentSrc == "" || player.currentSrc != link_target) {
+    if (player.currentSrc == "" || player.currentSrc != src) {
       player.src = "";
-      player.src = link_target;
+      player.src = src;
       player.play();
       return false;
     }
@@ -127,10 +127,9 @@ const audio_player = ((_) => {
       recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
     }
 
-      recently_played.unshift(active_element);
-      if (recently_played.length > 4) recently_played.splice(-1, 1);
-      localStorage.setItem("recentlyplayed", JSON.stringify(recently_played));
-    
+    recently_played.unshift(active_element);
+    if (recently_played.length > 4) recently_played.splice(-1, 1);
+    localStorage.setItem("recentlyplayed", JSON.stringify(recently_played));
   };
 
   player.onended = function () {
