@@ -34,16 +34,6 @@
   hyphens: auto;
 }
 
-*,
-*:before,
-*:after {
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-}
-
 :focus {
   outline: none;
 }
@@ -105,18 +95,22 @@ div#intro img {
 }
 
 /*///////////////////////////
-///HELPER////////////////*/
+///TOAST////////////////*/
 
 div#toast {
   position: fixed;
   height: auto;
-  top: -100px;
+  overflow: none;
   background: black;
   color: white;
-  z-index: 6;
+  z-index: 10;
   min-width: 100%;
   padding: 5px;
-  text-align: center;
+  top: 0px;
+
+  transition: all 0.5s ease-in-out;
+  transform-origin: left top;
+  transform: translate(0px, -100px);
 }
 
 /*///////////////////////////
@@ -151,10 +145,13 @@ div#news-feed {
 }
 
 div#news-feed div#news-feed-list {
-  min-height: 100vh;
+  height: 92vh;
   width: 100%;
   min-width: 100%;
-  padding: 30px 0 50px 0;
+  padding: 0px 0 50px 0;
+  overflow: scroll;
+  position: absolute;
+  top: 27px;
 }
 
 div#news-feed div#news-feed-list article {
@@ -508,12 +505,11 @@ div#audio-player div#audio-title {
 
 div#audio-player div#image {
   background-size: cover;
-  min-height: 93vh;
+  min-height: 100vh;
 }
 
 div#audio-player div#background-pattern {
   min-width: 100vw;
-  outline: 3px solid red;
 }
 
 div#audio-player div#background-pattern div {

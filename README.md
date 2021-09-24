@@ -1,6 +1,10 @@
-![logo](/images/logo.png)
+![logo](/images/logo.svg)
 
 # Feedolin
+
+![badge-release](https://img.shields.io/github/v/release/strukturart/feedolin?include_prereleases&style=plastic)
+[![badge-bhackers](https://img.shields.io/badge/bHackers-bHackerStore-orange)](https://store.bananahackers.net/#feedolin)
+![badge-downloads](https://img.shields.io/github/downloads/strukturart/feedolin/total)
 
 ## RSS/Atom reader and Podcastplayer for KaiOs
 

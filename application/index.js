@@ -1,9 +1,7 @@
-var page = 0;
-var article_array;
+let article_array;
 var window_status = "intro";
 var content_arr = [];
 var source_array = [];
-//
 var k = 0;
 var panels = ["all"];
 var current_panel = 0;
@@ -36,7 +34,16 @@ var item_cid = "";
 var item_image = "";
 var item_id = "";
 var listened_elem = "";
-var sleepmode = false;
+//var sleepmode = false;
+
+let settings = {
+  sleepmode: false,
+  epsiodes_download: 3,
+};
+
+let status = {
+  active_element_id: 0,
+};
 
 let lock;
 if (window.navigator.requestWakeLock) {
@@ -208,7 +215,7 @@ let load_local_file = function () {
   finder.on("searchBegin", function (needle) {});
 
   finder.on("empty", function (needle) {
-    toaster("no sdcard found");
+    helper.toaster("no sdcard found");
     document.getElementById("message-box").style.display = "none";
     show_settings();
     return;
@@ -230,7 +237,7 @@ let load_local_file = function () {
   finder.on("fileFound", function (file, fileinfo, storageName) {
     var reader = new FileReader();
     reader.onerror = function (event) {
-      toaster("shit happens");
+      helper.toaster("shit happens");
       reader.abort();
     };
 
@@ -283,7 +290,7 @@ let load_local_file_opml = function () {
   });
 
   finder.on("empty", function (needle) {
-    toaster("no sdcard found");
+    helper.toaster("no sdcard found");
     document.getElementById("message-box").style.display = "none";
     show_settings();
     return;
@@ -307,7 +314,7 @@ let load_local_file_opml = function () {
   finder.on("fileFound", function (file, fileinfo, storageName) {
     var reader = new FileReader();
     reader.onerror = function (event) {
-      toaster("shit happens");
+      helper.toaster("shit happens");
       reader.abort();
     };
 
@@ -989,7 +996,7 @@ let mark_as_read = function (un_read) {
     localStorage.setItem("read", JSON.stringify(test));
     document.activeElement.setAttribute("data-read", "not-read");
 
-    toaster("article marked as not read", 2000);
+    helper.toaster("article marked as not read", 2000);
   }
 };
 
@@ -1012,7 +1019,7 @@ function nav_panels(left_right) {
   }
 
   top_bar("", panels[current_panel], "");
-  if (sleepmode)
+  if (settings.sleepmode)
     top_bar(
       "<img src='/assets/fonts/icons/timer.svg'>",
       panels[current_panel],
@@ -1111,21 +1118,20 @@ function nav(move) {
     });
   }
 
-  if (move == "-1" && tab_index == 1) {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   if (move == "-1" && tab_index > 0) {
     document.activeElement.classList.remove("overscrolling");
 
     tab_index--;
     siblings[tab_index].focus();
+
     siblings[tab_index].scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
+
     return true;
   }
+
   //overscrolling
   if (move == "-1" && tab_index == 0) {
     document.activeElement.classList.add("overscrolling");
@@ -1133,15 +1139,15 @@ function nav(move) {
 }
 
 let save_settings = function () {
-  var setting_interval = document.getElementById("time").value;
-  var setting_source = document.getElementById("source").value;
-  var setting_source_local = document.getElementById("source-local").value;
-  var setting_sleeptime = document.getElementById("sleep-mode").value;
-  var setting_episodes_download = document.getElementById("episodes-download")
+  let setting_interval = document.getElementById("time").value;
+  let setting_source = document.getElementById("source").value;
+  let setting_source_local = document.getElementById("source-local").value;
+  let setting_sleeptime = document.getElementById("sleep-mode").value;
+  let setting_episodes_download = document.getElementById("episodes-download")
     .value;
 
   if (setting_source == "" && setting_source_local == "") {
-    toaster("please fill in the location of the source file", 3000);
+    helper.toaster("please fill in the location of the source file", 3000);
     return false;
   }
 
@@ -1158,7 +1164,7 @@ let save_settings = function () {
   localStorage.setItem("sleep_time", setting_sleeptime);
   localStorage.setItem("episodes_download", setting_episodes_download);
 
-  toaster(
+  helper.toaster(
     "saved, the settings will be active the next time the app is started.",
     5000
   );
@@ -1256,7 +1262,7 @@ let show_article_list = function () {
   document.querySelector("div#source-page iframe").setAttribute("src", "");
   bottom_bar("settings", "select", "options");
 
-  if (sleepmode) {
+  if (settings.sleepmode) {
     top_bar(
       "<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>",
       panels[current_panel],
@@ -1272,6 +1278,7 @@ let show_article_list = function () {
 
   window_status = "article-list";
   document.activeElement.focus();
+
   document.activeElement.scrollIntoView({
     behavior: "smooth",
     block: "end",
@@ -1342,7 +1349,6 @@ function open_url() {
   }
 
   if (document.activeElement.getAttribute("data-media") == "youtube") {
-    console.log("youtube");
     document
       .querySelector("div#source-page iframe")
       .setAttribute("src", document.activeElement.getAttribute("data-link"));
@@ -1351,7 +1357,8 @@ function open_url() {
       .classList.add("video-view");
     navigator.spatialNavigationEnabled = true;
     window_status = "source-page";
-    //player.src = "";
+    player.src = "";
+    play.pause();
     return;
   }
 }
@@ -1395,10 +1402,10 @@ let sleep_mode = function () {
 
   sleepmode = true;
 
-  toaster("sleepmode activ", 3000);
+  helper.toaster("sleepmode activ", 3000);
   setTimeout(() => {
     audio_player.pause();
-    sleepmode = false;
+    settings.sleepmode = false;
   }, st);
 };
 
@@ -1406,6 +1413,13 @@ let open_player = function () {
   document.getElementById("audio-player").style.display = "block";
   window_status = "audio-player";
   document.getElementById("options").style.display = "none";
+  if (status.active_element_id != 0) {
+    document
+      .querySelector('[data-id="' + status.active_element_id + '"]')
+      .focus();
+  }
+
+  status.active_element_id = document.activeElement.getAttribute("data-id");
   document.getElementById("image").style.backgroundImage =
     "url(" + document.activeElement.getAttribute("data-image") + ")";
 
@@ -1435,12 +1449,52 @@ qr_listener.addEventListener("blur", (event) => {
   bottom_bar("save", "", "back");
   qrscan = false;
 });
-//////////////////////////
-////KEYPAD TRIGGER////////////
-/////////////////////////
 
-function handleKeyDown(evt) {
-  switch (evt.key) {
+//////////////////////////////
+////KEYPAD HANDLER////////////
+//////////////////////////////
+
+let longpress = false;
+const longpress_timespan = 1000;
+let timeout;
+
+function repeat_action(param) {
+  switch (param.key) {
+    case "0":
+      break;
+    case "ArrowLeft":
+      if (window_status == "audio-player") {
+        audio_player.seeking("backward");
+        break;
+      }
+      break;
+
+    case "ArrowRight":
+      if (window_status == "audio-player") {
+        audio_player.seeking("forward");
+        break;
+      }
+      break;
+  }
+}
+
+//////////////
+////LONGPRESS
+/////////////
+
+function longpress_action(param) {
+  switch (param.key) {
+    case "0":
+      break;
+  }
+}
+
+///////////////
+////SHORTPRESS
+//////////////
+
+function shortpress_action(param) {
+  switch (param.key) {
     case "Enter":
       if (window_status == "article-list") {
         show_article();
@@ -1542,12 +1596,12 @@ function handleKeyDown(evt) {
       break;
 
     case "SoftLeft":
-    case "+":
+    case "n":
       if (window_status == "article-list") {
         if (!activity) {
           show_settings();
         } else {
-          toaster(source_array[0][0], 3000);
+          helper.toaster(source_array[0][0], 3000);
           add_source(source_array[0][0], 5, "all", rss_title);
         }
         break;
@@ -1575,14 +1629,16 @@ function handleKeyDown(evt) {
       }
 
       if (window_status == "audio-player") {
-        audio_player.play_podcast();
+        audio_player.play_podcast(
+          document.activeElement.getAttribute("data-link")
+        );
         break;
       }
 
       break;
 
     case "SoftRight":
-    case "-":
+    case "m":
       if (window_status == "single-article") {
         open_options();
         break;
@@ -1604,18 +1660,20 @@ function handleKeyDown(evt) {
       }
       break;
 
-    case "Backspace":
-      evt.preventDefault();
+    case "EndCall":
+      helper.goodbye();
+      break;
 
+    case "Backspace":
       if (window_status == "intro") {
         bottom_bar("", "", "");
-        window.close();
+        //window.close();
         break;
       }
 
       if (window_status == "article-list") {
         bottom_bar("", "", "");
-        goodbye();
+        //goodbye();
         break;
       }
 
@@ -1655,4 +1713,53 @@ function handleKeyDown(evt) {
   }
 }
 
+/////////////////////////////////
+////shortpress / longpress logic
+////////////////////////////////
+
+function handleKeyDown(evt) {
+  if (evt.key === "Backspace" && window_status != "article-list") {
+    evt.preventDefault();
+  }
+
+  if (evt.key === "EndCall") {
+    evt.preventDefault();
+    helper.goodbye();
+  }
+  if (!evt.repeat) {
+    longpress = false;
+    timeout = setTimeout(() => {
+      longpress = true;
+      longpress_action(evt);
+    }, longpress_timespan);
+  }
+
+  if (evt.repeat) {
+    if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
+
+    longpress = false;
+    repeat_action(evt);
+  }
+}
+
+function handleKeyUp(evt) {
+  evt.preventDefault();
+
+  if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
+
+  if (
+    evt.key == "Backspace" &&
+    window_status != "article-list" &&
+    document.activeElement.tagName == "INPUT"
+  ) {
+    evt.preventDefault();
+  }
+
+  clearTimeout(timeout);
+  if (!longpress) {
+    shortpress_action(evt);
+  }
+}
+
 document.addEventListener("keydown", handleKeyDown);
+document.addEventListener("keyup", handleKeyUp);

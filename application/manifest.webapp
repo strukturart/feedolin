@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
 	"name": "feedolin",
-	"description": "feed-reader",
+	"description": "feed-reader and podcast player",
 	"launch_path": "/index.html",
 	"type": "privileged",
 	"fullscreen": "true",
@@ -46,10 +46,6 @@
 			"description": "Reading Codes using the Camera"
 			},
 
-		"device-storage:music": {
-			"description": "Read/Write from/to intern storage",
-			"access": "readwrite"
-		},
 
 		"audio-channel-normal" : {
       		"description" : "Needed to play this app's audio content on the normal channel"

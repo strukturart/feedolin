@@ -17,7 +17,7 @@ const audio_player = ((_) => {
     console.log(src);
     player.mozaudiochannel = "content";
     if (player.currentSrc == "" || player.currentSrc != src) {
-      player.src = "";
+      //player.src = "";
       player.src = src;
       player.play();
       return false;
@@ -105,7 +105,7 @@ const audio_player = ((_) => {
   player.onpause = function () {
     player_status = "pause";
     bottom_bar("play", "", "");
-    toaster("pause", 3000);
+    helper.toaster("pause", 3000);
   };
 
   player.onplay = function () {
@@ -116,8 +116,10 @@ const audio_player = ((_) => {
     document.activeElement.classList.add("audio-playing");
     player_status = "play";
     bottom_bar("pause", "", "");
-    toaster("play", 3000);
+    helper.toaster("play", 3000);
     active_element = document.activeElement.getAttribute("data-id");
+
+    status.active_element_id = document.activeElement.getAttribute("data-id");
     document.getElementById(
       "audio-title"
     ).innerText = document.activeElement.getAttribute("data-title");
