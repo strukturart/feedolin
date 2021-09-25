@@ -1,5 +1,5 @@
 let article_array;
-var window_status = "intro";
+
 var content_arr = [];
 var source_array = [];
 var k = 0;
@@ -7,12 +7,9 @@ var panels = ["all"];
 var current_panel = 0;
 var activity = false;
 var volume_status = false;
-var current_article;
-var epsiodes_download = 3;
 
 //store all used article ids
 var all_cid = [];
-
 var read = [];
 var recently_played = [];
 var listened_elements = "";
@@ -34,21 +31,21 @@ var item_cid = "";
 var item_image = "";
 var item_id = "";
 var listened_elem = "";
-//var sleepmode = false;
 
 let settings = {
   sleepmode: false,
-  epsiodes_download: 3,
+  epsiodes_download:
+    localStorage.getItem("epsiodes_download") != null
+      ? JSON.parse(localStorage.getItem("epsiodes_download"))
+      : 3,
+  local_file: false,
+  wwww_file: false,
 };
 
 let status = {
   active_element_id: 0,
+  window_status: "intro",
 };
-
-let lock;
-if (window.navigator.requestWakeLock) {
-  lock = window.navigator.requestWakeLock("screen");
-}
 
 //read settings
 if (localStorage.getItem("listened") != null) {
@@ -61,10 +58,6 @@ if (localStorage.getItem("recentlyplayed") != null) {
 
 if (localStorage.getItem("read") != null) {
   read_elem = JSON.parse(localStorage.getItem("read"));
-}
-
-if (localStorage.getItem("epsiodes_download") != null) {
-  epsiodes_download = localStorage.getItem("episodes_download");
 }
 
 setTimeout(() => {
@@ -333,7 +326,7 @@ let load_local_file_opml = function () {
           for (var z = 0; z < nested.length; z++) {
             source_array.push([
               nested[z].getAttribute("xmlUrl"),
-              epsiodes_download,
+              settings.epsiodes_download,
               m[i].getAttribute("text"),
               m[i].getAttribute("text"),
             ]);
@@ -379,7 +372,7 @@ let load_source_opml = function () {
           for (var z = 0; z < nested.length; z++) {
             source_array.push([
               nested[z].getAttribute("xmlUrl"),
-              epsiodes_download,
+              settings.epsiodes_download,
               m[i].getAttribute("text"),
               m[i].getAttribute("text"),
             ]);
@@ -759,8 +752,6 @@ let rss_fetcher = function (
       }
     }
 
-    console.log(xhttp.status);
-
     if (xhttp.status === 404) {
       console.log(param_channel + " url not found", 3000);
     }
@@ -955,7 +946,7 @@ function build() {
 
   lazyload.ll();
   document.getElementById("message-box").style.display = "none";
-  window_status = "article-list";
+  status.window_status = "article-list";
   set_tabindex();
 }
 
@@ -986,7 +977,7 @@ let mark_as_read = function (un_read) {
 
   if (un_read == false) {
     let kk = document
-      .querySelector("[data-id ='" + current_article + "']")
+      .querySelector("[data-id ='" + status.active_element_id + "']")
       .getAttribute("data-id");
 
     let test = [];
@@ -1074,17 +1065,28 @@ function nav_panels(left_right) {
 
   document.activeElement.classList.remove("overscrolling");
 }
-
+let tabIndex = 0;
 ////////////
 //TABINDEX NAVIGATION
 ///////////
+
 function nav(move) {
   let elem = document.activeElement;
   // Setup siblings array and get the first sibling
-  var siblings = [];
-  var sibling = elem.parentNode.firstChild;
+  let siblings = [];
+  let sibling = elem.parentNode.firstChild;
+
+  //nested input field
+  if (document.activeElement.parentNode.classList.contains("input-parent")) {
+    document.activeElement.parentNode.focus();
+  }
+
+  if (document.activeElement.classList.contains("input-parent")) {
+    bottom_bar("save", "edit", "back");
+  }
 
   // Loop through each sibling and push to the array
+  /*
   while (sibling) {
     if (
       sibling.tabIndex != null &&
@@ -1094,6 +1096,19 @@ function nav(move) {
       siblings.push(sibling);
     }
     sibling = sibling.nextSibling;
+  }
+  */
+
+  let b;
+
+  b = document.activeElement.parentNode;
+  let items = b.querySelectorAll(".item");
+
+  for (let i = 0; i < items.length; i++) {
+    siblings.push(items[i]);
+    if (items[i].parentNode.style.display == "block") {
+      siblings.push(items[i]);
+    }
   }
 
   setTimeout(() => {
@@ -1152,7 +1167,7 @@ let save_settings = function () {
   }
 
   if (setting_source != "") {
-    if (!validate(setting_source)) {
+    if (!helper.validate(setting_source)) {
       alert("url not valid");
       return false;
     }
@@ -1175,7 +1190,7 @@ let save_settings = function () {
 let show_article = function () {
   document.querySelector("div#source-page").style.display = "none";
 
-  window_status = "single-article";
+  status.window_status = "single-article";
   navigator.spatialNavigationEnabled = false;
 
   document.querySelector("div#news-feed").style.background = "silver";
@@ -1220,7 +1235,7 @@ let show_article = function () {
     block: "start",
   });
 
-  current_article = document.activeElement.getAttribute("data-id");
+  status.active_element_id = document.activeElement.getAttribute("data-id");
   mark_as_read(true);
 };
 
@@ -1276,7 +1291,7 @@ let show_article_list = function () {
     bottom_bar("add", "select", "");
   }
 
-  window_status = "article-list";
+  status.window_status = "article-list";
   document.activeElement.focus();
 
   document.activeElement.scrollIntoView({
@@ -1286,13 +1301,14 @@ let show_article_list = function () {
   });
 
   tab_index = document.activeElement.getAttribute("tabIndex");
+  helper.screenlock("unlock");
 };
 
 let show_settings = function () {
   bottom_bar("save", "", "back");
 
-  current_article = document.activeElement.getAttribute("data-id");
-  window_status = "settings";
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+  status.window_status = "settings";
   tab_index = 0;
   document.getElementById("top-bar").style.display = "none";
 
@@ -1302,7 +1318,7 @@ let show_settings = function () {
   }
   document.getElementById("settings").style.display = "block";
 
-  document.getElementById("time").focus();
+  document.getElementById("input-wrapper").children[0].focus();
   if (localStorage.getItem("interval") != null) {
     document.getElementById("time").value = localStorage.getItem("interval");
   }
@@ -1332,7 +1348,6 @@ let show_settings = function () {
 
 function open_url() {
   let link_target = document.activeElement.getAttribute("data-link");
-  let link_download = document.activeElement.getAttribute("data-download");
 
   let title = document.activeElement.querySelector("h1.title").textContent;
   title = title.replace(/\s/g, "-");
@@ -1356,16 +1371,17 @@ function open_url() {
       .querySelector("div#source-page div#iframe-wrapper")
       .classList.add("video-view");
     navigator.spatialNavigationEnabled = true;
-    window_status = "source-page";
+    status.window_status = "source-page";
     player.src = "";
     play.pause();
+    helper.screenlock("lock");
     return;
   }
 }
 
 let open_options = function () {
-  current_article = document.activeElement.getAttribute("data-id");
-  window_status = "options";
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+  status.window_status = "options";
   document.getElementById("options").style.display = "block";
   document.querySelectorAll("div#options ul li")[0].focus();
 };
@@ -1380,7 +1396,7 @@ let start_options = function () {
 
   if (document.activeElement.getAttribute("data-function") == "share") {
     var k = document
-      .querySelector("[data-id='" + current_article + "']")
+      .querySelector("[data-id='" + status.active_element_id + "']")
       .getAttribute("data-link");
     share(k);
   }
@@ -1411,7 +1427,7 @@ let sleep_mode = function () {
 
 let open_player = function () {
   document.getElementById("audio-player").style.display = "block";
-  window_status = "audio-player";
+  status.window_status = "audio-player";
   document.getElementById("options").style.display = "none";
   if (status.active_element_id != 0) {
     document
@@ -1463,14 +1479,14 @@ function repeat_action(param) {
     case "0":
       break;
     case "ArrowLeft":
-      if (window_status == "audio-player") {
+      if (status.window_status == "audio-player") {
         audio_player.seeking("backward");
         break;
       }
       break;
 
     case "ArrowRight":
-      if (window_status == "audio-player") {
+      if (status.window_status == "audio-player") {
         audio_player.seeking("forward");
         break;
       }
@@ -1496,18 +1512,22 @@ function longpress_action(param) {
 function shortpress_action(param) {
   switch (param.key) {
     case "Enter":
-      if (window_status == "article-list") {
+      if (document.activeElement.classList.contains("input-parent")) {
+        document.activeElement.children[0].focus();
+        return true;
+      }
+      if (status.window_status == "article-list") {
         show_article();
         break;
       }
 
-      if (window_status == "options") {
+      if (status.window_status == "options") {
         start_options();
         break;
       }
 
-      if (window_status == "settings" && qrscan == true) {
-        window_status = "scan";
+      if (status.window_status == "settings" && qrscan == true) {
+        status.window_status = "scan";
 
         qr.start_scan(function (callback) {
           let slug = callback;
@@ -1520,41 +1540,41 @@ function shortpress_action(param) {
       break;
 
     case "ArrowLeft":
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         nav_panels("left");
         break;
       }
 
-      if (window_status == "audio-player") {
+      if (status.window_status == "audio-player") {
         audio_player.seeking("backward");
         break;
       }
       break;
 
     case "ArrowRight":
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         nav_panels("right");
         break;
       }
 
-      if (window_status == "audio-player") {
+      if (status.window_status == "audio-player") {
         audio_player.seeking("forward");
         break;
       }
       break;
 
     case "ArrowDown":
-      if (window_status == "settings") {
+      if (status.window_status == "settings") {
         nav("+1");
         break;
       }
 
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         nav("+1");
         break;
       }
 
-      if (window_status == "options") {
+      if (status.window_status == "options") {
         nav("+1");
         break;
       }
@@ -1567,18 +1587,18 @@ function shortpress_action(param) {
       break;
 
     case "ArrowUp":
-      if (window_status == "settings") {
+      if (status.window_status == "settings") {
         nav("-1");
         break;
       }
 
-      if (window_status == "options") {
+      if (status.window_status == "options") {
         nav("-1");
 
         break;
       }
 
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         nav("-1");
         break;
       }
@@ -1597,7 +1617,7 @@ function shortpress_action(param) {
 
     case "SoftLeft":
     case "n":
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         if (!activity) {
           show_settings();
         } else {
@@ -1608,7 +1628,7 @@ function shortpress_action(param) {
       }
 
       if (
-        window_status == "single-article" &&
+        status.window_status == "single-article" &&
         document.activeElement.getAttribute("data-media") == "podcast"
       ) {
         open_player();
@@ -1618,17 +1638,17 @@ function shortpress_action(param) {
         break;
       }
 
-      if (window_status == "single-article") {
+      if (status.window_status == "single-article") {
         open_url();
         break;
       }
 
-      if (window_status == "settings") {
+      if (status.window_status == "settings") {
         save_settings();
         break;
       }
 
-      if (window_status == "audio-player") {
+      if (status.window_status == "audio-player") {
         audio_player.play_podcast(
           document.activeElement.getAttribute("data-link")
         );
@@ -1639,11 +1659,11 @@ function shortpress_action(param) {
 
     case "SoftRight":
     case "m":
-      if (window_status == "single-article") {
+      if (status.window_status == "single-article") {
         open_options();
         break;
       }
-      if (window_status == "settings") {
+      if (status.window_status == "settings") {
         show_article_list();
 
         setTimeout(() => {
@@ -1653,7 +1673,7 @@ function shortpress_action(param) {
         break;
       }
 
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         open_options();
 
         break;
@@ -1665,46 +1685,48 @@ function shortpress_action(param) {
       break;
 
     case "Backspace":
-      if (window_status == "intro") {
+      if (status.window_status == "intro") {
         bottom_bar("", "", "");
         //window.close();
         break;
       }
 
-      if (window_status == "article-list") {
+      if (status.window_status == "article-list") {
         bottom_bar("", "", "");
         //goodbye();
         break;
       }
 
-      if (window_status == "settings") {
+      if (status.window_status == "settings") {
         //show_article_list();
         break;
       }
 
-      if (window_status == "single-article") {
+      if (status.window_status == "single-article") {
         show_article_list();
         break;
       }
 
-      if (window_status == "audio-player") {
+      if (status.window_status == "audio-player") {
         show_article_list();
         break;
       }
 
-      if (window_status == "source-page") {
+      if (status.window_status == "source-page") {
         show_article_list();
         break;
       }
 
-      if (window_status == "options") {
+      if (status.window_status == "options") {
         document.getElementById("options").style.display = "none";
         show_article_list();
-        document.querySelector("[data-id ='" + current_article + "']").focus();
+        document
+          .querySelector("[data-id ='" + status.active_element_id + "']")
+          .focus();
         break;
       }
 
-      if (window_status == "scan") {
+      if (status.window_status == "scan") {
         qr.stop_scan();
         break;
       }
@@ -1718,7 +1740,7 @@ function shortpress_action(param) {
 ////////////////////////////////
 
 function handleKeyDown(evt) {
-  if (evt.key === "Backspace" && window_status != "article-list") {
+  if (evt.key === "Backspace" && status.window_status != "article-list") {
     evt.preventDefault();
   }
 
@@ -1749,7 +1771,7 @@ function handleKeyUp(evt) {
 
   if (
     evt.key == "Backspace" &&
-    window_status != "article-list" &&
+    status.window_status != "article-list" &&
     document.activeElement.tagName == "INPUT"
   ) {
     evt.preventDefault();

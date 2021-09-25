@@ -2,7 +2,10 @@ const audio_player = ((_) => {
   let player = new Audio();
   player.mozAudioChannelType = "content";
   player.type = "audio/mpeg";
+  player.mozaudiochannel = "content";
   player.preload = "none";
+  let getduration;
+
   let player_status = "";
   if (navigator.mozAudioChannelManager) {
     navigator.mozAudioChannelManager.volumeControlChannel = "content";
@@ -13,29 +16,25 @@ const audio_player = ((_) => {
   //////////////////
   //PLAY
   //////////////////
-  let play_podcast = function (src) {
-    console.log(src);
-    player.mozaudiochannel = "content";
-    if (player.currentSrc == "" || player.currentSrc != src) {
-      //player.src = "";
-      player.src = src;
+  let play_podcast = function (url) {
+    if (url != player.src) {
+      player.src = url;
       player.play();
-      return false;
     }
 
     if (player_status == "play") {
+      clearInterval(getduration);
+
       player.pause();
+      bottom_bar("play", "", "");
+      player_status = "pause";
       return false;
     }
-
-    if (player_status == "pause") {
+    if (player_status == "pause" || player_status == "") {
       player.play();
-      return false;
+      bottom_bar("pause", "", "");
+      player_status = "play";
     }
-  };
-
-  let pause = function () {
-    player.pause();
   };
 
   ////SEEKING//////
@@ -62,7 +61,10 @@ const audio_player = ((_) => {
       setTimeout(function () {
         volume_status = false;
 
-        if ($(":focus").hasClass("youtube") && window_status == "source-page") {
+        if (
+          $(":focus").hasClass("youtube") &&
+          status.window_status == "source-page"
+        ) {
           navigator.spatialNavigationEnabled = true;
         }
       }, 3000);
@@ -73,7 +75,7 @@ const audio_player = ((_) => {
       setTimeout(function () {
         volume_status = false;
 
-        if (window_status == "source-page") {
+        if (status.window_status == "source-page") {
           navigator.spatialNavigationEnabled = true;
         }
       }, 3000);
@@ -82,7 +84,11 @@ const audio_player = ((_) => {
 
   //time duration
   player.onloadedmetadata = function () {
-    var getduration = setInterval(function () {
+    getduration = setInterval(function () {
+      if (typeof player.duration != "number") {
+        bottom_bar("pause", "-", "");
+        return false;
+      }
       var time = player.duration - player.currentTime;
       let percent = (player.currentTime / player.duration) * 100;
 
@@ -98,14 +104,23 @@ const audio_player = ((_) => {
         seconds = seconds_long;
       }
       var duration = minutes + ":" + seconds;
-      if (window_status == "audio-player") bottom_bar("pause", duration, "");
+
+      if (duration == "NaN:NaN") {
+        bottom_bar("pause", "", "");
+        helper.toaster("Can't play media", 5000);
+
+        clearInterval(getduration);
+        return false;
+      }
+
+      if (status.window_status == "audio-player")
+        bottom_bar("pause", duration, "");
     }, 1000);
   };
 
   player.onpause = function () {
-    player_status = "pause";
-    bottom_bar("play", "", "");
     helper.toaster("pause", 3000);
+    //player_status = "pause";
   };
 
   player.onplay = function () {
@@ -114,8 +129,6 @@ const audio_player = ((_) => {
       articles[i].classList.remove("audio-playing");
     }
     document.activeElement.classList.add("audio-playing");
-    player_status = "play";
-    bottom_bar("pause", "", "");
     helper.toaster("play", 3000);
     active_element = document.activeElement.getAttribute("data-id");
 
@@ -132,6 +145,7 @@ const audio_player = ((_) => {
     recently_played.unshift(active_element);
     if (recently_played.length > 4) recently_played.splice(-1, 1);
     localStorage.setItem("recentlyplayed", JSON.stringify(recently_played));
+    //player_status = "play";
   };
 
   player.onended = function () {
@@ -148,6 +162,5 @@ const audio_player = ((_) => {
     play_podcast,
     seeking,
     volume_control,
-    pause,
   };
 })();

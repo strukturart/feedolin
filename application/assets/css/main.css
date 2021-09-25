@@ -36,6 +36,7 @@
 
 :focus {
   outline: none;
+  background: var(--color-four);
 }
 
 ::-moz-focus-inner {
@@ -60,6 +61,10 @@ body {
 }
 
 h1 {
+  font-size: 1rem;
+}
+
+h2 {
   font-size: 1rem;
 }
 

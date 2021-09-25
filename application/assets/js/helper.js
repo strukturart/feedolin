@@ -20,14 +20,6 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function validate(url) {
-  var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-  if (pattern.test(url)) {
-    return true;
-  }
-  return false;
-}
-
 function notify(param_title, param_text, param_silent, requireInteraction) {
   var options = {
     body: param_text,
@@ -249,6 +241,14 @@ function add_source(url, limit, categorie, channel) {
 }
 
 const helper = (() => {
+  function validate(url) {
+    var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    if (pattern.test(url)) {
+      return true;
+    }
+    return false;
+  }
+
   let getManifest = function (callback) {
     if (!navigator.mozApps) {
       let t = document.getElementById("kaisos-ads");
@@ -293,10 +293,20 @@ const helper = (() => {
     }, time);
   };
 
+  let screenlock = function (stat) {
+    if (window.navigator == false) return false;
+    let lock = window.navigator.requestWakeLock("screen");
+
+    if (stat == "unlock") {
+      lock.unlock();
+    }
+  };
+
   //goodbye
 
   let goodbye = function () {
     document.getElementById("goodbye").style.display = "block";
+    bottom_bar("", "", "");
 
     if (localStorage.clickcount) {
       localStorage.clickcount = Number(localStorage.clickcount) + 1;
@@ -350,5 +360,7 @@ const helper = (() => {
     add_script,
     deleteFile,
     goodbye,
+    screenlock,
+    validate,
   };
 })();
