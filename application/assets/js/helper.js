@@ -251,8 +251,8 @@ const helper = (() => {
 
   let getManifest = function (callback) {
     if (!navigator.mozApps) {
-      let t = document.getElementById("kaisos-ads");
-      t.remove();
+      //let t = document.getElementById("kaisos-ads");
+      //t.remove();
       return false;
     }
     let self = navigator.mozApps.getSelf();
@@ -294,7 +294,9 @@ const helper = (() => {
   };
 
   let screenlock = function (stat) {
-    if (window.navigator == false) return false;
+    if (typeof window.navigator.requestWakeLock === "undefined") {
+      return false;
+    }
     let lock = window.navigator.requestWakeLock("screen");
 
     if (stat == "unlock") {

@@ -13,14 +13,14 @@
 <body>
     <div id="wrapper">
         <div id="toast" class="width-100"></div>
-
         <div id="intro" class="flex width-100 height-100 justify-content-center">
             <img src="icons/intro.svg">
+            <div class="width-100" id="version">1.0</div>
         </div>
 
         <div id="audio-player" class="width-100 height-100">
             <div id="audio-title"></div>
-            <div id="image" class="width-100 height-100">hh</div>
+            <div id="image" class="width-100 height-100"></div>
             <div id="background-pattern" class="flex justify-content-start width-100 height-100">
             </div>
             <div id="progress-bar" class="width-100">
@@ -54,13 +54,13 @@
                     <h2>where should the list of the rss feed be loaded from?</h2>
                     <div class="item input-parent" tabindex="1">
                         <label for="source"><strong>url</strong></label>
-                        <input tabindex="" placeholder="https://" type="url" id="source" />
+                        <input tabindex="" placeholder="https://xyz.com/feeds.opml" type="url" id="source" />
                     </div>
 
         
                     <div class="item input-parent" tabindex="2">
                         <label for="source-local"><strong>local filename</strong></label>
-                        <input tabindex="2" placeholder="rss.json" type="text" id="source-local" />
+                        <input tabindex="2" placeholder="rss.opml" type="text" id="source-local" />
                     </div>
 
                     <div class="item input-parent" tabindex="3">
@@ -74,16 +74,16 @@
                         <input tabindex="4" type="tel" pattern="^[0-9]*$" id="sleep-mode" />
                     </div>
 
-                   
-                 
-                  
-
                 </div>
             </div>
             <div id="top"></div>
+
+            <div id="KaiOsAd" class="width-100"></div>
             <div id="news-feed-list"></div>
+      
 
             <script id="template" type="x-tmpl-mustache">
+               
                 {{#data}}
                     <article tabIndex=0 class="all item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-order="{{dateunix}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-download="{{download}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                         <div class="flex grid-col-10">
@@ -142,7 +142,7 @@
             </div>
         </div>
         <div id="message-box" class="flex width-100 height-100 align-item-center">
-            <div id="download" class="width-100 text-center">Welcome</div>
+            <div id="download" class="width-100 text-center">Welcome<br>loading feeds...</div>
         </div>
     </div>
 
@@ -161,13 +161,14 @@
             <br />
             <ul>
                 <li>Thank you</li>
-                <li>bHackers community ❤</li>
+                <li>for using feedolin</li>
             </ul>
         </div>
     </div>
 
 </body>
-
+<script defer src="assets/js/kaiads.v5.min.js"></script>
+<script defer src="assets/js/kaios-ads.js"></script>
 
 <script src="assets/js/audio.js"></script>
 <script src="assets/js/IntersectionObserver-polyfill.js"></script>
@@ -179,6 +180,7 @@
 <script src="assets/js/lazyload.js "></script>
 <script src="assets/js/jsQR.js"></script>
 <script src="assets/js/scan.js"></script>
+<script src="assets/js/purify.js "></script>
 <script src="index.js "></script>
 
 </html>
