@@ -3,15 +3,14 @@ const audio_player = ((_) => {
   player.mozAudioChannelType = "content";
   player.type = "audio/mpeg";
   player.mozaudiochannel = "content";
-  player.preload = "none";
+  player.preload = "auto";
   let getduration;
 
   let player_status = "";
   if (navigator.mozAudioChannelManager) {
     navigator.mozAudioChannelManager.volumeControlChannel = "content";
   }
-  let active_element = "";
-  let listened = [];
+
 
   //////////////////
   //PLAY
@@ -23,11 +22,11 @@ const audio_player = ((_) => {
     }
 
     if (player_status == "play") {
-      clearInterval(getduration);
-
       player.pause();
       bottom_bar("play", "", "");
       player_status = "pause";
+      clearInterval(getduration);
+
       return false;
     }
     if (player_status == "pause" || player_status == "") {
@@ -41,7 +40,6 @@ const audio_player = ((_) => {
 
   let seeking = function (param) {
     var step = 10;
-    //player.pause();
     if (param == "backward") {
       player.currentTime = player.currentTime - step++;
     }
@@ -119,8 +117,6 @@ const audio_player = ((_) => {
   };
 
   player.onpause = function () {
-    helper.toaster("pause", 3000);
-    //player_status = "pause";
   };
 
   player.onplay = function () {
@@ -129,8 +125,10 @@ const audio_player = ((_) => {
       articles[i].classList.remove("audio-playing");
     }
     document.activeElement.classList.add("audio-playing");
-    helper.toaster("play", 3000);
-    active_element = document.activeElement.getAttribute("data-id");
+
+    status.active_audio_element_id = document.activeElement.getAttribute(
+      "data-id"
+    );
 
     status.active_element_id = document.activeElement.getAttribute("data-id");
     document.getElementById(
@@ -138,24 +136,22 @@ const audio_player = ((_) => {
     ).innerText = document.activeElement.getAttribute("data-title");
 
     //add recently played tracks in list
-    if (localStorage.getItem("recentlyplayed")) {
-      recently_played = JSON.parse(localStorage.getItem("recentlyplayed"));
+    if (recently_played.indexOf(status.active_element_id) == -1) {
+      if (recently_played.length > 4) recently_played.shift();
+      recently_played.push(status.active_element_id);
+      localStorage.setItem("recently_played", JSON.stringify(recently_played));
     }
-
-    recently_played.unshift(active_element);
-    if (recently_played.length > 4) recently_played.splice(-1, 1);
-    localStorage.setItem("recentlyplayed", JSON.stringify(recently_played));
-    //player_status = "play";
+  
   };
 
   player.onended = function () {
     //when played to end
-    if (localStorage.getItem("listened")) {
-      listened = JSON.parse(localStorage["listened"]);
+    if (localStorage.getItem("listened_elem")) {
+      listened_elem = JSON.parse(localStorage["listened_elem"]);
     }
 
-    listened.push(active_element);
-    localStorage.setItem("listened", JSON.stringify(listened));
+    listened_elem.push(status.active_audio_element_id);
+    localStorage.setItem("listened_elem", JSON.stringify(listened_elem));
   };
 
   return {

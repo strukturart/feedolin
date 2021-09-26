@@ -56,7 +56,8 @@ body {
   max-width: 100%;
   height: 100%;
   width: 100%;
-  overflow: auto;
+  max-width: 100vw;
+  overflow: hidden;
   background: black;
 }
 
@@ -82,8 +83,10 @@ img[src=" "] {
   display: none;
 }
 
-img[src=" "] {
-  display: none;
+table {
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow: hidden;
 }
 
 div#intro {
@@ -97,6 +100,15 @@ div#intro {
 div#intro img {
   width: 150px;
   height: auto;
+}
+
+div#intro div#version {
+  position: relative;
+  bottom: 10px;
+  text-align: center;
+  color: white;
+  z-index: 2000;
+  font-size: 0.8rem;
 }
 
 /*///////////////////////////
@@ -120,6 +132,15 @@ div#toast {
 
 /*///////////////////////////
 ///FEED////////////////*/
+
+div#KaiOsAd {
+  height: 200px;
+  position: fixed;
+  z-index: 5000000;
+  top: 30px;
+  background: silver;
+  opacity: 0;
+}
 
 div#options {
   display: none;
@@ -219,11 +240,6 @@ div#news-feed
   margin: 5px 5px 0 0;
 }
 
-img.sleepmode {
-  max-width: 3px;
-  max-height: 3px;
-}
-
 div#news-feed
   div#news-feed-list
   article
@@ -303,7 +319,7 @@ div#news-feed div#news-feed-list article div.listened-icon img {
 
 div#news-feed
   div#news-feed-list
-  article[data-listened*="true"]
+  article[data-listened="listened"]
   div.listened-icon {
   position: relative;
   opacity: 1;
@@ -561,17 +577,21 @@ div#top {
 div#settings {
   display: none;
   background: gray;
-  padding: 15px 5px 185px 5px;
+  padding: 15px 5px 10px 5px;
   margin: 0 0 150px 0;
-  height: 92%;
+  height: 90vh;
   position: fixed;
-  top: 0;
+  top: 0px;
   z-index: 3;
   overflow: scroll !important;
 }
 
 div#settings div#text {
   margin: 0 0 20px 0;
+}
+
+div#settings div.input-parent {
+  padding: 10px 0 10px 0;
 }
 
 div#settings div#nextdownload {
@@ -615,7 +635,7 @@ div#settings input:focus {
 
 #goodbye {
   position: fixed;
-  z-index: 5;
+  z-index: 50000;
   left: 0;
   top: 0;
   background: black;

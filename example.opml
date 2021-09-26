@@ -11,9 +11,10 @@
             <outline type="rss" text="getKirby Forum" title="getKirby Forum" xmlUrl="https://forum.getkirby.com/latest.rss" htmlUrl=""/>
         </outline>
 
-        <outline text="bhackers Store" title="bhackers Store">
-            <outline type="rss" text="bhackers Store" title="bhackers Store" xmlUrl="https://rss.bhackers.uber.space/store.php" htmlUrl=""/>
+        <outline text="Blog" title="Blog">
+            <outline type="rss" text="KaiOs Blog" title="KaiOs Reddit" xmlUrl="https://www.kaiostech.com/feed/" htmlUrl=""/>
         </outline>
+
 
 
          <outline text="Podcast" title="Podcast">

@@ -112,27 +112,6 @@ function check_iconnection() {
   window.addEventListener("offline", updateOfflineStatus);
 }
 
-//wake up screen
-function screenWakeLock(param1) {
-  if (param1 == "lock") {
-    lock = window.navigator.requestWakeLock("screen");
-
-    lock.onsuccess = function () {
-      toaster("screen-lock", 10000);
-    };
-
-    lock.onerror = function () {
-      alert("An error occurred: " + this.error.name);
-    };
-  }
-
-  if (param1 == "unlock") {
-    if (lock.topic == "screen") {
-      lock.unlock();
-    }
-  }
-}
-
 function delete_file(filename) {
   var sdcard = navigator.getDeviceStorages("sdcard");
   var request = sdcard[1].delete(filename);
@@ -251,8 +230,8 @@ const helper = (() => {
 
   let getManifest = function (callback) {
     if (!navigator.mozApps) {
-      let t = document.getElementById("kaisos-ads");
-      t.remove();
+      //let t = document.getElementById("kaisos-ads");
+      //t.remove();
       return false;
     }
     let self = navigator.mozApps.getSelf();
@@ -293,12 +272,26 @@ const helper = (() => {
     }, time);
   };
 
+  let lock;
   let screenlock = function (stat) {
-    if (window.navigator == false) return false;
-    let lock = window.navigator.requestWakeLock("screen");
+    if (typeof window.navigator.requestWakeLock === "undefined") {
+      alert("hey");
+      return false;
+    }
+    if (stat == "lock") {
+      lock = window.navigator.requestWakeLock("screen");
+      lock.onsuccess = function () {
+        alert("yeah");
+      };
+      lock.onerror = function () {
+        alert("An error occurred: " + this.error.name);
+      };
+    }
 
     if (stat == "unlock") {
-      lock.unlock();
+      if (lock.topic == "screen") {
+        lock.unlock();
+      }
     }
   };
 
