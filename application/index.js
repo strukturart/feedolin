@@ -606,6 +606,12 @@ let rss_fetcher = function (
             item_media = "rss";
           }
 
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(item_summary, "text/html");
+          //item_summary = new Readability(doc).parse();
+
+
           content_arr.push({
             title: item_title,
             summary: DOMPurify.sanitize(item_summary, {
@@ -716,6 +722,11 @@ let rss_fetcher = function (
               if (item_duration == "Invalid date") item_duration = "";
             }
           }
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(item_summary, "text/html");
+          //item_summary = new Readability(doc).parse();
+
 
           content_arr.push({
             title: item_title,
