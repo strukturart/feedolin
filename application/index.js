@@ -602,11 +602,15 @@ let rss_fetcher = function (
             item_media = "rss";
           }
 
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(item_summary, "text/html");
+          //item_summary = new Readability(doc).parse();
+
+
           content_arr.push({
             title: item_title,
-            summary: DOMPurify.sanitize(item_summary, {
-              ALLOWED_TAGS: ["img"],
-            }),
+            summary: DOMPurify.sanitize(item_summary),
             link: item_link,
             date: item_date,
             dateunix: item_date_unix,
@@ -714,11 +718,14 @@ let rss_fetcher = function (
             }
           }
 
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(item_summary, "text/html");
+          //item_summary = new Readability(doc).parse();
+
+
           content_arr.push({
             title: item_title,
-            summary: DOMPurify.sanitize(item_summary, {
-              ALLOWED_TAGS: ["img"],
-            }),
+            summary: DOMPurify.sanitize(item_summary),
             link: item_link,
             date: item_date,
             dateunix: item_date_unix,
