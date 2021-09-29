@@ -24,11 +24,10 @@
 
 ## Installation
 
-You have to save the list of urls in a .json or .opml file as in the example.
+You have to save the list of urls in a  .opml file as in the example.
 In the settings you can set where the app should get this file from.
-It can be stored locally or online on a sever.
+It can be stored locally or online on a server.
 
-https://raw.githubusercontent.com/strukturart/rss-reader/master/example.json  
 https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
 
 ## How to install

@@ -11,7 +11,6 @@ const audio_player = ((_) => {
     navigator.mozAudioChannelManager.volumeControlChannel = "content";
   }
 
-
   //////////////////
   //PLAY
   //////////////////
@@ -58,11 +57,7 @@ const audio_player = ((_) => {
       navigator.volumeManager.requestUp();
       setTimeout(function () {
         volume_status = false;
-
-        if (
-          $(":focus").hasClass("youtube") &&
-          status.window_status == "source-page"
-        ) {
+        if (status.window_status == "source-page") {
           navigator.spatialNavigationEnabled = true;
         }
       }, 3000);
@@ -72,7 +67,6 @@ const audio_player = ((_) => {
       navigator.volumeManager.requestDown();
       setTimeout(function () {
         volume_status = false;
-
         if (status.window_status == "source-page") {
           navigator.spatialNavigationEnabled = true;
         }
@@ -116,8 +110,7 @@ const audio_player = ((_) => {
     }, 1000);
   };
 
-  player.onpause = function () {
-  };
+  player.onpause = function () {};
 
   player.onplay = function () {
     let articles = document.querySelectorAll("article");
@@ -141,7 +134,6 @@ const audio_player = ((_) => {
       recently_played.push(status.active_element_id);
       localStorage.setItem("recently_played", JSON.stringify(recently_played));
     }
-  
   };
 
   player.onended = function () {

@@ -5,17 +5,21 @@ var source_array = [];
 var k = 0;
 var panels = ["all"];
 var current_panel = 0;
+const parser = new DOMParser();
 
 //store all used article ids
 var all_cid = [];
+//get read articles
 var read_elem =
   localStorage.getItem("read_elem") != null
     ? JSON.parse(localStorage.getItem("read_elem"))
     : [];
+//get recently played podcast
 let recently_played =
   localStorage.getItem("recently_played") != null
     ? JSON.parse(localStorage.getItem("recently_played"))
     : [];
+//get listened podcasts
 let listened_elem =
   localStorage.getItem("listened_elem") != null
     ? JSON.parse(localStorage.getItem("listened_elem"))
@@ -39,7 +43,6 @@ var item_image = "";
 helper.screenlock("lock");
 setTimeout(function () {
   helper.screenlock("unlock");
-  console.log("hey");
 }, 3000);
 
 let settings = {
@@ -52,6 +55,12 @@ let settings = {
     localStorage.getItem("epsiodes_download") != null
       ? localStorage.getItem("epsiodes_download")
       : 3,
+
+      interval:
+      localStorage.getItem("interval") != null
+        ? localStorage.getItem("interval")
+      : 0,
+      
   local_file: false,
   wwww_file: false,
   ads: false,
@@ -85,21 +94,19 @@ setTimeout(() => {
   if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
   if (
-    localStorage["source_local"] == undefined &&
-    localStorage["source"] == undefined
+    localStorage["source_local"] == null &&
+    localStorage["source"] == null
   ) {
     localStorage.setItem(
       "source",
       "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml"
     );
     document.getElementById("message-box").style.display = "none";
-    load_source();
+    load_source_opml();
   }
   //get update time; cache || download
   let a = localStorage.getItem("interval");
-  if (a == null) {
-    a = 0;
-  }
+  
   //download
   if (cache.getTime(a) && navigator.onLine) {
     if (
@@ -108,20 +115,14 @@ setTimeout(() => {
       localStorage["source"] != undefined
     ) {
       let str = localStorage["source"];
-      if (str.includes(".json")) {
-        load_source();
-      }
-      if (str.includes(".opml")) {
+      
         load_source_opml();
-      }
+      
     } else {
       let str = localStorage["source_local"];
-      if (str.includes(".json")) {
-        load_local_file();
-      }
-      if (str.includes(".opml")) {
+     
         load_local_file_opml();
-      }
+      
     }
     //load cache
   } else {
@@ -144,130 +145,8 @@ setTimeout(() => {
 //////////////////////////
 //////////////////////////
 
-///////////
-///load source file from online source
-//////////
+let nocaching = Math.floor(Date.now() / 1000);
 
-let load_source = function () {
-  let source_url = localStorage.getItem("source") + "?q=123";
-  let xhttp = new XMLHttpRequest({
-    mozSystem: true,
-  });
-
-  let nocaching = Math.floor(Date.now() / 1000);
-
-  xhttp.open("GET", source_url + "?time=" + nocaching, true);
-  xhttp.timeout = 5000;
-  xhttp.onload = function () {
-    if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-      //alert(this.getResponseHeader("Last-Modified"));
-
-      let data = xhttp.response;
-
-      //check if json valid
-      try {
-        data = JSON.parse(data);
-      } catch (e) {
-        document.querySelector("#download").innerHTML =
-          "😴<br>Your json file is not valid";
-        setTimeout(() => {
-          document.getElementById("message-box").style.display = "none";
-          //show_settings();
-        }, 3000);
-
-        return false;
-      }
-
-      start_download_content(data);
-    }
-  };
-
-  xhttp.onerror = function () {
-    document.querySelector("#download").innerHTML =
-      "😴<br>the source file cannot be loaded";
-
-    setTimeout(() => {
-      document.getElementById("message-box").style.display = "none";
-      //show_settings();
-    }, 2000);
-  };
-
-  xhttp.send();
-};
-
-///////////
-///load source file from local file
-//////////
-
-/////////////////////////
-let load_local_file = function () {
-  let a = localStorage.getItem("source_local");
-
-  if (
-    localStorage.getItem("source_local") == "" ||
-    localStorage.getItem("source_local") == null
-  ) {
-    document.getElementById("message-box").style.display = "none";
-    show_settings();
-    return false;
-  }
-
-  var finder = new Applait.Finder({
-    type: "sdcard",
-    debugMode: false,
-  });
-
-  finder.search(a);
-
-  finder.on("searchBegin", function (needle) {});
-
-  finder.on("empty", function (needle) {
-    helper.toaster("no sdcard found");
-    document.getElementById("message-box").style.display = "none";
-    //show_settings();
-    return;
-  });
-
-  finder.on("searchComplete", function (needle, filematchcount) {
-    if (filematchcount == 0) {
-      document.querySelector("#download").innerHTML =
-        "😴<br>No source file founded,<br> please create a json file or set a url in the settings.";
-      setTimeout(() => {
-        document.getElementById("message-box").style.display = "none";
-        //show_settings();
-      }, 3000);
-    }
-  });
-
-  finder.on("error", function (message, err) {});
-
-  finder.on("fileFound", function (file, fileinfo, storageName) {
-    var reader = new FileReader();
-    reader.onerror = function (event) {
-      helper.toaster("shit happens");
-      reader.abort();
-    };
-
-    reader.onloadend = function (event) {
-      let data;
-      //check if json valid
-      try {
-        data = JSON.parse(event.target.result);
-      } catch (e) {
-        document.querySelector("#download").innerHTML =
-          "😴<br>Your json file is not valid";
-        setTimeout(() => {
-          document.getElementById("message-box").style.display = "none";
-          //show_settings;
-        }, 3000);
-        return false;
-      }
-
-      start_download_content(data);
-    };
-    reader.readAsText(file);
-  });
-};
 
 ///////////
 ///load source opml file from local source
@@ -363,12 +242,12 @@ let load_local_file_opml = function () {
 ///load source opml file from online source
 //////////
 let load_source_opml = function () {
-  let source_url = localStorage.getItem("source") + "?q=123";
+  let source_url = localStorage.getItem("source") + "?time=" + nocaching;
   let xhttp = new XMLHttpRequest({
     mozSystem: true,
   });
 
-  xhttp.open("GET", source_url + "?test=1&time=12345", true);
+  xhttp.open("GET", source_url + "?time=" + nocaching, true);
   xhttp.timeout = 5000;
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
@@ -444,15 +323,6 @@ let start_download_content = function (source_data) {
   }
 };
 
-function formatFileSize(bytes, decimalPoint) {
-  if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
-    var k = 1000,
-      dm = decimalPoint || 2,
-      sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
-      i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-  }
-}
 
 //////////////////////////////
 //download content////
@@ -483,9 +353,16 @@ let rss_fetcher = function (
     console.log("failed" + param_channel, 1000);
   }
 
+
+  // Add a hook to convert all text to capitals
+DOMPurify.addHook('afterSanitizeElements', function (node) {
+  console.log("done")
+});
+
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
       let data = xhttp.response;
+
 
       item_image = "";
       item_summary = "";
@@ -573,7 +450,7 @@ let rss_fetcher = function (
               let en_length = el[i]
                 .querySelector("enclosure")
                 .getAttribute("length");
-              item_filesize = formatFileSize(en_length, 2);
+              item_filesize = helper.formatFileSize(en_length, 2);
             }
           }
           if (item_media == "podcast") {
@@ -606,17 +483,13 @@ let rss_fetcher = function (
             item_media = "rss";
           }
 
-
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(item_summary, "text/html");
+          let doc = parser.parseFromString(item_summary, "text/html");
+          console.log(doc);
           //item_summary = new Readability(doc).parse();
-
 
           content_arr.push({
             title: item_title,
-            summary: DOMPurify.sanitize(item_summary, {
-              ALLOWED_TAGS: ["img"],
-            }),
+            summary: DOMPurify.sanitize(item_summary),
             link: item_link,
             date: item_date,
             dateunix: item_date_unix,
@@ -708,7 +581,7 @@ let rss_fetcher = function (
               let en_length = el[i]
                 .querySelector("enclosure")
                 .getAttribute("length");
-              item_filesize = formatFileSize(en_length, 2);
+              item_filesize = helper.formatFileSize(en_length, 2);
             }
           }
           if (item_media == "podcast") {
@@ -723,16 +596,13 @@ let rss_fetcher = function (
             }
           }
 
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(item_summary, "text/html");
+          let doc = parser.parseFromString(item_summary, "text/html");
+          console.log(doc);
           //item_summary = new Readability(doc).parse();
-
 
           content_arr.push({
             title: item_title,
-            summary: DOMPurify.sanitize(item_summary, {
-              ALLOWED_TAGS: ["img"],
-            }),
+            summary: DOMPurify.sanitize(item_summary),
             link: item_link,
             date: item_date,
             dateunix: item_date_unix,
