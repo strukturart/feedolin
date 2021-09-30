@@ -116,7 +116,8 @@ setTimeout(() => {
     ) {
       let str = localStorage["source"];
       
-        load_source_opml();
+      load_source_opml();
+      helper.toaster("load online",3000)
       
     } else {
       let str = localStorage["source_local"];
@@ -246,15 +247,17 @@ let load_source_opml = function () {
   let xhttp = new XMLHttpRequest({
     mozSystem: true,
   });
+  console.log(source_url)
 
   xhttp.open("GET", source_url + "?time=" + nocaching, true);
-  xhttp.timeout = 5000;
+  xhttp.timeout = 25000;
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
       let data = xhttp.response;
 
       var parser = new DOMParser();
       var xmlDoc = parser.parseFromString(data, "text/xml");
+      console.log(xmlDoc)
       let content = xmlDoc.getElementsByTagName("body")[0];
 
       let m = content.querySelectorAll("outline");
@@ -285,14 +288,26 @@ let load_source_opml = function () {
   xhttp.onerror = function () {
     document.querySelector("#download").innerHTML =
       "😴<br>the source file cannot be loaded";
+         helper.toaster("try to load cached data",5000);
+
 
     setTimeout(() => {
       document.getElementById("message-box").style.display = "none";
-      show_settings();
+      //show_settings();
+        content_arr = cache.loadCache();
+    if (content_arr) {
+      build();
+     helper.toaster("cached data loaded",5000);
+    } else {
+     
+      setTimeout(function () {
+        helper.goodbye();
+      }, 4000);
+    }
     }, 2000);
   };
 
-  xhttp.send();
+  xhttp.send(null);
 };
 
 let start_download_content = function (source_data) {
@@ -921,12 +936,6 @@ function nav_panels(left_right) {
 
   set_tabindex();
 
-  document.activeElement.scrollIntoView({
-    behavior: "smooth",
-    block: "end",
-    inline: "nearest",
-  });
-
   if (panels[current_panel] == "KaiOsAds") {
     s.style.opacity = "1";
   }
@@ -981,25 +990,25 @@ function nav(move) {
 
     siblings[tab_index].focus();
 
-    document.activeElement.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
   }
 
   if (move == "-1" && tab_index > 0) {
     document.activeElement.classList.remove("overscrolling");
-
     tab_index--;
     siblings[tab_index].focus();
-
-    siblings[tab_index].scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    return true;
   }
+
+
+
+       const rect = document.activeElement.getBoundingClientRect();
+      const elY =
+        rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
+
+      document.activeElement.parentNode.scrollBy({
+        left: 0,
+        top: elY - window.innerHeight / 2,
+        behavior: "smooth",
+      });
 
   //overscrolling
   if (move == "-1" && tab_index == 0) {
