@@ -56,11 +56,11 @@ let settings = {
       ? localStorage.getItem("epsiodes_download")
       : 3,
 
-      interval:
-      localStorage.getItem("interval") != null
-        ? localStorage.getItem("interval")
+  interval:
+    localStorage.getItem("interval") != null
+      ? localStorage.getItem("interval")
       : 0,
-      
+
   local_file: false,
   wwww_file: false,
   ads: false,
@@ -71,6 +71,11 @@ let status = {
   window_status: "intro",
   active_audio_element_id: "",
   volume_status: false,
+};
+
+let reload = function () {
+  window.location.reload(true);
+  localStorage.setItem("reload", "true");
 };
 
 //get version
@@ -93,10 +98,7 @@ setTimeout(() => {
 
   if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
-  if (
-    localStorage["source_local"] == null &&
-    localStorage["source"] == null
-  ) {
+  if (localStorage["source_local"] == null && localStorage["source"] == null) {
     localStorage.setItem(
       "source",
       "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml"
@@ -106,7 +108,16 @@ setTimeout(() => {
   }
   //get update time; cache || download
   let a = localStorage.getItem("interval");
-  
+
+  //reload content without caching
+  if (localStorage.getItem("reload") == null)
+    localStorage.setItem("reload", "false");
+
+  if (localStorage.getItem("reload") == "true") {
+    a = 0;
+  }
+  localStorage.setItem("reload", "false");
+
   //download
   if (cache.getTime(a) && navigator.onLine) {
     if (
@@ -115,15 +126,13 @@ setTimeout(() => {
       localStorage["source"] != undefined
     ) {
       let str = localStorage["source"];
-      
+
       load_source_opml();
-      helper.toaster("load online",3000)
-      
+      helper.toaster("load online", 3000);
     } else {
       let str = localStorage["source_local"];
-     
-        load_local_file_opml();
-      
+
+      load_local_file_opml();
     }
     //load cache
   } else {
@@ -147,7 +156,6 @@ setTimeout(() => {
 //////////////////////////
 
 let nocaching = Math.floor(Date.now() / 1000);
-
 
 ///////////
 ///load source opml file from local source
@@ -247,7 +255,7 @@ let load_source_opml = function () {
   let xhttp = new XMLHttpRequest({
     mozSystem: true,
   });
-  console.log(source_url)
+  console.log(source_url);
 
   xhttp.open("GET", source_url + "?time=" + nocaching, true);
   xhttp.timeout = 25000;
@@ -257,7 +265,6 @@ let load_source_opml = function () {
 
       var parser = new DOMParser();
       var xmlDoc = parser.parseFromString(data, "text/xml");
-      console.log(xmlDoc)
       let content = xmlDoc.getElementsByTagName("body")[0];
 
       let m = content.querySelectorAll("outline");
@@ -288,22 +295,20 @@ let load_source_opml = function () {
   xhttp.onerror = function () {
     document.querySelector("#download").innerHTML =
       "😴<br>the source file cannot be loaded";
-         helper.toaster("try to load cached data",5000);
-
+    helper.toaster("try to load cached data", 5000);
 
     setTimeout(() => {
       document.getElementById("message-box").style.display = "none";
       //show_settings();
-        content_arr = cache.loadCache();
-    if (content_arr) {
-      build();
-     helper.toaster("cached data loaded",5000);
-    } else {
-     
-      setTimeout(function () {
-        helper.goodbye();
-      }, 4000);
-    }
+      content_arr = cache.loadCache();
+      if (content_arr) {
+        build();
+        helper.toaster("cached data loaded", 5000);
+      } else {
+        setTimeout(function () {
+          helper.goodbye();
+        }, 4000);
+      }
     }, 2000);
   };
 
@@ -338,7 +343,6 @@ let start_download_content = function (source_data) {
   }
 };
 
-
 //////////////////////////////
 //download content////
 //////////////////////////////
@@ -368,16 +372,14 @@ let rss_fetcher = function (
     console.log("failed" + param_channel, 1000);
   }
 
-
   // Add a hook to convert all text to capitals
-DOMPurify.addHook('afterSanitizeElements', function (node) {
-  console.log("done")
-});
+  DOMPurify.addHook("afterSanitizeElements", function (node) {
+    //console.log("done");
+  });
 
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
       let data = xhttp.response;
-
 
       item_image = "";
       item_summary = "";
@@ -394,6 +396,9 @@ DOMPurify.addHook('afterSanitizeElements', function (node) {
 
       //Channel
       rss_title = data.querySelector("title").textContent || "unknow";
+
+      param_channel = rss_title;
+
       let count = k + " / " + (source_array.length - 1);
 
       document.getElementById("download").innerText = rss_title;
@@ -497,10 +502,6 @@ DOMPurify.addHook('afterSanitizeElements', function (node) {
           } else {
             item_media = "rss";
           }
-
-          let doc = parser.parseFromString(item_summary, "text/html");
-          console.log(doc);
-          //item_summary = new Readability(doc).parse();
 
           content_arr.push({
             title: item_title,
@@ -612,8 +613,10 @@ DOMPurify.addHook('afterSanitizeElements', function (node) {
           }
 
           let doc = parser.parseFromString(item_summary, "text/html");
-          console.log(doc);
+          //console.log(doc);
           //item_summary = new Readability(doc).parse();
+
+          console.log(param_channel);
 
           content_arr.push({
             title: item_title,
@@ -989,7 +992,6 @@ function nav(move) {
     }
 
     siblings[tab_index].focus();
-
   }
 
   if (move == "-1" && tab_index > 0) {
@@ -998,17 +1000,15 @@ function nav(move) {
     siblings[tab_index].focus();
   }
 
+  const rect = document.activeElement.getBoundingClientRect();
+  const elY =
+    rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
 
-
-       const rect = document.activeElement.getBoundingClientRect();
-      const elY =
-        rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
-
-      document.activeElement.parentNode.scrollBy({
-        left: 0,
-        top: elY - window.innerHeight / 2,
-        behavior: "smooth",
-      });
+  document.activeElement.parentNode.scrollBy({
+    left: 0,
+    top: elY - window.innerHeight / 2,
+    behavior: "smooth",
+  });
 
   //overscrolling
   if (move == "-1" && tab_index == 0) {
@@ -1369,6 +1369,13 @@ function shortpress_action(param) {
       if (status.window_status == "options") {
         start_options();
         break;
+      }
+
+      if (
+        status.window_status == "settings" &&
+        document.activeElement.classList.contains("reload")
+      ) {
+        reload();
       }
 
       if (status.window_status == "settings" && qrscan == true) {
