@@ -356,6 +356,8 @@ let rss_fetcher = function (
   var xhttp = new XMLHttpRequest({
     mozSystem: true,
   });
+  //workarounf for LE bug ??
+  //xhttp.open("GET", "https://cors.bridged.cc/" + param_url, true);
 
   xhttp.open("GET", param_url, true);
   xhttp.timeout = 2000;
@@ -378,7 +380,7 @@ let rss_fetcher = function (
   });
 
   xhttp.onload = function () {
-    if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
+    if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
       let data = xhttp.response;
 
       item_image = "";
@@ -877,6 +879,7 @@ var s = document.getElementById("KaiOsAd");
 
 function nav_panels(left_right) {
   s.style.opacity = "0";
+  window.scrollTo(0, 0);
 
   if (left_right == "left") {
     current_panel--;
@@ -1468,7 +1471,6 @@ function shortpress_action(param) {
       break;
 
     case "SoftLeft":
-    case "n":
       if (status.window_status == "article-list") {
         show_settings();
         break;
@@ -1505,7 +1507,6 @@ function shortpress_action(param) {
       break;
 
     case "SoftRight":
-    case "m":
       if (status.window_status == "single-article") {
         open_options();
         break;
@@ -1540,7 +1541,6 @@ function shortpress_action(param) {
 
       if (status.window_status == "article-list") {
         bottom_bar("", "", "");
-        //goodbye();
         break;
       }
 

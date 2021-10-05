@@ -16,15 +16,15 @@
 - open rss feedlink
 - offline use (caching)
 
-![image-4](/images/image-4.jpg)
-![image-5](/images/image-5.jpg)
+![image-4](/images/image-4.png)
+![image-5](/images/image-5.png)
 ![image-1](/images/image-1.png)
 ![image-2](/images/image-2.png)
 ![image-3](/images/image-3.png)
 
 ## Installation
 
-You have to save the list of urls in a  .opml file as in the example.
+You have to save the list of urls in a .opml file as in the example.
 In the settings you can set where the app should get this file from.
 It can be stored locally or online on a server.
 

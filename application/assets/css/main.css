@@ -83,6 +83,13 @@ img[src=" "] {
   display: none;
 }
 
+button {
+  font-size: 1rem;
+  background: silver;
+  padding: 5px;
+  width: 95vw;
+}
+
 table {
   max-width: 100vw;
   min-width: 100vw;
@@ -187,7 +194,9 @@ div#news-feed div#news-feed-list article {
 }
 
 div#news-feed div#news-feed-list article div.summary img {
-  max-width: 220px !important;
+  max-width: 97vw !important;
+  margin: 5px 0 5px 0;
+  display: block;
 }
 
 div#news-feed div#news-feed-list article[data-read="read"] {
@@ -206,6 +215,7 @@ div#news-feed div#news-feed-list article:focus {
 div#news-feed div#news-feed-list article h1 {
   font-size: 1rem;
   font-weight: bold;
+  margin: 0px;
 }
 
 div#news-feed div#news-feed-list article time {
@@ -289,6 +299,25 @@ div#news-feed
 
 div#news-feed div#news-feed-list article div.youtube-icon {
   display: none;
+}
+
+div#news-feed div#news-feed-list article div.channel {
+  font-size: 0.8rem;
+}
+
+div#news-feed div#news-feed-list article h1.title {
+  /*
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 90vw;
+  line-height: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  */
+  max-height: 2.8rem;
+  overflow: hidden;
 }
 
 div#news-feed
