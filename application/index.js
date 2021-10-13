@@ -1471,6 +1471,7 @@ function shortpress_action(param) {
       break;
 
     case "SoftLeft":
+    case "Control":
       if (status.window_status == "article-list") {
         show_settings();
         break;
@@ -1507,6 +1508,7 @@ function shortpress_action(param) {
       break;
 
     case "SoftRight":
+    case "Alt":
       if (status.window_status == "single-article") {
         open_options();
         break;
