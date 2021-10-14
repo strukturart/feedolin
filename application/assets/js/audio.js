@@ -3,7 +3,7 @@ const audio_player = ((_) => {
   player.mozAudioChannelType = "content";
   player.type = "audio/mpeg";
   player.mozaudiochannel = "content";
-  player.preload = "auto";
+  player.preload = "none";
   let getduration;
 
   let player_status = "";
@@ -18,6 +18,7 @@ const audio_player = ((_) => {
     if (url != player.src) {
       player.src = url;
       player.play();
+      console.log(url);
     }
 
     if (player_status == "play") {
@@ -76,6 +77,7 @@ const audio_player = ((_) => {
 
   //time duration
   player.onloadedmetadata = function () {
+    console.log(player.networkState);
     getduration = setInterval(function () {
       if (typeof player.duration != "number") {
         bottom_bar("pause", "-", "");
@@ -110,7 +112,9 @@ const audio_player = ((_) => {
     }, 1000);
   };
 
-  player.onpause = function () {};
+  player.onpause = function () {
+    console.log(player.networkState);
+  };
 
   player.onplay = function () {
     let articles = document.querySelectorAll("article");
@@ -145,6 +149,21 @@ const audio_player = ((_) => {
     listened_elem.push(status.active_audio_element_id);
     localStorage.setItem("listened_elem", JSON.stringify(listened_elem));
   };
+
+  player.addEventListener("loadeddata", function () {
+    console.log(player.readyState);
+  });
+
+  player.addEventListener("playing", function () {
+    console.log(player.networkState);
+    if (player.networkState === 2) {
+      // Still loading...
+    }
+  });
+
+  player.addEventListener("error", () => {
+    helper.toaster("Can't play media", 5000);
+  });
 
   return {
     play_podcast,
