@@ -11,8 +11,8 @@
 }
 
 @font-face {
-  font-family: "Lato-Regular";
-  src: url("../fonts/Lato-Regular.ttf");
+  font-family: 'Lato-Regular';
+  src: url('../fonts/Lato-Regular.ttf');
 }
 
 *,
@@ -45,7 +45,7 @@
 
 html,
 body {
-  font-family: "Lato-Regular";
+  font-family: 'Lato-Regular';
   font-weight: 100;
   position: relative;
   margin: 0px;
@@ -75,11 +75,11 @@ img {
   display: block;
 }
 
-img[src=""] {
+img[src=''] {
   display: none;
 }
 
-img[src=" "] {
+img[src=' '] {
   display: none;
 }
 
@@ -194,17 +194,18 @@ div#news-feed div#news-feed-list article {
 }
 
 div#news-feed div#news-feed-list article div.summary img {
-  max-width: 97vw !important;
+  max-width: 95vw !important;
+  min-width: 95vw !important;
   margin: 5px 0 5px 0;
   display: block;
 }
 
-div#news-feed div#news-feed-list article[data-read="read"] {
+div#news-feed div#news-feed-list article[data-read='read'] {
   font-style: italic;
   color: gray;
 }
 
-div#news-feed div#news-feed-list article[data-read="not-read"] {
+div#news-feed div#news-feed-list article[data-read='not-read'] {
   font-style: normal;
 }
 
@@ -241,12 +242,12 @@ div#news-feed
   article
   div.duration-filesize
   div.duration:before {
-  background-image: url("/assets/fonts/icons/clock.svg");
+  background-image: url('/assets/fonts/icons/clock.svg');
   background-size: 14px 14px;
   display: inline-block;
   width: 14px;
   height: 14px;
-  content: "";
+  content: '';
   margin: 5px 5px 0 0;
 }
 
@@ -263,12 +264,12 @@ div#news-feed div#news-feed-list article div.filesize {
   display: none;
 }
 
-article[data-media*="podcast"] div.duration-filesize {
+article[data-media*='podcast'] div.duration-filesize {
   display: flex !important;
   display: -webkit-flex !important;
 }
 
-article[data-media*="podcast"] div.duration-filesize:empty {
+article[data-media*='podcast'] div.duration-filesize:empty {
   display: none;
 }
 
@@ -283,7 +284,7 @@ div#news-feed div#news-feed-list article div.podcast-icon {
 
 div#news-feed
   div#news-feed-list
-  article[data-media*="podcast"]
+  article[data-media*='podcast']
   div.podcast-icon {
   display: block;
   max-width: 15px;
@@ -291,7 +292,7 @@ div#news-feed
 
 div#news-feed
   div#news-feed-list
-  article[data-media*="podcast"]
+  article[data-media*='podcast']
   div.podcast-icon
   img {
   max-width: 15px;
@@ -306,23 +307,21 @@ div#news-feed div#news-feed-list article div.channel {
 }
 
 div#news-feed div#news-feed-list article h1.title {
-  /*
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: 90vw;
-  line-height: 1.5rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  */
   max-height: 2.8rem;
   overflow: hidden;
 }
 
+div#news-feed div#news-feed-list article.view h1.title {
+  max-height: auto;
+  max-height: fit-content;
+  display: block;
+
+  overflow: visible;
+}
+
 div#news-feed
   div#news-feed-list
-  article[data-media*="youtube"]
+  article[data-media*='youtube']
   div.youtube-icon {
   display: block;
   max-width: 15px;
@@ -330,7 +329,7 @@ div#news-feed
 
 div#news-feed
   div#news-feed-list
-  article[data-media*="youtube"]
+  article[data-media*='youtube']
   div.youtube-icon
   img {
   max-width: 15px;
@@ -348,7 +347,7 @@ div#news-feed div#news-feed-list article div.listened-icon img {
 
 div#news-feed
   div#news-feed-list
-  article[data-listened="listened"]
+  article[data-listened='listened']
   div.listened-icon {
   position: relative;
   opacity: 1;
