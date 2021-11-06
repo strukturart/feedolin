@@ -2,7 +2,7 @@ let article_array;
 var content_arr = [];
 var source_array = [];
 var k = 0;
-var panels = ['all'];
+var panels = ["all"];
 var current_panel = 0;
 const parser = new DOMParser();
 
@@ -10,126 +10,118 @@ const parser = new DOMParser();
 var all_cid = [];
 //get read articles
 var read_elem =
-  localStorage.getItem('read_elem') != null
-    ? JSON.parse(localStorage.getItem('read_elem'))
+  localStorage.getItem("read_elem") != null
+    ? JSON.parse(localStorage.getItem("read_elem"))
     : [];
 //get recently played podcast
 let recently_played =
-  localStorage.getItem('recently_played') != null
-    ? JSON.parse(localStorage.getItem('recently_played'))
+  localStorage.getItem("recently_played") != null
+    ? JSON.parse(localStorage.getItem("recently_played"))
     : [];
 //get listened podcasts
 let listened_elem =
-  localStorage.getItem('listened_elem') != null
-    ? JSON.parse(localStorage.getItem('listened_elem'))
+  localStorage.getItem("listened_elem") != null
+    ? JSON.parse(localStorage.getItem("listened_elem"))
     : [];
 
 var tab_index = 0;
 //xml items
-var rss_title = '';
-var item_title = '';
-var item_summary = '';
-var item_link = '';
-var item_date_unix = '';
-var item_duration = '';
-var item_type = '';
-var item_filesize = '';
-var item_date_unix = '';
-var item_category = '';
-var item_cid = '';
-var item_image = '';
+var rss_title = "";
+var item_title = "";
+var item_summary = "";
+var item_link = "";
+var item_date_unix = "";
+var item_duration = "";
+var item_type = "";
+var item_filesize = "";
+var item_date_unix = "";
+var item_category = "";
+var item_cid = "";
+var item_image = "";
 
-helper.screenlock('lock');
+helper.screenlock("lock");
 setTimeout(function () {
-  helper.screenlock('unlock');
+  helper.screenlock("unlock");
 }, 3000);
 
 let settings = {
   sleepmode: false,
   sleep_time:
-    localStorage.getItem('sleep_time') != null
-      ? localStorage.getItem('sleep_time')
+    localStorage.getItem("sleep_time") != null
+      ? localStorage.getItem("sleep_time")
       : 20,
   epsiodes_download:
-    localStorage.getItem('epsiodes_download') != null
-      ? localStorage.getItem('epsiodes_download')
+    localStorage.getItem("epsiodes_download") != null
+      ? localStorage.getItem("epsiodes_download")
       : 3,
 
   interval:
-    localStorage.getItem('interval') != null
-      ? localStorage.getItem('interval')
+    localStorage.getItem("interval") != null
+      ? localStorage.getItem("interval")
       : 0,
 
   local_file: false,
   wwww_file: false,
   ads: false,
   default_opml:
-    'https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml',
+    "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
 };
 
 let status = {
-  active_element_id: '',
-  window_status: 'intro',
-  active_audio_element_id: '',
+  active_element_id: "",
+  window_status: "intro",
+  active_audio_element_id: "",
   volume_status: false,
 };
 
 let reload = function () {
   window.location.reload(true);
-  localStorage.setItem('reload', 'true');
+  localStorage.setItem("reload", "true");
 };
 
 //get version
 
 function manifest(a) {
-  document.getElementById('version').innerText =
-    'Version ' + a.manifest.version;
-  if (a.installOrigin == 'app://kaios-plus.kaiostech.com') {
+  document.getElementById("version").innerText =
+    "Version " + a.manifest.version;
+  if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
     settings.ads = true;
   } else {
-    let t = document.getElementById('KaiOsAd');
+    let t = document.getElementById("KaiOsAd");
     t.remove();
   }
 }
 
 helper.getManifest(manifest);
 setTimeout(() => {
-  //document.getElementById('intro').style.display = 'none';
-  document.getElementById('message-box').style.display = 'none';
-
   if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
-  if (localStorage['source_local'] == null && localStorage['source'] == null) {
-    localStorage.setItem('source', settings.default_opml);
-    //document.getElementById('message-box').style.display = 'none';
+  if (localStorage["source_local"] == null && localStorage["source"] == null) {
+    localStorage.setItem("source", settings.default_opml);
     load_source_opml();
   }
   //get update time; cache || download
-  let a = localStorage.getItem('interval');
+  let a = localStorage.getItem("interval");
 
   //reload content without caching
-  if (localStorage.getItem('reload') == null)
-    localStorage.setItem('reload', 'false');
+  if (localStorage.getItem("reload") == null)
+    localStorage.setItem("reload", "false");
 
-  if (localStorage.getItem('reload') == 'true') {
+  if (localStorage.getItem("reload") == "true") {
     a = 0;
   }
-  localStorage.setItem('reload', 'false');
+  localStorage.setItem("reload", "false");
 
   //download
   if (cache.getTime(a) && navigator.onLine) {
     if (
-      localStorage['source'] &&
-      localStorage['source'] != '' &&
-      localStorage['source'] != undefined
+      localStorage["source"] &&
+      localStorage["source"] != "" &&
+      localStorage["source"] != undefined
     ) {
-      let str = localStorage['source'];
-
       load_source_opml();
-      helper.toaster('load online', 3000);
+      document.getElementById("intro-message").innerText = "load online";
     } else {
-      let str = localStorage['source_local'];
-
       load_local_file_opml();
     }
     //load cache
@@ -138,9 +130,10 @@ setTimeout(() => {
     if (content_arr) {
       build();
     } else {
-      alert('no internet connection and no cached data available');
+      document.getElementById("intro-message").innerText =
+        "no internet connection and no cached data available";
       setTimeout(function () {
-        helper.goodbye();
+        //helper.goodbye();
       }, 4000);
     }
   }
@@ -160,54 +153,51 @@ let nocaching = Math.floor(Date.now() / 1000);
 //////////
 
 let load_local_file_opml = function () {
-  let a = localStorage.getItem('source_local');
+  let a = localStorage.getItem("source_local");
 
   if (
-    localStorage.getItem('source_local') == '' ||
-    localStorage.getItem('source_local') == null
+    localStorage.getItem("source_local") == "" ||
+    localStorage.getItem("source_local") == null
   ) {
-    //document.getElementById('message-box').style.display = 'none';
     //show_settings();
     return false;
   }
 
   var finder = new Applait.Finder({
-    type: 'sdcard',
+    type: "sdcard",
     debugMode: true,
   });
 
   finder.search(a);
 
-  finder.on('searchBegin', function (needle) {
+  finder.on("searchBegin", function (needle) {
     alert(needle);
   });
 
-  finder.on('empty', function (needle) {
-    helper.toaster('no sdcard found');
-    //document.getElementById('message-box').style.display = 'none';
+  finder.on("empty", function (needle) {
+    helper.toaster("no sdcard found");
     //show_settings();
     return;
   });
 
-  finder.on('searchCancelled', function (message) {});
+  finder.on("searchCancelled", function (message) {});
 
-  finder.on('searchComplete', function (needle, filematchcount) {
+  finder.on("searchComplete", function (needle, filematchcount) {
     if (filematchcount == 0) {
-      document.getElementById('intro-message').innerHTML =
-        '😴<br>No source file founded,<br> please create a opml file or set a url in the settings.';
+      document.getElementById("intro-message").innerHTML =
+        "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.";
       setTimeout(() => {
-        //document.getElementById('message-box').style.display = 'none';
         //show_settings();
       }, 3000);
     }
   });
 
-  finder.on('error', function (message, err) {});
+  finder.on("error", function (message, err) {});
 
-  finder.on('fileFound', function (file, fileinfo, storageName) {
+  finder.on("fileFound", function (file, fileinfo, storageName) {
     var reader = new FileReader();
     reader.onerror = function (event) {
-      helper.toaster('shit happens');
+      helper.toaster("shit happens");
       reader.abort();
     };
 
@@ -215,20 +205,20 @@ let load_local_file_opml = function () {
       let data = event.target.result;
 
       var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(data, 'text/xml');
-      let content = xmlDoc.getElementsByTagName('body')[0];
+      var xmlDoc = parser.parseFromString(data, "text/xml");
+      let content = xmlDoc.getElementsByTagName("body")[0];
 
-      let m = content.querySelectorAll('outline');
+      let m = content.querySelectorAll("outline");
       for (var i = 0; i < m.length; i++) {
-        var nested = m[i].querySelectorAll('outline');
+        var nested = m[i].querySelectorAll("outline");
 
         if (nested.length > 0) {
           for (var z = 0; z < nested.length; z++) {
             source_array.push([
-              nested[z].getAttribute('xmlUrl'),
+              nested[z].getAttribute("xmlUrl"),
               settings.epsiodes_download,
-              m[i].getAttribute('text'),
-              m[i].getAttribute('text'),
+              m[i].getAttribute("text"),
+              m[i].getAttribute("text"),
             ]);
           }
         }
@@ -249,33 +239,34 @@ let load_local_file_opml = function () {
 ///load source opml file from online source
 //////////
 let load_source_opml = function () {
-  let source_url = localStorage.getItem('source') + '?time=' + nocaching;
+  let source_url = JSON.stringify(localStorage.getItem("source"));
+  console.log(source_url);
+
   let xhttp = new XMLHttpRequest({
     mozSystem: true,
   });
-  console.log(source_url);
 
-  xhttp.open('GET', source_url + '?time=' + nocaching, true);
+  xhttp.open("GET", source_url + "?time=" + nocaching, true);
   xhttp.timeout = 25000;
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
       let data = xhttp.response;
 
       var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(data, 'text/xml');
-      let content = xmlDoc.getElementsByTagName('body')[0];
+      var xmlDoc = parser.parseFromString(data, "text/xml");
+      let content = xmlDoc.getElementsByTagName("body")[0];
 
-      let m = content.querySelectorAll('outline');
+      let m = content.querySelectorAll("outline");
       for (var i = 0; i < m.length; i++) {
-        var nested = m[i].querySelectorAll('outline');
+        var nested = m[i].querySelectorAll("outline");
 
         if (nested.length > 0) {
           for (var z = 0; z < nested.length; z++) {
             source_array.push([
-              nested[z].getAttribute('xmlUrl'),
+              nested[z].getAttribute("xmlUrl"),
               settings.epsiodes_download,
-              m[i].getAttribute('text'),
-              m[i].getAttribute('text'),
+              m[i].getAttribute("text"),
+              m[i].getAttribute("text"),
             ]);
           }
         }
@@ -291,22 +282,18 @@ let load_source_opml = function () {
   };
 
   xhttp.onerror = function () {
-    document.querySelector('#download').innerHTML =
-      '😴<br>the source file cannot be loaded';
-    document.getElementById('intro-message').innerText =
-      'try to load cached data';
+    document.getElementById("intro-message").innerHTML =
+      "😴<br>the source file cannot be loaded";
 
     setTimeout(() => {
-      //document.getElementById('message-box').style.display = 'none';
-      //show_settings();
       content_arr = cache.loadCache();
       if (content_arr) {
         build();
-        document.getElementById('intro-message').innerText =
-          'cached data loaded';
+        document.getElementById("intro-message").innerText =
+          "cached data loaded";
       } else {
         setTimeout(function () {
-          helper.goodbye();
+          // helper.goodbye();
         }, 4000);
       }
     }, 2000);
@@ -317,7 +304,7 @@ let load_source_opml = function () {
 
 let start_download_content = function (source_data) {
   for (let i = 0; i < source_data.length; i++) {
-    if (!source_data[i].category || source_data[i].category == '') {
+    if (!source_data[i].category || source_data[i].category == "") {
       source_data[i].category = 0;
     }
     source_array.push([
@@ -338,8 +325,8 @@ let start_download_content = function (source_data) {
       source_array[0][3]
     );
   } else {
-    document.getElementById('intro-message').innerHTML =
-      '😴<br>Your device is offline, please connect it to the internet ';
+    document.getElementById("intro-message").innerHTML =
+      "😴<br>Your device is offline, please connect it to the internet ";
   }
 };
 
@@ -359,151 +346,156 @@ let rss_fetcher = function (
   //workarounf for LE bug ??
   //xhttp.open("GET", "https://cors.bridged.cc/" + param_url, true);
 
-  xhttp.open('GET', param_url, true);
+  xhttp.open("GET", param_url, true);
   xhttp.timeout = 2000;
-  xhttp.responseType = 'document';
-  xhttp.overrideMimeType('text/xml');
+  xhttp.responseType = "document";
+  xhttp.overrideMimeType("text/xml");
   xhttp.send();
 
-  //document.getElementById('message-box').style.display = 'block';
-
-  xhttp.addEventListener('error', transferFailed);
-  xhttp.addEventListener('loadend', loadEnd);
+  xhttp.addEventListener("error", transferFailed);
+  xhttp.addEventListener("loadend", loadEnd);
 
   function transferFailed() {
-    console.log('failed' + param_channel, 1000);
+    console.log("failed" + param_channel, 1000);
   }
 
   // Add a hook to convert all text to capitals
-  DOMPurify.addHook('afterSanitizeElements', function (node) {
+  DOMPurify.addHook("afterSanitizeElements", function (node) {
     //console.log("done");
   });
 
   xhttp.onload = function () {
-    document.getElementById('intro-message').innerText = 'downloading data';
+    document.getElementById("intro-message").innerText = "downloading data";
     if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
       let data = xhttp.response;
 
-      item_image = '';
-      item_summary = '';
-      item_link = '';
-      item_title = '';
-      item_type = '';
-      item_media = 'rss';
-      item_duration = '';
-      item_filesize = '';
-      listened = 'false';
-      play_track = 'false';
-      item_cid = '';
-      item_read = 'not-read';
+      item_image = "";
+      item_summary = "";
+      item_link = "";
+      item_title = "";
+      item_type = "";
+      item_media = "rss";
+      item_duration = "";
+      item_filesize = "";
+      listened = "false";
+      play_track = "false";
+      item_cid = "";
+      item_read = "not-read";
+      item_date = "";
 
       //Channel
-      rss_title = data.querySelector('title').textContent || 'unknow';
+      rss_title = data.querySelector("title").textContent || "unknow";
 
       param_channel = rss_title;
 
-      let count = k + ' / ' + (source_array.length - 1);
+      let count = k + " / " + (source_array.length - 1);
+      let p = Number(source_array.length - 1);
+      precent = (100 / p) * k;
+      document.querySelector(
+        "div#intro div#loading-progress div div"
+      ).style.width = precent + "%";
 
-      document.getElementById('download').innerText = rss_title;
-      //bottom_bar('', count, '');
-
-      if (data.getElementsByTagName('url')[0]) {
-        item_image = data.getElementsByTagName('url')[0].textContent;
+      if (data.getElementsByTagName("url")[0]) {
+        item_image = data.getElementsByTagName("url")[0].textContent;
       }
 
       //ATOM
-      el = data.querySelectorAll('entry');
+      el = data.querySelectorAll("entry");
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
-          item_title = el[i].querySelector('title').innerHTML;
+          item_title = el[i].querySelector("title").innerHTML;
           item_cid = hashCode(item_title);
 
-          var elem = el[i].querySelector('summary');
+          var elem = el[i].querySelector("summary");
           if (elem) {
-            item_summary = el[i].querySelector('summary').textContent;
-            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, '');
-            item_summary = item_summary.replace(/(]]>)/g, '');
-            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, '');
-            item_summary = item_summary.replace(/(]]&gt;)/g, '');
+            item_summary = el[i].querySelector("summary").textContent;
+            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]>)/g, "");
+            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]&gt;)/g, "");
           } else {
-            var elem = el[i].querySelector('content');
+            var elem = el[i].querySelector("content");
             if (elem) {
-              item_summary = el[i].querySelector('content').textContent;
-              item_summary = item_summary.replace(/(<!\[CDATA\[)/g, '');
-              item_summary = item_summary.replace(/(]]>)/g, '');
-              item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, '');
-              item_summary = item_summary.replace(/(]]&gt;)/g, '');
+              item_summary = el[i].querySelector("content").textContent;
+              item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+              item_summary = item_summary.replace(/(]]>)/g, "");
+              item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+              item_summary = item_summary.replace(/(]]&gt;)/g, "");
             }
           }
 
-          if (el[i].getElementsByTagNameNS('*', 'thumbnail').length > 0) {
+          if (el[i].getElementsByTagNameNS("*", "thumbnail").length > 0) {
             item_image = el[i]
-              .getElementsByTagNameNS('*', 'thumbnail')
+              .getElementsByTagNameNS("*", "thumbnail")
               .item(0)
-              .getAttribute('url');
+              .getAttribute("url");
           }
 
-          if (el[i].querySelector('link') !== null) {
-            item_link = el[i].querySelector('link').getAttribute('href');
+          if (el[i].querySelector("link") !== null) {
+            item_link = el[i].querySelector("link").getAttribute("href");
           }
 
           if (
-            el[i].querySelector('enclosure') != null ||
-            el[i].querySelector('enclosure') != undefined
+            el[i].querySelector("enclosure") != null ||
+            el[i].querySelector("enclosure") != undefined
           ) {
-            if (el[i].querySelector('enclosure').getAttribute('url'))
+            if (el[i].querySelector("enclosure").getAttribute("url"))
               item_download = el[i]
-                .querySelector('enclosure')
-                .getAttribute('url');
-            if (el[i].querySelector('enclosure').getAttribute('type'))
-              item_type = el[i].querySelector('enclosure').getAttribute('type');
+                .querySelector("enclosure")
+                .getAttribute("url");
+            if (el[i].querySelector("enclosure").getAttribute("type"))
+              item_type = el[i].querySelector("enclosure").getAttribute("type");
 
             if (
-              item_type == 'audio/mpeg' ||
-              item_type == 'audio/aac' ||
-              item_type == 'audio/x-mpeg' ||
-              item_type == 'audio/mp3' ||
-              item_type == 'audio/x-m4a'
+              item_type == "audio/mpeg" ||
+              item_type == "audio/aac" ||
+              item_type == "audio/x-mpeg" ||
+              item_type == "audio/mp3" ||
+              item_type == "audio/x-m4a"
             ) {
-              item_media = 'podcast';
+              item_media = "podcast";
             }
 
-            if (el[i].querySelector('enclosure').getAttribute('length') > 0) {
+            if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
               let en_length = el[i]
-                .querySelector('enclosure')
-                .getAttribute('length');
+                .querySelector("enclosure")
+                .getAttribute("length");
               item_filesize = helper.formatFileSize(en_length, 2);
             }
           }
-          if (item_media == 'podcast') {
-            if (el[i].getElementsByTagNameNS('*', 'duration').length > 0) {
+          if (item_media == "podcast") {
+            if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
               var duration = el[i]
-                .getElementsByTagNameNS('*', 'duration')
+                .getElementsByTagNameNS("*", "duration")
                 .item(0).textContent;
-              item_duration = moment(duration, 'hh:mm:ss').format('HH:mm:ss');
-              if (item_duration == 'Invalid date') item_duration = '';
+              item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
+              if (item_duration == "Invalid date") item_duration = "";
             }
           }
 
           //check valid date
-          if (el[i].querySelector('updated').innerText == '') {
-            item_date_unix = new Date().valueOf();
-          } else {
-            item_date_unix = Date.parse(
-              el[i].querySelector('updated').innerText
-            );
+          if (
+            el[i].querySelector("updated") != null ||
+            el[i].querySelector("updated") != undefined
+          ) {
+            if (el[i].querySelector("updated").innerHTML == "") {
+              item_date_unix = new Date().valueOf();
+              item_date = "";
+            } else {
+              item_date = new Date(el[i].querySelector("updated").innerHTML);
+              item_date_unix = item_date.valueOf();
+              item_date = item_date.toDateString();
+            }
           }
-          item_date = new Date(item_date_unix);
-          item_date = item_date.toDateString();
 
           if (
             item_link !== null &&
-            item_link.includes('https://www.youtube.com') === true
+            item_link.includes("https://www.youtube.com") === true
           ) {
-            item_media = 'youtube';
+            item_media = "youtube";
           } else {
-            item_media = 'rss';
+            item_media = "rss";
           }
 
           content_arr.push({
@@ -520,10 +512,10 @@ let rss_fetcher = function (
             media: item_media,
             filesize: item_filesize,
             cid: item_cid,
-            listened: 'not-listened',
+            listened: "not-listened",
             recently_played: null,
             recently_order: null,
-            read: 'not-read',
+            read: "not-read",
           });
         }
       }
@@ -532,90 +524,91 @@ let rss_fetcher = function (
       //RSS
       ///////////
 
-      el = data.querySelectorAll('item');
+      el = data.querySelectorAll("item");
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
           if (
-            el[i].querySelector('title') &&
-            el[i].querySelector('title') != undefined
+            el[i].querySelector("title") &&
+            el[i].querySelector("title") != undefined
           ) {
-            item_title = el[i].querySelector('title').innerHTML;
+            item_title = el[i].querySelector("title").innerHTML;
 
-            item_title = item_title.replace('<![CDATA[', '');
-            item_title = item_title.replace(']]>', '');
+            item_title = item_title.replace("<![CDATA[", "");
+            item_title = item_title.replace("]]>", "");
           }
           item_cid = hashCode(item_title);
-          if (el[i].querySelector('description')) {
-            item_summary = el[i].querySelector('description').textContent;
-            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, '');
-            item_summary = item_summary.replace(/(]]>)/g, '');
-            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, '');
-            item_summary = item_summary.replace(/(]]&gt;)/g, '');
+          if (el[i].querySelector("description")) {
+            item_summary = el[i].querySelector("description").textContent;
+            item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]>)/g, "");
+            item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
+            item_summary = item_summary.replace(/(]]&gt;)/g, "");
           }
 
-          if (el[i].querySelector('link')) {
-            item_link = el[i].querySelector('link').textContent;
-            item_download = el[i].querySelector('link');
+          if (el[i].querySelector("link")) {
+            item_link = el[i].querySelector("link").textContent;
+            item_download = el[i].querySelector("link");
           }
 
           //check valid date
-          if (el[i].querySelector('pubDate') != null) {
-            if (el[i].querySelector('pubDate').innerText == '') {
+          if (
+            el[i].querySelector("pubDate") != null ||
+            el[i].querySelector("pubDate") != undefined
+          ) {
+            if (el[i].querySelector("pubDate").innerHTML == "") {
               item_date_unix = new Date().valueOf();
+              item_date = "";
             } else {
-              item_date_unix = Date.parse(
-                el[i].querySelector('pubDate').innerText
-              );
+              item_date = new Date(el[i].querySelector("pubDate").innerHTML);
+              item_date_unix = item_date.valueOf();
+              item_date = item_date.toDateString();
             }
-
-            item_date = new Date(item_date_unix);
-            item_date = item_date.toDateString();
           }
 
           if (
-            el[i].querySelector('enclosure') != null ||
-            el[i].querySelector('enclosure') != undefined
+            el[i].querySelector("enclosure") != null ||
+            el[i].querySelector("enclosure") != undefined
           ) {
-            if (el[i].querySelector('enclosure').getAttribute('url'))
+            if (el[i].querySelector("enclosure").getAttribute("url"))
               item_download = el[i]
-                .querySelector('enclosure')
-                .getAttribute('url');
+                .querySelector("enclosure")
+                .getAttribute("url");
 
-            item_link = el[i].querySelector('enclosure').getAttribute('url');
-            if (el[i].querySelector('enclosure').getAttribute('type'))
-              item_type = el[i].querySelector('enclosure').getAttribute('type');
+            item_link = el[i].querySelector("enclosure").getAttribute("url");
+            if (el[i].querySelector("enclosure").getAttribute("type"))
+              item_type = el[i].querySelector("enclosure").getAttribute("type");
 
             if (
-              item_type == 'audio/mpeg' ||
-              item_type == 'audio/aac' ||
-              item_type == 'audio/x-mpeg' ||
-              item_type == 'audio/mp3' ||
-              item_type == 'audio/x-m4a'
+              item_type == "audio/mpeg" ||
+              item_type == "audio/aac" ||
+              item_type == "audio/x-mpeg" ||
+              item_type == "audio/mp3" ||
+              item_type == "audio/x-m4a"
             ) {
-              item_media = 'podcast';
+              item_media = "podcast";
             }
 
-            if (el[i].querySelector('enclosure').getAttribute('length') > 0) {
+            if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
               let en_length = el[i]
-                .querySelector('enclosure')
-                .getAttribute('length');
+                .querySelector("enclosure")
+                .getAttribute("length");
               item_filesize = helper.formatFileSize(en_length, 2);
             }
           }
-          if (item_media == 'podcast') {
+          if (item_media == "podcast") {
             console.log(item_link);
 
-            if (el[i].getElementsByTagNameNS('*', 'duration').length > 0) {
+            if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
               var duration = el[i]
-                .getElementsByTagNameNS('*', 'duration')
+                .getElementsByTagNameNS("*", "duration")
                 .item(0).textContent;
-              item_duration = moment(duration, 'hh:mm:ss').format('HH:mm:ss');
-              if (item_duration == 'Invalid date') item_duration = '';
+              item_duration = moment(duration, "hh:mm:ss").format("HH:mm:ss");
+              if (item_duration == "Invalid date") item_duration = "";
             }
           }
 
-          let doc = parser.parseFromString(item_summary, 'text/html');
+          let doc = parser.parseFromString(item_summary, "text/html");
           //console.log(doc);
           //item_summary = new Readability(doc).parse();
 
@@ -635,45 +628,45 @@ let rss_fetcher = function (
             media: item_media,
             filesize: item_filesize,
             cid: item_cid,
-            listened: 'not-listened',
+            listened: "not-listened",
             recently_played: null,
             recently_order: null,
-            read: 'not-read',
+            read: "not-read",
           });
         }
       }
     }
 
     if (xhttp.status === 404) {
-      console.log(param_channel + ' url not found', 3000);
+      console.log(param_channel + " url not found", 3000);
     }
 
     if (xhttp.status === 408) {
-      console.log(param_channel + 'Time out', 3000);
+      console.log(param_channel + "Time out", 3000);
     }
 
     if (xhttp.status === 409) {
-      console.log(param_channel + 'Conflict', 3000);
+      console.log(param_channel + "Conflict", 3000);
     }
 
     ////Redirection
     if (xhttp.status === 301) {
-      console.log(param_channel + ' redirection', 3000);
+      console.log(param_channel + " redirection", 3000);
       rss_fetcher(
-        xhttp.getResponseHeader('Location'),
+        xhttp.getResponseHeader("Location"),
         param_limit,
         param_channel
       );
     }
 
     xhttp.ontimeout = function (e) {
-      console.log(param_channel + 'Time out', 3000);
+      console.log(param_channel + "Time out", 3000);
     };
 
     if (xhttp.status === 0) {
       console.log(
         param_channel +
-          ' status: ' +
+          " status: " +
           xhttp.status +
           xhttp.getAllResponseHeaders(),
         3000
@@ -690,7 +683,7 @@ let rss_fetcher = function (
       }, 1500);
     }
     if (k < source_array.length - 1) {
-      document.getElementById('intro-message').innerText = 'downloading data';
+      document.getElementById("intro-message").innerText = "loading data";
       k++;
       rss_fetcher(
         source_array[k][0],
@@ -711,11 +704,11 @@ let read_articles = function () {
   //mark article as read
   content_arr.forEach(function (index) {
     all_cid.push(index.cid);
-    index.read = 'not-read';
+    index.read = "not-read";
     if (read_elem.length > 0) {
       read_elem.forEach(function (p) {
         if (p == index.cid) {
-          index.read = 'read';
+          index.read = "read";
         }
       });
     }
@@ -726,12 +719,12 @@ let read_articles = function () {
 //to show icon
 let listened_articles = function () {
   content_arr.forEach(function (index) {
-    index.listened = 'not-listened';
+    index.listened = "not-listened";
 
     if (listened_elem.length > 0) {
       for (t = 0; t < listened_elem.length; t++) {
         if (listened_elem[t] == index.cid) {
-          index.listened = 'listened';
+          index.listened = "listened";
         }
       }
     }
@@ -742,12 +735,12 @@ let listened_articles = function () {
 //add to list recently played
 let listened_podcast_articles = function () {
   content_arr.forEach(function (index) {
-    index.recently_played = '';
-    index.recently_order = '';
+    index.recently_played = "";
+    index.recently_order = "";
     if (recently_played.length > 0) {
       for (let t = 0; t < recently_played.length; t++) {
         if (recently_played[t] == index.cid) {
-          index.recently_played = 'recently-played';
+          index.recently_played = "recently-played";
           index.recently_order = t;
         }
       }
@@ -763,7 +756,7 @@ let clean_localstorage = function () {
       read_elem.slice(i, 1);
     }
   }
-  localStorage.setItem('read_elem', JSON.stringify(read_elem));
+  localStorage.setItem("read_elem", JSON.stringify(read_elem));
 
   //recently played
   for (let i = 0; i < recently_played.length; i++) {
@@ -771,17 +764,17 @@ let clean_localstorage = function () {
       recently_played.slice(i, 1);
     }
   }
-  localStorage.setItem('recently_played', JSON.stringify(recently_played));
+  localStorage.setItem("recently_played", JSON.stringify(recently_played));
 };
 
 //render html
 
 function renderHello(arr) {
-  var template = document.getElementById('template').innerHTML;
+  var template = document.getElementById("template").innerHTML;
   var rendered = Mustache.render(template, {
     data: arr,
   });
-  document.getElementById('news-feed-list').innerHTML = rendered;
+  document.getElementById("news-feed-list").innerHTML = rendered;
 }
 let heroArray = [];
 
@@ -818,28 +811,28 @@ function build() {
   listened_articles();
   tabs();
   clean_localstorage();
-  bottom_bar('settings', 'select', 'options');
-  top_bar('', panels[0], '');
-  if (settings.ads) panels.push('KaiOsAds');
+  bottom_bar("settings", "select", "options");
+  top_bar("", panels[0], "");
+  if (settings.ads) panels.push("KaiOsAds");
 
-  panels.push('recently-played');
+  panels.push("recently-played");
 
   renderHello(content_arr);
 
   lazyload.ll();
   //document.getElementById('message-box').style.display = 'none';
-  status.window_status = 'article-list';
+  status.window_status = "article-list";
   set_tabindex();
 
-  document.getElementById('intro').style.display = 'none';
+  document.getElementById("intro").style.display = "none";
 }
 
 let set_tabindex = function () {
-  let divs = document.querySelectorAll('article');
+  let divs = document.querySelectorAll("article");
 
   let t = -1;
   for (let i = 0; i < divs.length; i++) {
-    divs[i].removeAttribute('tabindex');
+    divs[i].removeAttribute("tabindex");
 
     t++;
     divs[i].tabIndex = t;
@@ -848,48 +841,48 @@ let set_tabindex = function () {
   document.querySelector('article[tabIndex="0"]').focus();
   tab_index = 0;
 
-  article_array = document.querySelectorAll('article');
+  article_array = document.querySelectorAll("article");
   article_array[0].focus();
 };
 
 let mark_as_read = function (un_read) {
   if (un_read == true) {
-    document.activeElement.setAttribute('data-read', 'read');
-    status.active_element_id = document.activeElement.getAttribute('data-id');
+    document.activeElement.setAttribute("data-read", "read");
+    status.active_element_id = document.activeElement.getAttribute("data-id");
     read_elem.push(status.active_element_id);
-    localStorage.setItem('read_elem', JSON.stringify(read_elem));
+    localStorage.setItem("read_elem", JSON.stringify(read_elem));
   }
 
   if (un_read == false) {
     let kk = document
       .querySelector("[data-id ='" + status.active_element_id + "']")
-      .getAttribute('data-id');
+      .getAttribute("data-id");
 
     let test = [];
     for (var i = 0; i < read_elem.length; i++) {
       if (read_elem[i] != kk) test.push(read_elem[i]);
     }
-    localStorage.setItem('read', JSON.stringify(test));
-    document.activeElement.setAttribute('data-read', 'not-read');
+    localStorage.setItem("read", JSON.stringify(test));
+    document.activeElement.setAttribute("data-read", "not-read");
 
-    helper.toaster('article marked as not read', 2000);
+    helper.toaster("article marked as not read", 2000);
   }
 };
 
 ////////////////////////
 //NAVIGATION
 /////////////////////////
-var s = document.getElementById('KaiOsAd');
+var s = document.getElementById("KaiOsAd");
 
 function nav_panels(left_right) {
-  s.style.opacity = '0';
+  s.style.opacity = "0";
   window.scrollTo(0, 0);
 
-  if (left_right == 'left') {
+  if (left_right == "left") {
     current_panel--;
   }
 
-  if (left_right == 'right') {
+  if (left_right == "right") {
     current_panel++;
   }
 
@@ -898,28 +891,28 @@ function nav_panels(left_right) {
     current_panel += panels.length;
   }
 
-  top_bar('', panels[current_panel], '');
+  top_bar("", panels[current_panel], "");
   if (settings.sleepmode)
     top_bar(
       "<img src='/assets/fonts/icons/timer.svg'>",
       panels[current_panel],
-      ''
+      ""
     );
 
   setTimeout(() => {
-    article_array = document.querySelectorAll('article');
+    article_array = document.querySelectorAll("article");
     article_array[0].focus();
   }, 500);
 
   //filter data
 
-  if (panels[current_panel] == 'recently-played') {
+  if (panels[current_panel] == "recently-played") {
     //to do
     heroArray.length = 0;
     listened_podcast_articles();
 
     for (let i = 0; i < content_arr.length; i++) {
-      if (content_arr[i].recently_played == 'recently-played') {
+      if (content_arr[i].recently_played == "recently-played") {
         heroArray.push(content_arr[i]);
       }
     }
@@ -931,13 +924,13 @@ function nav_panels(left_right) {
     renderHello(heroArray);
   }
 
-  if (panels[current_panel] == 'all') {
+  if (panels[current_panel] == "all") {
     renderHello(content_arr);
   }
 
   if (
-    panels[current_panel] != 'all' &&
-    panels[current_panel] != 'recently-played'
+    panels[current_panel] != "all" &&
+    panels[current_panel] != "recently-played"
   ) {
     filter_data(panels[current_panel]);
     sort_array(heroArray);
@@ -946,11 +939,11 @@ function nav_panels(left_right) {
 
   set_tabindex();
 
-  if (panels[current_panel] == 'KaiOsAds') {
-    s.style.opacity = '1';
+  if (panels[current_panel] == "KaiOsAds") {
+    s.style.opacity = "1";
   }
 
-  document.activeElement.classList.remove('overscrolling');
+  document.activeElement.classList.remove("overscrolling");
 }
 let tabIndex = 0;
 ////////////
@@ -964,36 +957,36 @@ function nav(move) {
   let sibling = elem.parentNode.firstChild;
 
   //nested input field
-  if (document.activeElement.parentNode.classList.contains('input-parent')) {
+  if (document.activeElement.parentNode.classList.contains("input-parent")) {
     document.activeElement.parentNode.focus();
   }
 
-  if (document.activeElement.classList.contains('input-parent')) {
-    bottom_bar('save', 'edit', 'back');
+  if (document.activeElement.classList.contains("input-parent")) {
+    bottom_bar("save", "edit", "back");
   }
 
   let b;
 
   b = document.activeElement.parentNode;
-  let items = b.querySelectorAll('.item');
+  let items = b.querySelectorAll(".item");
 
   for (let i = 0; i < items.length; i++) {
     siblings.push(items[i]);
-    if (items[i].parentNode.style.display == 'block') {
+    if (items[i].parentNode.style.display == "block") {
       siblings.push(items[i]);
     }
   }
 
   setTimeout(() => {
-    document.activeElement.classList.remove('overscrolling');
+    document.activeElement.classList.remove("overscrolling");
   }, 400);
 
-  if (move == '+1') {
-    document.activeElement.classList.remove('overscrolling');
+  if (move == "+1") {
+    document.activeElement.classList.remove("overscrolling");
 
     tab_index++;
     if (tab_index == siblings.length || tab_index >= siblings.length) {
-      document.activeElement.classList.add('overscrolling');
+      document.activeElement.classList.add("overscrolling");
       tab_index = siblings.length - 1;
       return true;
     }
@@ -1001,8 +994,8 @@ function nav(move) {
     siblings[tab_index].focus();
   }
 
-  if (move == '-1' && tab_index > 0) {
-    document.activeElement.classList.remove('overscrolling');
+  if (move == "-1" && tab_index > 0) {
+    document.activeElement.classList.remove("overscrolling");
     tab_index--;
     siblings[tab_index].focus();
   }
@@ -1014,43 +1007,43 @@ function nav(move) {
   document.activeElement.parentNode.scrollBy({
     left: 0,
     top: elY - window.innerHeight / 2,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 
   //overscrolling
-  if (move == '-1' && tab_index == 0) {
-    document.activeElement.classList.add('overscrolling');
+  if (move == "-1" && tab_index == 0) {
+    document.activeElement.classList.add("overscrolling");
   }
 }
 
 let save_settings = function () {
-  let setting_interval = document.getElementById('time').value;
-  let setting_source = document.getElementById('source').value;
-  let setting_source_local = document.getElementById('source-local').value;
-  let setting_sleeptime = document.getElementById('sleep-mode').value;
-  let setting_episodes_download = document.getElementById('episodes-download')
+  let setting_interval = document.getElementById("time").value;
+  let setting_source = document.getElementById("source").value;
+  let setting_source_local = document.getElementById("source-local").value;
+  let setting_sleeptime = document.getElementById("sleep-mode").value;
+  let setting_episodes_download = document.getElementById("episodes-download")
     .value;
 
-  if (setting_source == '' && setting_source_local == '') {
-    helper.toaster('please fill in the location of the source file', 3000);
+  if (setting_source == "" && setting_source_local == "") {
+    helper.toaster("please fill in the location of the source file", 3000);
     return false;
   }
 
-  if (setting_source != '') {
+  if (setting_source != "") {
     if (!helper.validate(setting_source)) {
-      alert('url not valid');
+      alert("url not valid");
       return false;
     }
   }
 
-  localStorage.setItem('interval', setting_interval);
-  localStorage.setItem('source', setting_source);
-  localStorage.setItem('source_local', setting_source_local);
-  localStorage.setItem('sleep_time', setting_sleeptime);
-  localStorage.setItem('episodes_download', setting_episodes_download);
+  localStorage.setItem("interval", setting_interval);
+  localStorage.setItem("source", setting_source);
+  localStorage.setItem("source_local", setting_source_local);
+  localStorage.setItem("sleep_time", setting_sleeptime);
+  localStorage.setItem("episodes_download", setting_episodes_download);
 
   helper.toaster(
-    'saved, the settings will be active the next time the app is started.',
+    "saved, the settings will be active the next time the app is started.",
     5000
   );
 
@@ -1058,53 +1051,53 @@ let save_settings = function () {
 };
 
 let show_article = function () {
-  document.querySelector('div#source-page').style.display = 'none';
+  document.querySelector("div#source-page").style.display = "none";
 
-  status.window_status = 'single-article';
+  status.window_status = "single-article";
   navigator.spatialNavigationEnabled = false;
 
-  document.querySelector('div#news-feed').style.background = 'silver';
-  let link_target = document.activeElement.getAttribute('data-download');
-  link_type = document.activeElement.getAttribute('data-audio-type');
+  document.querySelector("div#news-feed").style.background = "silver";
+  let link_target = document.activeElement.getAttribute("data-download");
+  link_type = document.activeElement.getAttribute("data-audio-type");
 
-  let elem = document.querySelectorAll('article');
+  let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = 'none';
+    elem[i].style.display = "none";
   }
 
-  elem = document.querySelectorAll('div.summary');
+  elem = document.querySelectorAll("div.summary");
   for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = 'block';
+    elem[i].style.display = "block";
   }
 
-  document.activeElement.style.fontStyle = 'normal';
-  document.activeElement.style.color = 'black';
+  document.activeElement.style.fontStyle = "normal";
+  document.activeElement.style.color = "black";
 
-  document.activeElement.style.display = 'block';
-  document.activeElement.classList.add('view');
+  document.activeElement.style.display = "block";
+  document.activeElement.classList.add("view");
 
-  document.getElementById('top-bar').style.display = 'none';
-  document.getElementById('settings').style.display = 'none';
+  document.getElementById("top-bar").style.display = "none";
+  document.getElementById("settings").style.display = "none";
 
-  if (document.activeElement.getAttribute('data-media') == 'podcast') {
-    if (document.activeElement.classList.contains('audio-playing')) {
-      bottom_bar('pause', '', 'options');
+  if (document.activeElement.getAttribute("data-media") == "podcast") {
+    if (document.activeElement.classList.contains("audio-playing")) {
+      bottom_bar("pause", "", "options");
     } else {
-      bottom_bar('play', '', 'options');
+      bottom_bar("play", "", "options");
     }
   }
 
-  if (document.activeElement.getAttribute('data-media') == 'rss') {
-    bottom_bar('visit', '', 'options');
+  if (document.activeElement.getAttribute("data-media") == "rss") {
+    bottom_bar("visit", "", "options");
   }
 
-  if (document.activeElement.getAttribute('data-media') == 'youtube') {
-    bottom_bar('open', '', 'options');
+  if (document.activeElement.getAttribute("data-media") == "youtube") {
+    bottom_bar("open", "", "options");
   }
 
   document.activeElement.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start',
+    behavior: "smooth",
+    block: "start",
   });
 
   mark_as_read(true);
@@ -1114,156 +1107,156 @@ let show_article = function () {
 //show article list
 //////////////////
 let show_article_list = function () {
-  bottom_bar('settings', 'select', 'options');
-  top_bar('', panels[current_panel], '');
+  bottom_bar("settings", "select", "options");
+  top_bar("", panels[current_panel], "");
 
-  document.getElementById('audio-player').style.display = 'none';
-  document.querySelector('div#news-feed').style.background = 'white';
+  document.getElementById("audio-player").style.display = "none";
+  document.querySelector("div#news-feed").style.background = "white";
   navigator.spatialNavigationEnabled = false;
   document
-    .querySelector('div#source-page div#iframe-wrapper')
-    .classList.remove('video-view');
-  document.getElementById('top-bar').style.display = 'block';
+    .querySelector("div#source-page div#iframe-wrapper")
+    .classList.remove("video-view");
+  document.getElementById("top-bar").style.display = "block";
 
-  let elem = document.querySelectorAll('article');
+  let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = 'block';
+    elem[i].style.display = "block";
 
-    let rd = elem[i].getAttribute('data-read');
+    let rd = elem[i].getAttribute("data-read");
 
-    if (rd == 'read') {
-      document.activeElement.style.fontStyle = 'italic';
-      document.activeElement.style.color = 'gray';
+    if (rd == "read") {
+      document.activeElement.style.fontStyle = "italic";
+      document.activeElement.style.color = "gray";
     }
   }
 
-  elem = document.querySelectorAll('div.summary');
+  elem = document.querySelectorAll("div.summary");
   for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = 'none';
+    elem[i].style.display = "none";
   }
 
-  document.querySelector('div#settings').style.display = 'none';
+  document.querySelector("div#settings").style.display = "none";
   article_array[tab_index];
-  document.querySelector('div#source-page').style.display = 'none';
-  document.querySelector('div#source-page iframe').setAttribute('src', '');
-  bottom_bar('settings', 'select', 'options');
+  document.querySelector("div#source-page").style.display = "none";
+  document.querySelector("div#source-page iframe").setAttribute("src", "");
+  bottom_bar("settings", "select", "options");
 
   if (settings.sleepmode) {
     top_bar(
       "<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>",
       panels[current_panel],
-      ''
+      ""
     );
   }
 
-  bottom_bar('settings', 'select', 'options');
+  bottom_bar("settings", "select", "options");
 
-  status.window_status = 'article-list';
+  status.window_status = "article-list";
   document.activeElement.focus();
 
-  document.activeElement.classList.remove('view');
+  document.activeElement.classList.remove("view");
 
   document.activeElement.scrollIntoView({
-    behavior: 'smooth',
-    block: 'end',
-    inline: 'nearest',
+    behavior: "smooth",
+    block: "end",
+    inline: "nearest",
   });
 
-  tab_index = document.activeElement.getAttribute('tabIndex');
+  tab_index = document.activeElement.getAttribute("tabIndex");
 };
 
 let show_settings = function () {
-  bottom_bar('save', '', 'back');
+  bottom_bar("save", "", "back");
 
-  status.active_element_id = document.activeElement.getAttribute('data-id');
-  status.window_status = 'settings';
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+  status.window_status = "settings";
   tab_index = 0;
-  document.getElementById('top-bar').style.display = 'none';
+  document.getElementById("top-bar").style.display = "none";
 
-  let elem = document.querySelectorAll('article');
+  let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = 'none';
+    elem[i].style.display = "none";
   }
-  document.getElementById('settings').style.display = 'block';
+  document.getElementById("settings").style.display = "block";
 
-  document.getElementById('input-wrapper').children[0].focus();
-  if (localStorage.getItem('interval') != null) {
-    document.getElementById('time').value = localStorage.getItem('interval');
-  }
-
-  if (localStorage.getItem('source') != null) {
-    document.getElementById('source').value = localStorage.getItem('source');
+  document.getElementById("input-wrapper").children[0].focus();
+  if (localStorage.getItem("interval") != null) {
+    document.getElementById("time").value = localStorage.getItem("interval");
   }
 
-  if (localStorage.getItem('source_local') != null) {
-    document.getElementById('source-local').value = localStorage.getItem(
-      'source_local'
+  if (localStorage.getItem("source") != null) {
+    document.getElementById("source").value = localStorage.getItem("source");
+  }
+
+  if (localStorage.getItem("source_local") != null) {
+    document.getElementById("source-local").value = localStorage.getItem(
+      "source_local"
     );
   }
 
-  document.getElementById('sleep-mode').value = settings.sleep_time;
-  document.getElementById('episodes-download').value =
+  document.getElementById("sleep-mode").value = settings.sleep_time;
+  document.getElementById("episodes-download").value =
     settings.epsiodes_download;
 };
 
 function open_url() {
-  let link_target = document.activeElement.getAttribute('data-link');
-  let title = document.activeElement.querySelector('h1.title').textContent;
-  title = title.replace(/\s/g, '-');
-  bottom_bar('', '', '');
+  let link_target = document.activeElement.getAttribute("data-link");
+  let title = document.activeElement.querySelector("h1.title").textContent;
+  title = title.replace(/\s/g, "-");
+  bottom_bar("", "", "");
 
-  document.querySelector('div#source-page').style.display = 'block';
-  document.querySelector('div#source-page div#iframe-wrapper').style.height =
-    '100vh';
+  document.querySelector("div#source-page").style.display = "block";
+  document.querySelector("div#source-page div#iframe-wrapper").style.height =
+    "100vh";
 
-  if (document.activeElement.getAttribute('data-media') == 'rss') {
+  if (document.activeElement.getAttribute("data-media") == "rss") {
     show_article_list();
     window.open(link_target);
     return;
   }
 
-  if (document.activeElement.getAttribute('data-media') == 'youtube') {
+  if (document.activeElement.getAttribute("data-media") == "youtube") {
     document
-      .querySelector('div#source-page iframe')
-      .setAttribute('src', document.activeElement.getAttribute('data-link'));
+      .querySelector("div#source-page iframe")
+      .setAttribute("src", document.activeElement.getAttribute("data-link"));
     document
-      .querySelector('div#source-page div#iframe-wrapper')
-      .classList.add('video-view');
+      .querySelector("div#source-page div#iframe-wrapper")
+      .classList.add("video-view");
     navigator.spatialNavigationEnabled = true;
-    status.window_status = 'source-page';
-    player.src = '';
+    status.window_status = "source-page";
+    player.src = "";
     play.pause();
     return;
   }
 }
 
 let open_options = function () {
-  status.active_element_id = document.activeElement.getAttribute('data-id');
-  status.window_status = 'options';
-  document.getElementById('options').style.display = 'block';
-  document.querySelectorAll('div#options ul li')[0].focus();
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+  status.window_status = "options";
+  document.getElementById("options").style.display = "block";
+  document.querySelectorAll("div#options ul li")[0].focus();
 };
 
 let start_options = function () {
-  if (document.activeElement.getAttribute('data-function') == 'unread') {
+  if (document.activeElement.getAttribute("data-function") == "unread") {
     mark_as_read(false);
   }
-  if (document.activeElement.getAttribute('data-function') == 'sleepmode') {
+  if (document.activeElement.getAttribute("data-function") == "sleepmode") {
     sleep_mode();
   }
 
-  if (document.activeElement.getAttribute('data-function') == 'share') {
+  if (document.activeElement.getAttribute("data-function") == "share") {
     var k = document
       .querySelector("[data-id='" + status.active_element_id + "']")
-      .getAttribute('data-link');
+      .getAttribute("data-link");
     share(k);
   }
 
-  if (document.activeElement.getAttribute('data-function') == 'audio-player') {
+  if (document.activeElement.getAttribute("data-function") == "audio-player") {
     open_player();
   }
 
-  if (document.activeElement.getAttribute('data-function') == 'volume') {
+  if (document.activeElement.getAttribute("data-function") == "volume") {
     navigator.volumeManager.requestShow();
     status.volume_status = true;
     navigator.spatialNavigationEnabled = false;
@@ -1276,7 +1269,7 @@ let sleep_mode = function () {
 
   status.sleepmode = true;
 
-  helper.toaster('sleepmode activ', 3000);
+  helper.toaster("sleepmode activ", 3000);
   setTimeout(() => {
     audio_player.play_podcast();
     status.sleepmode = false;
@@ -1284,41 +1277,41 @@ let sleep_mode = function () {
 };
 
 let open_player = function () {
-  document.getElementById('audio-player').style.display = 'block';
-  status.window_status = 'audio-player';
-  document.getElementById('options').style.display = 'none';
-  if (status.active_audio_element_id != '') {
+  document.getElementById("audio-player").style.display = "block";
+  status.window_status = "audio-player";
+  document.getElementById("options").style.display = "none";
+  if (status.active_audio_element_id != "") {
     document
       .querySelector('[data-id="' + status.active_audio_element_id + '"]')
       .focus();
   } else {
     document
       .querySelector(
-        '[data-id="' + document.activeElement.getAttribute('data-id') + '"]'
+        '[data-id="' + document.activeElement.getAttribute("data-id") + '"]'
       )
       .focus();
   }
 
-  status.active_element_id = document.activeElement.getAttribute('data-id');
-  if (document.activeElement.getAttribute('data-image') != '') {
-    document.getElementById('image').style.backgroundImage =
-      'url(' + document.activeElement.getAttribute('data-image') + ')';
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+  if (document.activeElement.getAttribute("data-image") != "") {
+    document.getElementById("image").style.backgroundImage =
+      "url(" + document.activeElement.getAttribute("data-image") + ")";
   } else {
-    document.getElementById('image').style.backgroundImage = 'url(null)';
+    document.getElementById("image").style.backgroundImage = "url(null)";
   }
-  top_bar('', '', '');
+  top_bar("", "", "");
 };
 
 //qr scan listener
-const qr_listener = document.querySelector('input#source');
+const qr_listener = document.querySelector("input#source");
 let qrscan = false;
-qr_listener.addEventListener('focus', (event) => {
-  bottom_bar('save', 'qr', 'back');
+qr_listener.addEventListener("focus", (event) => {
+  bottom_bar("save", "qr", "back");
   qrscan = true;
 });
 
-qr_listener.addEventListener('blur', (event) => {
-  bottom_bar('save', '', 'back');
+qr_listener.addEventListener("blur", (event) => {
+  bottom_bar("save", "", "back");
   qrscan = false;
 });
 
@@ -1332,18 +1325,18 @@ let timeout;
 
 function repeat_action(param) {
   switch (param.key) {
-    case '0':
+    case "0":
       break;
-    case 'ArrowLeft':
-      if (status.window_status == 'audio-player') {
-        audio_player.seeking('backward');
+    case "ArrowLeft":
+      if (status.window_status == "audio-player") {
+        audio_player.seeking("backward");
         break;
       }
       break;
 
-    case 'ArrowRight':
-      if (status.window_status == 'audio-player') {
-        audio_player.seeking('forward');
+    case "ArrowRight":
+      if (status.window_status == "audio-player") {
+        audio_player.seeking("forward");
         break;
       }
       break;
@@ -1356,7 +1349,7 @@ function repeat_action(param) {
 
 function longpress_action(param) {
   switch (param.key) {
-    case '0':
+    case "0":
       break;
   }
 }
@@ -1367,34 +1360,34 @@ function longpress_action(param) {
 
 function shortpress_action(param) {
   switch (param.key) {
-    case 'Enter':
-      if (document.activeElement.classList.contains('input-parent')) {
+    case "Enter":
+      if (document.activeElement.classList.contains("input-parent")) {
         document.activeElement.children[0].focus();
         return true;
       }
-      if (status.window_status == 'article-list') {
+      if (status.window_status == "article-list") {
         show_article();
         break;
       }
 
-      if (status.window_status == 'options') {
+      if (status.window_status == "options") {
         start_options();
         break;
       }
 
       if (
-        status.window_status == 'settings' &&
-        document.activeElement.classList.contains('reload')
+        status.window_status == "settings" &&
+        document.activeElement.classList.contains("reload")
       ) {
         reload();
       }
 
-      if (status.window_status == 'settings' && qrscan == true) {
-        status.window_status = 'scan';
+      if (status.window_status == "settings" && qrscan == true) {
+        status.window_status = "scan";
 
         qr.start_scan(function (callback) {
           let slug = callback;
-          document.getElementById('source').value = slug;
+          document.getElementById("source").value = slug;
         });
 
         break;
@@ -1402,180 +1395,184 @@ function shortpress_action(param) {
 
       break;
 
-    case 'ArrowLeft':
-      if (status.window_status == 'article-list') {
-        nav_panels('left');
+    case "ArrowLeft":
+      if (status.window_status == "article-list") {
+        nav_panels("left");
         break;
       }
 
-      if (status.window_status == 'audio-player') {
-        audio_player.seeking('backward');
-        break;
-      }
-      break;
-
-    case 'ArrowRight':
-      if (status.window_status == 'article-list') {
-        nav_panels('right');
-        break;
-      }
-
-      if (status.window_status == 'audio-player') {
-        audio_player.seeking('forward');
+      if (status.window_status == "audio-player") {
+        audio_player.seeking("backward");
         break;
       }
       break;
 
-    case 'ArrowDown':
-      if (status.window_status == 'settings') {
-        nav('+1');
+    case "ArrowRight":
+      if (status.window_status == "article-list") {
+        nav_panels("right");
         break;
       }
 
-      if (status.window_status == 'article-list') {
-        nav('+1');
+      if (status.window_status == "audio-player") {
+        audio_player.seeking("forward");
+        break;
+      }
+      break;
+
+    case "ArrowDown":
+      if (status.window_status == "settings") {
+        nav("+1");
         break;
       }
 
-      if (status.window_status == 'options') {
-        nav('+1');
+      if (status.window_status == "article-list") {
+        nav("+1");
+        break;
+      }
+
+      if (status.window_status == "options") {
+        nav("+1");
         break;
       }
 
       if (status.volume_status === true) {
-        audio_player.volume_control('down');
+        audio_player.volume_control("down");
         break;
       }
 
       break;
 
-    case 'ArrowUp':
-      if (status.window_status == 'settings') {
-        nav('-1');
+    case "ArrowUp":
+      if (status.window_status == "settings") {
+        nav("-1");
         break;
       }
 
-      if (status.window_status == 'options') {
-        nav('-1');
+      if (status.window_status == "options") {
+        nav("-1");
 
         break;
       }
 
-      if (status.window_status == 'article-list') {
-        nav('-1');
+      if (status.window_status == "article-list") {
+        nav("-1");
         break;
       }
 
       if (status.volume_status === true) {
-        audio_player.volume_control('up');
+        audio_player.volume_control("up");
         break;
       }
       break;
 
-    case '#':
+    case "*":
+      open_player();
+      break;
+
+    case "#":
       navigator.volumeManager.requestShow();
       status.volume_status = true;
       navigator.spatialNavigationEnabled = false;
       break;
 
-    case 'SoftLeft':
-    case 'Control':
-      if (status.window_status == 'article-list') {
+    case "SoftLeft":
+    case "Control":
+      if (status.window_status == "article-list") {
         show_settings();
         break;
       }
 
       if (
-        status.window_status == 'single-article' &&
-        document.activeElement.getAttribute('data-media') == 'podcast'
+        status.window_status == "single-article" &&
+        document.activeElement.getAttribute("data-media") == "podcast"
       ) {
         open_player();
         audio_player.play_podcast(
-          document.activeElement.getAttribute('data-link')
+          document.activeElement.getAttribute("data-link")
         );
         break;
       }
 
-      if (status.window_status == 'single-article') {
+      if (status.window_status == "single-article") {
         open_url();
         break;
       }
 
-      if (status.window_status == 'settings') {
+      if (status.window_status == "settings") {
         save_settings();
         break;
       }
 
-      if (status.window_status == 'audio-player') {
+      if (status.window_status == "audio-player") {
         audio_player.play_podcast(
-          document.activeElement.getAttribute('data-link')
+          document.activeElement.getAttribute("data-link")
         );
         break;
       }
 
       break;
 
-    case 'SoftRight':
-    case 'Alt':
-      if (status.window_status == 'single-article') {
+    case "SoftRight":
+    case "Alt":
+      if (status.window_status == "single-article") {
         open_options();
         break;
       }
-      if (status.window_status == 'settings') {
+      if (status.window_status == "settings") {
         show_article_list();
 
         setTimeout(() => {
-          article_array = document.querySelectorAll('article');
+          article_array = document.querySelectorAll("article");
           article_array[0].focus();
         }, 1000);
         break;
       }
 
-      if (status.window_status == 'article-list') {
+      if (status.window_status == "article-list") {
         open_options();
 
         break;
       }
       break;
 
-    case 'EndCall':
+    case "EndCall":
       helper.goodbye();
       break;
 
-    case 'Backspace':
-      if (status.window_status == 'intro') {
-        bottom_bar('', '', '');
+    case "Backspace":
+      if (status.window_status == "intro") {
+        bottom_bar("", "", "");
         //window.close();
         break;
       }
 
-      if (status.window_status == 'article-list') {
-        bottom_bar('', '', '');
+      if (status.window_status == "article-list") {
+        bottom_bar("", "", "");
         break;
       }
 
-      if (status.window_status == 'settings') {
+      if (status.window_status == "settings") {
         //show_article_list();
         break;
       }
 
-      if (status.window_status == 'single-article') {
+      if (status.window_status == "single-article") {
         show_article_list();
         break;
       }
 
-      if (status.window_status == 'audio-player') {
+      if (status.window_status == "audio-player") {
         show_article_list();
         break;
       }
 
-      if (status.window_status == 'source-page') {
+      if (status.window_status == "source-page") {
         show_article_list();
         break;
       }
 
-      if (status.window_status == 'options') {
-        document.getElementById('options').style.display = 'none';
+      if (status.window_status == "options") {
+        document.getElementById("options").style.display = "none";
         show_article_list();
         document
           .querySelector("[data-id ='" + status.active_element_id + "']")
@@ -1583,7 +1580,7 @@ function shortpress_action(param) {
         break;
       }
 
-      if (status.window_status == 'scan') {
+      if (status.window_status == "scan") {
         qr.stop_scan();
         break;
       }
@@ -1597,11 +1594,11 @@ function shortpress_action(param) {
 ////////////////////////////////
 
 function handleKeyDown(evt) {
-  if (evt.key === 'Backspace' && status.window_status != 'article-list') {
+  if (evt.key === "Backspace" && status.window_status != "article-list") {
     evt.preventDefault();
   }
 
-  if (evt.key === 'EndCall') {
+  if (evt.key === "EndCall") {
     evt.preventDefault();
     helper.goodbye();
   }
@@ -1614,7 +1611,7 @@ function handleKeyDown(evt) {
   }
 
   if (evt.repeat) {
-    if (evt.key == 'Backspace') evt.preventDefault(); // Disable close app by holding backspace
+    if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
 
     longpress = false;
     repeat_action(evt);
@@ -1624,12 +1621,12 @@ function handleKeyDown(evt) {
 function handleKeyUp(evt) {
   evt.preventDefault();
 
-  if (evt.key == 'Backspace') evt.preventDefault(); // Disable close app by holding backspace
+  if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
 
   if (
-    evt.key == 'Backspace' &&
-    status.window_status != 'article-list' &&
-    document.activeElement.tagName == 'INPUT'
+    evt.key == "Backspace" &&
+    status.window_status != "article-list" &&
+    document.activeElement.tagName == "INPUT"
   ) {
     evt.preventDefault();
   }
@@ -1640,5 +1637,5 @@ function handleKeyUp(evt) {
   }
 }
 
-document.addEventListener('keydown', handleKeyDown);
-document.addEventListener('keyup', handleKeyUp);
+document.addEventListener("keydown", handleKeyDown);
+document.addEventListener("keyup", handleKeyUp);
