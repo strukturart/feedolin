@@ -1,5 +1,4 @@
 let article_array;
-
 var content_arr = [];
 var source_array = [];
 var k = 0;
@@ -64,6 +63,8 @@ let settings = {
   local_file: false,
   wwww_file: false,
   ads: false,
+  default_opml:
+    'https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml',
 };
 
 let status = {
@@ -92,18 +93,15 @@ function manifest(a) {
 }
 
 helper.getManifest(manifest);
-
 setTimeout(() => {
-  document.getElementById('intro').style.display = 'none';
+  //document.getElementById('intro').style.display = 'none';
+  document.getElementById('message-box').style.display = 'none';
 
   if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
   if (localStorage['source_local'] == null && localStorage['source'] == null) {
-    localStorage.setItem(
-      'source',
-      'https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml'
-    );
-    document.getElementById('message-box').style.display = 'none';
+    localStorage.setItem('source', settings.default_opml);
+    //document.getElementById('message-box').style.display = 'none';
     load_source_opml();
   }
   //get update time; cache || download
@@ -168,7 +166,7 @@ let load_local_file_opml = function () {
     localStorage.getItem('source_local') == '' ||
     localStorage.getItem('source_local') == null
   ) {
-    document.getElementById('message-box').style.display = 'none';
+    //document.getElementById('message-box').style.display = 'none';
     //show_settings();
     return false;
   }
@@ -186,7 +184,7 @@ let load_local_file_opml = function () {
 
   finder.on('empty', function (needle) {
     helper.toaster('no sdcard found');
-    document.getElementById('message-box').style.display = 'none';
+    //document.getElementById('message-box').style.display = 'none';
     //show_settings();
     return;
   });
@@ -195,10 +193,10 @@ let load_local_file_opml = function () {
 
   finder.on('searchComplete', function (needle, filematchcount) {
     if (filematchcount == 0) {
-      document.querySelector('#download').innerHTML =
+      document.getElementById('intro-message').innerHTML =
         '😴<br>No source file founded,<br> please create a opml file or set a url in the settings.';
       setTimeout(() => {
-        document.getElementById('message-box').style.display = 'none';
+        //document.getElementById('message-box').style.display = 'none';
         //show_settings();
       }, 3000);
     }
@@ -295,15 +293,17 @@ let load_source_opml = function () {
   xhttp.onerror = function () {
     document.querySelector('#download').innerHTML =
       '😴<br>the source file cannot be loaded';
-    helper.toaster('try to load cached data', 5000);
+    document.getElementById('intro-message').innerText =
+      'try to load cached data';
 
     setTimeout(() => {
-      document.getElementById('message-box').style.display = 'none';
+      //document.getElementById('message-box').style.display = 'none';
       //show_settings();
       content_arr = cache.loadCache();
       if (content_arr) {
         build();
-        helper.toaster('cached data loaded', 5000);
+        document.getElementById('intro-message').innerText =
+          'cached data loaded';
       } else {
         setTimeout(function () {
           helper.goodbye();
@@ -338,7 +338,7 @@ let start_download_content = function (source_data) {
       source_array[0][3]
     );
   } else {
-    document.querySelector('#download').innerHTML =
+    document.getElementById('intro-message').innerHTML =
       '😴<br>Your device is offline, please connect it to the internet ';
   }
 };
@@ -365,7 +365,7 @@ let rss_fetcher = function (
   xhttp.overrideMimeType('text/xml');
   xhttp.send();
 
-  document.getElementById('message-box').style.display = 'block';
+  //document.getElementById('message-box').style.display = 'block';
 
   xhttp.addEventListener('error', transferFailed);
   xhttp.addEventListener('loadend', loadEnd);
@@ -380,6 +380,7 @@ let rss_fetcher = function (
   });
 
   xhttp.onload = function () {
+    document.getElementById('intro-message').innerText = 'downloading data';
     if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
       let data = xhttp.response;
 
@@ -404,7 +405,7 @@ let rss_fetcher = function (
       let count = k + ' / ' + (source_array.length - 1);
 
       document.getElementById('download').innerText = rss_title;
-      bottom_bar('', count, '');
+      //bottom_bar('', count, '');
 
       if (data.getElementsByTagName('url')[0]) {
         item_image = data.getElementsByTagName('url')[0].textContent;
@@ -689,6 +690,7 @@ let rss_fetcher = function (
       }, 1500);
     }
     if (k < source_array.length - 1) {
+      document.getElementById('intro-message').innerText = 'downloading data';
       k++;
       rss_fetcher(
         source_array[k][0],
@@ -825,9 +827,11 @@ function build() {
   renderHello(content_arr);
 
   lazyload.ll();
-  document.getElementById('message-box').style.display = 'none';
+  //document.getElementById('message-box').style.display = 'none';
   status.window_status = 'article-list';
   set_tabindex();
+
+  document.getElementById('intro').style.display = 'none';
 }
 
 let set_tabindex = function () {

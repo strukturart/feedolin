@@ -118,6 +118,19 @@ div#intro div#version {
   font-size: 0.8rem;
 }
 
+div#intro div#intro-message {
+  position: relative;
+  bottom: 10px;
+  text-align: center;
+  color: white;
+  z-index: 2000;
+  font-size: 0.8rem;
+}
+
+div#message-box {
+  display: none;
+}
+
 /*///////////////////////////
 ///TOAST////////////////*/
 
@@ -511,7 +524,8 @@ div#message-box {
   background: black;
   color: white;
   z-index: 5;
-  display: block;
+
+  display: none;
 }
 
 div#message-box div {
