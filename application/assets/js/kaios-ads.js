@@ -1,3 +1,4 @@
+/*
 getKaiAd({
   publisher: "4408b6fa-4e1d-438f-af4d-f3be2fa97208",
   app: "feedolin",
@@ -32,3 +33,5 @@ getKaiAd({
     });
   },
 });
+
+*/

@@ -18,7 +18,6 @@ const audio_player = ((_) => {
     if (url != player.src) {
       player.src = url;
       player.play();
-      console.log(url);
     }
 
     if (player_status == "play") {

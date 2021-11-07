@@ -112,6 +112,8 @@ setTimeout(() => {
   }
   localStorage.setItem("reload", "false");
 
+
+
   //download
   if (cache.getTime(a) && navigator.onLine) {
     if (
@@ -123,6 +125,7 @@ setTimeout(() => {
       document.getElementById("intro-message").innerText = "load online";
     } else {
       load_local_file_opml();
+       document.getElementById("intro-message").innerText = "load local file";
     }
     //load cache
   } else {
@@ -133,7 +136,7 @@ setTimeout(() => {
       document.getElementById("intro-message").innerText =
         "no internet connection and no cached data available";
       setTimeout(function () {
-        //helper.goodbye();
+        helper.goodbye();
       }, 4000);
     }
   }
@@ -240,7 +243,6 @@ let load_local_file_opml = function () {
 //////////
 let load_source_opml = function () {
   let source_url = JSON.stringify(localStorage.getItem("source"));
-  console.log(source_url);
 
   let xhttp = new XMLHttpRequest({
     mozSystem: true,
@@ -284,6 +286,7 @@ let load_source_opml = function () {
   xhttp.onerror = function () {
     document.getElementById("intro-message").innerHTML =
       "😴<br>the source file cannot be loaded";
+      document.getElementById("intro").style.display = "none";
 
     setTimeout(() => {
       content_arr = cache.loadCache();
@@ -293,10 +296,10 @@ let load_source_opml = function () {
           "cached data loaded";
       } else {
         setTimeout(function () {
-          // helper.goodbye();
+          helper.goodbye();
         }, 4000);
       }
-    }, 2000);
+    }, 4000);
   };
 
   xhttp.send(null);
@@ -327,6 +330,8 @@ let start_download_content = function (source_data) {
   } else {
     document.getElementById("intro-message").innerHTML =
       "😴<br>Your device is offline, please connect it to the internet ";
+      document.getElementById("intro").style.display = "none";
+
   }
 };
 
@@ -1253,7 +1258,7 @@ let start_options = function () {
   }
 
   if (document.activeElement.getAttribute("data-function") == "audio-player") {
-    open_player();
+    open_player(true);
   }
 
   if (document.activeElement.getAttribute("data-function") == "volume") {
@@ -1276,7 +1281,7 @@ let sleep_mode = function () {
   }, st);
 };
 
-let open_player = function () {
+let open_player = function (reopen) {
   document.getElementById("audio-player").style.display = "block";
   status.window_status = "audio-player";
   document.getElementById("options").style.display = "none";
@@ -1293,11 +1298,20 @@ let open_player = function () {
   }
 
   status.active_element_id = document.activeElement.getAttribute("data-id");
-  if (document.activeElement.getAttribute("data-image") != "") {
-    document.getElementById("image").style.backgroundImage =
-      "url(" + document.activeElement.getAttribute("data-image") + ")";
-  } else {
-    document.getElementById("image").style.backgroundImage = "url(null)";
+
+  if (!reopen) {
+    if (document.activeElement.getAttribute("data-image") != "") {
+      audio_cover = document.activeElement.getAttribute("data-image");
+      document.getElementById("image").style.backgroundImage =
+        "url(" + document.activeElement.getAttribute("data-image") + ")";
+    } else {
+      document.getElementById("image").style.backgroundImage = "url(null)";
+    }
+  }
+
+  if (reopen) {
+     document.getElementById("image").style.backgroundImage =
+       "url(" + audio_cover + ")";
   }
   top_bar("", "", "");
 };
@@ -1466,7 +1480,7 @@ function shortpress_action(param) {
       break;
 
     case "*":
-      open_player();
+      open_player(true);
       break;
 
     case "#":
@@ -1486,7 +1500,7 @@ function shortpress_action(param) {
         status.window_status == "single-article" &&
         document.activeElement.getAttribute("data-media") == "podcast"
       ) {
-        open_player();
+        open_player(false);
         audio_player.play_podcast(
           document.activeElement.getAttribute("data-link")
         );

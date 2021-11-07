@@ -107,10 +107,28 @@ div#intro {
 div#intro img {
   width: 100px;
   height: auto;
+  position: absolute;
+  top:100px;
+  left:50%;
+  margin-left:-50px;
+  will-change: top; 
+  animation-name: intro;
+  animation-duration: 2s;
+  animation-delay: 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+
+
+
+}
+
+@keyframes intro {
+  from {top:100px;}
+  to {top: 50px;}
 }
 
 div#intro div#version {
-  position: relative;
+  position: absolute;
   text-align: center;
   color: white;
   z-index: 2000;
@@ -119,7 +137,8 @@ div#intro div#version {
 }
 
 div#intro div#intro-message {
-  position: relative;
+  position: absolute;
+  top:200px;
   text-align: center;
   color: white;
   z-index: 2000;
@@ -127,6 +146,9 @@ div#intro div#intro-message {
 }
 
 div#intro div#loading-progress {
+    position: absolute;
+  top:210px;
+
   height: 10px;
   width: 200px;
 }
