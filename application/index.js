@@ -81,7 +81,6 @@ let reload = function () {
 };
 
 //get version
-
 function manifest(a) {
   document.getElementById("version").innerText =
     "Version " + a.manifest.version;
@@ -90,6 +89,7 @@ function manifest(a) {
   } else {
     let t = document.getElementById("KaiOsAd");
     t.remove();
+    settings.ads = false;
   }
 }
 
@@ -827,7 +827,6 @@ function build() {
   renderHello(content_arr);
 
   lazyload.ll();
-  //document.getElementById('message-box').style.display = 'none';
   status.window_status = "article-list";
   set_tabindex();
 
@@ -883,6 +882,7 @@ var s = document.getElementById("KaiOsAd");
 
 function nav_panels(left_right) {
   s.style.opacity = "0";
+
   window.scrollTo(0, 0);
 
   if (left_right == "left") {
@@ -893,9 +893,16 @@ function nav_panels(left_right) {
     current_panel++;
   }
 
+  console.log(panels[current_panel]);
   current_panel = current_panel % panels.length;
   if (current_panel < 0) {
     current_panel += panels.length;
+  }
+
+  if (panels[current_panel] == "KaiOsAds") {
+    s.style.opacity = "1";
+  } else {
+    s.style.opacity = "0";
   }
 
   top_bar("", panels[current_panel], "");
@@ -945,10 +952,6 @@ function nav_panels(left_right) {
   }
 
   set_tabindex();
-
-  if (panels[current_panel] == "KaiOsAds") {
-    s.style.opacity = "1";
-  }
 
   document.activeElement.classList.remove("overscrolling");
 }

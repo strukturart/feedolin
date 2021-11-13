@@ -1,12 +1,11 @@
-/*
 getKaiAd({
   publisher: "4408b6fa-4e1d-438f-af4d-f3be2fa97208",
   app: "feedolin",
   slot: "feedolin",
   test: 0,
 
-  h: 200,
-  w: 220,
+  h: 300,
+  w: 240,
 
   // Max supported size is 240x264
   // container is required for responsive ads
@@ -33,5 +32,3 @@ getKaiAd({
     });
   },
 });
-
-*/
