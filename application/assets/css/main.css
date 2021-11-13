@@ -255,6 +255,13 @@ div#news-feed div#news-feed-list article[data-read="not-read"] {
   font-style: normal;
 }
 
+div#news-feed div#news-feed-list div.division {
+  color: white;
+  background: rgb(69, 73, 67);
+  display: block;
+  text-align: center;
+}
+
 div#news-feed div#news-feed-list article:focus {
   background: silver;
 }
@@ -651,7 +658,7 @@ div#settings {
   background: gray;
   padding: 15px 5px 10px 5px;
   margin: 0 0 150px 0;
-  height: 90vh;
+  height: 92vh;
   position: fixed;
   top: 0px;
   z-index: 3;

@@ -92,7 +92,8 @@
             <script id="template" type="x-tmpl-mustache">
                
                 {{#data}}
-                    <article tabIndex=0 class="all item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-order="{{dateunix}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+                    <div class="division {{channel}}">{{channel}}</div>
+                    <article tabIndex=0 class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-order="{{dateunix}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                         <div class="flex grid-col-10">
                             <div class="podcast-icon"><img src="assets/image/podcast.png"></div>
                             <div class="youtube-icon"><img src="assets/image/youtube.png"></div>

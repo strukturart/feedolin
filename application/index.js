@@ -2,7 +2,7 @@ let article_array;
 var content_arr = [];
 var source_array = [];
 var k = 0;
-var panels = ["all"];
+var panels = ["channels"];
 var current_panel = 0;
 const parser = new DOMParser();
 
@@ -23,8 +23,7 @@ let listened_elem =
   localStorage.getItem("listened_elem") != null
     ? JSON.parse(localStorage.getItem("listened_elem"))
     : [];
-
-var tab_index = 0;
+let tab_index = 0;
 //xml items
 var rss_title = "";
 var item_title = "";
@@ -73,6 +72,7 @@ let status = {
   window_status: "intro",
   active_audio_element_id: "",
   volume_status: false,
+  panel: "",
 };
 
 let reload = function () {
@@ -391,7 +391,7 @@ let rss_fetcher = function (
       item_date = "";
 
       //Channel
-      rss_title = data.querySelector("title").textContent || "unknow";
+      rss_title = data.querySelector("title").textContent || param_channel;
 
       param_channel = rss_title;
 
@@ -604,8 +604,6 @@ let rss_fetcher = function (
             }
           }
           if (item_media == "podcast") {
-            console.log(item_link);
-
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
               var duration = el[i]
                 .getElementsByTagNameNS("*", "duration")
@@ -616,10 +614,6 @@ let rss_fetcher = function (
           }
 
           let doc = parser.parseFromString(item_summary, "text/html");
-          //console.log(doc);
-          //item_summary = new Readability(doc).parse();
-
-          console.log(param_channel);
 
           content_arr.push({
             title: DOMPurify.sanitize(item_title),
@@ -775,7 +769,6 @@ let clean_localstorage = function () {
 };
 
 //render html
-
 function renderHello(arr) {
   var template = document.getElementById("template").innerHTML;
   var rendered = Mustache.render(template, {
@@ -783,8 +776,9 @@ function renderHello(arr) {
   });
   document.getElementById("news-feed-list").innerHTML = rendered;
 }
-let heroArray = [];
 
+//filter view
+let heroArray = [];
 let filter_data = function (cat) {
   heroArray.length = 0;
   for (let i = 0; i < content_arr.length; i++) {
@@ -794,10 +788,29 @@ let filter_data = function (cat) {
   }
 };
 
-let sort_array = function (arr) {
-  arr.sort((a, b) => {
-    return b.dateunix - a.dateunix;
-  });
+//sort
+let sort_array = function (arr, item_key, type) {
+  //sort by number
+  if (type == "number") {
+    arr.sort((a, b) => {
+      return b[item_key] - a[item_key];
+    });
+  }
+  //sort by string
+  if (type == "string") {
+    arr.sort((a, b) => {
+      let fa = a[item_key].toLowerCase(),
+        fb = b[item_key].toLowerCase();
+
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 };
 
 let tabs = function () {
@@ -812,8 +825,30 @@ let tabs = function () {
   }
 };
 
+let division_remove = function () {
+  //remove division element
+  let pp = [];
+  document
+    .querySelectorAll("div.division")
+    .forEach(function (item, index, object) {
+      if (document.querySelectorAll("div.division")[index].classList) {
+        let k = document.querySelectorAll("div.division")[index].className;
+        if (pp.indexOf(k) > -1) {
+          item.classList.add("remove");
+        }
+        pp.push(k);
+      }
+    });
+
+  document
+    .querySelectorAll("div.remove")
+    .forEach(function (item, index, object) {
+      item.remove();
+    });
+};
+
 function build() {
-  sort_array(content_arr);
+  sort_array(content_arr, "channel", "string");
   read_articles();
   listened_articles();
   tabs();
@@ -825,6 +860,7 @@ function build() {
   panels.push("recently-played");
 
   renderHello(content_arr);
+  division_remove();
 
   lazyload.ll();
   status.window_status = "article-list";
@@ -882,7 +918,6 @@ var s = document.getElementById("KaiOsAd");
 
 function nav_panels(left_right) {
   s.style.opacity = "0";
-
   window.scrollTo(0, 0);
 
   if (left_right == "left") {
@@ -893,7 +928,6 @@ function nav_panels(left_right) {
     current_panel++;
   }
 
-  console.log(panels[current_panel]);
   current_panel = current_panel % panels.length;
   if (current_panel < 0) {
     current_panel += panels.length;
@@ -906,12 +940,7 @@ function nav_panels(left_right) {
   }
 
   top_bar("", panels[current_panel], "");
-  if (settings.sleepmode)
-    top_bar(
-      "<img src='/assets/fonts/icons/timer.svg'>",
-      panels[current_panel],
-      ""
-    );
+  if (settings.sleepmode) top_bar("sleep", panels[current_panel], "");
 
   setTimeout(() => {
     article_array = document.querySelectorAll("article");
@@ -919,6 +948,17 @@ function nav_panels(left_right) {
   }, 500);
 
   //filter data
+  //default
+  //view
+  filter_data(panels[current_panel]);
+  //sort
+  sort_array(heroArray, "dateunix", "number");
+  //build html
+  renderHello(heroArray);
+
+  document.querySelectorAll("div.division").forEach(function (index, key) {
+    document.querySelectorAll("div.division")[key].style.display = "none";
+  });
 
   if (panels[current_panel] == "recently-played") {
     //to do
@@ -931,29 +971,27 @@ function nav_panels(left_right) {
       }
     }
 
-    heroArray.sort((a, b) => {
-      return a.recently_order - b.recently_order;
+    sort_array(heroArray, "recently_order", "number");
+    renderHello(heroArray);
+
+    document.querySelectorAll("div.division").forEach(function (index, key) {
+      document.querySelectorAll("div.division")[key].style.display = "none";
     });
-
-    renderHello(heroArray);
   }
 
-  if (panels[current_panel] == "all") {
+  if (panels[current_panel] == "channels") {
+    document.querySelectorAll("div.division").forEach(function (index, key) {
+      document.querySelectorAll("div.division")[key].style.display = "block";
+    });
+    sort_array(content_arr, "channel", "string");
     renderHello(content_arr);
-  }
-
-  if (
-    panels[current_panel] != "all" &&
-    panels[current_panel] != "recently-played"
-  ) {
-    filter_data(panels[current_panel]);
-    sort_array(heroArray);
-    renderHello(heroArray);
+    division_remove();
   }
 
   set_tabindex();
 
   document.activeElement.classList.remove("overscrolling");
+  status.panel = panels[current_panel];
 }
 let tabIndex = 0;
 ////////////
@@ -1026,6 +1064,61 @@ function nav(move) {
   }
 }
 
+//navigation between channels into channels view
+division_count = 0;
+let channel_navigation = function (direction) {
+  let elements = document.getElementsByClassName("division");
+
+  if (direction == "down" && division_count < elements.length) {
+    let current = document.activeElement;
+    let nextSibling = current.nextElementSibling;
+
+    while (nextSibling) {
+      nextSibling = nextSibling.nextElementSibling;
+      if (nextSibling.classList.contains("division")) {
+        nextSibling.nextElementSibling.focus();
+        tab_index = document.activeElement.getAttribute("tabindex");
+        const rect = document.activeElement.getBoundingClientRect();
+        const elY =
+          rect.top -
+          document.body.getBoundingClientRect().top +
+          rect.height / 2;
+
+        document.activeElement.parentNode.scrollBy({
+          left: 0,
+          top: elY - window.innerHeight / 2,
+          behavior: "smooth",
+        });
+        return true;
+      }
+    }
+  }
+  if (direction == "up") {
+    let current = document.activeElement;
+    let previousSibling = current.previousElementSibling;
+
+    while (previousSibling) {
+      previousSibling = previousSibling.previousElementSibling;
+      if (previousSibling.classList.contains("division")) {
+        previousSibling.nextElementSibling.focus();
+        tab_index = document.activeElement.getAttribute("tabindex");
+        const rect = document.activeElement.getBoundingClientRect();
+        const elY =
+          rect.top -
+          document.body.getBoundingClientRect().top +
+          rect.height / 2;
+
+        document.activeElement.parentNode.scrollBy({
+          left: 0,
+          top: elY - window.innerHeight / 2,
+          behavior: "smooth",
+        });
+        return true;
+      }
+    }
+  }
+};
+
 let save_settings = function () {
   let setting_interval = document.getElementById("time").value;
   let setting_source = document.getElementById("source").value;
@@ -1063,11 +1156,14 @@ let save_settings = function () {
 let show_article = function () {
   document.querySelector("div#source-page").style.display = "none";
 
+  document.querySelectorAll("div.division").forEach(function (index, key) {
+    document.querySelectorAll("div.division")[key].style.display = "none";
+  });
+
   status.window_status = "single-article";
   navigator.spatialNavigationEnabled = false;
 
   document.querySelector("div#news-feed").style.background = "silver";
-  let link_target = document.activeElement.getAttribute("data-download");
   link_type = document.activeElement.getAttribute("data-audio-type");
 
   let elem = document.querySelectorAll("article");
@@ -1110,6 +1206,12 @@ let show_article = function () {
     block: "start",
   });
 
+  if (status.panel == "channel") {
+    document.querySelectorAll("div.division").forEach(function (index, key) {
+      document.querySelectorAll("div.division")[key].style.display = "none";
+    });
+  }
+
   mark_as_read(true);
 };
 
@@ -1119,6 +1221,14 @@ let show_article = function () {
 let show_article_list = function () {
   bottom_bar("settings", "select", "options");
   top_bar("", panels[current_panel], "");
+
+  //show hide channels division
+  if (status.panel == "channels") {
+    document.querySelectorAll("div.division").forEach(function (index, key) {
+      document.querySelectorAll("div.division")[key].style.display = "block";
+      document.querySelectorAll("div.division")[key].style.background = "black";
+    });
+  }
 
   document.getElementById("audio-player").style.display = "none";
   document.querySelector("div#news-feed").style.background = "white";
@@ -1163,17 +1273,22 @@ let show_article_list = function () {
 
   status.window_status = "article-list";
   document.activeElement.focus();
-
   document.activeElement.classList.remove("view");
 
-  document.activeElement.scrollIntoView({
+  const rect = document.activeElement.getBoundingClientRect();
+  const elY =
+    rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
+
+  document.activeElement.parentNode.scrollBy({
+    left: 0,
+    top: elY - window.innerHeight / 2,
     behavior: "smooth",
-    block: "end",
-    inline: "nearest",
   });
 
   tab_index = document.activeElement.getAttribute("tabIndex");
 };
+
+//settings view
 
 let show_settings = function () {
   bottom_bar("save", "", "back");
@@ -1379,6 +1494,12 @@ function longpress_action(param) {
 
 function shortpress_action(param) {
   switch (param.key) {
+    case "2":
+      channel_navigation("up");
+      break;
+    case "5":
+      channel_navigation("down");
+      break;
     case "Enter":
       if (document.activeElement.classList.contains("input-parent")) {
         document.activeElement.children[0].focus();
