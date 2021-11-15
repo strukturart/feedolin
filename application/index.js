@@ -50,7 +50,7 @@ let settings = {
       ? localStorage.getItem("sleep_time")
       : 20,
   epsiodes_download:
-    localStorage.getItem("epsiodes_download") != null
+    localStorage.getItem("episodes_download") != null
       ? localStorage.getItem("epsiodes_download")
       : 3,
 
@@ -864,9 +864,10 @@ function build() {
 
   lazyload.ll();
   status.window_status = "article-list";
-  set_tabindex();
 
   document.getElementById("intro").style.display = "none";
+
+  set_tabindex();
 }
 
 let set_tabindex = function () {
@@ -880,11 +881,13 @@ let set_tabindex = function () {
     divs[i].tabIndex = t;
   }
 
-  document.querySelector('article[tabIndex="0"]').focus();
+  //document.querySelector('article[tabIndex="0"]').focus();
   tab_index = 0;
-
-  article_array = document.querySelectorAll("article");
-  article_array[0].focus();
+  setTimeout(function () {
+    article_array = document.querySelectorAll("article");
+    //alert(article_array.length);
+    if (article_array > 0) article_array[0].focus();
+  }, 1500);
 };
 
 let mark_as_read = function (un_read) {
@@ -1305,6 +1308,13 @@ let show_settings = function () {
   document.getElementById("settings").style.display = "block";
 
   document.getElementById("input-wrapper").children[0].focus();
+
+  if (localStorage.getItem("episodes_download") !== null) {
+    document.getElementById("episodes-download").value = localStorage.getItem(
+      "episodes_download"
+    );
+  }
+
   if (localStorage.getItem("interval") != null) {
     document.getElementById("time").value = localStorage.getItem("interval");
   }
@@ -1319,9 +1329,11 @@ let show_settings = function () {
     );
   }
 
-  document.getElementById("sleep-mode").value = settings.sleep_time;
-  document.getElementById("episodes-download").value =
-    settings.epsiodes_download;
+  if (localStorage.getItem("sleep_time") !== null) {
+    document.getElementById("sleep-mode").value = localStorage.getItem(
+      "sleep_time"
+    );
+  }
 };
 
 function open_url() {
