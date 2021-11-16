@@ -1290,6 +1290,8 @@ let show_article_list = function () {
 
 //settings view
 
+//settings view
+
 let show_settings = function () {
   bottom_bar("save", "", "back");
 
@@ -1297,14 +1299,21 @@ let show_settings = function () {
   status.window_status = "settings";
   tab_index = 0;
   document.getElementById("top-bar").style.display = "none";
-
+  /*
   let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
     elem[i].style.display = "none";
   }
+  */
   document.getElementById("settings").style.display = "block";
-
   document.getElementById("input-wrapper").children[0].focus();
+
+  if (localStorage.getItem("episodes_download") !== null) {
+    document.getElementById("episodes-download").value = localStorage.getItem(
+      "episodes_download"
+    );
+  }
+
   if (localStorage.getItem("interval") != null) {
     document.getElementById("time").value = localStorage.getItem("interval");
   }
@@ -1319,11 +1328,12 @@ let show_settings = function () {
     );
   }
 
-  document.getElementById("sleep-mode").value = settings.sleep_time;
-  document.getElementById("episodes-download").value =
-    settings.epsiodes_download;
+  if (localStorage.getItem("sleep_time") !== null) {
+    document.getElementById("sleep-mode").value = localStorage.getItem(
+      "sleep_time"
+    );
+  }
 };
-
 function open_url() {
   let link_target = document.activeElement.getAttribute("data-link");
   let title = document.activeElement.querySelector("h1.title").textContent;
