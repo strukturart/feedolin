@@ -43,8 +43,7 @@ setTimeout(function () {
   helper.screenlock("unlock");
 }, 3000);
 
-let settings = {
-  sleepmode: false,
+let setting = {
   sleep_time:
     localStorage.getItem("sleep_time") != null
       ? localStorage.getItem("sleep_time")
@@ -52,16 +51,26 @@ let settings = {
   epsiodes_download:
     localStorage.getItem("epsiodes_download") != null
       ? localStorage.getItem("epsiodes_download")
-      : 3,
+      : 5,
 
   interval:
     localStorage.getItem("interval") != null
       ? localStorage.getItem("interval")
       : 0,
+  source_local:
+    localStorage.getItem("source_local") != null
+      ? localStorage.getItem("source_local")
+      : "",
+
+  source:
+    localStorage.getItem("source") != null
+      ? localStorage.getItem("source")
+      : "",
 
   local_file: false,
   wwww_file: false,
   ads: false,
+  sleepmode: false,
 };
 
 let default_opml =
@@ -85,11 +94,11 @@ function manifest(a) {
   document.getElementById("version").innerText =
     "Version " + a.manifest.version;
   if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
-    settings.ads = true;
+    setting.ads = true;
   } else {
     let t = document.getElementById("KaiOsAd");
     t.remove();
-    settings.ads = false;
+    setting.ads = false;
   }
 }
 
@@ -165,7 +174,6 @@ let load_local_file_opml = function () {
     localStorage.getItem("source_local") == "" ||
     localStorage.getItem("source_local") == null
   ) {
-    //show_settings();
     return false;
   }
 
@@ -182,7 +190,6 @@ let load_local_file_opml = function () {
 
   finder.on("empty", function (needle) {
     helper.toaster("no sdcard found");
-    //show_settings();
     return;
   });
 
@@ -192,9 +199,7 @@ let load_local_file_opml = function () {
     if (filematchcount == 0) {
       document.getElementById("intro-message").innerHTML =
         "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.";
-      setTimeout(() => {
-        //show_settings();
-      }, 3000);
+      setTimeout(() => {}, 3000);
     }
   });
 
@@ -222,7 +227,7 @@ let load_local_file_opml = function () {
           for (var z = 0; z < nested.length; z++) {
             source_array.push([
               nested[z].getAttribute("xmlUrl"),
-              settings.epsiodes_download,
+              setting.epsiodes_download,
               m[i].getAttribute("text"),
               m[i].getAttribute("text"),
             ]);
@@ -269,7 +274,7 @@ let load_source_opml = function () {
           for (var z = 0; z < nested.length; z++) {
             source_array.push([
               nested[z].getAttribute("xmlUrl"),
-              settings.epsiodes_download,
+              setting.epsiodes_download,
               m[i].getAttribute("text"),
               m[i].getAttribute("text"),
             ]);
@@ -855,7 +860,7 @@ function build() {
   clean_localstorage();
   bottom_bar("settings", "select", "options");
   top_bar("", panels[0], "");
-  if (settings.ads) panels.push("KaiOsAds");
+  if (setting.ads) panels.push("KaiOsAds");
 
   panels.push("recently-played");
 
@@ -940,7 +945,7 @@ function nav_panels(left_right) {
   }
 
   top_bar("", panels[current_panel], "");
-  if (settings.sleepmode) top_bar("sleep", panels[current_panel], "");
+  if (setting.sleepmode) top_bar("sleep", panels[current_panel], "");
 
   setTimeout(() => {
     article_array = document.querySelectorAll("article");
@@ -999,10 +1004,11 @@ let tabIndex = 0;
 ///////////
 
 function nav(move) {
-  let elem = document.activeElement;
+  //let elem = document.activeElement;
   // Setup siblings array and get the first sibling
+  document.activeElement.classList.remove("overscrolling");
   let siblings = [];
-  let sibling = elem.parentNode.firstChild;
+  //let sibling = elem.parentNode.firstChild;
 
   //nested input field
   if (document.activeElement.parentNode.classList.contains("input-parent")) {
@@ -1013,27 +1019,20 @@ function nav(move) {
     bottom_bar("save", "edit", "back");
   }
 
-  let b;
-
-  b = document.activeElement.parentNode;
+  let b = document.activeElement.parentNode;
   let items = b.querySelectorAll(".item");
 
   for (let i = 0; i < items.length; i++) {
     siblings.push(items[i]);
     if (items[i].parentNode.style.display == "block") {
-      siblings.push(items[i]);
+      //siblings.push(items[i]);
     }
   }
 
-  setTimeout(() => {
-    document.activeElement.classList.remove("overscrolling");
-  }, 400);
-
   if (move == "+1") {
-    document.activeElement.classList.remove("overscrolling");
-
     tab_index++;
-    if (tab_index == siblings.length || tab_index >= siblings.length) {
+
+    if (tab_index >= siblings.length) {
       document.activeElement.classList.add("overscrolling");
       tab_index = siblings.length - 1;
       return true;
@@ -1048,6 +1047,7 @@ function nav(move) {
     siblings[tab_index].focus();
   }
 
+  //smooth scrolling
   const rect = document.activeElement.getBoundingClientRect();
   const elY =
     rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
@@ -1058,10 +1058,14 @@ function nav(move) {
     behavior: "smooth",
   });
 
+  console.log(elY - window.innerHeight / 2);
+
   //overscrolling
   if (move == "-1" && tab_index == 0) {
     document.activeElement.classList.add("overscrolling");
   }
+
+  console.log(siblings.length);
 }
 
 //navigation between channels into channels view
@@ -1117,40 +1121,6 @@ let channel_navigation = function (direction) {
       }
     }
   }
-};
-
-let save_settings = function () {
-  let setting_interval = document.getElementById("time").value;
-  let setting_source = document.getElementById("source").value;
-  let setting_source_local = document.getElementById("source-local").value;
-  let setting_sleeptime = document.getElementById("sleep-mode").value;
-  let setting_episodes_download = document.getElementById("episodes-download")
-    .value;
-
-  if (setting_source == "" && setting_source_local == "") {
-    helper.toaster("please fill in the location of the source file", 3000);
-    return false;
-  }
-
-  if (setting_source != "") {
-    if (!helper.validate(setting_source)) {
-      alert("url not valid");
-      return false;
-    }
-  }
-
-  localStorage.setItem("interval", setting_interval);
-  localStorage.setItem("source", setting_source);
-  localStorage.setItem("source_local", setting_source_local);
-  localStorage.setItem("sleep_time", setting_sleeptime);
-  localStorage.setItem("episodes_download", setting_episodes_download);
-
-  helper.toaster(
-    "saved, the settings will be active the next time the app is started.",
-    5000
-  );
-
-  return true;
 };
 
 let show_article = function () {
@@ -1261,7 +1231,7 @@ let show_article_list = function () {
   document.querySelector("div#source-page iframe").setAttribute("src", "");
   bottom_bar("settings", "select", "options");
 
-  if (settings.sleepmode) {
+  if (setting.sleepmode) {
     top_bar(
       "<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>",
       panels[current_panel],
@@ -1290,8 +1260,6 @@ let show_article_list = function () {
 
 //settings view
 
-//settings view
-
 let show_settings = function () {
   bottom_bar("save", "", "back");
 
@@ -1299,40 +1267,10 @@ let show_settings = function () {
   status.window_status = "settings";
   tab_index = 0;
   document.getElementById("top-bar").style.display = "none";
-  /*
-  let elem = document.querySelectorAll("article");
-  for (let i = 0; i < elem.length; i++) {
-    elem[i].style.display = "none";
-  }
-  */
+
   document.getElementById("settings").style.display = "block";
-  document.getElementById("input-wrapper").children[0].focus();
-
-  if (localStorage.getItem("episodes_download") !== null) {
-    document.getElementById("episodes-download").value = localStorage.getItem(
-      "episodes_download"
-    );
-  }
-
-  if (localStorage.getItem("interval") != null) {
-    document.getElementById("time").value = localStorage.getItem("interval");
-  }
-
-  if (localStorage.getItem("source") != null) {
-    document.getElementById("source").value = localStorage.getItem("source");
-  }
-
-  if (localStorage.getItem("source_local") != null) {
-    document.getElementById("source-local").value = localStorage.getItem(
-      "source_local"
-    );
-  }
-
-  if (localStorage.getItem("sleep_time") !== null) {
-    document.getElementById("sleep-mode").value = localStorage.getItem(
-      "sleep_time"
-    );
-  }
+  document.getElementById("settings").children[0].focus();
+  settings.load_settings();
 };
 function open_url() {
   let link_target = document.activeElement.getAttribute("data-link");
@@ -1399,7 +1337,7 @@ let start_options = function () {
 };
 
 let sleep_mode = function () {
-  let st = settings.sleep_time;
+  let st = setting.sleep_time;
   st = st * 60 * 1000;
 
   status.sleepmode = true;
@@ -1410,6 +1348,8 @@ let sleep_mode = function () {
     status.sleepmode = false;
   }, st);
 };
+
+let export_settings = function () {};
 
 let open_player = function (reopen) {
   document.getElementById("audio-player").style.display = "block";
@@ -1532,6 +1472,20 @@ function shortpress_action(param) {
         reload();
       }
 
+      if (
+        status.window_status == "settings" &&
+        document.activeElement.classList.contains("loadsettings")
+      ) {
+        settings.load_settings_from_file();
+      }
+
+      if (
+        status.window_status == "settings" &&
+        document.activeElement.classList.contains("export")
+      ) {
+        settings.export_settings();
+      }
+
       if (status.window_status == "settings" && qrscan == true) {
         status.window_status = "scan";
 
@@ -1649,7 +1603,7 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "settings") {
-        save_settings();
+        settings.save_settings();
         break;
       }
 
