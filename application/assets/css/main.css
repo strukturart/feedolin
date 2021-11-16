@@ -87,7 +87,12 @@ button {
   font-size: 1rem;
   background: silver;
   padding: 5px;
-  width: 95vw;
+  width: 100vw;
+  margin: 0 0 5px 0;
+}
+
+button:focus {
+  background: rgb(87, 85, 85);
 }
 
 table {
@@ -211,7 +216,7 @@ div#options ul li {
 }
 
 div#options ul li:focus {
-  color: black;
+  background: rgb(92, 90, 90);
 }
 
 div#news-feed {
@@ -655,31 +660,30 @@ div#top {
 
 div#settings {
   display: none;
-  background: gray;
-  padding: 15px 5px 10px 5px;
-  margin: 0 0 150px 0;
   height: 92vh;
-  position: fixed;
+  width: 100%;
+  padding: 0px 0 50px 0;
+  overflow: hidden;
+  position: absolute;
   top: 0px;
   z-index: 3;
-  overflow: scroll !important;
+  background: rgb(231, 231, 231);
 }
 
 div#settings div#text {
   margin: 0 0 20px 0;
 }
-
-div#settings div.input-parent {
-  padding: 10px 0 10px 0;
+div#settings h2 {
+  padding: 0 10px 0 10px;
 }
 
-div#settings div#nextdownload {
-  position: fixed;
-  z-index: 10;
-  bottom: 25px;
-  right: 15px;
-  font-size: 8px;
-  color: white;
+div#settings div.input-parent {
+  padding: 10px 10px 20px 10px;
+}
+
+div#settings div.input-parent:focus {
+  padding: 10px 10px 20px 10px;
+  background: rgb(179, 179, 179);
 }
 
 div#settings label {
@@ -708,9 +712,6 @@ div#settings input:focus {
 }
 
 /* AUDIO */
-
-.audio-playing {
-}
 
 #goodbye {
   position: fixed;
@@ -758,52 +759,6 @@ div#settings input:focus {
   /* When the animation is finished, start again */
 
   animation-iteration-count: 1;
-}
-
-@keyframes shake {
-  0% {
-    transform: translate(1px, 1px) rotate(0deg);
-  }
-
-  10% {
-    transform: translate(-1px, -2px) rotate(-1deg);
-  }
-
-  20% {
-    transform: translate(-3px, 0px) rotate(1deg);
-  }
-
-  30% {
-    transform: translate(3px, 2px) rotate(0deg);
-  }
-
-  40% {
-    transform: translate(1px, -1px) rotate(1deg);
-  }
-
-  50% {
-    transform: translate(-1px, 2px) rotate(-1deg);
-  }
-
-  60% {
-    transform: translate(-3px, 1px) rotate(0deg);
-  }
-
-  70% {
-    transform: translate(3px, 1px) rotate(-1deg);
-  }
-
-  80% {
-    transform: translate(-1px, -1px) rotate(1deg);
-  }
-
-  90% {
-    transform: translate(1px, 2px) rotate(0deg);
-  }
-
-  100% {
-    transform: translate(1px, -2px) rotate(-1deg);
-  }
 }
 
 @keyframes jump {
