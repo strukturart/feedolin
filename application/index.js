@@ -5,6 +5,13 @@ var k = 0;
 var panels = ["channels"];
 var current_panel = 0;
 const parser = new DOMParser();
+let audio_memory = [{ "audio": "null" }];
+
+if (localStorage.getItem("audio_memory") != null) {
+  audio_memory = JSON.parse(localStorage.getItem("audio_memory"));
+} else {
+  localStorage.setItem("audio_memory", JSON.stringify(audio_memory));
+}
 
 //store all used article ids
 var all_cid = [];

@@ -75,8 +75,25 @@ const audio_player = ((_) => {
   };
 
   //time duration
+  let stream_id = "";
   player.onloadedmetadata = function () {
-    console.log(player.networkState);
+    stream_id = document.activeElement.getAttribute("data-id");
+    console.log(stream_id);
+    if (!audio_memory.hasOwnProperty(stream_id)) {
+      audio_memory.push({ [stream_id]: "" });
+    }
+
+    if (audio_memory.hasOwnProperty(stream_id)) {
+      player.pause();
+      var person = confirm("would you like to continue the podcast ?");
+      if (person) {
+        player.currentTime = audio_memory[stream_id];
+        player.play();
+      }
+      if (!person) {
+        player.play();
+      }
+    }
     getduration = setInterval(function () {
       if (typeof player.duration != "number") {
         bottom_bar("pause", "-", "");
@@ -84,6 +101,11 @@ const audio_player = ((_) => {
       }
       var time = player.duration - player.currentTime;
       let percent = (player.currentTime / player.duration) * 100;
+
+      audio_memory[stream_id] = player.currentTime;
+      //var tt = JSON.stringify(audio_memory);
+      //console.log(tt);
+      //localStorage.setItem("audio_memory", tt);
 
       document.querySelector("div#progress-bar div").style.width =
         percent + "%";
@@ -141,6 +163,11 @@ const audio_player = ((_) => {
 
   player.onended = function () {
     //when played to end
+
+    if (audio_memory.hasOwnProperty(stream_id)) {
+      delete audio_memory.stream_id;
+    }
+
     if (localStorage.getItem("listened_elem")) {
       listened_elem = JSON.parse(localStorage["listened_elem"]);
     }
