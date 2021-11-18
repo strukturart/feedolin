@@ -90,10 +90,12 @@ const settings = ((_) => {
         let data = JSON.parse(reader.result);
 
         let settings = data[0];
-        document.getElementById("source-local").value = settings.sleep_time;
-        document.getElementById("source").value = settings.sleep_time;
-        document.getElementById("time").value = settings.sleep_time;
-        document.getElementById("episodes-download").value = settings.interval;
+        document.getElementById("source-local").value = settings.source_local;
+        document.getElementById("source").value = settings.source;
+        document.getElementById("time").value = settings.interval;
+        document.getElementById("episodes-download").value =
+          settings.epsiodes_download;
+        document.getElementById("sleep-mode").value = settings.sleep_time;
 
         helper.toaster(
           "the settings were loaded from the file, if you want to use them permanently don't forget to save.",

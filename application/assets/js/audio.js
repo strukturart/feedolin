@@ -5,10 +5,19 @@ const audio_player = ((_) => {
   player.mozaudiochannel = "content";
   player.preload = "none";
   let getduration;
+  let duration = "";
 
-  let player_status = "";
   if (navigator.mozAudioChannelManager) {
     navigator.mozAudioChannelManager.volumeControlChannel = "content";
+  }
+
+  let stream_id = "";
+  let audio_memory;
+  if (localStorage.getItem("audio_memory") != null) {
+    let d = JSON.parse(localStorage.getItem("audio_memory"));
+    audio_memory = d;
+  } else {
+    audio_memory = {};
   }
 
   //////////////////
@@ -20,18 +29,12 @@ const audio_player = ((_) => {
       player.play();
     }
 
-    if (player_status == "play") {
+    if (!player.paused) {
       player.pause();
-      bottom_bar("play", "", "");
-      player_status = "pause";
-      clearInterval(getduration);
-
       return false;
     }
-    if (player_status == "pause" || player_status == "") {
+    if (player.paused) {
       player.play();
-      bottom_bar("pause", "", "");
-      player_status = "play";
     }
   };
 
@@ -74,70 +77,50 @@ const audio_player = ((_) => {
     }
   };
 
-  //time duration
-  let stream_id = "";
   player.onloadedmetadata = function () {
     stream_id = document.activeElement.getAttribute("data-id");
-    console.log(stream_id);
-    if (!audio_memory.hasOwnProperty(stream_id)) {
-      audio_memory.push({ [stream_id]: "" });
-    }
+    //clearInterval(getduration);
 
     if (audio_memory.hasOwnProperty(stream_id)) {
       player.pause();
-      var person = confirm("would you like to continue the podcast ?");
-      if (person) {
+
+      var w = confirm("would you like to continue the podcast ?");
+      if (w) {
+        player.play();
         player.currentTime = audio_memory[stream_id];
-        player.play();
       }
-      if (!person) {
+      if (!w) {
         player.play();
+        delete audio_memory[stream_id];
       }
     }
-    getduration = setInterval(function () {
-      if (typeof player.duration != "number") {
-        bottom_bar("pause", "-", "");
-        return false;
-      }
-      var time = player.duration - player.currentTime;
-      let percent = (player.currentTime / player.duration) * 100;
+  };
 
+  let remember = function () {
+    //rember position
+    if (player.currentTime > 10) {
       audio_memory[stream_id] = player.currentTime;
-      //var tt = JSON.stringify(audio_memory);
-      //console.log(tt);
-      //localStorage.setItem("audio_memory", tt);
+      var tt = JSON.stringify(audio_memory);
+      localStorage.setItem("audio_memory", tt);
+    }
+  };
 
-      document.querySelector("div#progress-bar div").style.width =
-        percent + "%";
+  player.addEventListener("play", (event) => {
+    bottom_bar("pause", duration, "");
+  });
 
-      var minutes = parseInt(time / 60, 10);
-      var seconds_long = parseInt(time % 60, 10);
-      var seconds;
-      if (seconds_long < 10) {
-        seconds = "0" + seconds_long;
-      } else {
-        seconds = seconds_long;
-      }
-      var duration = minutes + ":" + seconds;
-
-      if (duration == "NaN:NaN") {
-        bottom_bar("pause", "", "");
-        helper.toaster("Can't play media", 5000);
-
-        clearInterval(getduration);
-        return false;
-      }
-
-      if (status.window_status == "audio-player")
-        bottom_bar("pause", duration, "");
+  player.addEventListener("pause", (event) => {
+    remember();
+    clearInterval(getduration);
+    setTimeout(function () {
+      bottom_bar("play", duration, "");
     }, 1000);
-  };
+  });
 
-  player.onpause = function () {
-    console.log(player.networkState);
-  };
-
-  player.onplay = function () {
+  player.addEventListener("playing", (event) => {
+    if (player.networkState === 2) {
+      helper.toaster("loading media", 1000);
+    }
     let articles = document.querySelectorAll("article");
     for (var i = 0; i < articles.length; i++) {
       articles[i].classList.remove("audio-playing");
@@ -159,11 +142,30 @@ const audio_player = ((_) => {
       recently_played.push(status.active_element_id);
       localStorage.setItem("recently_played", JSON.stringify(recently_played));
     }
-  };
+
+    getduration = setInterval(function () {
+      if (!player.paused) {
+        var time = player.duration - player.currentTime;
+        let percent = (player.currentTime / player.duration) * 100;
+
+        document.querySelector("div#progress-bar div").style.width =
+          percent + "%";
+
+        var minutes = parseInt(time / 60, 10);
+        var seconds_long = parseInt(time % 60, 10);
+        var seconds;
+        if (seconds_long < 10) {
+          seconds = "0" + seconds_long;
+        } else {
+          seconds = seconds_long;
+        }
+        duration = minutes + ":" + seconds;
+        bottom_bar("pause", duration, "");
+      }
+    }, 1000);
+  });
 
   player.onended = function () {
-    //when played to end
-
     if (audio_memory.hasOwnProperty(stream_id)) {
       delete audio_memory.stream_id;
     }
@@ -174,21 +176,13 @@ const audio_player = ((_) => {
 
     listened_elem.push(status.active_audio_element_id);
     localStorage.setItem("listened_elem", JSON.stringify(listened_elem));
+    clearInterval(getduration);
+    //bottom_bar("play", "", "");
   };
-
-  player.addEventListener("loadeddata", function () {
-    console.log(player.readyState);
-  });
-
-  player.addEventListener("playing", function () {
-    console.log(player.networkState);
-    if (player.networkState === 2) {
-      // Still loading...
-    }
-  });
 
   player.addEventListener("error", () => {
     helper.toaster("Can't play media", 5000);
+    clearInterval(getduration);
   });
 
   return {

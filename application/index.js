@@ -5,13 +5,6 @@ var k = 0;
 var panels = ["channels"];
 var current_panel = 0;
 const parser = new DOMParser();
-let audio_memory = [{ "audio": "null" }];
-
-if (localStorage.getItem("audio_memory") != null) {
-  audio_memory = JSON.parse(localStorage.getItem("audio_memory"));
-} else {
-  localStorage.setItem("audio_memory", JSON.stringify(audio_memory));
-}
 
 //store all used article ids
 var all_cid = [];
@@ -96,6 +89,15 @@ let reload = function () {
   localStorage.setItem("reload", "true");
 };
 
+let stream_id = "";
+let audio_memory;
+if (localStorage.getItem("audio_memory") != null) {
+  let d = JSON.parse(localStorage.getItem("audio_memory"));
+  audio_memory = d;
+} else {
+  audio_memory = {};
+}
+
 //get version
 function manifest(a) {
   document.getElementById("version").innerText =
@@ -109,6 +111,11 @@ function manifest(a) {
   }
 }
 
+//let audio_memory;
+if (localStorage.getItem("audio_memory") != null) {
+  let d = JSON.parse(localStorage.getItem("audio_memory"));
+  audio_memory = d;
+}
 helper.getManifest(manifest);
 
 setTimeout(() => {
@@ -379,9 +386,7 @@ let rss_fetcher = function (
   }
 
   // Add a hook to convert all text to capitals
-  DOMPurify.addHook("afterSanitizeElements", function (node) {
-    //console.log("done");
-  });
+  DOMPurify.addHook("afterSanitizeElements", function (node) {});
 
   xhttp.onload = function () {
     document.getElementById("intro-message").innerText = "loading data";
@@ -401,6 +406,7 @@ let rss_fetcher = function (
       item_cid = "";
       item_read = "not-read";
       item_date = "";
+      startlistened = "";
 
       //Channel
       rss_title = data.querySelector("title").textContent || param_channel;
@@ -517,6 +523,11 @@ let rss_fetcher = function (
             item_media = "rss";
           }
 
+          startlistened = "";
+          if (audio_memory.hasOwnProperty(item_cid)) {
+            start_listened = "start_listened";
+          }
+
           content_arr.push({
             title: DOMPurify.sanitize(item_title),
             summary: DOMPurify.sanitize(item_summary),
@@ -535,6 +546,7 @@ let rss_fetcher = function (
             recently_played: null,
             recently_order: null,
             read: "not-read",
+            start_listened: startlistened,
           });
         }
       }
@@ -625,7 +637,10 @@ let rss_fetcher = function (
             }
           }
 
-          let doc = parser.parseFromString(item_summary, "text/html");
+          startlistened = "";
+          if (audio_memory.hasOwnProperty(item_cid)) {
+            startlistened = "start_listened";
+          }
 
           content_arr.push({
             title: DOMPurify.sanitize(item_title),
@@ -645,6 +660,7 @@ let rss_fetcher = function (
             recently_played: null,
             recently_order: null,
             read: "not-read",
+            start_listened: startlistened,
           });
         }
       }
@@ -690,10 +706,8 @@ let rss_fetcher = function (
   function loadEnd(e) {
     //after download build html objects
     if (k == source_array.length - 1) {
-      setTimeout(() => {
-        build();
-        cache.saveCache(content_arr);
-      }, 1500);
+      build();
+      cache.saveCache(content_arr);
     }
     if (k < source_array.length - 1) {
       document.getElementById("intro-message").innerText = "loading data";
@@ -839,24 +853,27 @@ let tabs = function () {
 
 let division_remove = function () {
   //remove division element
-  let pp = [];
-  document
-    .querySelectorAll("div.division")
-    .forEach(function (item, index, object) {
-      if (document.querySelectorAll("div.division")[index].classList) {
-        let k = document.querySelectorAll("div.division")[index].className;
-        if (pp.indexOf(k) > -1) {
-          item.classList.add("remove");
+  if (document.querySelectorAll("div.division").length > 0) {
+    let pp = [];
+    document
+      .querySelectorAll("div.division")
+      .forEach(function (item, index, object) {
+        if (document.querySelectorAll("div.division")[index].classList) {
+          let k = document.querySelectorAll("div.division")[index].className;
+          console.log(k);
+          if (pp.indexOf(k) > -1) {
+            item.classList.add("remove");
+          }
+          pp.push(k);
         }
-        pp.push(k);
-      }
-    });
+      });
 
-  document
-    .querySelectorAll("div.remove")
-    .forEach(function (item, index, object) {
-      item.remove();
-    });
+    document
+      .querySelectorAll("div.remove")
+      .forEach(function (item, index, object) {
+        item.remove();
+      });
+  }
 };
 
 function build() {
@@ -872,6 +889,7 @@ function build() {
   panels.push("recently-played");
 
   renderHello(content_arr);
+
   division_remove();
 
   lazyload.ll();
@@ -880,6 +898,9 @@ function build() {
   document.getElementById("intro").style.display = "none";
 
   set_tabindex();
+
+  article_array = document.querySelectorAll("article");
+  article_array[0].focus();
 }
 
 let set_tabindex = function () {
@@ -1068,14 +1089,10 @@ function nav(move) {
     behavior: "smooth",
   });
 
-  console.log(elY - window.innerHeight / 2);
-
   //overscrolling
   if (move == "-1" && tab_index == 0) {
     document.activeElement.classList.add("overscrolling");
   }
-
-  console.log(siblings.length);
 }
 
 //navigation between channels into channels view
@@ -1317,7 +1334,7 @@ let open_options = function () {
   status.active_element_id = document.activeElement.getAttribute("data-id");
   status.window_status = "options";
   document.getElementById("options").style.display = "block";
-  document.querySelectorAll("div#options ul li")[0].focus();
+  document.querySelectorAll("div#options button")[0].focus();
 };
 
 let start_options = function () {

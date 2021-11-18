@@ -48,35 +48,45 @@
 
 
         <div id="news-feed" class="width-100 height-100 page">
-            <div id="settings">                   
-                <div class="item input-parent" tabindex="0">
+            <div id="settings">   
+                <h2 class="item" tabindex="0">Icons & Shortcuts</h2>      
+                <ul id="icons-shortcuts">
+                    <li class="flex">*  <span>Audioplayer</span></li>
+                    <li class="flex">#  <span>Volumecontrol</span></li>
+                    <li class="flex"><img src="assets/image/podcast.png"><span>Podcast</span></li>
+                    <li class="flex"><img src="assets/image/youtube.png"><span>Youtube</span></li>
+                    <li class="flex"><img src="assets/fonts/icons/diamond.svg"><span>Podcast listened</span></li>
+                    <li class="flex"><img src="assets/fonts/icons/ghost.svg"><span>Podcast in progress</span></li>       
+                </ul>  
+                <h2>Settings</h2>
+                <div class="item input-parent" tabindex="1">
                     <label for="time">The loaded articles are temporarily saved on your device. After how many minutes should a new item be searched for and
                     reloaded ?</label>
                     <input type="tel" pattern="^[0-9]*$" id="time" name="time" />
                 </div>
 
                 <h2>where should the list of the rss feed be loaded from?</h2>
-                <div class="item input-parent" tabindex="1">
+                <div class="item input-parent" tabindex="2">
                     <label for="source"><strong>url</strong></label>
                     <input  placeholder="https://xyz.com/feeds.opml" type="url" id="source" />
                 </div>
-                <div class="item input-parent" tabindex="2">
+                <div class="item input-parent" tabindex="3">
                     <label for="source-local"><strong>local filename</strong></label>
                     <input tabindex="2" placeholder="rss.opml" type="text" id="source-local" />
                 </div>
 
-                <div class="item input-parent" tabindex="3">
+                <div class="item input-parent" tabindex="4">
                     <label for="episodes-download"><strong>How many episodes should be loaded ?</strong></label>
                     <input type="tel" pattern="^[0-9]*$" id="episodes-download" />
                 </div>
 
-                <div class="item input-parent" tabindex="4">
+                <div class="item input-parent" tabindex="5">
                     <label for="sleep-mode"><strong>Here you can set after how many minutes the audio playback should be stopped.</strong></label>
                     <input  type="tel" pattern="^[0-9]*$" id="sleep-mode" />
                 </div>
-                <button tabindex="5" class="item export">export settings</button>
-                <button tabindex="6" class="item loadsettings">load settings</button>
-                <button tabindex="7" class="item reload">reload content</button>
+                <button tabindex="6" class="item export">export settings</button>
+                <button tabindex="7" class="item loadsettings">load settings</button>
+                <button tabindex="8" class="item reload">reload content</button>
             </div>
             <div id="top"></div>
 
@@ -88,11 +98,12 @@
                
                 {{#data}}
                     <div class="division {{channel}}">{{channel}}</div>
-                    <article tabIndex=0 class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-order="{{dateunix}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+                    <article tabIndex=0 class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                         <div class="flex grid-col-10">
                             <div class="podcast-icon"><img src="assets/image/podcast.png"></div>
                             <div class="youtube-icon"><img src="assets/image/youtube.png"></div>
                             <div class="listened-icon"><img src="assets/fonts/icons/diamond.svg"></div>
+                            <div class="startlistened-icon"><img src="assets/fonts/icons/ghost.svg"></div>
                         </div>
                         <div class="channel">{{channel}}<span></span></div>
                         <time>{{date}}</time>
@@ -126,13 +137,13 @@
             </div>
 
             <div id="options" class="width-100 height-100">
-                <ul>
-                    <li class="item" data-function="unread" tabindex="0">mark as unread</li>
-                    <li class="item" data-function="sleepmode" tabindex="1">activate sleep mode</li>
-                    <li class="item" data-function="audio-player" tabindex="2">open audioplayer</li>
-                    <li class="item" data-function="volume" tabindex="3">volume</li>
-                    <li class="item" data-function="share" tabindex="4">share</li>
-                </ul>
+                
+                    <button class="item" data-function="unread" tabindex="0">mark as unread</button>
+                    <button class="item" data-function="sleepmode" tabindex="1">activate sleep mode</button>
+                    <button class="item" data-function="audio-player" tabindex="2">open audioplayer</button>
+                    <button class="item" data-function="volume" tabindex="3">volume</>
+                    <button class="item" data-function="share" tabindex="4">share</li>
+               
 
             </div>
 

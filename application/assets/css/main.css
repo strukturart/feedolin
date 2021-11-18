@@ -6,7 +6,6 @@
   --color-three: silver;
   --color-four: rgb(99, 99, 99);
   --color-five: rgb(38, 38, 38);
-  --color-six: rgb(78, 206, 144);
   --color-seven: gainsboro;
 }
 
@@ -58,7 +57,7 @@ body {
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
-  background: black;
+  background: white;
 }
 
 h1 {
@@ -89,10 +88,12 @@ button {
   padding: 5px;
   width: 100vw;
   margin: 0 0 5px 0;
+  color: black;
 }
 
 button:focus {
   background: rgb(87, 85, 85);
+  color: white;
 }
 
 table {
@@ -188,6 +189,23 @@ div#toast {
   transform: translate(0px, -100px);
 }
 
+ul#icons-shortcuts {
+  padding: 10px;
+}
+
+ul#icons-shortcuts li {
+  align-items: center;
+}
+
+ul#icons-shortcuts li img {
+  max-width: 15px;
+  height: 15px;
+}
+
+ul#icons-shortcuts li span {
+  margin: 0 0 0 20px;
+}
+
 /*///////////////////////////
 ///FEED////////////////*/
 
@@ -202,7 +220,7 @@ div#KaiOsAd {
 
 div#options {
   display: none;
-  background: var(--color-four);
+  background: white;
   position: fixed;
   top: 0;
   z-index: 5;
@@ -219,9 +237,11 @@ div#options ul li:focus {
   background: rgb(92, 90, 90);
 }
 
+/*FEED*/
+
 div#news-feed {
   position: relative;
-  background: black;
+  background: white;
   color: black;
   max-height: 90vh;
   width: 100vw;
@@ -300,7 +320,7 @@ div#news-feed
   article
   div.duration-filesize
   div.duration:before {
-  background-image: url("/assets/fonts/icons/clock.svg");
+  background-image: url("../fonts/icons/clock.svg");
   background-size: 14px 14px;
   display: inline-block;
   width: 14px;
@@ -395,7 +415,17 @@ div#news-feed div#news-feed-list article div.listened-icon {
   opacity: 0;
 }
 
+div#news-feed div#news-feed-list article div.startlistened-icon {
+  position: fixed;
+  opacity: 0;
+}
+
 div#news-feed div#news-feed-list article div.listened-icon img {
+  height: 15px;
+  margin: 2px 0 0 10px;
+}
+
+div#news-feed div#news-feed-list article div.startlistened-icon img {
   height: 15px;
   margin: 2px 0 0 10px;
 }
@@ -408,13 +438,20 @@ div#news-feed
   opacity: 1;
 }
 
+div#news-feed
+  div#news-feed-list
+  article[data-startlistened="start_listened"]
+  div.startlistened-icon {
+  position: relative;
+  opacity: 1;
+}
+
 div#source-page {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 5;
-  background: black;
   min-height: 100vh;
   width: 101vw;
 }
@@ -635,20 +672,6 @@ div#audio-player div#progress-bar div {
   background: var(--color-six);
 }
 
-@keyframes colorAnimation {
-  0% {
-    color: orange;
-  }
-
-  50% {
-    color: yellow;
-  }
-
-  100% {
-    color: orange;
-  }
-}
-
 /*
  SETTINGS
  */
@@ -697,21 +720,19 @@ div#settings div#input-wrapper {
 }
 
 div#settings input {
-  width: 80%;
+  width: 90%;
   height: 30px;
   font-size: 1rem;
-  border: 2px solid black;
-  margin: 0 0 25px 0;
+  border: 2px solid rgb(32, 32, 32);
+  margin: 10px 0 10px 0;
   padding: 3px;
   display: block;
 }
 
 div#settings input:focus {
-  outline: 2px solid red;
+  outline: 1px solid rgb(36, 35, 35);
   background: rgb(255, 240, 240);
 }
-
-/* AUDIO */
 
 #goodbye {
   position: fixed;
