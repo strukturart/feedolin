@@ -1,5 +1,9 @@
 "use strict";
 
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
 function hashCode(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
@@ -61,9 +65,8 @@ function notify(param_title, param_text, param_silent, requireInteraction) {
 //bottom bar
 function bottom_bar(left, center, right) {
   document.querySelector("div#bottom-bar div#button-left").textContent = left;
-  document.querySelector(
-    "div#bottom-bar div#button-center"
-  ).textContent = center;
+  document.querySelector("div#bottom-bar div#button-center").textContent =
+    center;
   document.querySelector("div#bottom-bar div#button-right").textContent = right;
 
   if (left == "" && center == "" && right == "") {
@@ -221,7 +224,8 @@ function add_source(url, limit, categorie, channel) {
 
 const helper = (() => {
   function validate(url) {
-    var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    var pattern =
+      /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if (pattern.test(url)) {
       return true;
     }
@@ -279,8 +283,7 @@ const helper = (() => {
     }
     if (stat == "lock") {
       lock = window.navigator.requestWakeLock("screen");
-      lock.onsuccess = function () {
-      };
+      lock.onsuccess = function () {};
       lock.onerror = function () {
         alert("An error occurred: " + this.error.name);
       };
@@ -293,7 +296,7 @@ const helper = (() => {
     }
   };
 
-//filesize
+  //filesize
   function formatFileSize(bytes, decimalPoint) {
     if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
       var k = 1000,
@@ -303,7 +306,6 @@ const helper = (() => {
       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
     }
   }
-  
 
   //goodbye
 
