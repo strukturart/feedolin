@@ -4,15 +4,15 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   NodeList.prototype.forEach = Array.prototype.forEach;
 }
 
-function hashCode(str) {
+export let hashCode = function (str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
     hash = ~~((hash << 5) - hash + str.charCodeAt(i));
   }
   return hash;
-}
+};
 
-function intToRGB(i) {
+export function intToRGB(i) {
   var c = (i & 0x00ffffff).toString(16).toUpperCase();
 
   return "00000".substring(0, 6 - c.length) + c;
@@ -24,7 +24,12 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function notify(param_title, param_text, param_silent, requireInteraction) {
+export let notify = function (
+  param_title,
+  param_text,
+  param_silent,
+  requireInteraction
+) {
   var options = {
     body: param_text,
     silent: param_silent,
@@ -60,10 +65,10 @@ function notify(param_title, param_text, param_silent, requireInteraction) {
       }
     });
   }
-}
+};
 
 //bottom bar
-function bottom_bar(left, center, right) {
+export let bottom_bar = function (left, center, right) {
   document.querySelector("div#bottom-bar div#button-left").textContent = left;
   document.querySelector("div#bottom-bar div#button-center").textContent =
     center;
@@ -74,10 +79,10 @@ function bottom_bar(left, center, right) {
   } else {
     document.querySelector("div#bottom-bar").style.display = "block";
   }
-}
+};
 
 //top bar
-function top_bar(left, center, right) {
+export let top_bar = function (left, center, right) {
   document.querySelector("div#top-bar div.button-left").innerHTML = left;
   document.querySelector("div#top-bar div.button-center").textContent = center;
   document.querySelector("div#top-bar div.button-right").textContent = right;
@@ -87,9 +92,9 @@ function top_bar(left, center, right) {
   } else {
     document.querySelector("div#top-bar").style.display = "block";
   }
-}
+};
 
-function share(url) {
+export let share = function (url) {
   var activity = new MozActivity({
     name: "share",
     data: {
@@ -103,10 +108,10 @@ function share(url) {
   activity.onerror = function () {
     console.log("The activity encounter en error: " + this.error);
   };
-}
+};
 
 //check if internet connection
-function check_iconnection() {
+export function check_iconnection() {
   function updateOfflineStatus() {
     toaster("Your Browser is offline", 15000);
     return false;
@@ -128,7 +133,7 @@ function delete_file(filename) {
   };
 }
 
-function get_file(filename) {
+export function get_file(filename) {
   var sdcard = navigator.getDeviceStorages("sdcard");
   var request = sdcard[1].get(filename);
 
@@ -142,7 +147,7 @@ function get_file(filename) {
   };
 }
 
-function write_file(data, filename) {
+export function write_file(data, filename) {
   var sdcard = navigator.getDeviceStorages("sdcard");
   var file = new Blob([data], {
     type: "text/plain",
@@ -160,7 +165,32 @@ function write_file(data, filename) {
   };
 }
 
-function add_source(url, limit, categorie, channel) {
+//sort
+export let sort_array = function (arr, item_key, type) {
+  //sort by number
+  if (type == "number") {
+    arr.sort((a, b) => {
+      return b[item_key] - a[item_key];
+    });
+  }
+  //sort by string
+  if (type == "string") {
+    arr.sort((a, b) => {
+      let fa = a[item_key].toLowerCase(),
+        fb = b[item_key].toLowerCase();
+
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+};
+
+export function add_source(url, limit, categorie, channel) {
   let sdcard = navigator.getDeviceStorages("sdcard");
   let request = sdcard[1].get("rss-reader.json");
 
@@ -222,151 +252,167 @@ function add_source(url, limit, categorie, channel) {
   };
 }
 
-const helper = (() => {
-  function validate(url) {
-    var pattern =
-      /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    if (pattern.test(url)) {
-      return true;
-    }
+export function validate(url) {
+  var pattern =
+    /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+  if (pattern.test(url)) {
+    return true;
+  }
+  return false;
+}
+
+export let getManifest = function (callback) {
+  if (!navigator.mozApps) {
+    //let t = document.getElementById("kaisos-ads");
+    //t.remove();
     return false;
   }
-
-  let getManifest = function (callback) {
-    if (!navigator.mozApps) {
-      //let t = document.getElementById("kaisos-ads");
-      //t.remove();
-      return false;
-    }
-    let self = navigator.mozApps.getSelf();
-    self.onsuccess = function () {
-      callback(self.result);
-    };
-    self.onerror = function () {};
+  let self = navigator.mozApps.getSelf();
+  self.onsuccess = function () {
+    callback(self.result);
   };
+  self.onerror = function () {};
+};
 
-  let queue = [];
-  let timeout;
-  let toaster = function (text, time) {
-    queue.push({ text: text, time: time });
-    if (queue.length === 1) {
-      toast_q(text, time);
-    }
-  };
-
-  let add_script = function (script) {
-    document.body.appendChild(document.createElement("script")).src = script;
-  };
-
-  let toast_q = function (text, time) {
-    var x = document.querySelector("div#toast");
-    x.innerHTML = queue[0].text;
-
-    x.style.transform = "translate(0px, 0px)";
-
-    timeout = setTimeout(function () {
-      timeout = null;
-      x.style.transform = "translate(0px, -100px)";
-      queue = queue.slice(1);
-      if (queue.length > 0) {
-        setTimeout(() => {
-          toast_q(text, time);
-        }, 1000);
-      }
-    }, time);
-  };
-
-  let lock;
-  let screenlock = function (stat) {
-    if (typeof window.navigator.requestWakeLock === "undefined") {
-      return false;
-    }
-    if (stat == "lock") {
-      lock = window.navigator.requestWakeLock("screen");
-      lock.onsuccess = function () {};
-      lock.onerror = function () {
-        alert("An error occurred: " + this.error.name);
-      };
-    }
-
-    if (stat == "unlock") {
-      if (lock.topic == "screen") {
-        lock.unlock();
-      }
-    }
-  };
-
-  //filesize
-  function formatFileSize(bytes, decimalPoint) {
-    if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
-      var k = 1000,
-        dm = decimalPoint || 2,
-        sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
-        i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-    }
+let queue = [];
+let timeout;
+export let toaster = function (text, time) {
+  queue.push({ text: text, time: time });
+  if (queue.length === 1) {
+    toast_q(text, time);
   }
+};
 
-  //goodbye
+let add_script = function (script) {
+  document.body.appendChild(document.createElement("script")).src = script;
+};
 
-  let goodbye = function () {
-    document.getElementById("goodbye").style.display = "block";
-    bottom_bar("", "", "");
+let toast_q = function (text, time) {
+  var x = document.querySelector("div#toast");
+  x.innerHTML = queue[0].text;
 
-    if (localStorage.clickcount) {
-      localStorage.clickcount = Number(localStorage.clickcount) + 1;
-    } else {
-      localStorage.clickcount = 1;
+  x.style.transform = "translate(0px, 0px)";
+
+  timeout = setTimeout(function () {
+    timeout = null;
+    x.style.transform = "translate(0px, -100px)";
+    queue = queue.slice(1);
+    if (queue.length > 0) {
+      setTimeout(() => {
+        toast_q(text, time);
+      }, 1000);
     }
+  }, time);
+};
 
-    if (localStorage.clickcount == 300000) {
-      message();
-    } else {
-      document.getElementById("ciao").style.display = "block";
-      setTimeout(function () {
-        window.close();
-      }, 4000);
-    }
-
-    function message() {
-      document.getElementById("donation").style.display = "block";
-      setTimeout(function () {
-        localStorage.clickcount = 1;
-
-        window.close();
-      }, 6000);
-    }
-  };
-
-  //delete file
-  function deleteFile(storage, path, notification) {
-    let sdcard = navigator.getDeviceStorages("sdcard");
-
-    let requestDel = sdcard[storage].delete(path);
-
-    requestDel.onsuccess = function () {
-      if (notification == "notification") {
-        helper.toaster(
-          'File "' +
-            name +
-            '" successfully deleted frome the sdcard storage area'
-        );
-      }
-    };
-
-    requestDel.onerror = function () {
-      helper.toaster("Unable to delete the file: " + this.error);
+let lock;
+export let screenlock = function (stat) {
+  if (typeof window.navigator.requestWakeLock === "undefined") {
+    return false;
+  }
+  if (stat == "lock") {
+    lock = window.navigator.requestWakeLock("screen");
+    lock.onsuccess = function () {};
+    lock.onerror = function () {
+      alert("An error occurred: " + this.error.name);
     };
   }
 
-  return {
-    getManifest,
-    toaster,
-    add_script,
-    deleteFile,
-    goodbye,
-    screenlock,
-    validate,
-    formatFileSize,
+  if (stat == "unlock") {
+    if (lock.topic == "screen") {
+      lock.unlock();
+    }
+  }
+};
+
+export const lazyload = ((_) => {
+  let ll = function () {
+    const images = document.querySelectorAll(".lazyload");
+
+    function handleIntersection(entries) {
+      entries.map((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.src = entry.target.dataset.src;
+          entry.target.classList.add("loaded");
+          observer.unobserve(entry.target);
+        }
+      });
+    }
+
+    const observer = new IntersectionObserver(handleIntersection);
+
+    for (let i = 0; i < images.length; i++) {
+      observer.observe(images[i]);
+    }
   };
+
+  let existCondition = setInterval(function () {
+    if (document.getElementsByClassName("lazyload").length) {
+      clearInterval(existCondition);
+      ll();
+    }
+  }, 500);
+
+  return { ll };
 })();
+
+//filesize
+export function formatFileSize(bytes, decimalPoint) {
+  if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
+    var k = 1000,
+      dm = decimalPoint || 2,
+      sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+      i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+  }
+}
+
+//goodbye
+
+export let goodbye = function () {
+  document.getElementById("goodbye").style.display = "block";
+  bottom_bar("", "", "");
+
+  if (localStorage.clickcount) {
+    localStorage.clickcount = Number(localStorage.clickcount) + 1;
+  } else {
+    localStorage.clickcount = 1;
+  }
+
+  if (localStorage.clickcount == 300000) {
+    message();
+  } else {
+    document.getElementById("ciao").style.display = "block";
+    setTimeout(function () {
+      window.close();
+    }, 4000);
+  }
+
+  function message() {
+    document.getElementById("donation").style.display = "block";
+    setTimeout(function () {
+      localStorage.clickcount = 1;
+
+      window.close();
+    }, 6000);
+  }
+};
+
+//delete file
+export function deleteFile(storage, path, notification) {
+  let sdcard = navigator.getDeviceStorages("sdcard");
+
+  let requestDel = sdcard[storage].delete(path);
+
+  requestDel.onsuccess = function () {
+    if (notification == "notification") {
+      helper.toaster(
+        'File "' + name + '" successfully deleted frome the sdcard storage area'
+      );
+    }
+  };
+
+  requestDel.onerror = function () {
+    helper.toaster("Unable to delete the file: " + this.error);
+  };
+}

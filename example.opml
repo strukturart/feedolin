@@ -27,6 +27,11 @@
             <outline type="rss" text="bHackers Blog" title="bHackers Blog" xmlUrl="https://blog.bananahackers.net/read/feed/" htmlUrl=""/>
         </outline>
 
+        <outline text="News" title="News">
+            <outline type="rss" text="t-online" title="t-online" xmlUrl="https://feeds.t-online.de/rss/ausland" htmlUrl=""/>
+        </outline>
+       
+
        
     </body>
 </opml>
