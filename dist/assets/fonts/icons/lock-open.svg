@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>lock-open</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-620.000000, -335.000000)">
+            <g id="113" transform="translate(620.000000, 335.000000)">
+                <rect id="Body" stroke="#333333" stroke-width="2" x="3" y="10" width="18" height="12" rx="1"></rect>
+                <path d="M13,16.7324356 L13,18 C13,18.5522847 12.5522847,19 12,19 C11.4477153,19 11,18.5522847 11,18 L11,16.7324356 C10.4021986,16.3866262 10,15.7402824 10,15 C10,13.8954305 10.8954305,13 12,13 C13.1045695,13 14,13.8954305 14,15 C14,15.7402824 13.5978014,16.3866262 13,16.7324356 Z" id="Keyhole" fill="#333333"></path>
+                <path d="M17,6 C17,3.23857625 14.7614237,1 12,1 C9.23857625,1 7,3.23857625 7,6 L7,9" id="Lock" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

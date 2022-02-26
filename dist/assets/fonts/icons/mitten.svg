@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>mitten</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-664.000000, -555.000000)" stroke="#333333" stroke-width="2">
+            <g id="215" transform="translate(664.000000, 555.000000)">
+                <rect id="Trim" x="4" y="18" width="15" height="4" rx="2"></rect>
+                <path d="M16,8.46108246 L16,6.99668583 C16,4.24157855 13.7614237,2 11,2 C8.24419519,2 6,4.23709245 6,6.99668583 L6,18 L16,18 L16,15.5321503 L20.2309588,11.3011915 C21.2074375,10.3247128 21.2051601,8.74407768 20.2288494,7.76776695 C19.245732,6.78464956 17.6705706,6.79051183 16.6954249,7.76565759 L16,8.46108246 Z" id="Mitten" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

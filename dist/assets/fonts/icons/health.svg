@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>health</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-180.000000, -467.000000)">
+            <g id="164" transform="translate(180.000000, 467.000000)">
+                <rect id="Frame" stroke="#333333" stroke-width="2" x="3" y="3" width="18" height="18" rx="2"></rect>
+                <path d="M14,10 L14,7.00247329 C14,6.45576096 13.5480902,6 12.9906311,6 L11.0093689,6 C10.4433532,6 10,6.44882258 10,7.00247329 L10,10 L7.00247329,10 C6.45576096,10 6,10.4519098 6,11.0093689 L6,12.9906311 C6,13.5566468 6.44882258,14 7.00247329,14 L10,14 L10,16.9975267 C10,17.544239 10.4519098,18 11.0093689,18 L12.9906311,18 C13.5566468,18 14,17.5511774 14,16.9975267 L14,14 L16.9975267,14 C17.544239,14 18,13.5480902 18,12.9906311 L18,11.0093689 C18,10.4433532 17.5511774,10 16.9975267,10 L14,10 Z" id="Cross" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

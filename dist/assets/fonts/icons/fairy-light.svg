@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>fairy-light</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-268.000000, -555.000000)">
+            <g id="206" transform="translate(268.000000, 555.000000)">
+                <path d="M1,3 C1,3 3,4 6,4 C9,4 10.0056811,3 12.0028405,3 C14,3 15,4 18,4 C21,4 23.0056811,3 23.0056811,3" id="String" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M12,3 L12,6" id="Wire" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M12,8 L12,12" id="Filament" stroke="#333333" stroke-width="2" opacity="0.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M10,5.99895656 C10,5.44724809 10.4433532,5 11.0093689,5 L12.9906311,5 C13.5480902,5 14,5.44266033 14,5.99895656 L14,8 L10,8 L10,5.99895656 Z" id="Top" fill="#333333"></path>
+                <path d="M12,21 C13.6666667,21 17,14.6923882 17,12 C17,9.30761184 14.7614237,7 12,7 C9.23857625,7 7,9.30761184 7,12 C7,14.6923882 10.3333333,21 12,21 Z" id="Glass" stroke="#333333" stroke-width="2"></path>
+                <path d="M18,21 L19.5,22.5" id="Path-149" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M4.5,21 L6,22.5" id="Path-149" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(5.250000, 21.750000) scale(-1, 1) translate(-5.250000, -21.750000) "></path>
+                <path d="M3,13 L1,13" id="Path-150" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M23,13 L21,13" id="Path-150" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M22,18 L20,17" id="Path-150" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M4,18 L2,17" id="Path-150" stroke="#333333" stroke-width="2" stroke-linecap="round" transform="translate(3.000000, 17.500000) scale(-1, 1) translate(-3.000000, -17.500000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>comet</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-796.000000, -819.000000)" stroke="#333333" stroke-width="2">
+            <g id="338" transform="translate(796.000000, 819.000000)">
+                <path d="M6.82895334,6.8287656 L6.80549426,12.4941599 M6.7934752,15.3967777 L6.78934064,16.3952791 C6.78934064,19.98513 9.70047674,22.8962661 13.2903276,22.8962661 C16.8801785,22.8962661 19.7893406,19.98513 19.7893406,16.3952791 C19.7893406,16.3952791 19.7834225,15.844139 19.7742176,15.0109287 M19.7420226,12.1619803 C19.7233323,10.5498551 19.7029335,8.87383688 19.6885635,7.92505585 M19.6885635,5.09662873 L19.6885635,3.68241517" id="Outer" stroke-linecap="round" stroke-linejoin="round" transform="translate(13.289341, 13.289341) rotate(-45.000000) translate(-13.289341, -13.289341) "></path>
+                <circle id="Comet" cx="15.5" cy="15.5" r="2.5"></circle>
+                <path d="M13.0622577,10.0622577 L5,2" id="3" stroke-linecap="round"></path>
+                <path d="M6,9 L2,5" id="2" stroke-linecap="round"></path>
+                <path d="M10,13 L8,11" id="1" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

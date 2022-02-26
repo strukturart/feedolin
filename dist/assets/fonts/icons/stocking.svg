@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>stocking</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-356.000000, -555.000000)" stroke="#333333" stroke-width="2">
+            <g id="208" transform="translate(356.000000, 555.000000)">
+                <path d="M17.0007556,6 L9.00075564,6 L9.00075564,12.7352385 L5.94277262,14.5700283 C4.04845155,15.7066209 3.4341913,18.163662 4.57078394,20.057983 C5.70737658,21.9523041 8.1644176,22.5665643 10.0587387,21.4299717 L15.0587387,18.4299717 C16.2635603,17.7070787 17.0007556,16.4050514 17.0007556,15 L17.0007556,6 Z" id="Sock" fill-rule="nonzero"></path>
+                <path d="M16.6288875,13.1860478 C16.2747059,13.0654318 15.8949941,13 15.5,13 C13.5670034,13 12,14.5670034 12,16.5 C12,17.6443123 12.5491574,18.6603619 13.3983072,19.298984" id="Heel" opacity="0.5"></path>
+                <rect id="Top" x="7" y="2" width="12" height="4" rx="2"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

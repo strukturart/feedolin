@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>timer</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="7.77745661%" id="linearGradient-1">
+            <stop stop-color="#373737" stop-opacity="0.35" offset="0%"></stop>
+            <stop stop-color="#333333" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-488.000000, -115.000000)">
+            <g id="11" transform="translate(488.000000, 115.000000)">
+                <path d="M12,22 C16.9705627,22 21,17.9705627 21,13 C21,8.02943725 16.9705627,4 12,4 C7.02943725,4 3,8.02943725 3,13 C3,17.9705627 7.02943725,22 12,22 Z" id="Base" stroke="#333333" stroke-width="2"></path>
+                <path d="M12,11 C12,9.37715382 12,7.17278908 12,6 C15.8659932,6 19,9.13400675 19,13 C19,14.9317726 18.2174903,16.6807802 16.9521533,17.9473404 C16.0965019,17.2010459 14.5298558,15.6165551 13.3871678,14.4407549 C13.7649574,14.0769307 14,13.5659139 14,13 C14,11.8954305 13.1045695,11 12,11 Z" id="Gradient" fill="url(#linearGradient-1)"></path>
+                <path d="M12,15 C10.8954305,15 10,14.1045695 10,13 C10,11.8954305 10.8954305,11 12,11 C13.1045695,11 14,11.8954305 14,13 C14,14.1045695 13.1045695,15 12,15 Z" id="Middle" fill="#333333"></path>
+                <path d="M13,14 L16,17" id="Hand" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M11,2 L13,2 L13,5 L11,5 L11,2 Z M9,1.5 C9,1.22385763 9.22788048,1 9.49100518,1 L14.5089948,1 C14.7801695,1 15,1.23193359 15,1.5 C15,1.77614237 14.7721195,2 14.5089948,2 L9.49100518,2 C9.21983051,2 9,1.76806641 9,1.5 Z" id="Top" fill="#333333"></path>
+                <rect id="Button" fill="#333333" transform="translate(19.767767, 5.767767) rotate(-315.000000) translate(-19.767767, -5.767767) " x="18.767767" y="4.26776695" width="2" height="3" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

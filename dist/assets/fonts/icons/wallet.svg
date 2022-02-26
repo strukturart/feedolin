@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>wallet</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-48.000000, -379.000000)">
+            <g id="120" transform="translate(48.000000, 379.000000)">
+                <path d="M21,17.9997559 L21,18.9987937 C21,20.1040294 20.1090746,21 19.0025781,21 L3.99742191,21 C2.89427625,21 2,20.1029399 2,18.9941413 L2,7 L2,7 L19.0025781,7 C20.1057238,7 21,7.9037256 21,8.99456116 L21,10.0673828" id="Body" stroke="#333333" stroke-width="2"></path>
+                <path d="M14,14 C14,12.3431458 15.3390201,11 17.0016655,11 L22,11 L22,17 L17.0016655,17 C15.3438914,17 14,15.6534829 14,14 L14,14 Z" id="Clip" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="Popper" fill="#333333" cx="17" cy="14" r="1"></circle>
+                <path d="M2,5.5 C2,4.6733323 2.67213849,4 3.4963932,4 L18.5036068,4 C19.3314489,4 20,4.68092191 20,5.5 L20,7 L3.4963932,7 C2.6685511,7 2,6.31907809 2,5.5 Z" id="Fold" stroke="#333333" stroke-width="2"></path>
+            </g>
+        </g>
+    </g>
+</svg>

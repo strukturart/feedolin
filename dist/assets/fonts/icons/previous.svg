@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>previous</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="Artboard-4" transform="translate(-312.000000, -1046.000000)" stroke="#333333" stroke-width="2">
+            <g id="Extras" transform="translate(48.000000, 1046.000000)">
+                <g id="previous" transform="translate(276.000000, 12.000000) scale(-1, 1) translate(-276.000000, -12.000000) translate(264.000000, 0.000000)">
+                    <path d="M11,10.8333333 L1,5 L1,19 L11,13.1666667 L11,10.8333333 Z" id="Combined-Shape"></path>
+                    <polygon id="Triangle-1" points="11 19 11 5 23 12"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

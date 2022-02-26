@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>briefcase</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-136.000000, -379.000000)">
+            <g id="122" transform="translate(136.000000, 379.000000)">
+                <rect id="Bag" stroke="#333333" stroke-width="2" x="1" y="6" width="22" height="16" rx="1"></rect>
+                <path d="M8,6.00189865 L8,3.99810135 C8,2.89458045 8.90195036,2 10.0085302,2 L13.9914698,2 C15.1007504,2 16,2.88670635 16,3.99810135 L16,6.00189865" id="Handle" stroke="#333333" stroke-width="2"></path>
+                <path d="M23,9 C23,9 22.9999992,14.0311289 17.9688711,14.0311289 C12.937743,14.0311289 9.00000019,14.0311289 4.99081969,14.0311289 C0.981639191,14.0311289 1,9 1,9" id="Flap" stroke="#333333" stroke-width="2" stroke-linejoin="round"></path>
+                <path d="M16,11.990778 C16,11.4435864 16.4438648,11 17,11 C17.5522847,11 18,11.4509752 18,11.990778 L18,16.009222 C18,16.5564136 17.5561352,17 17,17 C16.4477153,17 16,16.5490248 16,16.009222 L16,11.990778 Z M6,11.990778 C6,11.4435864 6.44386482,11 7,11 C7.55228475,11 8,11.4509752 8,11.990778 L8,16.009222 C8,16.5564136 7.55613518,17 7,17 C6.44771525,17 6,16.5490248 6,16.009222 L6,11.990778 Z" id="Clips" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

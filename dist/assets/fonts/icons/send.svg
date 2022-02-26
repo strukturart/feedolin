@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>send</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-356.000000, -335.000000)" stroke="#333333" stroke-width="2">
+            <g id="108" transform="translate(356.000000, 335.000000)">
+                <polygon id="Wings" stroke-linejoin="round" points="21 4 3 14 12.5 15 20 20"></polygon>
+                <polyline id="Bottom" fill="#333333" stroke-linejoin="round" points="12 15 12 19 14.5 16.5"></polyline>
+                <path d="M12,15 L20.5,5" id="Fold"></path>
+            </g>
+        </g>
+    </g>
+</svg>

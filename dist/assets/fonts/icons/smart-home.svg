@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>smart-home</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-444.000000, -1134.000000)">
+            <g id="Extras" transform="translate(48.000000, 1046.000000)">
+                <g id="smart-home" transform="translate(396.000000, 88.000000)">
+                    <path d="M2.69498562,11.0040174 L4,10.9864409 L4,20.000385 C4,20.5574808 4.44271433,21 4.99508929,21 L19.0049107,21 C19.5552337,21 20,20.5559323 20,20.0084645 L20,11.0404053 L21.4271769,11.0404053 L20,9.73355354 L20,6 L19,6 L19,8.74437789 L12.1122564,2.90703363 C12.0708145,2.87191177 11.9508167,2.87313979 11.908132,2.91063658 L2.69498562,11.0040174 Z" id="Home" stroke="#333333" stroke-width="2"></path>
+                    <circle id="0" fill="#333333" cx="7" cy="18" r="1"></circle>
+                    <path d="M10,18 C10,16.3431458 8.65685425,15 7,15" id="1" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M13,18 C13,14.6862915 10.3137085,12 7,12" id="2" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

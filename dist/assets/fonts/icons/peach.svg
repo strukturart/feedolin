@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>peach</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Artboard-4" transform="translate(-48.000000, -819.000000)" stroke="#333333" stroke-width="2">
+            <g id="321" transform="translate(48.000000, 819.000000)">
+                <path d="M15,12 C15.5,10 14.5,4 8.5,4 C5.5,4 3,6.5 3,11 C3,16.5 11,21 12,21 C13,21 21,16.5 21,11 C21,6.5 18,4 15.5,4 C13.5,4 12.5,5 12.5,5" id="Body"></path>
+                <path d="M12,4 C12,4 12.5,1.5 11,1" id="Stem"></path>
+            </g>
+        </g>
+    </g>
+</svg>

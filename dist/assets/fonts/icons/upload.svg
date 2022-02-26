@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>upload</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Artboard-4" transform="translate(-224.000000, -291.000000)" stroke="#333333" stroke-width="2">
+            <g id="85" transform="translate(224.000000, 291.000000)">
+                <path d="M12,9 L12,21" id="Line"></path>
+                <polyline id="Head" stroke-linejoin="round" transform="translate(12.000000, 10.000000) scale(1, -1) translate(-12.000000, -10.000000) " points="18 7 12 13 6 7"></polyline>
+                <path d="M3,3 L3,5.05908592 C3,5.6127331 3.44494889,6.06155281 3.99340349,6.06155281 L20.0067018,6.06155281 C20.5553434,6.06155281 21.0001052,5.60981015 21.0001051,5.05908592 L21.0001049,3" id="Container" stroke-linejoin="round" transform="translate(12.000053, 4.530776) scale(1, -1) translate(-12.000053, -4.530776) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

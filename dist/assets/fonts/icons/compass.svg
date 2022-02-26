@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>compass</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-444.000000, -291.000000)">
+            <g id="90" transform="translate(444.000000, 291.000000)">
+                <g id="arrow" transform="translate(12.000000, 12.000000) rotate(-45.000000) translate(-12.000000, -12.000000) translate(9.000000, 5.000000)">
+                    <polygon id="Path-17" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="3 0 0 7 3 14 6 7"></polygon>
+                    <polygon id="Rectangle-24" fill="#333333" points="2 2 4 2 6 7 0 7"></polygon>
+                </g>
+                <circle id="Circle" stroke="#333333" stroke-width="2" cx="12" cy="12" r="10"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

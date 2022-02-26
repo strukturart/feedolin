@@ -1,0 +1,796 @@
+/*GENERAL*/
+
+:root {
+  --color-one: black;
+  --color-two: yellow;
+  --color-three: silver;
+  --color-four: rgb(99, 99, 99);
+  --color-five: rgb(38, 38, 38);
+  --color-seven: gainsboro;
+}
+
+@font-face {
+  font-family: "Lato-Regular";
+  src: url("Lato-Regular.e2b5012c.ttf");
+}
+
+*,
+*:before,
+*:after {
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+
+  /* Careful, this breaks the word wherever it is without a hyphen */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  /* Adds a hyphen where the word breaks */
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+:focus {
+  outline: none;
+  background: var(--color-four);
+}
+
+::-moz-focus-inner {
+  border: 0;
+}
+
+html,
+body {
+  font-family: "Lato-Regular";
+  font-weight: 100;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  font-size: 1rem;
+  line-height: 1.4rem;
+  max-height: 100%;
+  max-width: 100%;
+  height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+  background: white;
+}
+
+h1 {
+  font-size: 1rem;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+img {
+  max-width: 90vw;
+  height: auto;
+  display: block;
+}
+
+img[src=""] {
+  display: none;
+}
+
+img[src=" "] {
+  display: none;
+}
+
+button {
+  font-size: 1rem;
+  background: silver;
+  padding: 5px;
+  width: 100vw;
+  margin: 0 0 5px 0;
+  color: black;
+}
+
+button:focus {
+  background: rgb(87, 85, 85);
+  color: white;
+}
+
+table {
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow: hidden;
+}
+
+div#intro {
+  position: fixed;
+  background: black;
+  z-index: 100000;
+  min-width: 100%;
+  height: 100%;
+}
+
+div#intro img {
+  width: 100px;
+  height: auto;
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  margin-left: -50px;
+  animation-name: intro;
+  animation-duration: 2s;
+  animation-delay: 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes intro {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-50px);
+  }
+}
+
+div#intro div#version {
+  position: absolute;
+  text-align: center;
+  color: white;
+  z-index: 2000;
+  font-size: 0.7rem;
+  display: none;
+}
+
+div#intro div#intro-message {
+  position: absolute;
+  top: 190px;
+  text-align: center;
+  color: white;
+  z-index: 2000;
+  font-size: 0.8rem;
+}
+
+div#intro div#loading-progress {
+  position: absolute;
+  top: 220px;
+
+  height: 10px;
+  width: 200px;
+}
+
+div#intro div#loading-progress div {
+  height: 10px;
+  width: 200px;
+}
+
+div#intro div#loading-progress div div {
+  width: 0%;
+  height: 10px;
+  background-color: rgb(180, 128, 128);
+}
+
+/*///////////////////////////
+///TOAST////////////////*/
+
+div#toast {
+  position: fixed;
+  height: auto;
+  overflow: none;
+  background: black;
+  color: white;
+  z-index: 10;
+  min-width: 100%;
+  padding: 5px;
+  top: 0px;
+
+  transition: all 0.5s ease-in-out;
+  transform-origin: left top;
+  transform: translate(0px, -100px);
+}
+
+ul#icons-shortcuts {
+  padding: 10px;
+}
+
+ul#icons-shortcuts li {
+  align-items: center;
+}
+
+ul#icons-shortcuts li img {
+  max-width: 15px;
+  height: 15px;
+}
+
+ul#icons-shortcuts li span {
+  margin: 0 0 0 20px;
+}
+
+/*///////////////////////////
+///FEED////////////////*/
+
+div#KaiOsAd {
+  height: 200px;
+  position: fixed;
+  z-index: 5000000;
+  top: 30px;
+  background: silver;
+  opacity: 0;
+}
+
+div#options {
+  display: none;
+  background: white;
+  position: fixed;
+  top: 0;
+  z-index: 5;
+}
+
+div#options ul li {
+  background: var(--color-three);
+  color: white;
+  padding: 5px;
+  margin: 0 0 5px 0;
+}
+
+div#options ul li:focus {
+  background: rgb(92, 90, 90);
+}
+
+/*FEED*/
+
+div#news-feed {
+  position: relative;
+  background: white;
+  color: black;
+  max-height: 90vh;
+  width: 100vw;
+  font-weight: normal;
+}
+
+div#news-feed div#news-feed-list {
+  height: 92vh;
+  width: 100%;
+  min-width: 100%;
+  padding: 0px 0 50px 0;
+  overflow: scroll;
+  position: absolute;
+  top: 27px;
+}
+
+div#news-feed div#news-feed-list article {
+  padding: 5px 5px 10px 5px;
+  font-weight: normal;
+  background: white;
+}
+
+div#news-feed div#news-feed-list article div.summary img {
+  max-width: 95vw !important;
+  min-width: 95vw !important;
+  margin: 5px 0 5px 0;
+  display: block;
+}
+
+div#news-feed div#news-feed-list article[data-read="read"] {
+  font-style: italic;
+  color: gray;
+}
+
+div#news-feed div#news-feed-list article[data-read="not-read"] {
+  font-style: normal;
+}
+
+div#news-feed div#news-feed-list div.division {
+  color: white;
+  background: rgb(69, 73, 67);
+  display: block;
+  text-align: center;
+}
+
+div#news-feed div#news-feed-list article:focus {
+  background: silver;
+}
+
+div#news-feed div#news-feed-list article h1 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0px;
+}
+
+div#news-feed div#news-feed-list article time {
+  font-size: 0.8rem;
+}
+
+div#news-feed div#news-feed-list article div.duration-filesize {
+  font-size: 0.8rem;
+  max-height: 20px !important;
+}
+
+div#news-feed div#news-feed-list article div.duration-filesize div {
+  font-size: 0.8rem;
+  max-height: 20px;
+}
+
+div#news-feed div#news-feed-list article div.duration {
+  margin: 0 10px 0 0;
+}
+
+div#news-feed
+  div#news-feed-list
+  article
+  div.duration-filesize
+  div.duration:before {
+  background-image: url("clock.794976c6.svg");
+  background-size: 14px 14px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  content: "";
+  margin: 5px 5px 0 0;
+}
+
+div#news-feed
+  div#news-feed-list
+  article
+  div.duration-filesize
+  div.duration:empty:before {
+  display: none;
+}
+
+div#news-feed div#news-feed-list article div.filesize {
+  margin: 0 10px 0 0;
+  display: none;
+}
+
+article[data-media*="podcast"] div.duration-filesize {
+  display: flex !important;
+  display: -webkit-flex !important;
+}
+
+article[data-media*="podcast"] div.duration-filesize:empty {
+  display: none;
+}
+
+div#news-feed div#news-feed-list article div.summary {
+  display: none;
+  padding: 0 0 30px 0;
+}
+
+div#news-feed div#news-feed-list article div.podcast-icon {
+  display: none;
+}
+
+div#news-feed
+  div#news-feed-list
+  article[data-media*="podcast"]
+  div.podcast-icon {
+  display: block;
+  max-width: 15px;
+}
+
+div#news-feed
+  div#news-feed-list
+  article[data-media*="podcast"]
+  div.podcast-icon
+  img {
+  max-width: 15px;
+}
+
+div#news-feed div#news-feed-list article div.youtube-icon {
+  display: none;
+}
+
+div#news-feed div#news-feed-list article div.channel {
+  font-size: 0.8rem;
+}
+
+div#news-feed div#news-feed-list article h1.title {
+  max-height: 2.8rem;
+  overflow: hidden;
+}
+
+div#news-feed div#news-feed-list article.view h1.title {
+  display: block;
+  max-height: 100vh;
+}
+
+div#news-feed
+  div#news-feed-list
+  article[data-media*="youtube"]
+  div.youtube-icon {
+  display: block;
+  max-width: 15px;
+}
+
+div#news-feed
+  div#news-feed-list
+  article[data-media*="youtube"]
+  div.youtube-icon
+  img {
+  max-width: 15px;
+}
+
+div#news-feed div#news-feed-list article div.listened-icon {
+  position: fixed;
+  opacity: 0;
+}
+
+div#news-feed div#news-feed-list article div.startlistened-icon {
+  position: fixed;
+  opacity: 0;
+}
+
+div#news-feed div#news-feed-list article div.listened-icon img {
+  height: 15px;
+  margin: 2px 0 0 10px;
+}
+
+div#news-feed div#news-feed-list article div.startlistened-icon img {
+  height: 15px;
+  margin: 2px 0 0 10px;
+}
+
+div#news-feed
+  div#news-feed-list
+  article[data-listened="listened"]
+  div.listened-icon {
+  position: relative;
+  opacity: 1;
+}
+
+div#news-feed
+  div#news-feed-list
+  article[data-startlistened="start_listened"]
+  div.startlistened-icon {
+  position: relative;
+  opacity: 1;
+}
+
+div#source-page {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  min-height: 100vh;
+  width: 101vw;
+}
+
+div#source-page div#iframe-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  /* ratio 16x9 */
+  height: 0;
+  width: 100%;
+}
+
+div#source-page iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: scroll;
+}
+
+div#source-page div.video-view > iframe {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+div#source-page div.video-view {
+  transform: rotate(90deg);
+  position: relative !important;
+  left: -50px !important;
+  top: 40px !important;
+  width: 320px !important;
+  height: 240px !important;
+}
+
+/*/////////////////
+///BOTTOM BAR////
+////////////////*/
+
+div#bottom-bar {
+  position: fixed;
+  z-index: 2000;
+  bottom: 10px;
+  left: 0px;
+  height: 18px;
+  z-index: 6;
+  background: black;
+  min-width: 100vw;
+}
+
+div#bottom-bar div#inner {
+  position: relative;
+}
+
+div#bottom-bar div {
+  background: black;
+  color: white;
+  padding: 2px;
+}
+
+div#bottom-bar div#button-center {
+  background: black;
+  color: white;
+  padding: 2px;
+  width: 30%;
+  text-align: center;
+}
+
+div#bottom-bar div#button-left {
+  background: black;
+  color: white;
+  padding: 2px;
+  width: 20px;
+  text-align: left;
+  width: 30%;
+}
+
+div#bottom-bar div#button-right {
+  background: black;
+  color: white;
+  padding: 2px;
+  width: 30%;
+  text-align: right;
+}
+
+/*/////////////////
+///TOP-BAR///////*/
+
+div#top-bar {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 18px;
+  z-index: 4;
+  background: black;
+  min-width: 100vw;
+  display: none;
+}
+
+div#top-bar img {
+  margin: 3px 0 0 5px;
+  max-height: 15px;
+  color: white;
+}
+
+div#top-bar div#inner {
+  position: relative;
+}
+
+div#top-bar div {
+  background: black;
+  color: white;
+  padding: 2px;
+}
+
+div#top-bar div#button-center {
+  background: black;
+  color: white;
+  padding: 2px;
+  width: 30%;
+  text-align: center;
+}
+
+div#top-bar div#button-left {
+  background: black;
+  color: white;
+  padding: 2px;
+  width: 20px;
+  text-align: left;
+  width: 30%;
+}
+
+div#top-bar div#button-right {
+  background: black;
+  color: white;
+  padding: 2px;
+  width: 30%;
+  text-align: right;
+}
+
+/*INTRO*/
+
+div#message-box {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  min-width: 100%;
+  height: 100%;
+  background: black;
+  color: white;
+  z-index: 5;
+
+  display: none;
+}
+
+div#message-box div {
+  margin: 100px 0 0 0;
+  animation-name: colorAnimation;
+  animation-duration: 2s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  max-width: 70%;
+  text-align: center;
+}
+
+div#count {
+  font-size: 8px;
+  color: white !important;
+  position: fixed;
+  bottom: 15px;
+}
+
+/*AUDIO-PLAYER*/
+
+div#audio-player {
+  background: var(--color-four);
+  z-index: 3;
+  position: fixed;
+  display: none;
+}
+
+div#audio-player div#audio-title {
+  background: black;
+  color: white;
+  font-size: 1.2rem;
+  max-width: 60%;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+div#audio-player div#image {
+  background-size: cover;
+  min-height: 100vh;
+}
+
+div#audio-player div#background-pattern {
+  min-width: 100vw;
+}
+
+div#audio-player div#background-pattern div {
+  width: 45px;
+  height: 45px;
+  margin: 0px;
+}
+
+div#audio-player div#progress-bar {
+  height: 10px;
+  position: fixed;
+  bottom: 30px;
+  z-index: 5;
+}
+
+div#audio-player div#progress-bar div {
+  height: 5px;
+  background: var(--color-six);
+}
+
+/*
+ SETTINGS
+ */
+
+div#top {
+  position: fixed;
+  top: 0;
+}
+
+div#settings {
+  display: none;
+  height: 92vh;
+  width: 100%;
+  padding: 0px 0 50px 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+  background: rgb(231, 231, 231);
+}
+
+div#settings div#text {
+  margin: 0 0 20px 0;
+}
+
+div#settings h2 {
+  padding: 0 10px 0 10px;
+}
+
+div#settings div.input-parent {
+  padding: 10px 10px 20px 10px;
+}
+
+div#settings div.input-parent:focus {
+  padding: 10px 10px 20px 10px;
+  background: rgb(179, 179, 179);
+}
+
+div#settings label {
+  min-width: 80%;
+  height: 30px;
+  margin: 5px 5px 0 0;
+}
+
+div#settings div#input-wrapper {
+  margin: 0 0 0px 0;
+}
+
+div#settings input {
+  width: 90%;
+  height: 30px;
+  font-size: 1rem;
+  border: 2px solid rgb(32, 32, 32);
+  margin: 10px 0 10px 0;
+  padding: 3px;
+  display: block;
+}
+
+div#settings input:focus {
+  outline: 1px solid rgb(36, 35, 35);
+  background: rgb(255, 240, 240);
+}
+
+#goodbye {
+  position: fixed;
+  z-index: 50000;
+  left: 0;
+  top: 0;
+  background: black;
+  color: white;
+  font-size: 18px;
+  padding: 70px 5px 5px 5px;
+  display: none;
+}
+
+#ciao {
+  padding: 5px;
+  text-align: center;
+  display: none;
+}
+
+#ciao ul {
+  margin: 20px 0 0px 0;
+}
+
+#ciao ul li {
+  margin: 0 0 0px 0;
+  font-size: 14px;
+  list-style: none;
+}
+
+#ciao ul li:first-child {
+  color: yellow;
+  margin: 0 0 5px 0;
+}
+
+#donation {
+  padding: 5px;
+  text-align: center;
+  display: none;
+}
+
+.overscrolling {
+  /* Start the shake animation and make the animation last for 0.5 seconds */
+  animation: jump 0.5s;
+
+  /* When the animation is finished, start again */
+
+  animation-iteration-count: 1;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-30px);
+  }
+}
+
+/*# sourceMappingURL=index.0b7a98f0.css.map */

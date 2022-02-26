@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>save</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-532.000000, -291.000000)">
+            <g id="92" transform="translate(532.000000, 291.000000)">
+                <path d="M3,4.99508929 C3,3.8932319 3.89706013,3 5.00585866,3 L15.9931545,3 C16.5492199,3 17.3138733,3.31387329 17.7059121,3.70591205 L20.2940879,6.29408795 C20.6839524,6.68395241 21,7.44994876 21,8.00684547 L21,18.9941413 C21,20.1019465 20.1073772,21 19.0049107,21 L4.99508929,21 C3.8932319,21 3,20.1073772 3,19.0049107 L3,4.99508929 Z" id="Body" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M7,15.0029293 C7,14.4490268 7.4556644,14 7.99539757,14 L16.0046024,14 C16.5543453,14 17,14.4378814 17,15.0029293 L17,21 L7,21 L7,15.0029293 Z" id="Label" stroke="#333333" stroke-width="2"></path>
+                <path d="M9,16 L15,16 L15,17 L9,17 L9,16 Z M9,18 L15,18 L15,19 L9,19 L9,18 Z" id="Lines" fill="#333333" opacity="0.5"></path>
+                <rect id="Hole" fill="#333333" x="12" y="5" width="1" height="2"></rect>
+                <rect id="Tape" fill="#333333" x="7" y="4" width="2" height="5"></rect>
+                <rect id="Slider" stroke="#333333" stroke-width="2" x="7" y="3" width="8" height="6" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

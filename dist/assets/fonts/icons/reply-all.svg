@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>reply-all</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-444.000000, -335.000000)">
+            <g id="110" transform="translate(444.000000, 335.000000)">
+                <polyline id="Path-37" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="7 5 1 11 7 17"></polyline>
+                <path d="M12,6 L7,11.0296054 L12,16 L12,11.999579 L17,11.999579 C20,11.999579 21,13.9583764 21,17 C23,13.9583764 21,10 17,10 L12,10 L12,6 Z M14,8 L17,8 C22.5007525,8 25.5952407,13.6517611 22.6711036,18.0988234 C21.5803123,19.7577116 19,18.9853804 19,17 C19,14.6641564 18.5225201,13.999579 17,13.999579 L14,13.999579 L14,16 C14,17.7789478 11.8516275,18.6725719 10.5899919,17.4184066 L5.58999192,12.448012 C4.80661789,11.6692764 4.8028688,10.4029328 5.58161814,9.61957244 L10.5816181,4.58996706 C11.8398311,3.32430411 14,4.21534246 14,6 L14,8 Z" id="Path-36" fill="#333333" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

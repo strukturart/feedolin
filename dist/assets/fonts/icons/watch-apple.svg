@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>watch-apple</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-664.000000, -247.000000)" stroke="#333333">
+            <g id="75" transform="translate(664.000000, 247.000000)">
+                <path d="M8.80243218,1.9878391 C8.91154587,1.44227063 9.45097518,1 9.99077797,1 L14.009222,1 C14.5564136,1 15.0887433,1.44371665 15.1975678,1.9878391 L16,6 L8,6 L8.80243218,1.9878391 Z M8.80243218,22.0121609 L8,18 L16,18 L15.1975678,22.0121609 C15.0887433,22.5562834 14.5564136,23 14.009222,23 L9.99077797,23 C9.45097518,23 8.91154587,22.5577294 8.80243218,22.0121609 Z" id="Strap" stroke-width="2" stroke-linejoin="round"></path>
+                <rect id="Body" stroke-width="2" x="6" y="6" width="12" height="12" rx="3"></rect>
+                <rect id="Screen" opacity="0.5" x="8.5" y="8.5" width="7" height="7" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

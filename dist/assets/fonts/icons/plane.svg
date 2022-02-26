@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>plane</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="Artboard-4" transform="translate(-224.000000, -423.000000)" stroke="#333333" stroke-width="2">
+            <g id="145" transform="translate(224.000000, 423.000000)">
+                <path d="M10,5.00684547 C10,4.45078007 10.2150574,3.61437988 10.5229301,3.14021301 C10.5229301,3.14021301 11,2 12,2 C13,2 13.4770699,3.14021301 13.4770699,3.14021301 C13.7658762,3.61506025 14,4.44994876 14,5.00684547 L14,16.9931545 C14,17.5492199 13.8009205,18.398159 13.5561352,18.8877296 L12,22 L10.4438648,18.8877296 C10.1987251,18.3974501 10,17.5500512 10,16.9931545 L10,5.00684547 Z" id="Body"></path>
+                <polyline id="Left-Wing" points="10 8 1 13 1 15 10 13"></polyline>
+                <polyline id="Right-Wing" transform="translate(18.500000, 11.500000) scale(-1, 1) translate(-18.500000, -11.500000) " points="23 8 14 13 14 15 23 13"></polyline>
+                <polyline id="Rear-Right-Wing" points="14 17 18 21 18 22 12 21"></polyline>
+                <polyline id="Rear-Left-Wing" transform="translate(9.000000, 19.500000) scale(-1, 1) translate(-9.000000, -19.500000) " points="8 17 12 21 12 22 6 21"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

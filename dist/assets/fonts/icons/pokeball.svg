@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>pokeball</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-268.000000, -247.000000)">
+            <g id="66" transform="translate(268.000000, 247.000000)">
+                <circle id="Body" stroke="#333333" stroke-width="2" cx="12" cy="12" r="10"></circle>
+                <path d="M14.8292943,12 C17.3089272,12 19.8023152,12 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C3.31957718,12 5.99348631,12 9.17070571,12 C9.06015422,11.6872211 9,11.3506354 9,11 C9,9.34314575 10.3431458,8 12,8 C13.6568542,8 15,9.34314575 15,11 C15,11.3506354 14.9398458,11.6872211 14.8292943,12 Z" id="Tint" fill="#333333" opacity="0.200000003"></path>
+                <path d="M3,11 L9,11 L9,13 L3,13 L3,11 Z M15,11 L21,11 L21,13 L15,13 L15,11 Z" id="Mid" fill="#333333"></path>
+                <circle id="button" stroke="#333333" stroke-width="2" cx="12" cy="12" r="3"></circle>
+                <circle id="button-centre" fill="#333333" cx="12" cy="12" r="1"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

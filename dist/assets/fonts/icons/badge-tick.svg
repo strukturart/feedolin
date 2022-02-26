@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>badge-tick</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-356.000000, -379.000000)">
+            <g id="127" transform="translate(356.000000, 379.000000)">
+                <circle id="Circle" stroke="#333333" stroke-width="2" cx="12" cy="12" r="8"></circle>
+                <path d="M9.85640646,4 L6.14359354,6.14359354 L4,9.85640646 L4,14.1435935 L6.14359354,17.8564065 L9.85640646,20 L14.1435935,20 L17.8564065,17.8564065 L20,14.1435935 L20,9.85640646 L17.8564065,6.14359354 L14.1435935,4 L9.85640646,4 Z M9.67542648,3.32457352 L12,1 L14.3245735,3.32457352 L17.5,2.47372056 L18.350853,5.64914704 L21.5262794,6.5 L20.6754265,9.67542648 L23,12 L20.6754265,14.3245735 L21.5262794,17.5 L18.350853,18.350853 L17.5,21.5262794 L14.3245735,20.6754265 L12,23 L9.67542648,20.6754265 L6.5,21.5262794 L5.64914704,18.350853 L2.47372056,17.5 L3.32457352,14.3245735 L1,12 L3.32457352,9.67542648 L2.47372056,6.5 L5.64914704,5.64914704 L6.5,2.47372056 L9.67542648,3.32457352 Z" id="Points" fill="#333333"></path>
+                <polyline id="Tick" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="9 12 11 14 15 10"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

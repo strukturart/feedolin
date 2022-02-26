@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>bell-1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-840.000000, -247.000000)">
+            <g id="79" transform="translate(840.000000, 247.000000)">
+                <rect id="Base" fill="#333333" x="0" y="18" width="24" height="2" rx="1"></rect>
+                <path d="M22,16 C21.4104337,10.9871312 18,7 12,7 C6,7 2.60236046,10.9413006 2,16 C4.10236046,15.9413006 20.4104337,15.9871312 22,16 Z" id="Body" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M13,5 L13,6 L11,6 L11,5 L9.99077797,5 C9.44358641,5 9,4.55613518 9,4 C9,3.44771525 9.45097518,3 9.99077797,3 L14.009222,3 C14.5564136,3 15,3.44386482 15,4 C15,4.55228475 14.5490248,5 14.009222,5 L13,5 Z" id="Ding" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>
