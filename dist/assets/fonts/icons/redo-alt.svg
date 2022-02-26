@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>redo-alt</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Artboard-4" transform="translate(-400.000000, -1090.000000)" stroke="#333333" stroke-width="2">
+            <g id="Extras" transform="translate(48.000000, 1046.000000)">
+                <g id="redo" transform="translate(352.000000, 44.000000)">
+                    <path d="M13.8275862,19 C16.6842315,19 19,16.7614237 19,14 C19,11.2385763 16.6842315,9 13.8275862,9 L4,9" id="Line" transform="translate(11.500000, 14.000000) scale(-1, 1) translate(-11.500000, -14.000000) "></path>
+                    <polyline id="Head" stroke-linejoin="round" transform="translate(17.500000, 9.000000) scale(-1, 1) translate(-17.500000, -9.000000) " points="19.9974713 4 15 8.99873531 20 14"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

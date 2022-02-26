@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>cake</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-356.000000, -731.000000)" stroke="#333333" stroke-width="2">
+            <g id="288" transform="translate(356.000000, 731.000000)">
+                <path d="M21,8 L21,18.0044225 C21,18.5542648 20.6142426,19.2216766 20.1210938,19.4638672 C20.1210938,19.4638672 18,21 12,21 C6,21 3.87890625,19.4638672 3.87890625,19.4638672 C3.39349973,19.2076804 3,18.555163 3,18.0044225 L3,8" id="Cake" stroke-linecap="round" stroke-linejoin="round"></path>
+                <ellipse id="Top" stroke-linecap="round" stroke-linejoin="round" cx="12" cy="8" rx="9" ry="3"></ellipse>
+                <path d="M3,12 C3,12 4,15.5 5.5,15.5 C7,15.5 7,14.5 8.5,14.5 C10,14.5 10.4793094,17.0104162 12,17 C13.5206906,16.9895838 13.9998573,14.5102041 15.5,14.5 C17.0001427,14.4897959 16.9996908,15.5000832 18.5,15.5 C20.0003092,15.4999168 21,12 21,12" id="Icing"></path>
+                <path d="M8,7.02493781 L8,2" id="Candle-3" stroke-linecap="round"></path>
+                <path d="M12,8.02493781 L12,3" id="Candle-2" stroke-linecap="round"></path>
+                <path d="M16,7.02493781 L16,2" id="Candle-1" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

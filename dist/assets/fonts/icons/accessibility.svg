@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>accessibility</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-92.000000, -907.000000)">
+            <g id="362" transform="translate(92.000000, 907.000000)">
+                <circle id="Circle" stroke="#333333" stroke-width="2" cx="12" cy="12" r="10"></circle>
+                <circle id="Head" fill="#333333" cx="12" cy="7" r="2"></circle>
+                <path d="M7.5,10 C7.5,10 9.03405762,11 12,11 C14.9659424,11 16.5,9.99584961 16.5,9.99584961" id="Arms" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M10,18 C10,18 11.1715543,15.3137829 11.5,14 C11.8284457,12.6862171 11.5,11 11.5,11 L12.5,11 C12.5,11 12.294965,13.1798598 12.5,14 C12.8392358,15.3569432 14,18 14,18" id="Legs" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

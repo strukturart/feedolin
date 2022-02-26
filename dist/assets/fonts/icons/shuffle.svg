@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>shuffle</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-576.000000, -467.000000)">
+            <g id="173" transform="translate(576.000000, 467.000000)">
+                <path d="M2,7 C2,7 3,7 4,7 C10,7 12,17 18.0069431,17 L20,17" id="Bottom-Line" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M2,7 C2,7 2.99832958,7 4,7 C10,7 12.0069431,17 18.0069431,17 L21,17" id="Top-Line" stroke="#333333" stroke-width="2" stroke-linecap="round" transform="translate(11.500000, 12.000000) scale(1, -1) translate(-11.500000, -12.000000) "></path>
+                <path d="M19.5547002,9.83205029 C18.8901455,10.2750868 18,9.79869538 18,9 L18,5 C18,4.20130462 18.8901455,3.72491322 19.5547002,4.16794971 L22.5547002,6.16794971 C23.1484333,6.56377175 23.1484333,7.43622825 22.5547002,7.83205029 L19.5547002,9.83205029 Z" id="Top-Arrow" fill="#333333" fill-rule="nonzero"></path>
+                <path d="M19.5547002,19.8320503 C18.8901455,20.2750868 18,19.7986954 18,19 L18,15 C18,14.2013046 18.8901455,13.7249132 19.5547002,14.1679497 L22.5547002,16.1679497 C23.1484333,16.5637718 23.1484333,17.4362282 22.5547002,17.8320503 L19.5547002,19.8320503 Z" id="Bottom-Arrow" fill="#333333" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

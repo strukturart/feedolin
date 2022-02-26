@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>cloud-error-alt</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-444.000000, -775.000000)">
+            <g id="310" transform="translate(444.000000, 775.000000)">
+                <path d="M7,18 L5,18 C2.790861,18 1,16.209139 1,14 C1,11.790861 2.790861,10 5,10 C5.35840468,10 5.70579988,10.0471371 6.03632437,10.1355501 C6.01233106,9.92702603 6,9.71495305 6,9.5 C6,6.46243388 8.46243388,4 11.5,4 C14.0673313,4 16.2238156,5.7590449 16.8299648,8.1376465 C17.2052921,8.04765874 17.5970804,8 18,8 C20.7614237,8 23,10.2385763 23,13 C23,15.7614237 20.7614237,18 18,18 L17,18" id="Cloud" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="Dot" fill="#333333" cx="12" cy="21" r="1"></circle>
+                <path d="M12,19 C11.4477153,19 10.9504098,18.5536886 10.8891617,18.0024554 L10.1999615,11.7996535 C10.0895258,10.8057323 10.8094597,10 11.8127441,10 L12.1872559,10 C13.1884068,10 13.9112567,10.79869 13.8000385,11.7996535 L13.1108383,18.0024554 C13.049624,18.553384 12.5561352,19 12,19 L12,19 Z" id="Line" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

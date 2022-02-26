@@ -1,4 +1,4 @@
 #!/bin/sh 
-parcel build application/index.html --no-source-maps  --no-minify --no-cache
+parcel build application/index.html --no-source-maps --no-cache
 cd dist
-zip -r ../build/greg.zip ./*
+zip -r ../build/feedolin.zip ./*

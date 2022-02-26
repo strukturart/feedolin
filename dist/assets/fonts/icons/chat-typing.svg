@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>chat-typing</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-136.000000, -599.000000)">
+            <g id="223" transform="translate(136.000000, 599.000000)">
+                <path d="M12.4142136,18 L9,21.4142136 L5.58578644,18 L3.99895656,18 C2.89547708,18 2,17.0970743 2,15.9975267 L2,6.00247329 C2,4.89859975 2.89058031,4 3.99339768,4 L20.0066023,4 C21.1082892,4 22,4.90415942 22,6.00247329 L22,15.9975267 C22,17.1024207 21.1070219,18 20.0024554,18 L12.4142136,18 Z" id="Body" stroke="#333333" stroke-width="2" stroke-linejoin="round"></path>
+                <path d="M8,12 C7.44771525,12 7,11.5522847 7,11 C7,10.4477153 7.44771525,10 8,10 C8.55228475,10 9,10.4477153 9,11 C9,11.5522847 8.55228475,12 8,12 Z M12,12 C11.4477153,12 11,11.5522847 11,11 C11,10.4477153 11.4477153,10 12,10 C12.5522847,10 13,10.4477153 13,11 C13,11.5522847 12.5522847,12 12,12 Z M16,12 C15.4477153,12 15,11.5522847 15,11 C15,10.4477153 15.4477153,10 16,10 C16.5522847,10 17,10.4477153 17,11 C17,11.5522847 16.5522847,12 16,12 Z" id="Dots" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

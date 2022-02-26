@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>headphones</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-180.000000, -247.000000)">
+            <g id="64" transform="translate(180.000000, 247.000000)">
+                <rect id="Right-Ear" fill="#333333" x="15" y="13" width="4" height="9" rx="2"></rect>
+                <rect id="Left-Ear" fill="#333333" x="5" y="13" width="4" height="9" rx="2"></rect>
+                <path d="M21,18 L21,13 C21,7 17,3 12,3 C7,3 3.00000009,7 3,13 C3,13.1247005 3.00000009,18 3.00000009,18" id="Arm" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

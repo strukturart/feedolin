@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>glass-wine</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-400.000000, -291.000000)">
+            <g id="89" transform="translate(400.000000, 291.000000)">
+                <ellipse id="Rim" stroke="#333333" stroke-width="2" cx="12" cy="3" rx="7" ry="2"></ellipse>
+                <path d="M11,13 L11,21.0024554 C11,21.553384 10.5562834,22.0887433 10.0121609,22.1975678 L6.49769878,22.9004602 C6.22282734,22.9554345 6,23.2319336 6,23.5 L6,23.5 C6,23.7761424 6.22900057,24 6.50034732,24 L17.4996527,24 C17.7759869,24 18,23.7680664 18,23.5 L18,23.5 C18,23.2238576 17.7851562,22.9570312 17.5023012,22.9004602 L13.9878391,22.1975678 C13.4422706,22.0884541 13,21.5536886 13,21.0024554 L13,13 L11,13 Z" id="Stem" fill="#333333"></path>
+                <path d="M5,3 C5,7 4.99999996,13 12,13 C19,13 19,7 19,3" id="Body" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

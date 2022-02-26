@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>reindeer</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-576.000000, -555.000000)">
+            <g id="213" transform="translate(576.000000, 555.000000)">
+                <path d="M18,16 L18,16 C19.1045695,16 21,14.1045695 21,13 C21,11.8954305 20.1045695,12 19,12 C18.646115,12 18.3136971,12.0919116 18.0253154,12.2531655" id="Right-Ear" stroke="#333333" stroke-width="2"></path>
+                <path d="M6.03811324,12.2901794 C5.73549324,12.1060506 5.38013134,12 5,12 C3.8954305,12 3,11.8954305 3,13 C3,14.1045695 4.8954305,16 6,16 L6,16" id="Left-Ear" stroke="#333333" stroke-width="2"></path>
+                <path d="M12,21 C15,21 18,18.3137085 18,15 C18,11.6862915 15.3137085,9 12,9 C8.6862915,9 6,11.6862915 6,15 C6,18.3137085 9,21 12,21 Z" id="Head" stroke="#333333" stroke-width="2"></path>
+                <circle id="A-Very-Shiny-Nose" fill="#333333" cx="12" cy="21" r="3"></circle>
+                <path d="M14,17 C13.4477153,17 13,16.5522847 13,16 C13,15.4477153 13.4477153,15 14,15 C14.5522847,15 15,15.4477153 15,16 C15,16.5522847 14.5522847,17 14,17 Z M10,17 C9.44771525,17 9,16.5522847 9,16 C9,15.4477153 9.44771525,15 10,15 C10.5522847,15 11,15.4477153 11,16 C11,16.5522847 10.5522847,17 10,17 Z" id="Eyes" fill="#333333"></path>
+                <path d="M15,11 L18.1122704,9.44386482 C18.6025499,9.19872505 19,8.56211865 19,7.99707067 L19,2" id="Right-Antler" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M15,3 L15,3.99895656 C15,5.10410234 15.8877296,6 17,6 L19,6 L21,6 C22.1045695,6 23,5.1061002 23,3.9951185 L23,1" id="Right-Antler" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M5,11 L8.11227036,9.44386482 C8.6025499,9.19872505 9,8.56211865 9,7.99707067 L9,2" id="Left-Antler" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(7.000000, 6.500000) scale(-1, 1) translate(-7.000000, -6.500000) "></path>
+                <path d="M1,3 L1,3.99895656 C1,5.10410234 1.88772964,6 3,6 L5,6 L7,6 C8.1045695,6 9,5.1061002 9,3.9951185 L9,1" id="Left-Antler" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(5.000000, 3.500000) scale(-1, 1) translate(-5.000000, -3.500000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

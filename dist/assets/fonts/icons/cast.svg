@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>cast</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-576.000000, -775.000000)">
+            <g id="313" transform="translate(576.000000, 775.000000)">
+                <path d="M14,21 C14,20.3198705 13.9477705,19.6519398 13.8471036,19 L20.1079605,19 C20.6000638,19 21,18.4774101 21,17.8264982 L21,6.17350177 C21,5.52281095 20.5995081,5 20.1079605,5 L3.8920395,5 C3.3999362,5 3,5.52258989 3,6.17350177 L3,8.15289636 C2.34806024,8.05222948 1.68012954,8 1,8 L1,6.38159099 C1,4.5152872 2.22486399,3 3.74189208,3 L20.2581079,3 C21.7741705,3 23,4.5150181 23,6.38159099 L23,17.618409 C23,19.4847128 21.775136,21 20.2581079,21 L14,21 Z M13.3730012,17 C12.0929649,13.0375969 8.96240308,9.90703508 5,8.62699876 L5,7 L19,7 L19,17 L13.3730012,17 Z" id="Screen" fill="#333333" fill-rule="nonzero"></path>
+                <path d="M2.0093689,21 C1.45190985,21 1,20.5496864 1,19.9906311 L1,18 C3,18 4,19 4,21 L2.0093689,21 Z" id="0" fill="#333333"></path>
+                <path d="M1,15 C4.5,15 7,17.5 7,21" id="1" stroke="#333333" stroke-width="2"></path>
+                <path d="M1,11 C6.5,11 11,15.5 11,21" id="2" stroke="#333333" stroke-width="2"></path>
+            </g>
+        </g>
+    </g>
+</svg>

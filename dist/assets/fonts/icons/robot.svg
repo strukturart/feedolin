@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>robot</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-532.000000, -335.000000)">
+            <g id="111" transform="translate(532.000000, 335.000000)">
+                <rect id="Face" stroke="#333333" stroke-width="2" x="1" y="7" width="22" height="14" rx="2"></rect>
+                <path d="M13,3.73243561 L13,7 L11,7 L11,3.73243561 C10.4021986,3.38662619 10,2.74028236 10,2 C10,0.8954305 10.8954305,0 12,0 C13.1045695,0 14,0.8954305 14,2 C14,2.74028236 13.5978014,3.38662619 13,3.73243561 Z" id="Antenna" fill="#333333"></path>
+                <path d="M18,14 C16.8954305,14 16,13.1045695 16,12 C16,10.8954305 16.8954305,10 18,10 C19.1045695,10 20,10.8954305 20,12 C20,13.1045695 19.1045695,14 18,14 Z M6,14 C4.8954305,14 4,13.1045695 4,12 C4,10.8954305 4.8954305,10 6,10 C7.1045695,10 8,10.8954305 8,12 C8,13.1045695 7.1045695,14 6,14 Z" id="Eyes" fill="#333333"></path>
+                <path d="M10,15 C10,16.1045695 10.8954305,17 12,17 L12,17 C13.1045695,17 14,16.1045695 14,15" id="Mouth" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>thermometer-high</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-664.000000, -1090.000000)">
+            <g id="Extras" transform="translate(48.000000, 1046.000000)">
+                <g id="thermometer-high" transform="translate(616.000000, 44.000000)">
+                    <path d="M14,14.7577745 L14,3.50840855 C14,2.11541748 12.8807119,1 11.5,1 C10.1096621,1 9,2.12305276 9,3.50840855 L9,14.7577745 C7.79401426,15.5650359 7,16.9397919 7,18.5 C7,20.9852814 9.01471863,23 11.5,23 C13.9852814,23 16,20.9852814 16,18.5 C16,16.9397919 15.2059857,15.5650359 14,14.7577745 Z" id="Termometer" stroke="#333333" stroke-width="2"></path>
+                    <path d="M12,16.0500091 L12,3.4963932 C12,3.22618103 11.7761424,3 11.5,3 C11.2319336,3 11,3.22224281 11,3.4963932 L11,16.0500091 C9.85887984,16.2816442 9,17.290521 9,18.5 C9,19.8807119 10.1192881,21 11.5,21 C12.8807119,21 14,19.8807119 14,18.5 C14,17.290521 13.1411202,16.2816442 12,16.0500091 Z" id="Level" fill="#333333"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

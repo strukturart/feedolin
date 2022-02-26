@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>laptop</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-136.000000, -159.000000)">
+            <g id="23" transform="translate(136.000000, 159.000000)">
+                <path d="M3,17 L3,6.99539757 C3,5.89148214 3.89423523,5 5.00087166,5 L18.9991283,5 C20.1010492,5 21,5.90024417 21,6.99539757 L21,17 L3,17 Z" id="Screen" stroke="#333333" stroke-width="2"></path>
+                <path d="M0,16 L24,16 L24,17.5 C24,18.3284271 23.3330537,19 22.4986925,19 L1.50130749,19 C0.672158257,19 0,18.3342028 0,17.5 L0,16 Z M19,17.5 C19,17.7680664 19.2238576,18 19.5,18 C19.7680664,18 20,17.7761424 20,17.5 C20,17.2319336 19.7761424,17 19.5,17 C19.2319336,17 19,17.2238576 19,17.5 Z" id="Base" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

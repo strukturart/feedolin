@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>holly</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-752.000000, -555.000000)" stroke="#333333" stroke-width="2">
+            <g id="217" transform="translate(751.000000, 555.000000)">
+                <g id="Left-Leaf" transform="translate(7.779591, 14.764475) rotate(-345.000000) translate(-7.779591, -14.764475) translate(2.779591, 6.264475)" stroke-linecap="round">
+                    <path d="M5,1.86517468e-14 C5,3 -8.8817842e-15,5 -8.8817842e-15,5 C-8.8817842e-15,5 2,6.75 2,8.5 C2,10.25 -8.8817842e-15,12 -8.8817842e-15,12 C-8.8817842e-15,12 5,15 5,17 C5,15 10,12 10,12 C10,12 8,10.1624373 8,8.5 C8,6.6624373 10,5 10,5 C10,5 5,3 5,1.86517468e-14 Z" id="Path-161" stroke-linejoin="round"></path>
+                    <path d="M5,9 L5,1" id="Path-162"></path>
+                </g>
+                <g id="Right-Leaf" transform="translate(18.279591, 14.764475) scale(-1, 1) rotate(-345.000000) translate(-18.279591, -14.764475) translate(13.279591, 6.264475)" stroke-linecap="round">
+                    <path d="M5,1.77635684e-14 C5,3 -1.0658141e-14,5 -1.0658141e-14,5 C-1.0658141e-14,5 2,6.75 2,8.5 C2,10.25 -1.0658141e-14,12 -1.0658141e-14,12 C-1.0658141e-14,12 5,15 5,17 C5,15 10,12 10,12 C10,12 8,10.1624373 8,8.5 C8,6.6624373 10,5 10,5 C10,5 5,3 5,1.77635684e-14 Z" id="Path-161" stroke-linejoin="round"></path>
+                    <path d="M5,9 L5,1" id="Path-162"></path>
+                </g>
+                <path d="M10.5,6 C9.11928813,6 8,4.88071187 8,3.5 C8,2.11928813 9.11928813,1 10.5,1 C11.8807119,1 13,2.11928813 13,3.5 C13,4.88071187 11.8807119,6 10.5,6 Z M15.5,6 C14.1192881,6 13,4.88071187 13,3.5 C13,2.11928813 14.1192881,1 15.5,1 C16.8807119,1 18,2.11928813 18,3.5 C18,4.88071187 16.8807119,6 15.5,6 Z" id="Berries"></path>
+            </g>
+        </g>
+    </g>
+</svg>

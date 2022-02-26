@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>mobile-data</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-488.000000, -511.000000)">
+            <g id="191" transform="translate(488.000000, 511.000000)">
+                <polyline id="Mast" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="5 23 12 8 19 23"></polyline>
+                <circle id="Tip" fill="#333333" cx="12" cy="7" r="2"></circle>
+                <path d="M12,9 L12,23" id="Mast-Leg" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M19,23 L8,16 L19,23 Z" id="Mast-Support" stroke="#333333"></path>
+                <path d="M16,23 L5,16 L16,23 Z" id="Mast-Support" stroke="#333333" transform="translate(10.500000, 19.500000) scale(-1, 1) translate(-10.500000, -19.500000) "></path>
+                <path d="M7.28846879,3.28456761 C6.48158342,4.3063776 6,5.59694888 6,7 C6,8.41311382 6.48851603,9.71212861 7.30587991,10.7373762 M16.7342585,10.6864699 C17.5274514,9.66928573 18,8.38982768 18,7 C18,5.59877562 17.5196698,4.30973837 16.7146812,3.28856008" id="Radio-Waves-1" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M2.74593423,1.05091292 C1.64106815,2.76603232 1,4.80815142 1,7 C1,9.22931821 1.6631736,11.3037439 2.80300299,13.0367593 M21.2161707,13.0075063 C22.3442601,11.2804208 23,9.21678853 23,7 C23,4.79436429 22.3508416,2.74034764 21.2331613,1.01858654" id="Radio-Waves-2" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

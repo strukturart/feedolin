@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>selection-rect</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Artboard-4" transform="translate(-576.000000, -687.000000)" stroke="#333333" stroke-width="2">
+            <g id="273" transform="translate(576.000000, 687.000000)">
+                <path d="M8,4 L16,4 M19,4 L19.9989566,4 C21.1041023,4 22,4.88991509 22,5.99790166 L22,7.02050781 M22,10 L22,14 M22,17 L22,17.9989566 C22,19.1041023 21.0993358,20 20.0006631,20 L19.0515137,20 M16,20 L8,20 M5,20 L4.00104344,20 C2.89589766,20 2,19.0999011 2,17.9989566 L2,17 M2,14 L2,10 M2,7 L2,6.00104344 L2,6.00104344 C2,4.89589766 2.90009892,4 4.00104344,4 L5,4" id="Selection"></path>
+            </g>
+        </g>
+    </g>
+</svg>

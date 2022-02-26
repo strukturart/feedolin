@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>scales</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-4" transform="translate(-224.000000, -819.000000)">
+            <g id="325" transform="translate(224.000000, 819.000000)">
+                <path d="M5,19 C7.209139,19 9,17.209139 9,15 C7.5,15 2,15 1,15 C1,17.209139 2.790861,19 5,19 Z" id="Left" fill="#333333"></path>
+                <path d="M19,15 C21.209139,15 23,13.209139 23,11 C21.5,11 16,11 15,11 C15,13.209139 16.790861,15 19,15 Z" id="Right" fill="#333333"></path>
+                <rect id="Centre" stroke="#333333" stroke-width="2" x="10" y="2" width="4" height="4" rx="2"></rect>
+                <path d="M5,6 L10.004003,4.57028486 M14.0447031,3.41579912 L19,2" id="Arms" stroke="#333333" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M12,6 L12,21" id="Stand" stroke="#333333" stroke-width="2"></path>
+                <polyline id="Path-260" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" points="8.5 15 5 6 1.5 15"></polyline>
+                <polyline id="Path-260" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" points="22.5 11 19 2 15.5 11"></polyline>
+                <path d="M4,22 C4,21.4477153 4.44371665,21 4.99980749,21 L9,21 L9,21 C9,20.4477153 9.45516821,20 9.99998991,20 L14.0557962,20 C14.6080754,20 15.0557861,20.453186 15.0557861,21 L15.0557861,21 L18.9994645,21 C19.552045,21 20,21.4438648 20,22 L20,23 L4,23 L4,22 Z" id="Base" fill="#333333"></path>
+            </g>
+        </g>
+    </g>
+</svg>

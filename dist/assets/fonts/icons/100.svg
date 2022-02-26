@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>100</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Artboard-4" transform="translate(-92.000000, -819.000000)" stroke="#333333" stroke-width="2">
+            <g id="322" transform="translate(92.000000, 819.000000)">
+                <path d="M3,7 L8,3 C8,3 3,13.5 3,17" id="1" stroke-linejoin="round"></path>
+                <path d="M12.4358982,3 C10.9358982,3.5 9.93589818,6 9.43589818,8 C8.93589818,10 8.34414647,13 10.9358982,13 C14.5276499,13 14.0276499,5 14.0276499,5" id="0"></path>
+                <path d="M19.4358982,3 C17.9358982,3.5 16.9358982,6 16.4358982,8 C15.9358982,10 15.3441465,13 17.9358982,13 C21.5276499,13 21.0276499,5 21.0276499,5" id="0"></path>
+                <path d="M7,17 C7,17 12,15 18,16" id="Line-1"></path>
+                <path d="M19,19 C10.5,18.1020408 4,21 4,21" id="Line-2" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>
