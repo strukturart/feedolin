@@ -8,6 +8,7 @@ export let stop_scan = function () {
   document.getElementById("qr-screen").style.display = "none";
   console.log("yeah");
   clearInterval(intv);
+  status.window_status = "settings";
 };
 
 export let start_scan = function (callback) {
@@ -60,6 +61,7 @@ export let start_scan = function (callback) {
               stop_scan();
               callback(code.data);
               clearInterval(intv);
+              status.window_status = "settings";
             }
           }, 1000);
         };

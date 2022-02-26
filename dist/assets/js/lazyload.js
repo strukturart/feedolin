@@ -1,30 +1,28 @@
-const lazyload = ((_) => {
-  let ll = function () {
-    const images = document.querySelectorAll(".lazyload");
+import IntersectionObserver from "intersection-observer";
 
-    function handleIntersection(entries) {
-      entries.map((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.src = entry.target.dataset.src;
-          entry.target.classList.add("loaded");
-          observer.unobserve(entry.target);
-        }
-      });
-    }
+let ll = function () {
+  const images = document.querySelectorAll(".lazyload");
 
-    const observer = new IntersectionObserver(handleIntersection);
+  function handleIntersection(entries) {
+    entries.map((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.src = entry.target.dataset.src;
+        entry.target.classList.add("loaded");
+        observer.unobserve(entry.target);
+      }
+    });
+  }
 
-    for (let i = 0; i < images.length; i++) {
-      observer.observe(images[i]);
-    }
-  };
+  const observer = new IntersectionObserver(handleIntersection);
 
-  let existCondition = setInterval(function () {
-    if (document.getElementsByClassName("lazyload").length) {
-      clearInterval(existCondition);
-      ll();
-    }
-  }, 500);
+  for (let i = 0; i < images.length; i++) {
+    observer.observe(images[i]);
+  }
+};
 
-  return { ll };
-})();
+let existCondition = setInterval(function () {
+  if (document.getElementsByClassName("lazyload").length) {
+    clearInterval(existCondition);
+    ll();
+  }
+}, 500);

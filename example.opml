@@ -15,6 +15,11 @@
             <outline type="rss" text="KaiOs Blog" title="KaiOs Reddit" xmlUrl="https://www.kaiostech.com/feed/" htmlUrl=""/>
         </outline>
 
+        <outline text="Youtube" title="youtube">
+<outline type="rss" text="Verbrechen" title="Verbrechen" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCjMzlcG7THh8QEsP5pWFr2w" htmlUrl=""/>
+<outline type="rss" text="Bookstream" title="Bookstream" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UC07W8bIiwY-EXZ9wpPQZLPw" htmlUrl=""/>
+</outline>
+
 
 
          <outline text="Podcast" title="Podcast">

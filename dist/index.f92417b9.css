@@ -6,12 +6,13 @@
   --color-three: silver;
   --color-four: rgb(99, 99, 99);
   --color-five: rgb(38, 38, 38);
+  --color-six: rgb(187, 79, 79);
   --color-seven: gainsboro;
 }
 
 @font-face {
   font-family: "Lato-Regular";
-  src: url("Lato-Regular.e2b5012c.ttf");
+  src: url("Lato-Regular.e40177f3.ttf");
 }
 
 *,
@@ -210,12 +211,12 @@ ul#icons-shortcuts li span {
 ///FEED////////////////*/
 
 div#KaiOsAd {
-  height: 200px;
-  position: fixed;
-  z-index: 5000000;
-  top: 30px;
-  background: silver;
-  opacity: 0;
+  height: 90px;
+}
+
+div#KaiOsAds-Wrapper {
+  height: 90px;
+  overflow: hidden;
 }
 
 div#options {
@@ -245,6 +246,7 @@ div#news-feed {
   color: black;
   max-height: 90vh;
   width: 100vw;
+  overflow: hidden;
   font-weight: normal;
 }
 
@@ -253,7 +255,7 @@ div#news-feed div#news-feed-list {
   width: 100%;
   min-width: 100%;
   padding: 0px 0 50px 0;
-  overflow: scroll;
+  overflow-y: scroll;
   position: absolute;
   top: 27px;
 }
@@ -320,7 +322,7 @@ div#news-feed
   article
   div.duration-filesize
   div.duration:before {
-  background-image: url("clock.794976c6.svg");
+  background-image: url("clock.c272e924.svg");
   background-size: 14px 14px;
   display: inline-block;
   width: 14px;
@@ -793,4 +795,4 @@ div#settings input:focus {
   }
 }
 
-/*# sourceMappingURL=index.0b7a98f0.css.map */
+/*# sourceMappingURL=index.f92417b9.css.map */

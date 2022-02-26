@@ -1,5 +1,6 @@
 "use strict";
 import Mustache from "mustache";
+
 import DOMPurify from "dompurify";
 import { sort_array } from "./assets/js/helper.js";
 import { toaster } from "./assets/js/helper.js";
@@ -8,14 +9,14 @@ import {
   hashCode,
   goodbye,
   formatFileSize,
-  lazyload,
 } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 
 import { bottom_bar, top_bar } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
-import { load_settings } from "./assets/js/settings.js";
+import { load_settings, save_settings } from "./assets/js/settings.js";
+import { play_podcast, volume_control, seeking } from "./assets/js/audio.js";
 
 let article_array;
 var content_arr = [];
@@ -33,12 +34,12 @@ var read_elem =
     ? JSON.parse(localStorage.getItem("read_elem"))
     : [];
 //get recently played podcast
-let recently_played =
+export let recently_played =
   localStorage.getItem("recently_played") != null
     ? JSON.parse(localStorage.getItem("recently_played"))
     : [];
 //get listened podcasts
-let listened_elem =
+export let listened_elem =
   localStorage.getItem("listened_elem") != null
     ? JSON.parse(localStorage.getItem("listened_elem"))
     : [];
@@ -89,7 +90,6 @@ let setting = {
   local_file: false,
   wwww_file: false,
   ads: false,
-  sleepmode: false,
 };
 
 let default_opml =
@@ -101,6 +101,9 @@ export let status = {
   active_audio_element_id: "",
   volume_status: false,
   panel: "",
+  audio_duration: "",
+  audio_status: "play",
+  sleepmode: false,
 };
 
 let reload = function () {
@@ -116,18 +119,38 @@ if (localStorage.getItem("audio_memory") != null) {
 } else {
   audio_memory = {};
 }
-/*
+
 //get version
-function manifest(a) {
-  document.getElementById("version").innerText =
-    "Version " + a.manifest.version;
-  if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
-    setting.ads = true;
-  } else {
-    let t = document.getElementById("KaiOsAd");
-    t.remove();
-    setting.ads = false;
+
+if (navigator.mozApps) {
+  //ads || ads free
+
+  //KaioOs ads
+  let getManifest = function (callback) {
+    if (!navigator.mozApps) {
+      return false;
+    }
+    let self = navigator.mozApps.getSelf();
+    self.onsuccess = function () {
+      callback(self.result);
+    };
+    self.onerror = function () {};
+  };
+
+  let self;
+  //KaiOs store true||false
+  function manifest(a) {
+    self = a.origin;
+    let t = document.getElementById("KaiOsAds-Wrapper");
+    if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
+      document.querySelector("#KaiOsAds-Wrapper iframe").src = "ads.html";
+    } else {
+      console.log("Ads free");
+      t.style.display = "none";
+    }
   }
+
+  getManifest(manifest);
 }
 
 //let audio_memory;
@@ -135,8 +158,7 @@ if (localStorage.getItem("audio_memory") != null) {
   let d = JSON.parse(localStorage.getItem("audio_memory"));
   audio_memory = d;
 }
-getManifest(manifest);
-*/
+
 setTimeout(() => {
   if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
@@ -210,35 +232,17 @@ let load_local_file_opml = function () {
     return false;
   }
 
-  var finder = new Applait.Finder({
-    type: "sdcard",
-    debugMode: true,
-  });
+  var sdcard = navigator.getDeviceStorage("sdcard");
 
-  finder.search(a);
+  var request = sdcard.get(a);
+  request.onerror = function () {
+    document.getElementById("intro-message").innerHTML =
+      "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.";
+  };
 
-  finder.on("searchBegin", function (needle) {
-    alert(needle);
-  });
+  request.onsuccess = function () {
+    var file = this.result;
 
-  finder.on("empty", function (needle) {
-    toaster("no sdcard found");
-    return;
-  });
-
-  finder.on("searchCancelled", function (message) {});
-
-  finder.on("searchComplete", function (needle, filematchcount) {
-    if (filematchcount == 0) {
-      document.getElementById("intro-message").innerHTML =
-        "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.";
-      setTimeout(() => {}, 3000);
-    }
-  });
-
-  finder.on("error", function (message, err) {});
-
-  finder.on("fileFound", function (file, fileinfo, storageName) {
     var reader = new FileReader();
     reader.onerror = function (event) {
       toaster("shit happens");
@@ -276,7 +280,7 @@ let load_local_file_opml = function () {
       );
     };
     reader.readAsText(file);
-  });
+  };
 };
 
 ///////////
@@ -345,7 +349,7 @@ let load_source_opml = function () {
 
   xhttp.send(null);
 };
-
+/*
 let start_download_content = function (source_data) {
   for (let i = 0; i < source_data.length; i++) {
     if (!source_data[i].category || source_data[i].category == "") {
@@ -374,7 +378,7 @@ let start_download_content = function (source_data) {
     document.getElementById("intro").style.display = "none";
   }
 };
-
+*/
 //////////////////////////////
 //download content////
 //////////////////////////////
@@ -388,8 +392,6 @@ let rss_fetcher = function (
   var xhttp = new XMLHttpRequest({
     mozSystem: true,
   });
-  //workarounf for LE bug ??
-  //xhttp.open("GET", "https://cors.bridged.cc/" + param_url, true);
 
   xhttp.open("GET", param_url, true);
   xhttp.timeout = 2000;
@@ -401,7 +403,7 @@ let rss_fetcher = function (
   xhttp.addEventListener("loadend", loadEnd);
 
   function transferFailed() {
-    console.log("failed" + param_channel, 1000);
+    //console.log("failed" + param_channel, 1000);
   }
 
   // Add a hook to convert all text to capitals
@@ -699,7 +701,7 @@ let rss_fetcher = function (
 
     ////Redirection
     if (xhttp.status === 301) {
-      console.log(param_channel + " redirection", 3000);
+      //console.log(param_channel + " redirection", 3000);
       rss_fetcher(
         xhttp.getResponseHeader("Location"),
         param_limit,
@@ -708,17 +710,10 @@ let rss_fetcher = function (
     }
 
     xhttp.ontimeout = function (e) {
-      console.log(param_channel + "Time out", 3000);
+      //console.log(param_channel + "Time out", 3000);
     };
 
     if (xhttp.status === 0) {
-      console.log(
-        param_channel +
-          " status: " +
-          xhttp.status +
-          xhttp.getAllResponseHeaders(),
-        3000
-      );
     }
   };
 
@@ -854,7 +849,6 @@ let division_remove = function () {
       .forEach(function (item, index, object) {
         if (document.querySelectorAll("div.division")[index].classList) {
           let k = document.querySelectorAll("div.division")[index].className;
-          console.log(k);
           if (pp.indexOf(k) > -1) {
             item.classList.add("remove");
           }
@@ -878,7 +872,6 @@ function build() {
   clean_localstorage();
   bottom_bar("settings", "select", "options");
   top_bar("", panels[0], "");
-  if (setting.ads) panels.push("KaiOsAds");
 
   panels.push("recently-played");
 
@@ -886,7 +879,7 @@ function build() {
 
   division_remove();
 
-  lazyload.ll();
+  //ll();
   status.window_status = "article-list";
 
   document.getElementById("intro").style.display = "none";
@@ -944,10 +937,8 @@ let mark_as_read = function (un_read) {
 ////////////////////////
 //NAVIGATION
 /////////////////////////
-var s = document.getElementById("KaiOsAd");
 
 function nav_panels(left_right) {
-  s.style.opacity = "0";
   window.scrollTo(0, 0);
 
   if (left_right == "left") {
@@ -963,14 +954,8 @@ function nav_panels(left_right) {
     current_panel += panels.length;
   }
 
-  if (panels[current_panel] == "KaiOsAds") {
-    s.style.opacity = "1";
-  } else {
-    s.style.opacity = "0";
-  }
-
   top_bar("", panels[current_panel], "");
-  if (setting.sleepmode) top_bar("sleep", panels[current_panel], "");
+  if (status.sleepmode) top_bar("sleep", panels[current_panel], "");
 
   setTimeout(() => {
     article_array = document.querySelectorAll("article");
@@ -1041,7 +1026,7 @@ function nav(move) {
   }
 
   if (document.activeElement.classList.contains("input-parent")) {
-    bottom_bar("save", "edit", "back");
+    bottom_bar("", "edit", "back");
   }
 
   let b = document.activeElement.parentNode;
@@ -1049,7 +1034,6 @@ function nav(move) {
 
   for (let i = 0; i < items.length; i++) {
     siblings.push(items[i]);
-  
   }
 
   if (move == "+1") {
@@ -1211,6 +1195,10 @@ let show_article_list = function () {
   bottom_bar("settings", "select", "options");
   top_bar("", panels[current_panel], "");
 
+  if (status.sleepmode) {
+    top_bar("sleep", panels[current_panel], "");
+  }
+
   //show hide channels division
   if (status.panel == "channels") {
     document.querySelectorAll("div.division").forEach(function (index, key) {
@@ -1248,17 +1236,6 @@ let show_article_list = function () {
   article_array[tab_index];
   document.querySelector("div#source-page").style.display = "none";
   document.querySelector("div#source-page iframe").setAttribute("src", "");
-  bottom_bar("settings", "select", "options");
-
-  if (setting.sleepmode) {
-    top_bar(
-      "<img class='sleepmode' src='/assets/fonts/icons/timer.svg'>",
-      panels[current_panel],
-      ""
-    );
-  }
-
-  bottom_bar("settings", "select", "options");
 
   status.window_status = "article-list";
   document.activeElement.focus();
@@ -1280,7 +1257,7 @@ let show_article_list = function () {
 //settings view
 
 let show_settings = function () {
-  bottom_bar("save", "", "back");
+  bottom_bar("", "", "back");
 
   status.active_element_id = document.activeElement.getAttribute("data-id");
   status.window_status = "settings";
@@ -1363,12 +1340,10 @@ let sleep_mode = function () {
 
   toaster("sleepmode activ", 3000);
   setTimeout(() => {
-    audio_player.play_podcast();
+    play_podcast();
     status.sleepmode = false;
   }, st);
 };
-
-let export_settings = function () {};
 
 let open_player = function (reopen) {
   document.getElementById("audio-player").style.display = "block";
@@ -1409,12 +1384,12 @@ let open_player = function (reopen) {
 const qr_listener = document.querySelector("input#source");
 let qrscan = false;
 qr_listener.addEventListener("focus", (event) => {
-  bottom_bar("save", "qr", "back");
+  bottom_bar("", "qr", "back");
   qrscan = true;
 });
 
 qr_listener.addEventListener("blur", (event) => {
-  bottom_bar("save", "", "back");
+  bottom_bar("", "", "back");
   qrscan = false;
 });
 
@@ -1432,14 +1407,14 @@ function repeat_action(param) {
       break;
     case "ArrowLeft":
       if (status.window_status == "audio-player") {
-        audio_player.seeking("backward");
+        seeking("backward");
         break;
       }
       break;
 
     case "ArrowRight":
       if (status.window_status == "audio-player") {
-        audio_player.seeking("forward");
+        seeking("forward");
         break;
       }
       break;
@@ -1452,7 +1427,8 @@ function repeat_action(param) {
 
 function longpress_action(param) {
   switch (param.key) {
-    case "0":
+    case "Backspace":
+      window.close();
       break;
   }
 }
@@ -1495,20 +1471,29 @@ function shortpress_action(param) {
         status.window_status == "settings" &&
         document.activeElement.classList.contains("loadsettings")
       ) {
-        settings.load_settings_from_file();
+        load_settings_from_file();
       }
 
       if (
         status.window_status == "settings" &&
         document.activeElement.classList.contains("export")
       ) {
-        settings.export_settings();
+        export_settings();
+      }
+
+      if (
+        status.window_status == "settings" &&
+        document.activeElement.classList.contains("save")
+      ) {
+        save_settings();
       }
 
       if (status.window_status == "settings" && qrscan == true) {
         status.window_status = "scan";
 
         start_scan(function (callback) {
+          status.window_status = "settings";
+
           let slug = callback;
           document.getElementById("source").value = slug;
         });
@@ -1525,7 +1510,7 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "audio-player") {
-        audio_player.seeking("backward");
+        seeking("backward");
         break;
       }
       break;
@@ -1537,7 +1522,7 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "audio-player") {
-        audio_player.seeking("forward");
+        seeking("forward");
         break;
       }
       break;
@@ -1559,7 +1544,7 @@ function shortpress_action(param) {
       }
 
       if (status.volume_status === true) {
-        audio_player.volume_control("down");
+        volume_control("down");
         break;
       }
 
@@ -1583,7 +1568,7 @@ function shortpress_action(param) {
       }
 
       if (status.volume_status === true) {
-        audio_player.volume_control("up");
+        volume_control("up");
         break;
       }
       break;
@@ -1610,9 +1595,7 @@ function shortpress_action(param) {
         document.activeElement.getAttribute("data-media") == "podcast"
       ) {
         open_player(false);
-        audio_player.play_podcast(
-          document.activeElement.getAttribute("data-link")
-        );
+        play_podcast(document.activeElement.getAttribute("data-link"));
         break;
       }
 
@@ -1622,14 +1605,12 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "settings") {
-        settings.save_settings();
+        save_settings();
         break;
       }
 
       if (status.window_status == "audio-player") {
-        audio_player.play_podcast(
-          document.activeElement.getAttribute("data-link")
-        );
+        play_podcast(document.activeElement.getAttribute("data-link"));
         break;
       }
 
