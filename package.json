@@ -17,7 +17,8 @@
       "dompurify": "^2.3.6",
       "intersection-observer": "^0.12.0",
       "jsqr": "^1.4.0",
-      "mustache": "^4.2.0"
+      "mustache": "^4.2.0",
+      "youtube-player": "^5.5.2"
    },
    "staticFiles": {
       "staticPath": [

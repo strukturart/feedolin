@@ -825,6 +825,7 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             item_read = "not-read";
             item_date = "";
             startlistened = "";
+            youtube_id = "";
             //Channel
             rss_title = data.querySelector("title").textContent || param_channel;
             param_channel = rss_title;
@@ -884,8 +885,10 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         item_date = item_date.toDateString();
                     }
                 }
-                if (item_link !== null && item_link.includes("https://www.youtube.com") === true) item_media = "youtube";
-                else item_media = "rss";
+                if (item_link !== null && item_link.includes("https://www.youtube.com") === true) {
+                    item_media = "youtube";
+                    if (el[i].getElementsByTagNameNS("*", "videoId").length > 0) youtube_id = el[i].getElementsByTagNameNS("*", "videoId").item(0).textContent;
+                } else item_media = "rss";
                 startlistened = "";
                 if (audio_memory.hasOwnProperty(item_cid)) start_listened = "start_listened";
                 content_arr.push({
@@ -906,7 +909,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     recently_played: null,
                     recently_order: null,
                     read: "not-read",
-                    start_listened: startlistened
+                    start_listened: startlistened,
+                    youtube_id: youtube_id
                 });
             }
             ////////////
@@ -1308,6 +1312,15 @@ let show_article = function() {
 //show article list
 //////////////////
 let show_article_list = function() {
+    if (player) {
+        //player.destroy();
+        //player.stopVideo();
+        player.pauseVideo();
+        document.querySelector("iframe").style.display = "none";
+    //document.querySelector("div#iframe-wrapper").style.display = "none";
+    //document.querySelector(".video-view").style.display = "none";
+    //ayer.clearVideo();
+    }
     _helperJs.bottom_bar("settings", "select", "options");
     _helperJs.top_bar("", panels[current_panel], "");
     if (status.sleepmode) _helperJs.top_bar("sleep", panels[current_panel], "");
@@ -1318,9 +1331,11 @@ let show_article_list = function() {
     });
     document.getElementById("audio-player").style.display = "none";
     document.querySelector("div#news-feed").style.background = "white";
-    navigator.spatialNavigationEnabled = false;
-    document.querySelector("div#source-page div#iframe-wrapper").classList.remove("video-view");
-    document.getElementById("top-bar").style.display = "block";
+    /*
+  document
+    .querySelector("div#source-page div#iframe-wrapper")
+    .classList.remove("video-view");
+    */ document.getElementById("top-bar").style.display = "block";
     let elem = document.querySelectorAll("article");
     for(let i = 0; i < elem.length; i++){
         elem[i].style.display = "block";
@@ -1359,6 +1374,7 @@ let show_settings = function() {
     document.getElementById("settings").children[0].focus();
     _settingsJs.load_settings();
 };
+let player;
 function open_url() {
     let link_target = document.activeElement.getAttribute("data-link");
     let title = document.activeElement.querySelector("h1.title").textContent;
@@ -1372,12 +1388,23 @@ function open_url() {
         return;
     }
     if (document.activeElement.getAttribute("data-media") == "youtube") {
-        document.querySelector("div#source-page iframe").setAttribute("src", document.activeElement.getAttribute("data-link"));
         document.querySelector("div#source-page div#iframe-wrapper").classList.add("video-view");
-        navigator.spatialNavigationEnabled = true;
+        player = new YT.Player("iframe-wrapper", {
+            height: "360",
+            width: "640",
+            videoId: document.activeElement.getAttribute("data-youtube-id"),
+            events: {
+                "onStateChange": onPlayerStateChange
+            }
+        });
+        function onPlayerStateChange(event) {
+            event.data, YT.PlayerState.PLAYING;
+        }
+        //navigator.spatialNavigationEnabled = true;
         status.window_status = "source-page";
-        player.src = "";
-        play.pause();
+        //paus audio player
+        document.querySelector("div#source-page").style.display = "block";
+        _helperJs.bottom_bar("play", "", "");
         return;
     }
 }
@@ -1597,6 +1624,10 @@ function shortpress_action(param) {
                 _audioJs.play_podcast(document.activeElement.getAttribute("data-link"));
                 break;
             }
+            if (status.window_status == "source-page") {
+                player.playVideo();
+                break;
+            }
             break;
         case "SoftRight":
         case "Alt":
@@ -1639,6 +1670,7 @@ function shortpress_action(param) {
                 break;
             }
             if (status.window_status == "source-page") {
+                console.log("hey");
                 show_article_list();
                 break;
             }
