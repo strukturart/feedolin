@@ -1195,20 +1195,109 @@ let show_article = function () {
   mark_as_read(true);
 };
 
+let youtube_player;
+let video_time;
+let video_status = "";
+
+let toTime = function (seconds) {
+  var date = new Date(null);
+  date.setSeconds(seconds);
+  return date.toISOString().substr(11, 8);
+};
+
+let youtube_seeking = function (param) {
+  var step = 10;
+  let new_time;
+  if (param == "backward") {
+    new_time = youtube_player.getCurrentTime() - step++;
+
+    youtube_player.seekTo(new_time, true);
+  }
+
+  if (param == "forward") {
+    new_time = youtube_player.getCurrentTime() + step++;
+    youtube_player.seekTo(new_time, true);
+  }
+};
+
+//open source or youtube
+function open_url() {
+  let link_target = document.activeElement.getAttribute("data-link");
+  let title = document.activeElement.querySelector("h1.title").textContent;
+  title = title.replace(/\s/g, "-");
+  bottom_bar("", "", "");
+
+  document.querySelector("div#source-page").style.display = "block";
+  document.querySelector("iframe").style.display = "block";
+  /*
+  document.querySelector("div#source-page div#iframe-wrapper").style.height =
+    "100vh";
+    */
+
+  if (document.activeElement.getAttribute("data-media") == "rss") {
+    show_article_list();
+    window.open(link_target);
+    return;
+  }
+
+  if (document.activeElement.getAttribute("data-media") == "youtube") {
+    document.querySelector("div#source-page").style.display = "block";
+    status.window_status = "source-page";
+    bottom_bar("play", "", "");
+
+    youtube_player = new YT.Player("iframe-wrapper", {
+      height: "360",
+      width: "640",
+      videoId: document.activeElement.getAttribute("data-youtube-id"),
+      events: {
+        "onReady": onPlayerReady,
+        "onStateChange": onPlayerStateChange,
+      },
+    });
+    let t;
+
+    function onPlayerStateChange(event) {
+      if (event.data == YT.PlayerState.PLAYING) {
+        video_status = "playing";
+        bottom_bar("pause", toTime(t), "");
+      }
+
+      if (event.data == YT.PlayerState.PAUSED) {
+        video_status = "paused";
+      }
+
+      video_time = setInterval(function () {
+        t = youtube_player.getDuration() - youtube_player.getCurrentTime();
+
+        if (video_status == "playing") {
+          bottom_bar("pause", toTime(t), "");
+        }
+        if (video_status == "paused") {
+          bottom_bar("play", toTime(t), "");
+        }
+      }, 1000);
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    return;
+  }
+}
+
 /////////////////
 //show article list
 //////////////////
 let show_article_list = function () {
-  if (player) {
-    //player.destroy();
-    //player.stopVideo();
-    player.pauseVideo();
-    document.querySelector("iframe").style.display = "none";
-    //document.querySelector("div#iframe-wrapper").style.display = "none";
-    //document.querySelector(".video-view").style.display = "none";
-
-    //ayer.clearVideo();
+  if (youtube_player) {
+    youtube_player.stopVideo();
+    youtube_player.destroy();
+    youtube_player = "";
   }
+
+  document.querySelector("div#source-page").style.display = "none";
+
   bottom_bar("settings", "select", "options");
   top_bar("", panels[current_panel], "");
 
@@ -1286,51 +1375,6 @@ let show_settings = function () {
   document.getElementById("settings").children[0].focus();
   load_settings();
 };
-let player;
-function open_url() {
-  let link_target = document.activeElement.getAttribute("data-link");
-  let title = document.activeElement.querySelector("h1.title").textContent;
-  title = title.replace(/\s/g, "-");
-  bottom_bar("", "", "");
-
-  document.querySelector("div#source-page").style.display = "block";
-  document.querySelector("div#source-page div#iframe-wrapper").style.height =
-    "100vh";
-
-  if (document.activeElement.getAttribute("data-media") == "rss") {
-    show_article_list();
-    window.open(link_target);
-    return;
-  }
-
-  if (document.activeElement.getAttribute("data-media") == "youtube") {
-    document
-      .querySelector("div#source-page div#iframe-wrapper")
-      .classList.add("video-view");
-
-    player = new YT.Player("iframe-wrapper", {
-      height: "360",
-      width: "640",
-      videoId: document.activeElement.getAttribute("data-youtube-id"),
-      events: {
-        "onStateChange": onPlayerStateChange,
-      },
-    });
-
-    function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.PLAYING) {
-      }
-    }
-
-    //navigator.spatialNavigationEnabled = true;
-    status.window_status = "source-page";
-    //paus audio player
-    document.querySelector("div#source-page").style.display = "block";
-    bottom_bar("play", "", "");
-
-    return;
-  }
-}
 
 let open_options = function () {
   status.active_element_id = document.activeElement.getAttribute("data-id");
@@ -1546,6 +1590,11 @@ function shortpress_action(param) {
         seeking("backward");
         break;
       }
+
+      if (status.window_status == "source-page") {
+        youtube_seeking("backward");
+        break;
+      }
       break;
 
     case "ArrowRight":
@@ -1558,6 +1607,11 @@ function shortpress_action(param) {
         seeking("forward");
         break;
       }
+      if (status.window_status == "source-page") {
+        youtube_seeking("forward");
+        break;
+      }
+
       break;
 
     case "ArrowDown":
@@ -1648,7 +1702,15 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "source-page") {
-        player.playVideo();
+        if (video_status == "paused" || video_status == "") {
+          youtube_player.playVideo();
+          return false;
+        }
+
+        if (video_status == "playing") {
+          youtube_player.pauseVideo();
+          return false;
+        }
         break;
       }
 
@@ -1672,7 +1734,6 @@ function shortpress_action(param) {
 
       if (status.window_status == "article-list") {
         open_options();
-
         break;
       }
       break;
@@ -1684,7 +1745,6 @@ function shortpress_action(param) {
     case "Backspace":
       if (status.window_status == "intro") {
         bottom_bar("", "", "");
-        //window.close();
         break;
       }
 
@@ -1709,10 +1769,7 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "source-page") {
-        console.log("hey");
         show_article_list();
-        //player.destroy();
-
         break;
       }
 
@@ -1758,6 +1815,18 @@ function handleKeyDown(evt) {
 
   if (evt.repeat) {
     if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
+
+    if (evt.key == "ArrowLeft") {
+      if (status.window_status == "source-page") {
+        youtube_seeking("backward");
+      }
+    }
+
+    if (evt.key == "ArrowRight") {
+      if (status.window_status == "source-page") {
+        youtube_seeking("forward");
+      }
+    }
 
     longpress = false;
     repeat_action(evt);
