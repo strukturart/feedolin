@@ -1336,10 +1336,7 @@ function open_url() {
     _helperJs.bottom_bar("", "", "");
     document.querySelector("div#source-page").style.display = "block";
     document.querySelector("iframe").style.display = "block";
-    /*
-  document.querySelector("div#source-page div#iframe-wrapper").style.height =
-    "100vh";
-    */ if (document.activeElement.getAttribute("data-media") == "rss") {
+    if (document.activeElement.getAttribute("data-media") == "rss") {
         show_article_list();
         window.open(link_target);
         return;
@@ -1348,9 +1345,9 @@ function open_url() {
         document.querySelector("div#source-page").style.display = "block";
         status.window_status = "source-page";
         _helperJs.bottom_bar("play", "", "");
+        document.getElementById("message").style.top = "0px";
+        document.getElementById("message-inner").innerText = "please wait ";
         youtube_player = new YT.Player("iframe-wrapper", {
-            height: "360",
-            width: "640",
             videoId: document.activeElement.getAttribute("data-youtube-id"),
             events: {
                 "onReady": onPlayerReady,
@@ -1366,12 +1363,16 @@ function open_url() {
             if (event.data == YT.PlayerState.PAUSED) video_status = "paused";
             video_time = setInterval(function() {
                 t = youtube_player.getDuration() - youtube_player.getCurrentTime();
+                let percent = youtube_player.getCurrentTime() / youtube_player.getDuration() * 100;
+                document.querySelector("div#youtube-progress-bar div.bar").style.width = percent + "%";
+                console.log(percent);
                 if (video_status == "playing") _helperJs.bottom_bar("pause", toTime(t), "");
                 if (video_status == "paused") _helperJs.bottom_bar("play", toTime(t), "");
             }, 1000);
         }
         function onPlayerReady(event) {
             event.target.playVideo();
+            document.getElementById("message").style.top = "-1000px";
         }
         return;
     }
@@ -1527,6 +1528,9 @@ function longpress_action(param) {
     switch(param.key){
         case "Backspace":
             window.close();
+            break;
+        case "0":
+            reload();
             break;
     }
 }

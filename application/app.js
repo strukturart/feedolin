@@ -1229,10 +1229,6 @@ function open_url() {
 
   document.querySelector("div#source-page").style.display = "block";
   document.querySelector("iframe").style.display = "block";
-  /*
-  document.querySelector("div#source-page div#iframe-wrapper").style.height =
-    "100vh";
-    */
 
   if (document.activeElement.getAttribute("data-media") == "rss") {
     show_article_list();
@@ -1245,9 +1241,10 @@ function open_url() {
     status.window_status = "source-page";
     bottom_bar("play", "", "");
 
+    document.getElementById("message").style.top = "0px";
+    document.getElementById("message-inner").innerText = "please wait ";
+
     youtube_player = new YT.Player("iframe-wrapper", {
-      height: "360",
-      width: "640",
       videoId: document.activeElement.getAttribute("data-youtube-id"),
       events: {
         "onReady": onPlayerReady,
@@ -1269,6 +1266,14 @@ function open_url() {
       video_time = setInterval(function () {
         t = youtube_player.getDuration() - youtube_player.getCurrentTime();
 
+        let percent =
+          (youtube_player.getCurrentTime() / youtube_player.getDuration()) *
+          100;
+
+        document.querySelector("div#youtube-progress-bar div.bar").style.width =
+          percent + "%";
+        console.log(percent);
+
         if (video_status == "playing") {
           bottom_bar("pause", toTime(t), "");
         }
@@ -1280,6 +1285,7 @@ function open_url() {
 
     function onPlayerReady(event) {
       event.target.playVideo();
+      document.getElementById("message").style.top = "-1000px";
     }
 
     return;
@@ -1506,6 +1512,10 @@ function longpress_action(param) {
   switch (param.key) {
     case "Backspace":
       window.close();
+      break;
+
+    case "0":
+      reload();
       break;
   }
 }

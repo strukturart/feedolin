@@ -97,6 +97,19 @@ button:focus {
   color: white;
 }
 
+div#message {
+  position: fixed;
+  z-index: 100000000;
+  top: -10000px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+div#message div#message-inner {
+  background-color: yellow;
+  color: black;
+  padding: 5px;
+}
+
 table {
   max-width: 100vw;
   min-width: 100vw;
@@ -663,15 +676,39 @@ div#audio-player div#background-pattern div {
 }
 
 div#audio-player div#progress-bar {
-  height: 10px;
+  height: 15px;
   position: fixed;
   bottom: 30px;
   z-index: 5;
 }
 
 div#audio-player div#progress-bar div {
-  height: 5px;
+  height: 10px;
   background: var(--color-six);
+}
+
+/*
+youtube player
+*/
+
+div#youtube-progress-bar {
+  position: absolute;
+  bottom: 30px;
+  height: 10px;
+  width: 200px;
+  z-index: 1000000;
+}
+
+div#youtube-progress-bar div {
+  height: 10px;
+  width: 200px;
+  position: relative;
+}
+
+div#youtube-progress-bar div.bar {
+  width: 0%;
+  height: 5px;
+  background-color: rgb(180, 128, 128);
 }
 
 /*
