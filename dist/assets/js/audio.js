@@ -126,6 +126,12 @@ player.addEventListener("pause", (event) => {
   }, 1000);
 });
 
+let toTime = function (seconds) {
+  var date = new Date(null);
+  date.setSeconds(seconds);
+  return date.toISOString().substr(11, 8);
+};
+
 player.addEventListener("playing", (event) => {
   if (player.networkState === 2) {
     toaster("loading media", 1000);
@@ -152,25 +158,15 @@ player.addEventListener("playing", (event) => {
 
   getduration = setInterval(function () {
     if (!player.paused) {
-      console.log(player.duration);
       var time = player.duration - player.currentTime;
       let percent = (player.currentTime / player.duration) * 100;
 
       document.querySelector("div#progress-bar div").style.width =
         percent + "%";
 
-      var minutes = parseInt(time / 60, 10);
-      var seconds_long = parseInt(time % 60, 10);
-      var seconds;
-      if (seconds_long < 10) {
-        seconds = "0" + seconds_long;
-      } else {
-        seconds = seconds_long;
-      }
-      duration = minutes + ":" + seconds;
-      status.audio_duration = duration;
+      status.audio_duration = toTime(time);
       if (status.window_status == "audio-player")
-        bottom_bar("pause", duration, "");
+        bottom_bar("pause", toTime(time), "");
     }
   }, 1000);
 });

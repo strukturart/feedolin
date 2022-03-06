@@ -566,6 +566,7 @@ var item_date_unix = "";
 var item_category = "";
 var item_cid = "";
 var item_image = "";
+var yt_thumbnail = "";
 _helperJs.screenlock("lock");
 setTimeout(function() {
     _helperJs.screenlock("unlock");
@@ -889,6 +890,14 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     item_media = "youtube";
                     if (el[i].getElementsByTagNameNS("*", "videoId").length > 0) youtube_id = el[i].getElementsByTagNameNS("*", "videoId").item(0).textContent;
                 } else item_media = "rss";
+                if (item_media == "youtube") {
+                    if (el[i].getElementsByTagNameNS("*", "group").length > 0) {
+                        yt_thumbnail = el[i].getElementsByTagNameNS("*", "group")[0];
+                        let n = yt_thumbnail.getElementsByTagNameNS("*", "thumbnail")[0];
+                        yt_thumbnail = n.getAttribute("url");
+                        console.log(yt_thumbnail);
+                    }
+                }
                 startlistened = "";
                 if (audio_memory.hasOwnProperty(item_cid)) start_listened = "start_listened";
                 content_arr.push({
@@ -910,7 +919,8 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                     recently_order: null,
                     read: "not-read",
                     start_listened: startlistened,
-                    youtube_id: youtube_id
+                    youtube_id: youtube_id,
+                    youtube_thumbnail: yt_thumbnail
                 });
             }
             ////////////
@@ -1102,7 +1112,6 @@ function build() {
     panels.push("recently-played");
     renderHello(content_arr);
     division_remove();
-    //ll();
     status.window_status = "article-list";
     document.getElementById("intro").style.display = "none";
     set_tabindex();
@@ -1117,11 +1126,9 @@ let set_tabindex = function() {
         t++;
         divs[i].tabIndex = t;
     }
-    //document.querySelector('article[tabIndex="0"]').focus();
     tab_index = 0;
     setTimeout(function() {
         article_array = document.querySelectorAll("article");
-        //alert(article_array.length);
         if (article_array > 0) article_array[0].focus();
     }, 1500);
 };
@@ -1145,17 +1152,12 @@ let mark_as_read = function(un_read) {
 //NAVIGATION
 /////////////////////////
 function nav_panels(left_right) {
-    window.scrollTo(0, 0);
     if (left_right == "left") current_panel--;
     if (left_right == "right") current_panel++;
     current_panel = current_panel % panels.length;
     if (current_panel < 0) current_panel += panels.length;
     _helperJs.top_bar("", panels[current_panel], "");
     if (status.sleepmode) _helperJs.top_bar("sleep", panels[current_panel], "");
-    setTimeout(()=>{
-        article_array = document.querySelectorAll("article");
-        article_array[0].focus();
-    }, 500);
     //filter data
     //default
     //view
@@ -1164,6 +1166,18 @@ function nav_panels(left_right) {
     _helperJs.sort_array(heroArray, "dateunix", "number");
     //build html
     renderHello(heroArray);
+    setTimeout(()=>{
+        article_array = document.querySelectorAll("article")[0].focus();
+        //smooth scrolling
+        const rect = document.activeElement.getBoundingClientRect();
+        const elY = rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
+        document.activeElement.parentNode.scrollBy({
+            left: 0,
+            top: elY - window.innerHeight / 2,
+            behavior: "smooth"
+        });
+    }, 1000);
+    document.querySelectorAll("article")[0].focus();
     document.querySelectorAll("div.division").forEach(function(index, key) {
         document.querySelectorAll("div.division")[key].style.display = "none";
     });

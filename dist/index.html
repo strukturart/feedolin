@@ -96,7 +96,6 @@
                 <button tabindex="9" class="item save">save</button>
 
             </div>
-            <div id="top"></div>
 
             <div id="news-feed-list"></div>
 
@@ -119,6 +118,11 @@
                         </div>
                         <h1 class="title">{{title}}</h1>
                         <div class="summary">{{{summary}}}
+                        {{#youtube_thumbnail}}
+                        <img src="{{youtube_thumbnail}}">
+                        {{/youtube_thumbnail}}
+
+
                         </div>
                     </article>
                 {{/data}}

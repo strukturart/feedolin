@@ -257,14 +257,14 @@ div#news-feed {
   position: relative;
   background: white;
   color: black;
-  max-height: 90vh;
+  max-height: 85vh;
   width: 100vw;
   overflow: hidden;
   font-weight: normal;
 }
 
 div#news-feed div#news-feed-list {
-  height: 92vh;
+  height: 85vh;
   width: 100%;
   min-width: 100%;
   padding: 0px 0 50px 0;
