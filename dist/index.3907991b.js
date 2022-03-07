@@ -646,26 +646,13 @@ setTimeout(()=>{
     if (localStorage.getItem("reload") == null) localStorage.setItem("reload", "false");
     if (localStorage.getItem("reload") == "true") a = 0;
     localStorage.setItem("reload", "false");
+    document.getElementById("intro-message").innerText = "checking feed list";
     //download
     if (_cacheJs.getTime(a) && navigator.onLine) {
-        load_source_opml();
-        load_local_file_opml();
-    /*
-    if (
-      localStorage["source"] &&
-      localStorage["source"] != "" &&
-      localStorage["source"] != undefined
-    ) {
-      load_source_opml();
-      load_local_file_opml();
-      document.getElementById("intro-message").innerText = "load online opml";
+        if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) load_source_opml();
+        else load_local_file_opml();
     } else {
-      load_local_file_opml();
-      document.getElementById("intro-message").innerText = "load local opml";
-    }
-    */ //load cache
-    } else {
-        console.log("not online");
+        document.getElementById("intro-message").innerText = "your device is offline, loading cached data";
         content_arr = _cacheJs.loadCache();
         if (content_arr) {
             document.getElementById("intro-message").innerText = "load cached data";
@@ -679,7 +666,24 @@ setTimeout(()=>{
             }, 4000);
         }
     }
-}, 1500);
+}, 1000);
+//start loading feeds
+let load_feeds = function(data) {
+    var parser1 = new DOMParser();
+    var xmlDoc = parser1.parseFromString(data, "text/xml");
+    let content = xmlDoc.getElementsByTagName("body")[0];
+    let m = content.querySelectorAll("outline");
+    for(var i = 0; i < m.length; i++){
+        var nested = m[i].querySelectorAll("outline");
+        if (nested.length > 0) for(var z = 0; z < nested.length; z++)source_array.push([
+            nested[z].getAttribute("xmlUrl"),
+            setting.epsiodes_download,
+            m[i].getAttribute("text"),
+            m[i].getAttribute("text"), 
+        ]);
+    }
+    rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3]);
+};
 /////////////////////////////
 ////////////////////////////
 //GET URL LIST/////////////
@@ -706,22 +710,36 @@ let load_local_file_opml = function() {
         };
         reader.onloadend = function(event) {
             let data = event.target.result;
-            document.getElementById("intro-message").innerText = "load local opml";
-            var parser1 = new DOMParser();
-            var xmlDoc = parser1.parseFromString(data, "text/xml");
-            let content = xmlDoc.getElementsByTagName("body")[0];
-            let m = content.querySelectorAll("outline");
-            for(var i = 0; i < m.length; i++){
-                var nested = m[i].querySelectorAll("outline");
-                if (nested.length > 0) for(var z = 0; z < nested.length; z++)source_array.push([
-                    nested[z].getAttribute("xmlUrl"),
-                    setting.epsiodes_download,
-                    m[i].getAttribute("text"),
-                    m[i].getAttribute("text"), 
-                ]);
-            }
-            rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3]);
-        };
+            document.getElementById("intro-message").innerText = "load local opml file";
+            load_feeds(data);
+        /*
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(data, "text/xml");
+      let content = xmlDoc.getElementsByTagName("body")[0];
+
+      let m = content.querySelectorAll("outline");
+      for (var i = 0; i < m.length; i++) {
+        var nested = m[i].querySelectorAll("outline");
+
+        if (nested.length > 0) {
+          for (var z = 0; z < nested.length; z++) {
+            source_array.push([
+              nested[z].getAttribute("xmlUrl"),
+              setting.epsiodes_download,
+              m[i].getAttribute("text"),
+              m[i].getAttribute("text"),
+            ]);
+          }
+        }
+      }
+
+      rss_fetcher(
+        source_array[0][0],
+        source_array[0][1],
+        source_array[0][2],
+        source_array[0][3]
+      );
+      */ };
         reader.readAsText(file);
     };
 };
@@ -737,23 +755,10 @@ let load_source_opml = function() {
     xhttp.timeout = 25000;
     xhttp.onload = function() {
         if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-            document.getElementById("intro-message").innerText = "load online opml";
+            document.getElementById("intro-message").innerText = "load online opml file";
             let data = xhttp.response;
-            var parser2 = new DOMParser();
-            var xmlDoc = parser2.parseFromString(data, "text/xml");
-            let content = xmlDoc.getElementsByTagName("body")[0];
-            let m = content.querySelectorAll("outline");
-            for(var i = 0; i < m.length; i++){
-                var nested = m[i].querySelectorAll("outline");
-                if (nested.length > 0) for(var z = 0; z < nested.length; z++)source_array.push([
-                    nested[z].getAttribute("xmlUrl"),
-                    setting.epsiodes_download,
-                    m[i].getAttribute("text"),
-                    m[i].getAttribute("text"), 
-                ]);
-            }
+            load_feeds(data);
         }
-        rss_fetcher(source_array[0][0], source_array[0][1], source_array[0][2], source_array[0][3]);
     };
     xhttp.onerror = function() {
         document.getElementById("intro-message").innerHTML = "😴<br>the source file cannot be loaded";
@@ -770,36 +775,7 @@ let load_source_opml = function() {
     };
     xhttp.send(null);
 };
-/*
-let start_download_content = function (source_data) {
-  for (let i = 0; i < source_data.length; i++) {
-    if (!source_data[i].category || source_data[i].category == "") {
-      source_data[i].category = 0;
-    }
-    source_array.push([
-      source_data[i].url,
-      source_data[i].limit,
-      source_data[i].channel,
-      source_data[i].category,
-    ]);
-  }
-
-  //check if internet connection
-  if (navigator.onLine) {
-    //start download loop
-    rss_fetcher(
-      source_array[0][0],
-      source_array[0][1],
-      source_array[0][2],
-      source_array[0][3]
-    );
-  } else {
-    document.getElementById("intro-message").innerHTML =
-      "😴<br>Your device is offline, please connect it to the internet ";
-    document.getElementById("intro").style.display = "none";
-  }
-};
-*/ //////////////////////////////
+//////////////////////////////
 //download content////
 //////////////////////////////
 let rss_fetcher = function(param_url, param_limit, param_channel, param_category) {
@@ -842,7 +818,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
             //Channel
             rss_title = data.querySelector("title").textContent || param_channel;
             param_channel = rss_title;
-            let count = k + " / " + (source_array.length - 1);
             let p = Number(source_array.length - 1);
             precent = 100 / p * k;
             document.querySelector("div#intro div#loading-progress div div").style.width = precent + "%";
@@ -1183,6 +1158,8 @@ function nav_panels(left_right) {
     //build html
     renderHello(heroArray);
     setTimeout(()=>{
+        console.log(document.querySelectorAll("article").length);
+        if (document.querySelectorAll("article").length < 1) return false;
         article_array = document.querySelectorAll("article")[0].focus();
         //smooth scrolling
         const rect = document.activeElement.getBoundingClientRect();
@@ -1197,7 +1174,7 @@ function nav_panels(left_right) {
         document.querySelectorAll("div.division")[key].style.display = "none";
     });
     //recently played
-    if (panels[current_panel] == "recently-played" && recently_played >= 0) {
+    if (panels[current_panel] == "recently-played") {
         //to do
         heroArray.length = 0;
         listened_podcast_articles();
@@ -1414,14 +1391,14 @@ function open_url() {
 //////////////////
 let show_article_list = function() {
     document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
+    _helperJs.bottom_bar("settings", "select", "options");
+    _helperJs.top_bar("", panels[current_panel], "");
     if (youtube_player) {
         youtube_player.stopVideo();
         youtube_player.destroy();
         youtube_player = "";
     }
     document.querySelector("div#source-page").style.display = "none";
-    _helperJs.bottom_bar("settings", "select", "options");
-    _helperJs.top_bar("", panels[current_panel], "");
     if (status.sleepmode) _helperJs.top_bar("sleep", panels[current_panel], "");
     //show hide channels division
     if (status.panel == "channels") document.querySelectorAll("div.division").forEach(function(index, key) {
@@ -1470,6 +1447,7 @@ let show_settings = function() {
     _settingsJs.load_settings();
 };
 let open_options = function() {
+    tab_index = 0;
     status.active_element_id = document.activeElement.getAttribute("data-id");
     status.window_status = "options";
     document.getElementById("options").style.display = "block";

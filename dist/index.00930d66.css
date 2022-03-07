@@ -43,6 +43,10 @@
   border: 0;
 }
 
+:visited {
+  font-style: normal;
+}
+
 html,
 body {
   font-family: "Lato-Regular";
@@ -245,6 +249,7 @@ div#options ul li {
   color: white;
   padding: 5px;
   margin: 0 0 5px 0;
+  font-style: normal !important;
 }
 
 div#options ul li:focus {
@@ -335,7 +340,7 @@ div#news-feed
   article
   div.duration-filesize
   div.duration:before {
-  background-image: url("clock.1b3bb8fa.svg");
+  background-image: url("clock.92c4d117.svg");
   background-size: 14px 14px;
   display: inline-block;
   width: 14px;
