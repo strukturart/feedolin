@@ -180,19 +180,26 @@ setTimeout(() => {
 
   //download
   if (getTime(a) && navigator.onLine) {
+    load_source_opml();
+    load_local_file_opml();
+
+    /*
     if (
       localStorage["source"] &&
       localStorage["source"] != "" &&
       localStorage["source"] != undefined
     ) {
       load_source_opml();
+      load_local_file_opml();
       document.getElementById("intro-message").innerText = "load online opml";
     } else {
       load_local_file_opml();
       document.getElementById("intro-message").innerText = "load local opml";
     }
+    */
     //load cache
   } else {
+    console.log("not online");
     content_arr = loadCache();
     if (content_arr) {
       document.getElementById("intro-message").innerText = "load cached data";
@@ -245,12 +252,12 @@ let load_local_file_opml = function () {
 
     var reader = new FileReader();
     reader.onerror = function (event) {
-      toaster("shit happens");
       reader.abort();
     };
 
     reader.onloadend = function (event) {
       let data = event.target.result;
+      document.getElementById("intro-message").innerText = "load local opml";
 
       var parser = new DOMParser();
       var xmlDoc = parser.parseFromString(data, "text/xml");
@@ -297,6 +304,7 @@ let load_source_opml = function () {
   xhttp.timeout = 25000;
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
+      document.getElementById("intro-message").innerText = "load online opml";
       let data = xhttp.response;
 
       var parser = new DOMParser();
@@ -429,6 +437,7 @@ let rss_fetcher = function (
       item_date = "";
       startlistened = "";
       youtube_id = "";
+      yt_thumbnail = "";
 
       //Channel
       rss_title = data.querySelector("title").textContent || param_channel;
@@ -701,6 +710,7 @@ let rss_fetcher = function (
             recently_order: null,
             read: "not-read",
             start_listened: startlistened,
+            youtube_thumbnail: yt_thumbnail,
           });
         }
       }
@@ -882,7 +892,7 @@ let division_remove = function () {
       });
   }
 };
-
+//build html
 function build() {
   sort_array(content_arr, "channel", "string");
   read_articles();
@@ -908,6 +918,8 @@ function build() {
   article_array[0].focus();
 }
 
+//set tabindex
+
 let set_tabindex = function () {
   let divs = document.querySelectorAll("article");
 
@@ -925,6 +937,8 @@ let set_tabindex = function () {
     if (article_array > 0) article_array[0].focus();
   }, 1500);
 };
+
+//mark as read
 
 let mark_as_read = function (un_read) {
   if (un_read == true) {
@@ -994,13 +1008,11 @@ function nav_panels(left_right) {
     });
   }, 1000);
 
-  document.querySelectorAll("article")[0].focus();
-
   document.querySelectorAll("div.division").forEach(function (index, key) {
     document.querySelectorAll("div.division")[key].style.display = "none";
   });
-
-  if (panels[current_panel] == "recently-played") {
+  //recently played
+  if (panels[current_panel] == "recently-played" && recently_played >= 0) {
     //to do
     heroArray.length = 0;
     listened_podcast_articles();
@@ -1018,7 +1030,7 @@ function nav_panels(left_right) {
       document.querySelectorAll("div.division")[key].style.display = "none";
     });
   }
-
+  //channels
   if (panels[current_panel] == "channels") {
     document.querySelectorAll("div.division").forEach(function (index, key) {
       document.querySelectorAll("div.division")[key].style.display = "block";
@@ -1033,10 +1045,10 @@ function nav_panels(left_right) {
   document.activeElement.classList.remove("overscrolling");
   status.panel = panels[current_panel];
 }
-let tabIndex = 0;
 ////////////
 //TABINDEX NAVIGATION
 ///////////
+let tabIndex = 0;
 
 function nav(move) {
   //let elem = document.activeElement;
@@ -1211,6 +1223,8 @@ let show_article = function () {
   }
 
   mark_as_read(true);
+
+  document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
 };
 
 let youtube_player;
@@ -1314,6 +1328,8 @@ function open_url() {
 //show article list
 //////////////////
 let show_article_list = function () {
+  document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
+
   if (youtube_player) {
     youtube_player.stopVideo();
     youtube_player.destroy();
@@ -1339,11 +1355,7 @@ let show_article_list = function () {
 
   document.getElementById("audio-player").style.display = "none";
   document.querySelector("div#news-feed").style.background = "white";
-  /*
-  document
-    .querySelector("div#source-page div#iframe-wrapper")
-    .classList.remove("video-view");
-    */
+
   document.getElementById("top-bar").style.display = "block";
 
   let elem = document.querySelectorAll("article");
