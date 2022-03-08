@@ -252,6 +252,36 @@ export function add_source(url, limit, categorie, channel) {
   };
 }
 
+
+
+
+export let list_files = function (filetype, callback) {
+  if (!navigator.getDeviceStorage) return false;
+  var d = navigator.getDeviceStorage("sdcard");
+
+  var cursor = d.enumerate();
+
+  cursor.onsuccess = function () {
+    if (!this.result) {
+      console.log("finished");
+    }
+    if (cursor.result.name !== null) {
+      var file = cursor.result;
+      let n = file.name.split(".");
+      let file_type = n[n.length - 1];
+
+      if (file_type == filetype) {
+        callback(file.name);
+      }
+      this.continue();
+    }
+  };
+
+  cursor.onerror = function () {
+    console.warn("No file found: " + this.error);
+  };
+};
+
 export function validate(url) {
   var pattern =
     /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;

@@ -11,7 +11,7 @@ import {
 } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 
-import { bottom_bar, top_bar } from "./assets/js/helper.js";
+import { bottom_bar, top_bar, list_files } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
 import { load_settings, save_settings } from "./assets/js/settings.js";
@@ -57,6 +57,8 @@ var item_category = "";
 var item_cid = "";
 var item_image = "";
 var yt_thumbnail = "";
+
+let select_box = [];
 
 screenlock("lock");
 setTimeout(function () {
@@ -541,8 +543,6 @@ let rss_fetcher = function (
 
               let n = yt_thumbnail.getElementsByTagNameNS("*", "thumbnail")[0];
               yt_thumbnail = n.getAttribute("url");
-
-              console.log(yt_thumbnail);
             }
           }
 
@@ -822,6 +822,15 @@ function renderHello(arr) {
   document.getElementById("news-feed-list").innerHTML = rendered;
 }
 
+//render selectbox
+function renderSB(arr) {
+  var template = document.getElementById("sb").innerHTML;
+  var rendered = Mustache.render(template, {
+    data: arr,
+  });
+  document.getElementById("select-box").innerHTML = rendered;
+}
+
 //filter view
 let heroArray = [];
 let filter_data = function (cat) {
@@ -971,7 +980,6 @@ function nav_panels(left_right) {
   renderHello(heroArray);
 
   setTimeout(() => {
-    console.log(document.querySelectorAll("article").length);
     if (document.querySelectorAll("article").length < 1) return false;
     article_array = document.querySelectorAll("article")[0].focus();
     //smooth scrolling
@@ -1031,7 +1039,7 @@ let tabIndex = 0;
 function nav(move) {
   //let elem = document.activeElement;
   // Setup siblings array and get the first sibling
-  document.activeElement.classList.remove("overscrolling");
+  //document.activeElement.classList.remove("overscrolling");
   let siblings = [];
   //let sibling = elem.parentNode.firstChild;
 
@@ -1055,7 +1063,7 @@ function nav(move) {
     tab_index++;
 
     if (tab_index >= siblings.length) {
-      document.activeElement.classList.add("overscrolling");
+      // document.activeElement.classList.add("overscrolling");
       tab_index = siblings.length - 1;
       return true;
     }
@@ -1064,7 +1072,7 @@ function nav(move) {
   }
 
   if (move == "-1" && tab_index > 0) {
-    document.activeElement.classList.remove("overscrolling");
+    //document.activeElement.classList.remove("overscrolling");
     tab_index--;
     siblings[tab_index].focus();
   }
@@ -1082,7 +1090,7 @@ function nav(move) {
 
   //overscrolling
   if (move == "-1" && tab_index == 0) {
-    document.activeElement.classList.add("overscrolling");
+    //document.activeElement.classList.add("overscrolling");
   }
 }
 
@@ -1282,7 +1290,6 @@ function open_url() {
 
         document.querySelector("div#youtube-progress-bar div.bar").style.width =
           percent + "%";
-        console.log(percent);
 
         if (video_status == "playing") {
           bottom_bar("pause", toTime(t), "");
@@ -1378,6 +1385,10 @@ let show_article_list = function () {
 
 let show_settings = function () {
   bottom_bar("", "", "back");
+
+  document.querySelectorAll("div#settings .item").forEach(function (e, index) {
+    e.setAttribute("tabindex", index);
+  });
 
   status.active_element_id = document.activeElement.getAttribute("data-id");
   status.window_status = "settings";
@@ -1484,6 +1495,48 @@ qr_listener.addEventListener("blur", (event) => {
   qrscan = false;
 });
 
+//button actions
+let button_action = function () {
+  bottom_bar("", "select", "");
+
+  let p = document.activeElement.getAttribute("data-action");
+
+  if (p == "list-opml-files") {
+    document.getElementById("select-box").style.display = "block";
+    status.window_status = "select-box";
+
+    document
+      .querySelectorAll("div#select-box .item")
+      .forEach(function (e, index) {
+        e.setAttribute("tabIndex", index);
+        document.querySelectorAll("div#select-box div.item")[0].focus();
+        tab_index = 0;
+      });
+  }
+
+  if (p == "set-filename") {
+    select_box_selected();
+  }
+};
+
+let list_files_callback = function (filename) {
+  select_box.push({ filename: filename });
+  renderSB(select_box);
+};
+
+list_files("opml", list_files_callback);
+
+//custom select box
+let select_box_selected = function () {
+  localStorage.setItem("source_local", document.activeElement.innerText);
+  close_select_box();
+};
+
+let close_select_box = function () {
+  document.getElementById("select-box").style.display = "none";
+  show_settings();
+};
+
 //////////////////////////////
 ////KEYPAD HANDLER////////////
 //////////////////////////////
@@ -1541,6 +1594,9 @@ function shortpress_action(param) {
       channel_navigation("down");
       break;
     case "Enter":
+      if (document.activeElement.hasAttributes("data-action")) {
+        button_action();
+      }
       if (document.activeElement.classList.contains("input-parent")) {
         document.activeElement.children[0].focus();
         return true;
@@ -1648,6 +1704,11 @@ function shortpress_action(param) {
         break;
       }
 
+      if (status.window_status == "select-box") {
+        nav("+1");
+        break;
+      }
+
       if (status.volume_status === true) {
         volume_control("down");
         break;
@@ -1656,6 +1717,11 @@ function shortpress_action(param) {
       break;
 
     case "ArrowUp":
+      if (status.window_status == "select-box") {
+        nav("-1");
+        break;
+      }
+
       if (status.window_status == "settings") {
         nav("-1");
         break;
@@ -1763,6 +1829,14 @@ function shortpress_action(param) {
     case "Backspace":
       if (status.window_status == "intro") {
         bottom_bar("", "", "");
+        break;
+      }
+
+      if (status.window_status == "select-box") {
+        bottom_bar("", "", "back");
+        close_select_box();
+        status.window_status = "settings";
+        show_settings();
         break;
       }
 

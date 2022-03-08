@@ -567,6 +567,7 @@ var item_category = "";
 var item_cid = "";
 var item_image = "";
 var yt_thumbnail = "";
+let select_box = [];
 _helperJs.screenlock("lock");
 setTimeout(function() {
     _helperJs.screenlock("unlock");
@@ -882,7 +883,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
                         yt_thumbnail = el[i].getElementsByTagNameNS("*", "group")[0];
                         let n = yt_thumbnail.getElementsByTagNameNS("*", "thumbnail")[0];
                         yt_thumbnail = n.getAttribute("url");
-                        console.log(yt_thumbnail);
                     }
                 }
                 startlistened = "";
@@ -1063,6 +1063,14 @@ function renderHello(arr) {
     });
     document.getElementById("news-feed-list").innerHTML = rendered;
 }
+//render selectbox
+function renderSB(arr) {
+    var template = document.getElementById("sb").innerHTML;
+    var rendered = _mustacheDefault.default.render(template, {
+        data: arr
+    });
+    document.getElementById("select-box").innerHTML = rendered;
+}
 //filter view
 let heroArray = [];
 let filter_data = function(cat) {
@@ -1158,7 +1166,6 @@ function nav_panels(left_right) {
     //build html
     renderHello(heroArray);
     setTimeout(()=>{
-        console.log(document.querySelectorAll("article").length);
         if (document.querySelectorAll("article").length < 1) return false;
         article_array = document.querySelectorAll("article")[0].focus();
         //smooth scrolling
@@ -1205,7 +1212,7 @@ let tabIndex = 0;
 function nav(move) {
     //let elem = document.activeElement;
     // Setup siblings array and get the first sibling
-    document.activeElement.classList.remove("overscrolling");
+    //document.activeElement.classList.remove("overscrolling");
     let siblings = [];
     //let sibling = elem.parentNode.firstChild;
     //nested input field
@@ -1217,14 +1224,14 @@ function nav(move) {
     if (move == "+1") {
         tab_index++;
         if (tab_index >= siblings.length) {
-            document.activeElement.classList.add("overscrolling");
+            // document.activeElement.classList.add("overscrolling");
             tab_index = siblings.length - 1;
             return true;
         }
         siblings[tab_index].focus();
     }
     if (move == "-1" && tab_index > 0) {
-        document.activeElement.classList.remove("overscrolling");
+        //document.activeElement.classList.remove("overscrolling");
         tab_index--;
         siblings[tab_index].focus();
     }
@@ -1236,8 +1243,6 @@ function nav(move) {
         top: elY - window.innerHeight / 2,
         behavior: "smooth"
     });
-    //overscrolling
-    if (move == "-1" && tab_index == 0) document.activeElement.classList.add("overscrolling");
 }
 //navigation between channels into channels view
 division_count = 0;
@@ -1374,7 +1379,6 @@ function open_url() {
                 t = youtube_player.getDuration() - youtube_player.getCurrentTime();
                 let percent = youtube_player.getCurrentTime() / youtube_player.getDuration() * 100;
                 document.querySelector("div#youtube-progress-bar div.bar").style.width = percent + "%";
-                console.log(percent);
                 if (video_status == "playing") _helperJs.bottom_bar("pause", toTime(t), "");
                 if (video_status == "paused") _helperJs.bottom_bar("play", toTime(t), "");
             }, 1000);
@@ -1438,6 +1442,9 @@ let show_article_list = function() {
 //settings view
 let show_settings = function() {
     _helperJs.bottom_bar("", "", "back");
+    document.querySelectorAll("div#settings .item").forEach(function(e, index) {
+        e.setAttribute("tabindex", index);
+    });
     status.active_element_id = document.activeElement.getAttribute("data-id");
     status.window_status = "settings";
     tab_index = 0;
@@ -1504,6 +1511,37 @@ qr_listener.addEventListener("blur", (event)=>{
     _helperJs.bottom_bar("", "", "back");
     qrscan = false;
 });
+//button actions
+let button_action = function() {
+    _helperJs.bottom_bar("", "select", "");
+    let p = document.activeElement.getAttribute("data-action");
+    if (p == "list-opml-files") {
+        document.getElementById("select-box").style.display = "block";
+        status.window_status = "select-box";
+        document.querySelectorAll("div#select-box .item").forEach(function(e, index) {
+            e.setAttribute("tabIndex", index);
+            document.querySelectorAll("div#select-box div.item")[0].focus();
+            tab_index = 0;
+        });
+    }
+    if (p == "set-filename") select_box_selected();
+};
+let list_files_callback = function(filename) {
+    select_box.push({
+        filename: filename
+    });
+    renderSB(select_box);
+};
+_helperJs.list_files("opml", list_files_callback);
+//custom select box
+let select_box_selected = function() {
+    localStorage.setItem("source_local", document.activeElement.innerText);
+    close_select_box();
+};
+let close_select_box = function() {
+    document.getElementById("select-box").style.display = "none";
+    show_settings();
+};
 //////////////////////////////
 ////KEYPAD HANDLER////////////
 //////////////////////////////
@@ -1553,6 +1591,7 @@ function shortpress_action(param) {
             channel_navigation("down");
             break;
         case "Enter":
+            if (document.activeElement.hasAttributes("data-action")) button_action();
             if (document.activeElement.classList.contains("input-parent")) {
                 document.activeElement.children[0].focus();
                 return true;
@@ -1620,12 +1659,20 @@ function shortpress_action(param) {
                 nav("+1");
                 break;
             }
+            if (status.window_status == "select-box") {
+                nav("+1");
+                break;
+            }
             if (status.volume_status === true) {
                 _audioJs.volume_control("down");
                 break;
             }
             break;
         case "ArrowUp":
+            if (status.window_status == "select-box") {
+                nav("-1");
+                break;
+            }
             if (status.window_status == "settings") {
                 nav("-1");
                 break;
@@ -1711,6 +1758,13 @@ function shortpress_action(param) {
         case "Backspace":
             if (status.window_status == "intro") {
                 _helperJs.bottom_bar("", "", "");
+                break;
+            }
+            if (status.window_status == "select-box") {
+                _helperJs.bottom_bar("", "", "back");
+                close_select_box();
+                status.window_status = "settings";
+                show_settings();
                 break;
             }
             if (status.window_status == "article-list") {
@@ -4040,6 +4094,8 @@ parcelHelpers.export(exports, "sort_array", ()=>sort_array
 );
 parcelHelpers.export(exports, "add_source", ()=>add_source
 );
+parcelHelpers.export(exports, "list_files", ()=>list_files
+);
 parcelHelpers.export(exports, "validate", ()=>validate
 );
 parcelHelpers.export(exports, "getManifest", ()=>getManifest
@@ -4232,6 +4288,24 @@ function add_source(url, limit, categorie, channel) {
         toaster(this.error, 3000);
     };
 }
+let list_files = function(filetype, callback) {
+    if (!navigator.getDeviceStorage) return false;
+    var d = navigator.getDeviceStorage("sdcard");
+    var cursor = d.enumerate();
+    cursor.onsuccess = function() {
+        if (!this.result) console.log("finished");
+        if (cursor.result.name !== null) {
+            var file = cursor.result;
+            let n = file.name.split(".");
+            let file_type = n[n.length - 1];
+            if (file_type == filetype) callback(file.name);
+            this.continue();
+        }
+    };
+    cursor.onerror = function() {
+        console.warn("No file found: " + this.error);
+    };
+};
 function validate(url) {
     var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if (pattern.test(url)) return true;

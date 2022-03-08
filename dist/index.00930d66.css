@@ -256,6 +256,27 @@ div#options ul li:focus {
   background: rgb(92, 90, 90);
 }
 
+div#select-box {
+  display: none;
+  background: white;
+  position: fixed;
+  top: 0;
+  z-index: 5;
+  height: 100vh;
+}
+
+div#select-box div {
+  background: silver;
+  min-width: 100vw;
+  text-align: center;
+  margin: 0 0 5px 0;
+  padding: 3px;
+}
+
+div#select-box div:focus {
+  background: rgb(179, 179, 179);
+}
+
 /*FEED*/
 
 div#news-feed {

@@ -43,6 +43,10 @@
             <div id="corner-sw"></div>
             <div id="startDecoding" hidden="">Start Scanning</div>
         </div>
+
+        <div id="select-box">
+            
+        </div>
         <!---------------->
         <!--news-feed-->
         <!---------------->
@@ -77,10 +81,14 @@
                     <label for="source"><strong>url</strong></label>
                     <input placeholder="https://xyz.com/feeds.opml" type="url" id="source">
                 </div>
-                <div class="item input-parent" tabindex="3">
+                <div class="input-parent">
                     <label for="source-local"><strong>local filename</strong></label>
                     <input tabindex="2" placeholder="rss.opml" type="text" id="source-local">
                 </div>
+
+
+                <button tabindex="3" class="item" data-action="list-opml-files">select local opml file</button>
+                <div id="selected-file"></div>
 
                 <div class="item input-parent" tabindex="4">
                     <label for="episodes-download"><strong>How many episodes should be loaded ?</strong></label>
@@ -95,7 +103,7 @@
                 <button tabindex="6" class="item export">export settings</button>
                 <button tabindex="7" class="item loadsettings">load settings</button>
                 <button tabindex="8" class="item reload">reload content</button>
-                <button tabindex="9" class="item save">save</button>
+                <button tabindex="9" class="item save">save settings</button>
 
             </div>
 
@@ -129,6 +137,14 @@
                     </article>
                 {{/data}}
             </script>
+
+
+            <script id="sb" type="x-tmpl-mustache">
+                {{#data}}
+                <div class="item" data-action="set-filename">{{filename}}</div>
+                {{/data}}
+            </script>
+
 
 
 
