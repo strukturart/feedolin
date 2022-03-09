@@ -188,7 +188,12 @@ setTimeout(() => {
       localStorage["source"] != undefined
     ) {
       load_source_opml();
-    } else {
+    }
+    if (
+      localStorage["source_local"] &&
+      localStorage["source_local"] != "" &&
+      localStorage["source_local"] != undefined
+    ) {
       load_local_file_opml();
     }
 
@@ -216,7 +221,7 @@ setTimeout(() => {
 //start loading feeds
 
 let load_feeds = function (data) {
-  var parser = new DOMParser();
+  //var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(data, "text/xml");
   let content = xmlDoc.getElementsByTagName("body")[0];
 
@@ -289,34 +294,6 @@ let load_local_file_opml = function () {
         "load local opml file";
 
       load_feeds(data);
-      /*
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(data, "text/xml");
-      let content = xmlDoc.getElementsByTagName("body")[0];
-
-      let m = content.querySelectorAll("outline");
-      for (var i = 0; i < m.length; i++) {
-        var nested = m[i].querySelectorAll("outline");
-
-        if (nested.length > 0) {
-          for (var z = 0; z < nested.length; z++) {
-            source_array.push([
-              nested[z].getAttribute("xmlUrl"),
-              setting.epsiodes_download,
-              m[i].getAttribute("text"),
-              m[i].getAttribute("text"),
-            ]);
-          }
-        }
-      }
-
-      rss_fetcher(
-        source_array[0][0],
-        source_array[0][1],
-        source_array[0][2],
-        source_array[0][3]
-      );
-      */
     };
     reader.readAsText(file);
   };
@@ -392,9 +369,6 @@ let rss_fetcher = function (
   function transferFailed() {
     //console.log("failed" + param_channel, 1000);
   }
-
-  // Add a hook to convert all text to capitals
-  DOMPurify.addHook("afterSanitizeElements", function (node) {});
 
   xhttp.onload = function () {
     document.getElementById("intro-message").innerText = "loading data";
