@@ -525,6 +525,8 @@ parcelHelpers.export(exports, "recently_played", ()=>recently_played
 );
 parcelHelpers.export(exports, "listened_elem", ()=>listened_elem
 );
+parcelHelpers.export(exports, "setting", ()=>setting
+);
 parcelHelpers.export(exports, "status", ()=>status
 );
 var _mustache = require("mustache");
@@ -554,19 +556,18 @@ let recently_played = localStorage.getItem("recently_played") != null ? JSON.par
 let listened_elem = localStorage.getItem("listened_elem") != null ? JSON.parse(localStorage.getItem("listened_elem")) : [];
 let tab_index = 0;
 //xml items
-var rss_title = "";
-var item_title = "";
-var item_summary = "";
-var item_link = "";
-var item_date_unix = "";
-var item_duration = "";
-var item_type = "";
-var item_filesize = "";
-var item_date_unix = "";
-var item_category = "";
-var item_cid = "";
-var item_image = "";
-var yt_thumbnail = "";
+let rss_title = "";
+let item_title = "";
+let item_summary = "";
+let item_link = "";
+let item_date_unix = "";
+let item_duration = "";
+let item_type = "";
+let item_filesize = "";
+let item_category = "";
+let item_cid = "";
+let item_image = "";
+let yt_thumbnail = "";
 let select_box = [];
 _helperJs.screenlock("lock");
 setTimeout(function() {
@@ -597,14 +598,12 @@ let reload = function() {
     window.location.reload(true);
     localStorage.setItem("reload", "true");
 };
-let stream_id = "";
 let audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
     let d = JSON.parse(localStorage.getItem("audio_memory"));
     audio_memory = d;
 } else audio_memory = {
 };
-//get version
 if (navigator.mozApps) {
     //ads || ads free
     //KaioOs ads
@@ -650,8 +649,20 @@ setTimeout(()=>{
     document.getElementById("intro-message").innerText = "checking feed list";
     //download
     if (_cacheJs.getTime(a) && navigator.onLine) {
-        if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) load_source_opml();
-        else load_local_file_opml();
+        let check = false;
+        if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) {
+            load_source_opml();
+            check = true;
+        }
+        if (localStorage["source_local"] && localStorage["source_local"] != "" && localStorage["source_local"] != undefined) {
+            load_local_file_opml();
+            check = true;
+        }
+        if (!check) {
+            localStorage.setItem("source", default_opml);
+            load_source_opml();
+        }
+    //load cache
     } else {
         document.getElementById("intro-message").innerText = "your device is offline, loading cached data";
         content_arr = _cacheJs.loadCache();
@@ -670,8 +681,7 @@ setTimeout(()=>{
 }, 1000);
 //start loading feeds
 let load_feeds = function(data) {
-    var parser1 = new DOMParser();
-    var xmlDoc = parser1.parseFromString(data, "text/xml");
+    var xmlDoc = parser.parseFromString(data, "text/xml");
     let content = xmlDoc.getElementsByTagName("body")[0];
     let m = content.querySelectorAll("outline");
     for(var i = 0; i < m.length; i++){
@@ -713,34 +723,7 @@ let load_local_file_opml = function() {
             let data = event.target.result;
             document.getElementById("intro-message").innerText = "load local opml file";
             load_feeds(data);
-        /*
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(data, "text/xml");
-      let content = xmlDoc.getElementsByTagName("body")[0];
-
-      let m = content.querySelectorAll("outline");
-      for (var i = 0; i < m.length; i++) {
-        var nested = m[i].querySelectorAll("outline");
-
-        if (nested.length > 0) {
-          for (var z = 0; z < nested.length; z++) {
-            source_array.push([
-              nested[z].getAttribute("xmlUrl"),
-              setting.epsiodes_download,
-              m[i].getAttribute("text"),
-              m[i].getAttribute("text"),
-            ]);
-          }
-        }
-      }
-
-      rss_fetcher(
-        source_array[0][0],
-        source_array[0][1],
-        source_array[0][2],
-        source_array[0][3]
-      );
-      */ };
+        };
         reader.readAsText(file);
     };
 };
@@ -793,9 +776,6 @@ let rss_fetcher = function(param_url, param_limit, param_channel, param_category
     function transferFailed() {
     //console.log("failed" + param_channel, 1000);
     }
-    // Add a hook to convert all text to capitals
-    _dompurifyDefault.default.addHook("afterSanitizeElements", function(node) {
-    });
     xhttp.onload = function() {
         document.getElementById("intro-message").innerText = "loading data";
         if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
@@ -1224,14 +1204,12 @@ function nav(move) {
     if (move == "+1") {
         tab_index++;
         if (tab_index >= siblings.length) {
-            // document.activeElement.classList.add("overscrolling");
             tab_index = siblings.length - 1;
             return true;
         }
         siblings[tab_index].focus();
     }
     if (move == "-1" && tab_index > 0) {
-        //document.activeElement.classList.remove("overscrolling");
         tab_index--;
         siblings[tab_index].focus();
     }
@@ -1364,8 +1342,8 @@ function open_url() {
         youtube_player = new YT.Player("iframe-wrapper", {
             videoId: document.activeElement.getAttribute("data-youtube-id"),
             events: {
-                "onReady": onPlayerReady,
-                "onStateChange": onPlayerStateChange
+                onReady: onPlayerReady,
+                onStateChange: onPlayerStateChange
             }
         });
         let t;
@@ -1443,7 +1421,7 @@ let show_article_list = function() {
 let show_settings = function() {
     _helperJs.bottom_bar("", "", "back");
     document.querySelectorAll("div#settings .item").forEach(function(e, index) {
-        e.setAttribute("tabindex", index);
+        if (e.style.display != "none") e.setAttribute("tabindex", index);
     });
     status.active_element_id = document.activeElement.getAttribute("data-id");
     status.window_status = "settings";
@@ -1454,6 +1432,7 @@ let show_settings = function() {
     _settingsJs.load_settings();
 };
 let open_options = function() {
+    _helperJs.bottom_bar("", "select", "");
     tab_index = 0;
     status.active_element_id = document.activeElement.getAttribute("data-id");
     status.window_status = "options";
@@ -1513,11 +1492,12 @@ qr_listener.addEventListener("blur", (event)=>{
 });
 //button actions
 let button_action = function() {
-    _helperJs.bottom_bar("", "select", "");
+    _helperJs.bottom_bar("", "select", "back");
     let p = document.activeElement.getAttribute("data-action");
     if (p == "list-opml-files") {
         document.getElementById("select-box").style.display = "block";
         status.window_status = "select-box";
+        _helperJs.bottom_bar("clear", "select", "back");
         document.querySelectorAll("div#select-box .item").forEach(function(e, index) {
             e.setAttribute("tabIndex", index);
             document.querySelectorAll("div#select-box div.item")[0].focus();
@@ -1526,7 +1506,9 @@ let button_action = function() {
     }
     if (p == "set-filename") select_box_selected();
 };
+document.querySelector("div.source-local-wrapper").style.display = "none";
 let list_files_callback = function(filename) {
+    document.querySelector("div.source-local-wrapper").style.display = "block";
     select_box.push({
         filename: filename
     });
@@ -1536,6 +1518,10 @@ _helperJs.list_files("opml", list_files_callback);
 //custom select box
 let select_box_selected = function() {
     localStorage.setItem("source_local", document.activeElement.innerText);
+    close_select_box();
+};
+let select_box_clear = function() {
+    localStorage.setItem("source_local", "");
     close_select_box();
 };
 let close_select_box = function() {
@@ -1605,8 +1591,8 @@ function shortpress_action(param) {
                 break;
             }
             if (status.window_status == "settings" && document.activeElement.classList.contains("reload")) reload();
-            if (status.window_status == "settings" && document.activeElement.classList.contains("loadsettings")) load_settings_from_file();
-            if (status.window_status == "settings" && document.activeElement.classList.contains("export")) export_settings();
+            if (status.window_status == "settings" && document.activeElement.classList.contains("loadsettings")) _settingsJs.load_settings_from_file();
+            if (status.window_status == "settings" && document.activeElement.classList.contains("export")) _settingsJs.export_settings();
             if (status.window_status == "settings" && document.activeElement.classList.contains("save")) _settingsJs.save_settings();
             if (status.window_status == "settings" && qrscan == true) {
                 status.window_status = "scan";
@@ -1730,6 +1716,10 @@ function shortpress_action(param) {
                     youtube_player.pauseVideo();
                     return false;
                 }
+                break;
+            }
+            if (status.window_status == "select-box") {
+                select_box_clear();
                 break;
             }
             break;

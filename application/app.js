@@ -11,10 +11,20 @@ import {
 } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 
-import { bottom_bar, top_bar, list_files } from "./assets/js/helper.js";
+import {
+  bottom_bar,
+  top_bar,
+  list_files,
+  screenlock,
+} from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
-import { load_settings, save_settings } from "./assets/js/settings.js";
+import {
+  load_settings,
+  save_settings,
+  export_settings,
+  load_settings_from_file,
+} from "./assets/js/settings.js";
 import { play_podcast, volume_control, seeking } from "./assets/js/audio.js";
 
 let article_array;
@@ -44,19 +54,18 @@ export let listened_elem =
     : [];
 let tab_index = 0;
 //xml items
-var rss_title = "";
-var item_title = "";
-var item_summary = "";
-var item_link = "";
-var item_date_unix = "";
-var item_duration = "";
-var item_type = "";
-var item_filesize = "";
-var item_date_unix = "";
-var item_category = "";
-var item_cid = "";
-var item_image = "";
-var yt_thumbnail = "";
+let rss_title = "";
+let item_title = "";
+let item_summary = "";
+let item_link = "";
+let item_date_unix = "";
+let item_duration = "";
+let item_type = "";
+let item_filesize = "";
+let item_category = "";
+let item_cid = "";
+let item_image = "";
+let yt_thumbnail = "";
 
 let select_box = [];
 
@@ -65,7 +74,7 @@ setTimeout(function () {
   screenlock("unlock");
 }, 3000);
 
-let setting = {
+export let setting = {
   sleep_time:
     localStorage.getItem("sleep_time") != null
       ? localStorage.getItem("sleep_time")
@@ -113,7 +122,6 @@ let reload = function () {
   localStorage.setItem("reload", "true");
 };
 
-let stream_id = "";
 let audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
   let d = JSON.parse(localStorage.getItem("audio_memory"));
@@ -121,8 +129,6 @@ if (localStorage.getItem("audio_memory") != null) {
 } else {
   audio_memory = {};
 }
-
-//get version
 
 if (navigator.mozApps) {
   //ads || ads free
@@ -182,12 +188,14 @@ setTimeout(() => {
   document.getElementById("intro-message").innerText = "checking feed list";
   //download
   if (getTime(a) && navigator.onLine) {
+    let check = false;
     if (
       localStorage["source"] &&
       localStorage["source"] != "" &&
       localStorage["source"] != undefined
     ) {
       load_source_opml();
+      check = true;
     }
     if (
       localStorage["source_local"] &&
@@ -195,6 +203,11 @@ setTimeout(() => {
       localStorage["source_local"] != undefined
     ) {
       load_local_file_opml();
+      check = true;
+    }
+    if (!check) {
+      localStorage.setItem("source", default_opml);
+      load_source_opml();
     }
 
     //load cache
@@ -221,7 +234,6 @@ setTimeout(() => {
 //start loading feeds
 
 let load_feeds = function (data) {
-  //var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(data, "text/xml");
   let content = xmlDoc.getElementsByTagName("body")[0];
 
@@ -1037,7 +1049,6 @@ function nav(move) {
     tab_index++;
 
     if (tab_index >= siblings.length) {
-      // document.activeElement.classList.add("overscrolling");
       tab_index = siblings.length - 1;
       return true;
     }
@@ -1046,7 +1057,6 @@ function nav(move) {
   }
 
   if (move == "-1" && tab_index > 0) {
-    //document.activeElement.classList.remove("overscrolling");
     tab_index--;
     siblings[tab_index].focus();
   }
@@ -1061,11 +1071,6 @@ function nav(move) {
     top: elY - window.innerHeight / 2,
     behavior: "smooth",
   });
-
-  //overscrolling
-  if (move == "-1" && tab_index == 0) {
-    //document.activeElement.classList.add("overscrolling");
-  }
 }
 
 //navigation between channels into channels view
@@ -1239,8 +1244,8 @@ function open_url() {
     youtube_player = new YT.Player("iframe-wrapper", {
       videoId: document.activeElement.getAttribute("data-youtube-id"),
       events: {
-        "onReady": onPlayerReady,
-        "onStateChange": onPlayerStateChange,
+        onReady: onPlayerReady,
+        onStateChange: onPlayerStateChange,
       },
     });
     let t;
@@ -1361,7 +1366,9 @@ let show_settings = function () {
   bottom_bar("", "", "back");
 
   document.querySelectorAll("div#settings .item").forEach(function (e, index) {
-    e.setAttribute("tabindex", index);
+    if (e.style.display != "none") {
+      e.setAttribute("tabindex", index);
+    }
   });
 
   status.active_element_id = document.activeElement.getAttribute("data-id");
@@ -1375,6 +1382,7 @@ let show_settings = function () {
 };
 
 let open_options = function () {
+  bottom_bar("", "select", "");
   tab_index = 0;
   status.active_element_id = document.activeElement.getAttribute("data-id");
   status.window_status = "options";
@@ -1471,13 +1479,14 @@ qr_listener.addEventListener("blur", (event) => {
 
 //button actions
 let button_action = function () {
-  bottom_bar("", "select", "");
+  bottom_bar("", "select", "back");
 
   let p = document.activeElement.getAttribute("data-action");
 
   if (p == "list-opml-files") {
     document.getElementById("select-box").style.display = "block";
     status.window_status = "select-box";
+    bottom_bar("clear", "select", "back");
 
     document
       .querySelectorAll("div#select-box .item")
@@ -1492,8 +1501,11 @@ let button_action = function () {
     select_box_selected();
   }
 };
+document.querySelector("div.source-local-wrapper").style.display = "none";
 
 let list_files_callback = function (filename) {
+  document.querySelector("div.source-local-wrapper").style.display = "block";
+
   select_box.push({ filename: filename });
   renderSB(select_box);
 };
@@ -1503,6 +1515,11 @@ list_files("opml", list_files_callback);
 //custom select box
 let select_box_selected = function () {
   localStorage.setItem("source_local", document.activeElement.innerText);
+  close_select_box();
+};
+
+let select_box_clear = function () {
+  localStorage.setItem("source_local", "");
   close_select_box();
 };
 
@@ -1771,6 +1788,10 @@ function shortpress_action(param) {
         }
         break;
       }
+      if (status.window_status == "select-box") {
+        select_box_clear();
+        break;
+      }
 
       break;
 
@@ -1794,6 +1815,7 @@ function shortpress_action(param) {
         open_options();
         break;
       }
+
       break;
 
     case "EndCall":

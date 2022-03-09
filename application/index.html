@@ -81,21 +81,17 @@
                     <label for="source"><strong>url</strong></label>
                     <input placeholder="https://xyz.com/feeds.opml" type="url" id="source" />
                 </div>
-                <div class="input-parent">
-                    <label for="source-local"><strong>local filename</strong></label>
+                <div class="item input-parent source-local-wrapper" data-action="list-opml-files">
+                    <label for="source-local"><strong>select local opml file</strong></label>
                     <input tabindex="2" placeholder="rss.opml" type="text" id="source-local" />
                 </div>
 
-
-                <button tabindex="3" class="item" data-action="list-opml-files">select local opml file</button>
-                <div id="selected-file"></div>
-
-                <div class="item input-parent" tabindex="4">
+                <div class="item input-parent">
                     <label for="episodes-download"><strong>How many episodes should be loaded ?</strong></label>
                     <input type="tel"  pattern="^[0-9]*$" id="episodes-download" />
                 </div>
 
-                <div class="item input-parent" tabindex="5">
+                <div class="item input-parent">
                     <label for="sleep-mode"><strong>Here you can set after how many minutes the audio playback should be
                             stopped.</strong></label>
                     <input type="tel" pattern="^[0-9]*$" id="sleep-mode" />
