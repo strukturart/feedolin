@@ -1,78 +1,75 @@
 div#qr-screen {
-    top: 0;
-    left: 0;
-    position: fixed;
-    z-index: 200000;
-    display: block;
-    min-height: 100vh;
-    min-width: 100vw;
-    z-index: 2000000000000;
-    display: none;
+  z-index: 200000;
+  min-height: 100vh;
+  min-width: 100vw;
+  z-index: 2000000000000;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 #video {
-    bottom: 0;
-    height: auto;
-    min-height: 100%;
-    min-width: 100%;
-    position: fixed;
-    right: 0;
-    width: auto;
+  height: auto;
+  min-height: 100%;
+  min-width: 100%;
+  width: auto;
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }
 
 #startDecoding {
-    background: #0095dd;
-    border-radius: 40px;
-    color: #fff;
-    font-family: Arial, sans;
-    font-size: 20px;
-    left: 50%;
-    margin: -30px 0 0 -95px;
-    padding: 20px;
-    position: fixed;
-    text-align: center;
-    top: 50%;
-    width: 150px;
+  color: #fff;
+  text-align: center;
+  width: 150px;
+  background: #0095dd;
+  border-radius: 40px;
+  margin: -30px 0 0 -95px;
+  padding: 20px;
+  font-family: Arial, sans;
+  font-size: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 
-#corner-nw,
-#corner-no,
-#corner-so,
-#corner-sw {
-    border: #fff 6px solid;
-    height: 30px;
-    position: fixed;
-    width: 30px;
+#corner-nw, #corner-no, #corner-so, #corner-sw {
+  height: 30px;
+  width: 30px;
+  border: 6px solid #fff;
+  position: fixed;
 }
 
 #corner-nw {
-    border-bottom: 0;
-    border-right: 0;
-    border-top-left-radius: 20px;
-    left: 20px;
-    top: 20px;
+  border-bottom: none;
+  border-right: none;
+  border-top-left-radius: 20px;
+  top: 20px;
+  left: 20px;
 }
 
 #corner-no {
-    border-bottom: 0;
-    border-left: 0;
-    border-top-right-radius: 20px;
-    right: 20px;
-    top: 20px;
+  border-bottom: none;
+  border-left: none;
+  border-top-right-radius: 20px;
+  top: 20px;
+  right: 20px;
 }
 
 #corner-so {
-    border-bottom-right-radius: 20px;
-    border-left: 0;
-    border-top: 0;
-    bottom: 20px;
-    right: 20px;
+  border-top: none;
+  border-left: none;
+  border-bottom-right-radius: 20px;
+  bottom: 20px;
+  right: 20px;
 }
 
 #corner-sw {
-    border-bottom-left-radius: 20px;
-    border-right: 0;
-    border-top: 0;
-    bottom: 20px;
-    left: 20px;
+  border-top: none;
+  border-right: none;
+  border-bottom-left-radius: 20px;
+  bottom: 20px;
+  left: 20px;
 }
+

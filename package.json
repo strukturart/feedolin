@@ -27,7 +27,8 @@
             "staticOutDir": "assets/"
          },
          {
-            "staticPath": "./application/manifest.webapp"
+            "staticPath": "./application/manifest.webapp",
+            "staticOutDir": "./"
          }
       ]
    }

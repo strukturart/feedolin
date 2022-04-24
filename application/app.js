@@ -1,4 +1,6 @@
 "use strict";
+import { translations } from "./assets/js/translations.js";
+
 import Mustache from "mustache";
 import DOMPurify from "dompurify";
 import { sort_array } from "./assets/js/helper.js";
@@ -10,7 +12,6 @@ import {
   formatFileSize,
 } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
-
 import {
   bottom_bar,
   top_bar,
@@ -25,7 +26,12 @@ import {
   export_settings,
   load_settings_from_file,
 } from "./assets/js/settings.js";
-import { play_podcast, volume_control, seeking } from "./assets/js/audio.js";
+import {
+  play_podcast,
+  volume_control,
+  seeking,
+  stop_player,
+} from "./assets/js/audio.js";
 
 let article_array;
 var content_arr = [];
@@ -34,6 +40,13 @@ var k = 0;
 var panels = ["channels"];
 var current_panel = 0;
 const parser = new DOMParser();
+
+let video = "";
+let youtube_player;
+let video_time;
+let youtube_time;
+let video_status = "";
+let youtube_status = "";
 
 //store all used article ids
 var all_cid = [];
@@ -73,6 +86,12 @@ screenlock("lock");
 setTimeout(function () {
   screenlock("unlock");
 }, 3000);
+
+//translation
+export let userLang = navigator.language || navigator.userLanguage;
+if (!translations[userLang]) {
+  userLang = "en-EN";
+}
 
 export let setting = {
   sleep_time:
@@ -289,7 +308,7 @@ let load_local_file_opml = function () {
   var request = sdcard.get(a);
   request.onerror = function () {
     document.getElementById("intro-message").innerHTML =
-      "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.";
+      translations[userLang].app_error_0;
   };
 
   request.onsuccess = function () {
@@ -303,7 +322,7 @@ let load_local_file_opml = function () {
     reader.onloadend = function (event) {
       let data = event.target.result;
       document.getElementById("intro-message").innerText =
-        "load local opml file";
+        translations[userLang].app_load_file;
 
       load_feeds(data);
     };
@@ -326,7 +345,8 @@ let load_source_opml = function () {
   xhttp.onload = function () {
     if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
       document.getElementById("intro-message").innerText =
-        "load online opml file";
+        translations[userLang].app_load_file;
+
       let data = xhttp.response;
 
       load_feeds(data);
@@ -403,6 +423,7 @@ let rss_fetcher = function (
       startlistened = "";
       youtube_id = "";
       yt_thumbnail = "";
+      item_video_url = "";
 
       //Channel
       rss_title = data.querySelector("title").textContent || param_channel;
@@ -475,6 +496,16 @@ let rss_fetcher = function (
               item_type == "audio/x-m4a"
             ) {
               item_media = "podcast";
+            }
+
+            if (
+              item_type == "video/mp4" ||
+              item_type == "application/x-mpegurl"
+            ) {
+              item_media = "video";
+              item_video_url = el[i]
+                .querySelector("enclosure")
+                .getAttribute("url");
             }
 
             if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
@@ -558,6 +589,7 @@ let rss_fetcher = function (
             start_listened: startlistened,
             youtube_id: youtube_id,
             youtube_thumbnail: yt_thumbnail,
+            video_url: item_video_url,
           });
         }
       }
@@ -621,6 +653,7 @@ let rss_fetcher = function (
             if (el[i].querySelector("enclosure").getAttribute("type"))
               item_type = el[i].querySelector("enclosure").getAttribute("type");
 
+            console.log(item_type);
             if (
               item_type == "audio/mpeg" ||
               item_type == "audio/aac" ||
@@ -629,6 +662,16 @@ let rss_fetcher = function (
               item_type == "audio/x-m4a"
             ) {
               item_media = "podcast";
+            }
+
+            if (
+              item_type == "video/mp4" ||
+              item_type == "application/x-mpegurl"
+            ) {
+              item_media = "video";
+              item_video_url = el[i]
+                .querySelector("enclosure")
+                .getAttribute("url");
             }
 
             if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
@@ -673,6 +716,7 @@ let rss_fetcher = function (
             read: "not-read",
             start_listened: startlistened,
             youtube_thumbnail: yt_thumbnail,
+            video_url: item_video_url,
           });
         }
       }
@@ -870,7 +914,11 @@ function build() {
   listened_articles();
   tabs();
   clean_localstorage();
-  bottom_bar("settings", "select", "options");
+  bottom_bar(
+    translations[userLang].app_settings,
+    translations[userLang].app_select,
+    translations[userLang].app_options
+  );
   top_bar("", panels[0], "");
 
   panels.push("recently-played");
@@ -1035,7 +1083,11 @@ function nav(move) {
   }
 
   if (document.activeElement.classList.contains("input-parent")) {
-    bottom_bar("", "edit", "back");
+    bottom_bar(
+      "",
+      translations[userLang].app_edit,
+      translations[userLang].app_back
+    );
   }
 
   let b = document.activeElement.parentNode;
@@ -1129,7 +1181,9 @@ let channel_navigation = function (direction) {
 };
 
 let show_article = function () {
-  document.querySelector("div#source-page").style.display = "none";
+  document.querySelector("div#youtube-player").style.display = "none";
+  document.querySelector("div#video-player").style.display = "none";
+  document.querySelector("div#audio-player").style.display = "none";
 
   document.querySelectorAll("div.division").forEach(function (index, key) {
     document.querySelectorAll("div.division")[key].style.display = "none";
@@ -1162,18 +1216,42 @@ let show_article = function () {
 
   if (document.activeElement.getAttribute("data-media") == "podcast") {
     if (document.activeElement.classList.contains("audio-playing")) {
-      bottom_bar("pause", "", "options");
+      bottom_bar(
+        translations[userLang].player_pause,
+        "",
+        translations[userLang].app_options
+      );
     } else {
-      bottom_bar("play", "", "options");
+      bottom_bar(
+        translations[userLang].player_play,
+        "",
+        translations[userLang].app_options
+      );
     }
   }
 
+  if (document.activeElement.getAttribute("data-media") == "video") {
+    bottom_bar(
+      translations[userLang].player_play,
+      "",
+      translations[userLang].app_options
+    );
+  }
+
   if (document.activeElement.getAttribute("data-media") == "rss") {
-    bottom_bar("visit", "", "options");
+    bottom_bar(
+      translations[userLang].app_visit,
+      "",
+      translations[userLang].app_options
+    );
   }
 
   if (document.activeElement.getAttribute("data-media") == "youtube") {
-    bottom_bar("open", "", "options");
+    bottom_bar(
+      translations[userLang].app_open,
+      "",
+      translations[userLang].app_options
+    );
   }
 
   document.activeElement.scrollIntoView({
@@ -1191,10 +1269,6 @@ let show_article = function () {
 
   document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
 };
-
-let youtube_player;
-let video_time;
-let video_status = "";
 
 let toTime = function (seconds) {
   var date = new Date(null);
@@ -1217,29 +1291,95 @@ let youtube_seeking = function (param) {
   }
 };
 
+let video_seeking = function (param) {
+  var step = 10;
+  if (param == "backward") {
+    video.currentTime = video.currentTime - step++;
+  }
+
+  if (param == "forward") {
+    video.currentTime = video.currentTime + step++;
+  }
+};
 //open source or youtube
 function open_url() {
-  let link_target = document.activeElement.getAttribute("data-link");
-  let title = document.activeElement.querySelector("h1.title").textContent;
-  title = title.replace(/\s/g, "-");
-  bottom_bar("", "", "");
-
-  document.querySelector("div#source-page").style.display = "block";
-  document.querySelector("iframe").style.display = "block";
-
+  //rss
   if (document.activeElement.getAttribute("data-media") == "rss") {
+    let link_target = document.activeElement.getAttribute("data-link");
+    let title = document.activeElement.querySelector("h1.title").textContent;
+    title = title.replace(/\s/g, "-");
+    bottom_bar("", "", "");
     show_article_list();
     window.open(link_target);
+    return true;
+  }
+  //video
+  if (document.activeElement.getAttribute("data-media") == "video") {
+    video = document.getElementById("videoplayer");
+
+    video.src = document.activeElement.getAttribute("data-video-url");
+    console.log(document.activeElement.getAttribute("data-video-url"));
+
+    open_video_player();
+    document.getElementById("progress-bar").style.display = "block";
+
+    status.window_status = "video";
+    bottom_bar(translations[userLang].player_pause, "", "");
+
+    video.onloadedmetadata = function () {
+      document.getElementById("message").style.top = "0px";
+      document.getElementById("message-inner").innerText = "please wait ";
+    };
+
+    video.onplay = function () {};
+
+    video.onplaying = function () {
+      stop_player(); //stop audio player
+
+      document.getElementById("message").style.top = "-1000px";
+      video_status = "playing";
+
+      video_time = setInterval(function () {
+        t = video.duration - video.currentTime;
+
+        let percent = (video.currentTime / video.duration) * 100;
+        document.getElementById("progress-bar").style.display = "block";
+
+        document.querySelector("div#progress-bar div").style.width =
+          percent + "%";
+
+        if (video_status == "playing") {
+          bottom_bar(translations[userLang].player_pause, toTime(t), "");
+        }
+        if (video_status == "paused") {
+          bottom_bar(translations[userLang].player_play, toTime(t), "");
+        }
+      }, 1000);
+    };
+
+    video.onpause = function () {
+      document.getElementById("message").style.top = "-1000px";
+      video_status = "paused";
+      bottom_bar(
+        translations[userLang].player_pause,
+        toTime(video.duration),
+        ""
+      );
+    };
+
     return;
   }
 
+  //youtube
+
   if (document.activeElement.getAttribute("data-media") == "youtube") {
-    document.querySelector("div#source-page").style.display = "block";
-    status.window_status = "source-page";
-    bottom_bar("play", "", "");
+    stop_player();
+    status.window_status = "youtube";
+    bottom_bar(translations[userLang].player_play, "", "");
 
     document.getElementById("message").style.top = "0px";
     document.getElementById("message-inner").innerText = "please wait ";
+    document.getElementById("youtube-player").style.display = "block";
 
     youtube_player = new YT.Player("iframe-wrapper", {
       videoId: document.activeElement.getAttribute("data-youtube-id"),
@@ -1252,28 +1392,29 @@ function open_url() {
 
     function onPlayerStateChange(event) {
       if (event.data == YT.PlayerState.PLAYING) {
-        video_status = "playing";
+        youtube_status = "playing";
         bottom_bar("pause", toTime(t), "");
       }
 
       if (event.data == YT.PlayerState.PAUSED) {
-        video_status = "paused";
+        youtube_status = "paused";
       }
 
-      video_time = setInterval(function () {
+      youtube_time = setInterval(function () {
         t = youtube_player.getDuration() - youtube_player.getCurrentTime();
 
         let percent =
           (youtube_player.getCurrentTime() / youtube_player.getDuration()) *
           100;
+        document.getElementById("progress-bar").style.display = "block";
 
-        document.querySelector("div#youtube-progress-bar div.bar").style.width =
+        document.querySelector("div#progress-bar div").style.width =
           percent + "%";
 
-        if (video_status == "playing") {
+        if (youtube_status == "playing") {
           bottom_bar("pause", toTime(t), "");
         }
-        if (video_status == "paused") {
+        if (youtube_status == "paused") {
           bottom_bar("play", toTime(t), "");
         }
       }, 1000);
@@ -1295,14 +1436,20 @@ let show_article_list = function () {
   document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
   bottom_bar("settings", "select", "options");
   top_bar("", panels[current_panel], "");
+  document.getElementById("progress-bar").style.display = "none";
 
   if (youtube_player) {
     youtube_player.stopVideo();
     youtube_player.destroy();
     youtube_player = "";
+    clearInterval(youtube_time);
+    document.querySelector("div#youtube-player").style.display = "none";
   }
 
-  document.querySelector("div#source-page").style.display = "none";
+  video.src = "";
+  clearInterval(video_time);
+
+  document.querySelector("div#video-player").style.display = "none";
 
   if (status.sleepmode) {
     top_bar("sleep", panels[current_panel], "");
@@ -1340,8 +1487,8 @@ let show_article_list = function () {
 
   document.querySelector("div#settings").style.display = "none";
   article_array[tab_index];
-  document.querySelector("div#source-page").style.display = "none";
-  document.querySelector("div#source-page iframe").setAttribute("src", "");
+  document.querySelector("div#youtube-player").style.display = "none";
+  document.querySelector("div#youtube-player iframe").setAttribute("src", "");
 
   status.window_status = "article-list";
   document.activeElement.focus();
@@ -1427,6 +1574,12 @@ let sleep_mode = function () {
     play_podcast();
     status.sleepmode = false;
   }, st);
+};
+
+let open_video_player = function () {
+  document.getElementById("video-player").style.display = "block";
+  status.window_status = "video";
+  video.src = document.activeElement.getAttribute("data-video-url");
 };
 
 let open_player = function (reopen) {
@@ -1656,9 +1809,13 @@ function shortpress_action(param) {
         break;
       }
 
-      if (status.window_status == "source-page") {
+      if (status.window_status == "youtube") {
         youtube_seeking("backward");
         break;
+      }
+
+      if (status.window_status == "video") {
+        video_seeking("backward");
       }
       break;
 
@@ -1672,9 +1829,13 @@ function shortpress_action(param) {
         seeking("forward");
         break;
       }
-      if (status.window_status == "source-page") {
+      if (status.window_status == "youtube") {
         youtube_seeking("forward");
         break;
+      }
+
+      if (status.window_status == "video") {
+        video_seeking("forward");
       }
 
       break;
@@ -1776,13 +1937,26 @@ function shortpress_action(param) {
         break;
       }
 
-      if (status.window_status == "source-page") {
+      if (status.window_status == "video") {
         if (video_status == "paused" || video_status == "") {
-          youtube_player.playVideo();
+          video.play();
+
           return false;
         }
 
         if (video_status == "playing") {
+          video.pause();
+          return false;
+        }
+      }
+
+      if (status.window_status == "youtube") {
+        if (youtube_status == "paused" || youtube_status == "") {
+          youtube_player.playVideo();
+          return false;
+        }
+
+        if (youtube_status == "playing") {
           youtube_player.pauseVideo();
           return false;
         }
@@ -1841,11 +2015,6 @@ function shortpress_action(param) {
         break;
       }
 
-      if (status.window_status == "settings") {
-        //show_article_list();
-        break;
-      }
-
       if (status.window_status == "single-article") {
         show_article_list();
         break;
@@ -1856,7 +2025,12 @@ function shortpress_action(param) {
         break;
       }
 
-      if (status.window_status == "source-page") {
+      if (status.window_status == "video") {
+        show_article_list();
+        break;
+      }
+
+      if (status.window_status == "youtube") {
         show_article_list();
         break;
       }
@@ -1905,14 +2079,22 @@ function handleKeyDown(evt) {
     if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
 
     if (evt.key == "ArrowLeft") {
-      if (status.window_status == "source-page") {
+      if (status.window_status == "youtube") {
         youtube_seeking("backward");
+      }
+
+      if (status.window_status == "video") {
+        video_seeking("backward");
       }
     }
 
     if (evt.key == "ArrowRight") {
-      if (status.window_status == "source-page") {
+      if (status.window_status == "youtube") {
         youtube_seeking("forward");
+      }
+
+      if (status.window_status == "video") {
+        video_seeking("forward");
       }
     }
 

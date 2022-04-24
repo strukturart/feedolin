@@ -13,7 +13,30 @@
 <body>
     <div id="wrapper">
         <div id="toast" class="width-100"></div>
-        <div id="message" class="width-100 height-100 flex justify-content-spacearound align-item-center"><div id="message-inner"></div></div>
+        <div id="side-toast"></div>
+        <div id="message" class="width-100 height-100 flex justify-content-spacearound align-item-center">
+            <div id="message-inner"></div>
+        </div>
+
+
+        <div id="bottom-bar">
+            <div class="inner flex justify-content-spacebetween width-100">
+                <div id="button-left"></div>
+                <div id="button-center"></div>
+                <div id="button-right"></div>
+            </div>
+        </div>
+        
+        <div id="top-bar">
+            <div class="inner flex justify-content-spacebetween width-100">
+                <div class="button-left"></div>
+                <div class="button-center"></div>
+                <div class="button-right"></div>
+            </div>
+        </div>
+
+
+
         <div id="intro" class="width-100 height-100">
             <img src="assets/icons/intro.png">
             <div class="width-100" id="version"></div>
@@ -30,9 +53,25 @@
             <div id="image" src=" " class="width-100 height-100"></div>
             <div id="background-pattern" class="flex justify-content-start width-100 height-100">
             </div>
-            <div id="progress-bar" class="width-100">
-                <div></div>
+        </div>
+
+
+        <div id="video-player"  class="width-100 height-100">
+            <video id="videoplayer" width="100%" height="240" autoplay=true>
+                <source src="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" type="video/mp4">
+            </video>
+        </div>
+
+
+        <div id="youtube-player" class="width-100 height-100">
+            <div id="iframe-wrapper">
+                <iframe src=" " scrolling="no" frameborder="”0″" mozbrowser allowfullscreen></iframe>
             </div>
+        </div>
+
+
+        <div id="progress-bar" class="width-100">
+            <div></div>
         </div>
 
         <div id="qr-screen">
@@ -109,7 +148,7 @@
 
                 {{#data}}
                     <div class="division {{channel}}">{{channel}}</div>
-                    <article tabIndex=0 class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+                    <article tabIndex=0 class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                         <div class="flex grid-col-10">
                             <div class="podcast-icon"><img src="assets/icons/podcast.png"></div>
                             <div class="youtube-icon"><img src="assets/icons/youtube.png"></div>
@@ -144,27 +183,13 @@
 
 
 
+          
+            
 
-            <div id="source-page" class="width-100 height-100">
 
-                <div id="iframe-wrapper">
-                    <iframe src=" " scrolling="no" frameborder="”0″" mozbrowser allowfullscreen></iframe>
-                </div>
-                <div id="youtube-progress-bar" class="width-100">
-                    
-                    <div class="bar"></div>
-                </div>
-            </div>
-            <div id="bottom-bar">
-                <div class="inner flex justify-content-spacebetween width-100">
-                    <div id="button-left"></div>
-                    <div id="button-center"></div>
-                    <div id="button-right"></div>
-                </div>
-            </div>
+            
 
             <div id="options" class="width-100 height-100">
-
                 <button class="item" data-function="unread" tabindex="0">mark as unread</button>
                 <button class="item" data-function="sleepmode" tabindex="1">activate sleep mode</button>
                 <button class="item" data-function="audio-player" tabindex="2">open audioplayer</button>
@@ -177,13 +202,7 @@
 
             </div>
 
-            <div id="top-bar">
-                <div class="inner flex justify-content-spacebetween width-100">
-                    <div class="button-left"></div>
-                    <div class="button-center"></div>
-                    <div class="button-right"></div>
-                </div>
-            </div>
+           
         </div>
 
     </div>
