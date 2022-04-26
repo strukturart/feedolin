@@ -498,8 +498,7 @@ video {
   width: 100vh;
   height: 100vw;
   margin-top: -100vw;
-  object-fit: cover;
-
+  object-fit: contain;
   z-index: 4;
   visibility: visible;
 }
