@@ -16082,22 +16082,32 @@ let load_settings = function() {
     if (localStorage.getItem("sleep_time") !== null) document.getElementById("sleep-mode").value = localStorage.getItem("sleep_time");
 };
 let load_settings_from_file = function() {
-    _helperJs.toaster("search setting file", 2000);
-    var sdcard = navigator.getDeviceStorage("sdcard");
+    const sdcard = navigator.getDeviceStorage("sdcard");
     var file = sdcard.get("feedolin_settings.json");
-    let reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function() {
-        let data = JSON.parse(reader.result);
-        let settings = data[0];
-        document.getElementById("source-local").value = settings.source_local;
-        document.getElementById("source").value = settings.source;
-        document.getElementById("time").value = settings.interval;
-        document.getElementById("episodes-download").value = settings.epsiodes_download;
-        document.getElementById("sleep-mode").value = settings.sleep_time;
-        _helperJs.toaster("the settings were loaded from the file, if you want to use them permanently don't forget to save.", 3000);
-        reader.onerror = function() {
-            _helperJs.toaster(reader.error);
+    _helperJs.toaster("search setting file", 2000);
+    file.onerror = function() {
+        _helperJs.toaster("error", 2000);
+    };
+    file.onerror = function() {
+        _helperJs.toaster("error", 2000);
+    };
+    file.onsuccess = function() {
+        _helperJs.toaster(file.result, 2000);
+        let reader = new FileReader();
+        reader.readAsText(file.result);
+        reader.onload = function() {
+            let data = JSON.parse(reader.result);
+            let settings = data[0];
+            console.log(settings);
+            document.getElementById("source-local").value = settings.source_local;
+            document.getElementById("source").value = settings.source;
+            document.getElementById("time").value = settings.interval;
+            document.getElementById("episodes-download").value = settings.epsiodes_download;
+            document.getElementById("sleep-mode").value = settings.sleep_time;
+            _helperJs.toaster("the settings were loaded from the file, if you want to use them permanently don't forget to save.", 3000);
+            reader.onerror = function() {
+                _helperJs.toaster(reader.error);
+            };
         };
     };
 };

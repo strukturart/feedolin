@@ -68,33 +68,45 @@ export let load_settings = function () {
 };
 
 export let load_settings_from_file = function () {
-  toaster("search setting file", 2000);
-  var sdcard = navigator.getDeviceStorage("sdcard");
-
+  const sdcard = navigator.getDeviceStorage("sdcard");
   var file = sdcard.get("feedolin_settings.json");
 
-  let reader = new FileReader();
+  toaster("search setting file", 2000);
 
-  reader.readAsText(file);
+  file.onerror = function () {
+    toaster("error", 2000);
+  };
 
-  reader.onload = function () {
-    let data = JSON.parse(reader.result);
+  file.onerror = function () {
+    toaster("error", 2000);
+  };
 
-    let settings = data[0];
-    document.getElementById("source-local").value = settings.source_local;
-    document.getElementById("source").value = settings.source;
-    document.getElementById("time").value = settings.interval;
-    document.getElementById("episodes-download").value =
-      settings.epsiodes_download;
-    document.getElementById("sleep-mode").value = settings.sleep_time;
+  file.onsuccess = function () {
+    toaster(file.result, 2000);
 
-    toaster(
-      "the settings were loaded from the file, if you want to use them permanently don't forget to save.",
-      3000
-    );
+    let reader = new FileReader();
+    reader.readAsText(file.result);
 
-    reader.onerror = function () {
-      toaster(reader.error);
+    reader.onload = function () {
+      let data = JSON.parse(reader.result);
+
+      let settings = data[0];
+      console.log(settings);
+      document.getElementById("source-local").value = settings.source_local;
+      document.getElementById("source").value = settings.source;
+      document.getElementById("time").value = settings.interval;
+      document.getElementById("episodes-download").value =
+        settings.epsiodes_download;
+      document.getElementById("sleep-mode").value = settings.sleep_time;
+
+      toaster(
+        "the settings were loaded from the file, if you want to use them permanently don't forget to save.",
+        3000
+      );
+
+      reader.onerror = function () {
+        toaster(reader.error);
+      };
     };
   };
 };
