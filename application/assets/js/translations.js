@@ -13,6 +13,8 @@ export const translations = {
     "app_open": "open",
     "app_slepp": "sleep",
     "app_load_file": "load OPML file",
+    "app_qrcode": "QR",
+    "app_clear": "clear",
 
     "app_error_0":
       "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.",

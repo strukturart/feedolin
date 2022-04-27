@@ -1434,7 +1434,11 @@ function open_url() {
 //////////////////
 let show_article_list = function () {
   document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
-  bottom_bar("settings", "select", "options");
+  bottom_bar(
+    translations[userLang].app_select,
+    translations[userLang].app_select,
+    translations[userLang].app_options
+  );
   top_bar("", panels[current_panel], "");
   document.getElementById("progress-bar").style.display = "none";
 
@@ -1510,7 +1514,7 @@ let show_article_list = function () {
 //settings view
 
 let show_settings = function () {
-  bottom_bar("", "", "back");
+  bottom_bar("", "", translations[userLang].app_back);
 
   document.querySelectorAll("div#settings .item").forEach(function (e, index) {
     if (e.style.display != "none") {
@@ -1529,7 +1533,7 @@ let show_settings = function () {
 };
 
 let open_options = function () {
-  bottom_bar("", "select", "");
+  bottom_bar("", translations[userLang].app_select, "");
   tab_index = 0;
   status.active_element_id = document.activeElement.getAttribute("data-id");
   status.window_status = "options";
@@ -1621,25 +1625,37 @@ let open_player = function (reopen) {
 const qr_listener = document.querySelector("input#source");
 let qrscan = false;
 qr_listener.addEventListener("focus", (event) => {
-  bottom_bar("", "qr", "back");
+  bottom_bar(
+    "",
+    translations[userLang].app_qr,
+    translations[userLang].app_back
+  );
   qrscan = true;
 });
 
 qr_listener.addEventListener("blur", (event) => {
-  bottom_bar("", "", "back");
+  bottom_bar("", "", translations[userLang].app_back);
   qrscan = false;
 });
 
 //button actions
 let button_action = function () {
-  bottom_bar("", "select", "back");
+  bottom_bar(
+    "",
+    translations[userLang].app_select,
+    translations[userLang].app_back
+  );
 
   let p = document.activeElement.getAttribute("data-action");
 
   if (p == "list-opml-files") {
     document.getElementById("select-box").style.display = "block";
     status.window_status = "select-box";
-    bottom_bar("clear", "select", "back");
+    bottom_bar(
+      translations[userLang].app_,
+      translations[userLang].app_select,
+      translations[userLang].app_back
+    );
 
     document
       .querySelectorAll("div#select-box .item")
@@ -2003,7 +2019,7 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "select-box") {
-        bottom_bar("", "", "back");
+        bottom_bar("", "", translations[userLang].app_back);
         close_select_box();
         status.window_status = "settings";
         show_settings();
