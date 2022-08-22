@@ -1761,6 +1761,11 @@ function shortpress_action(param) {
         document.activeElement.children[0].focus();
         return true;
       }
+
+      if (document.activeElement.classList.contains("set-download-amount")) {
+        alert("hello");
+        return true;
+      }
       if (status.window_status == "article-list") {
         show_article();
         break;
