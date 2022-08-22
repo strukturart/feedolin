@@ -227,6 +227,44 @@ div#KaiOsAds-Wrapper {
   overflow: hidden;
 }
 
+div#feed-download-list {
+  display: none;
+  background: white;
+  position: fixed;
+  top: 0;
+  padding: 5px;
+  z-index: 5;
+}
+
+div#feed-download-list div div {
+  margin: 0 0 10px 0;
+}
+
+div#news-feed div#feed-download-list h2 {
+  margin: 10px 0 20px 0;
+  text-align: center;
+}
+
+div#news-feed div#feed-download-list input {
+  background: white;
+  height: 20px;
+  width: 20px;
+  margin: 0 40px 0 0;
+  color: blue;
+}
+
+div#news-feed div#feed-download-list div {
+  padding: 5px;
+}
+
+div#news-feed div#feed-download-list div:focus {
+  background: pink;
+}
+
+div#news-feed div#feed-download-list div:focus input {
+  background: pink;
+}
+
 div#options {
   display: none;
   background: white;

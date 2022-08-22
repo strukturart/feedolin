@@ -251,17 +251,45 @@ setTimeout(() => {
 }, 1000);
 
 //start loading feeds
+let feed_download_list = [];
+if (localStorage.getItem("feed_download_list") == null) {
+  localStorage.setItem("feed_download_list", feed_download_list);
+} else {
+  feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+}
 
 let load_feeds = function (data) {
   var xmlDoc = parser.parseFromString(data, "text/xml");
   let content = xmlDoc.getElementsByTagName("body")[0];
+  let index = 0;
 
   let m = content.querySelectorAll("outline");
   for (var i = 0; i < m.length; i++) {
     var nested = m[i].querySelectorAll("outline");
-
     if (nested.length > 0) {
       for (var z = 0; z < nested.length; z++) {
+        //feed_download_list
+
+        let result = false;
+
+        for (var k = 0; k < feed_download_list.length; k++) {
+          if (feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
+            result = true;
+            break;
+          }
+        }
+        //put in list
+        if (result == false) {
+          feed_download_list.push({
+            title: nested[z].getAttribute("title"),
+            url: nested[z].getAttribute("xmlUrl"),
+            amount: setting.epsiodes_download,
+            index: index++,
+            channel: m[i].getAttribute("text"),
+          });
+        }
+
+        //set download list
         source_array.push([
           nested[z].getAttribute("xmlUrl"),
           setting.epsiodes_download,
@@ -270,13 +298,27 @@ let load_feeds = function (data) {
         ]);
       }
     }
-  }
 
+    localStorage.setItem(
+      "feed_download_list",
+      JSON.stringify(feed_download_list)
+    );
+  }
+  /*
   rss_fetcher(
     source_array[0][0],
     source_array[0][1],
     source_array[0][2],
     source_array[0][3]
+  );
+
+  */
+
+  rss_fetcher(
+    feed_download_list[0].url,
+    feed_download_list[0].amount,
+    feed_download_list[0].channel,
+    feed_download_list[0].channel
   );
 };
 
@@ -849,7 +891,18 @@ function renderHello(arr) {
   var rendered = Mustache.render(template, {
     data: arr,
   });
-  document.getElementById("news-feed-list").innerHTML = rendered;
+  document.querySelector("#news-feed-list").innerHTML = rendered;
+}
+
+//render download-list
+function render_feed_download_list(arr) {
+  var template = document.getElementById(
+    "feed-download-list-template"
+  ).innerHTML;
+  var rendered = Mustache.render(template, {
+    data: arr,
+  });
+  document.querySelector("#feed-download-list div").innerHTML = rendered;
 }
 
 //render selectbox
@@ -924,6 +977,7 @@ function build() {
   panels.push("recently-played");
 
   renderHello(content_arr);
+  render_feed_download_list(feed_download_list);
 
   division_remove();
 
@@ -1511,9 +1565,35 @@ let show_article_list = function () {
   tab_index = document.activeElement.getAttribute("tabIndex");
 };
 
+let show_feed_download_list = function () {
+  tabIndex = 0;
+  status.window_status = "download-list";
+  document.getElementById("feed-download-list").style.display = "block";
+
+  document.querySelector("div#feed-download-list div:first-child").focus();
+
+  document.querySelectorAll("#feed-download-list input").forEach(function (e) {
+    e.addEventListener("change", function () {
+      feed_download_list.forEach(function (f) {
+        if (f.url == e.getAttribute("data-url")) {
+          f.amount = e.value;
+
+          //save list
+          localStorage.setItem(
+            "feed_download_list",
+            JSON.stringify(feed_download_list)
+          );
+        }
+      });
+    });
+  });
+};
+
 //settings view
 
 let show_settings = function () {
+  status.window_status = "settings";
+
   bottom_bar("", "", translations[userLang].app_back);
 
   document.querySelectorAll("div#settings .item").forEach(function (e, index) {
@@ -1531,6 +1611,8 @@ let show_settings = function () {
   document.getElementById("settings").children[0].focus();
   load_settings();
 };
+
+//options view
 
 let open_options = function () {
   bottom_bar("", translations[userLang].app_select, "");
@@ -1758,12 +1840,12 @@ function shortpress_action(param) {
         button_action();
       }
       if (document.activeElement.classList.contains("input-parent")) {
-        document.activeElement.children[0].focus();
+        document.activeElement.querySelector("input").focus();
         return true;
       }
 
       if (document.activeElement.classList.contains("set-download-amount")) {
-        alert("hello");
+        show_feed_download_list();
         return true;
       }
       if (status.window_status == "article-list") {
@@ -1877,6 +1959,11 @@ function shortpress_action(param) {
         break;
       }
 
+      if (status.window_status == "download-list") {
+        nav("+1");
+        break;
+      }
+
       if (status.window_status == "select-box") {
         nav("+1");
         break;
@@ -1907,6 +1994,11 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "article-list") {
+        nav("-1");
+        break;
+      }
+
+      if (status.window_status == "download-list") {
         nav("-1");
         break;
       }
@@ -2065,9 +2157,22 @@ function shortpress_action(param) {
         break;
       }
 
+      if (status.window_status == "settings") {
+        show_article_list();
+
+        break;
+      }
+
       if (status.window_status == "scan") {
         stop_scan();
-        status.window_status == "settings";
+        status.window_status = "settings";
+        break;
+      }
+
+      if (status.window_status == "download-list") {
+        document.getElementById("feed-download-list").style.display = "none";
+        show_settings();
+        status.window_status = "settings";
         break;
       }
 
