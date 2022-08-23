@@ -1,8 +1,11 @@
 "use strict";
-import { status, listened_elem, recently_played, userLang } from "../../app.js";
+import { userLang } from "../../app.js";
+import { status } from "../../app.js";
+import { recently_played } from "../../app.js";
+
+//status, listened_elem, recently_played,
 import { toaster, bottom_bar } from "./helper.js";
 import { translations } from "../../assets/js/translations.js";
-
 let player = new Audio();
 player.mozAudioChannelType = "content";
 player.type = "audio/mpeg";
@@ -120,12 +123,12 @@ let remember = function () {
 };
 
 player.addEventListener("play", (event) => {
-  bottom_bar(translations[userLang].player_pause, duration, "");
+  bottom_bar("<img src='assets/icons/23EF.svg'>", duration, "");
 });
 
 player.addEventListener("pause", (event) => {
   remember();
-  bottom_bar(translations[userLang].player_play, duration, "");
+  bottom_bar("<img src='assets/icons/23EF.svg'>", duration, "");
 
   clearInterval(getduration);
 });
@@ -171,7 +174,7 @@ player.addEventListener("playing", (event) => {
 
       status.audio_duration = toTime(time);
       if (status.window_status == "audio-player")
-        bottom_bar(translations[userLang].player_pause, toTime(time), "");
+        bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(time), "");
     }
   }, 1000);
 });

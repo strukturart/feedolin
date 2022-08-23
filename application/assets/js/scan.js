@@ -1,19 +1,21 @@
 import jsQR from "jsqr";
-import { status } from "../../app.js";
 
-let video;
+let video = document.querySelector("video#video");
 let intv;
+let mediaStream;
 
-export let stop_scan = function () {
+export let stop_scan = function (callback) {
+  mediaStream.getTracks().map(function (val) {
+    val.stop();
+  });
+
   document.getElementById("qr-screen").style.display = "none";
-  console.log("yeah");
-  clearInterval(intv);
-  status.window_status = "settings";
+
+  callback();
 };
 
 export let start_scan = function (callback) {
   document.getElementById("qr-screen").style.display = "block";
-  console.log("start");
 
   navigator.getUserMedia =
     navigator.getUserMedia ||
@@ -30,8 +32,9 @@ export let start_scan = function (callback) {
         },
       },
       function (stream) {
-        video = document.querySelector("video");
         video.srcObject = stream;
+        console.log(stream);
+        mediaStream = stream;
 
         video.onloadedmetadata = function (e) {
           video.play();
@@ -55,13 +58,11 @@ export let start_scan = function (callback) {
             var idd = imageData.data;
 
             let code = jsQR(idd, imageWidth, imageHeight);
-            console.log(code);
 
             if (code) {
-              stop_scan();
-              callback(code.data);
               clearInterval(intv);
-              status.window_status = "settings";
+              callback(code.data);
+              stop_scan();
             }
           }, 1000);
         };

@@ -69,10 +69,9 @@ export let notify = function (
 
 //bottom bar
 export let bottom_bar = function (left, center, right) {
-  document.querySelector("div#bottom-bar div#button-left").textContent = left;
-  document.querySelector("div#bottom-bar div#button-center").textContent =
-    center;
-  document.querySelector("div#bottom-bar div#button-right").textContent = right;
+  document.querySelector("div#bottom-bar div#button-left").innerHTML = left;
+  document.querySelector("div#bottom-bar div#button-center").innerHTML = center;
+  document.querySelector("div#bottom-bar div#button-right").innerHTML = right;
 
   if (left == "" && center == "" && right == "") {
     document.querySelector("div#bottom-bar").style.display = "none";
@@ -252,10 +251,8 @@ export function add_source(url, limit, categorie, channel) {
   };
 }
 
-
-
-
 export let list_files = function (filetype, callback) {
+  console.log("hey");
   if (!navigator.getDeviceStorage) return false;
   var d = navigator.getDeviceStorage("sdcard");
 
@@ -279,6 +276,7 @@ export let list_files = function (filetype, callback) {
 
   cursor.onerror = function () {
     console.warn("No file found: " + this.error);
+    callback("error");
   };
 };
 
