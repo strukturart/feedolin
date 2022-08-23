@@ -1,35 +1,35 @@
 {
-   "source": "application/index.html",
-   "browserslist": "Firefox <= 48",
-   "scripts": {
-      "start": "parcel --no-source-maps ./application/index.html",
-      "build": "parcel build ./application/index.html --no-source-maps --log-level error"
-   },
-   "devDependencies": {
-      "cssnano": "^5.0.17",
-      "parcel": "^2.3.2",
-      "parcel-plugin-static-files-copy": "^2.6.0",
-      "postcss": "^8.4.6"
-   },
-   "dependencies": {
-      "as": "^0.4.1",
-      "assets": "^3.0.1",
-      "dompurify": "^2.3.6",
-      "intersection-observer": "^0.12.0",
-      "jsqr": "^1.4.0",
-      "mustache": "^4.2.0",
-      "youtube-player": "^5.5.2"
-   },
-   "staticFiles": {
-      "staticPath": [
-         {
-            "staticPath": "./application/assets/",
-            "staticOutDir": "assets/"
-         },
-         {
-            "staticPath": "./application/manifest.webapp",
-            "staticOutDir": "./"
-         }
-      ]
-   }
+  "source": "application/index.html",
+  "browserslist": "Firefox <= 48",
+  "scripts": {
+    "start": "parcel --no-source-maps ./application/index.html",
+    "build": "parcel build ./application/index.html --no-source-maps --log-level error"
+  },
+  "devDependencies": {
+    "cssnano": "^5.0.17",
+    "parcel": "^2.3.2",
+    "parcel-plugin-static-files-copy": "^2.6.0",
+    "postcss": "^8.4.6"
+  },
+  "dependencies": {
+    "as": "^0.4.1",
+    "assets": "^3.0.1",
+    "dompurify": "^2.3.6",
+    "intersection-observer": "^0.12.0",
+    "jsqr": "^1.4.0",
+    "mustache": "^4.2.0",
+    "youtube-player": "^5.5.2"
+  },
+  "staticFiles": {
+    "staticPath": [
+      {
+        "staticPath": "./application/assets/",
+        "staticOutDir": "assets/"
+      },
+      {
+        "staticPath": "./application/manifest.webapp",
+        "staticOutDir": "./"
+      }
+    ]
+  }
 }

@@ -95,127 +95,174 @@
 
       <div id="qr-screen">
         <video id="video"></video>
+
         <div id="corner-nw"></div>
         <div id="corner-no"></div>
         <div id="corner-so"></div>
         <div id="corner-sw"></div>
-        <div id="startDecoding" hidden>Start Scanning</div>
       </div>
 
-      <div id="select-box"></div>
+      <div id="options">
+        <h2>Options</h2>
+        <div class="item flex width-100" data-function="unread" tabindex="0">
+          <span class="text">mark as unread</span><span class="middle"></span
+          ><span class="key"></span>
+        </div>
+
+        <div class="item flex width-100" data-function="sleepmode" tabindex="1">
+          <span class="text">activate sleep mode</span
+          ><span class="middle"></span><span class="key"></span>
+        </div>
+
+        <div
+          class="item flex width-100"
+          data-function="audio-player"
+          tabindex="2"
+        >
+          <span class="text">open audio player</span><span class="middle"></span
+          ><span class="key">*</span>
+        </div>
+
+        <div class="item flex width-100" data-function="volume" tabindex="3">
+          <span class="text">volume</span><span class="middle"></span
+          ><span class="key">#</span>
+        </div>
+
+        <div class="item flex width-100" data-function="share" tabindex="4">
+          <span class="text">share</span><span class="middle"></span
+          ><span class="key">0</span>
+        </div>
+
+        <div data-function="reload" class="item flex width-100" tabindex="5">
+          <span class="text">reload content</span><span class="middle"></span
+          ><span class="key">0</span>
+        </div>
+
+        <div
+          data-function="download-list"
+          class="item flex width-100"
+          tabindex="6"
+        >
+          <span class="text">episodes downlad</span><span class="middle"></span
+          ><span class="key"></span>
+        </div>
+        <!---
+        <div
+          data-function="sort-by-name"
+          class="item flex width-100"
+          tabindex="7"
+        >
+          <span class="text">soert by name</span><span class="middle"></span
+          ><span class="key"></span>
+        </div>
+
+        <div
+          data-function="sort-by-date"
+          class="item flex width-100"
+          tabindex="8"
+        >
+          <span class="text">sort by date</span><span class="middle"></span>
+          <span class="key"></span>
+        </div>
+      -->
+
+        <div id="KaiOsAds-Wrapper" class="item" tabindex="7">
+          <iframe></iframe>
+        </div>
+      </div>
+
+      <div id="settings">
+        <h2 class="item" tabindex="0">Icons & Shortcuts</h2>
+        <ul id="icons-shortcuts">
+          <li class="flex">* <span>Audioplayer</span></li>
+          <li class="flex"># <span>Volumecontrol</span></li>
+          <li class="flex">
+            <img src="assets/icons/podcast.png" /><span>Podcast</span>
+          </li>
+          <li class="flex">
+            <img src="assets/icons/youtube.png" /><span>Youtube</span>
+          </li>
+          <li class="flex">
+            <img src="assets/icons/diamond.svg" /><span>Podcast listened</span>
+          </li>
+          <li class="flex">
+            <img src="assets/icons/ghost.svg" /><span>Podcast in progress</span>
+          </li>
+          <li class="flex"># <span>Volumecontrol</span></li>
+          <li class="flex">0 Longpress<span>Reload Content</span></li>
+          <li class="flex">2/5<span>Jump to next channel</span></li>
+        </ul>
+        <h2>Settings</h2>
+        <div class="item input-parent">
+          <label for="time"
+            >The loaded articles are temporarily saved on your device. New
+            content can be reloaded when the app is restarted. how many minutes
+            should the content be cached?</label
+          >
+          <input type="tel" pattern="^[0-9]*$" id="time" name="time" />
+        </div>
+
+        <h2>where should the list of the rss feed be loaded from?</h2>
+
+        <div class="item input-parent" tabindex="2">
+          <label for="source-local">
+            <strong>select local opml file</strong>
+          </label>
+          <select id="source-local" class="select-box"></select>
+        </div>
+
+        <div class="item input-parent" tabindex="2">
+          <label for="source"><strong>url</strong></label>
+          <input
+            placeholder="https://xyz.com/feeds.opml"
+            type="url"
+            id="source"
+          />
+        </div>
+
+        <button class="item set-download-amount">
+          How many episodes should be loaded ?
+        </button>
+
+        <div class="item input-parent">
+          <label for="sleep-mode"
+            ><strong
+              >Timer. <br />Here you can set after how many minutes the audio
+              playback should be stopped.</strong
+            ></label
+          >
+          <input type="tel" pattern="^[0-9]*$" id="sleep-mode" />
+        </div>
+        <button tabindex="6" class="item export">export settings</button>
+        <button tabindex="7" class="item loadsettings">load settings</button>
+        <button tabindex="9" class="item save">save settings</button>
+      </div>
+
+      <div id="feed-download-list" class="width-100">
+        <h2>Number of episodes</h2>
+        <div id="feed-download-list-box"></div>
+      </div>
+
+      <script id="feed-download-list-template" type="x-tmpl-mustache">
+
+        {{#data}}
+        <div class="item input-parent flex width-100 justify-content-spacebetween" tabindex={{index}}>
+          <label>{{title}}</label><span class="middle"></span>
+        <input data-url={{url}} type="tel" min="1" max="100" value={{amount}}>
+        </div>
+        {{/data}}
+      </script>
       <!---------------->
       <!--news-feed-->
       <!---------------->
 
       <div id="news-feed" class="width-100 height-100 page">
-        <div id="settings">
-          <h2 class="item" tabindex="0">Icons & Shortcuts</h2>
-          <ul id="icons-shortcuts">
-            <li class="flex">* <span>Audioplayer</span></li>
-            <li class="flex"># <span>Volumecontrol</span></li>
-            <li class="flex">
-              <img src="assets/icons/podcast.png" /><span>Podcast</span>
-            </li>
-            <li class="flex">
-              <img src="assets/icons/youtube.png" /><span>Youtube</span>
-            </li>
-            <li class="flex">
-              <img src="assets/icons/diamond.svg" /><span
-                >Podcast listened</span
-              >
-            </li>
-            <li class="flex">
-              <img src="assets/icons/ghost.svg" /><span
-                >Podcast in progress</span
-              >
-            </li>
-            <li class="flex">* <span>Open Audioplayer</span></li>
-            <li class="flex"># <span>Volumecontrol</span></li>
-            <li class="flex">0 Longpress<span>Reload Content</span></li>
-            <li class="flex">2/5<span>Jump to next channel</span></li>
-          </ul>
-          <h2>Settings</h2>
-          <div class="item input-parent" tabindex="1">
-            <label for="time"
-              >The loaded articles are temporarily saved on your device. After
-              how many minutes should a new item be searched for and reloaded
-              ?</label
-            >
-            <input type="tel" pattern="^[0-9]*$" id="time" name="time" />
-          </div>
-
-          <h2>where should the list of the rss feed be loaded from?</h2>
-          <div class="item input-parent" tabindex="2">
-            <label for="source"><strong>url</strong></label>
-            <input
-              placeholder="https://xyz.com/feeds.opml"
-              type="url"
-              id="source"
-            />
-          </div>
-          <div
-            class="item input-parent source-local-wrapper"
-            data-action="list-opml-files"
-          >
-            <label for="source-local"
-              ><strong>select local opml file</strong></label
-            >
-            <input
-              tabindex="2"
-              placeholder="rss.opml"
-              type="text"
-              id="source-local"
-            />
-          </div>
-
-          <div class="item input-parent">
-            <label for="episodes-download"
-              ><strong>How many episodes should be loaded ?</strong></label
-            >
-            <input type="tel" pattern="^[0-9]*$" id="episodes-download" />
-          </div>
-          <label
-            >set the amount of episodes to download for each feed
-            individually</label
-          >
-          <button class="item set-download-amount">set</button>
-
-          <div class="item input-parent">
-            <label for="sleep-mode"
-              ><strong
-                >Timer. <br />Here you can set after how many minutes the audio
-                playback should be stopped.</strong
-              ></label
-            >
-            <input type="tel" pattern="^[0-9]*$" id="sleep-mode" />
-          </div>
-          <button tabindex="6" class="item export">export settings</button>
-          <button tabindex="7" class="item loadsettings">load settings</button>
-          <button tabindex="8" class="item reload">reload content</button>
-          <button tabindex="9" class="item save">save settings</button>
-        </div>
-
         <div id="news-feed-list"></div>
-        <div id="feed-download-list" class="width-100 height-100">
-          <h2>Download</h2>
-          <div></div>
-        </div>
-
-        <script id="feed-download-list-template" type="x-tmpl-mustache">
-
-          {{#data}}
-          <div class="item input-parent flex width-100 justify-content-spacebetween" tabindex={{index}}>
-            <label>{{title}}</label>
-          <input data-url={{url}} type="tel" min="1" max="100" value={{amount}}>
-          </div>
-          {{/data}}
-        </script>
 
         <script id="template" type="x-tmpl-mustache">
 
           {{#data}}
-              <div class="division {{channel}}">{{channel}}</div>
-              <article tabIndex=0 class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                   <div class="flex grid-col-10">
                       <div class="podcast-icon"><img src="assets/icons/podcast.png"></div>
                       <div class="youtube-icon"><img src="assets/icons/youtube.png"></div>
@@ -242,50 +289,12 @@
 
         <script id="sb" type="x-tmpl-mustache">
           {{#data}}
-          <div class="item" data-action="set-filename">{{filename}}</div>
+          <option value="{{filename}}">{{filename}}</option>
           {{/data}}
         </script>
-
-        <div id="options" class="width-100 height-100">
-          <button class="item" data-function="unread" tabindex="0">
-            mark as unread
-          </button>
-          <button class="item" data-function="sleepmode" tabindex="1">
-            activate sleep mode
-          </button>
-          <button class="item" data-function="audio-player" tabindex="2">
-            open audioplayer
-          </button>
-          <button class="item" data-function="volume" tabindex="3">
-            volume
-          </button>
-          <button class="item" data-function="share" tabindex="4">share</button>
-
-          <div id="KaiOsAds-Wrapper" class="item" tabindex="5">
-            <iframe></iframe>
-          </div>
-        </div>
       </div>
     </div>
 
-    <div
-      id="goodbye"
-      class="flex justify-content-center align-item-center width-100 height-100"
-    >
-      <div id="donation">
-        please support my work, <br />make a donation<br />
-        <br />paypal.me/strukturart<br />
-        Thank you!
-      </div>
-      <div id="ciao">
-        Goodbye<br />
-        <br />
-        <ul>
-          <li>Thank you</li>
-          <li>for using feedolin</li>
-        </ul>
-      </div>
-    </div>
     <script type="module" src="app.js"></script>
     <script src="assets/js/youtube.js"></script>
   </body>

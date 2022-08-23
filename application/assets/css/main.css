@@ -4,7 +4,7 @@
   --color-one: black;
   --color-two: yellow;
   --color-three: silver;
-  --color-four: rgb(99, 99, 99);
+  --color-four: rgb(137, 143, 134);
   --color-five: rgb(38, 38, 38);
   --color-six: rgb(187, 79, 79);
   --color-seven: gainsboro;
@@ -26,7 +26,6 @@
 
 :focus {
   outline: none;
-  background: var(--color-four);
 }
 
 ::-moz-focus-inner {
@@ -77,17 +76,43 @@ img[src=" "] {
   display: none;
 }
 
+select {
+  width: 90%;
+  padding: 10px;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  color: rgb(54, 54, 54);
+
+  outline: 0;
+  border: 0;
+  border-bottom: 2px solid rgb(63, 63, 63);
+  margin: 10px 5% 10px 5%;
+  text-align: center;
+  position: relative;
+  background: #fafafa url("../icons/E264.svg") no-repeat 99% 80%;
+}
+
 button {
   font-size: 1rem;
   background: silver;
   padding: 5px;
   width: 100vw;
+  border-radius: 0%;
   margin: 0 0 5px 0;
   color: black;
+  font-style: normal !important;
 }
 
 button:focus {
-  background: rgb(87, 85, 85);
+  background: var(--color-four);
+  color: white;
+}
+
+.item:focus {
+  background: var(--color-four) !important;
   color: white;
 }
 
@@ -230,80 +255,64 @@ div#KaiOsAds-Wrapper {
 div#feed-download-list {
   display: none;
   background: white;
-  position: fixed;
+  position: absolute;
   top: 0;
-  padding: 5px;
+  padding: 0px;
   z-index: 5;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-div#feed-download-list div div {
+div#feed-download-list h2 {
+  text-align: right;
+  color: rgb(207, 109, 129);
+  padding: 0 20px 0 0;
+  width: 100vw;
   margin: 0 0 10px 0;
 }
 
-div#news-feed div#feed-download-list h2 {
-  margin: 10px 0 20px 0;
-  text-align: center;
+div#feed-download-list div#feed-download-list-box {
+  overflow: hidden;
+  height: 80vh;
 }
 
-div#news-feed div#feed-download-list input {
-  background: white;
-  height: 20px;
-  width: 20px;
-  margin: 0 40px 0 0;
+div#feed-download-list div#feed-download-list-box div {
+  margin: 0 0 5px 0;
+  background: none !important;
+  padding: 0 10px 0 10px;
+}
+
+div#feed-download-list div#feed-download-list-box label {
+  max-width: 60vw;
+  padding: 0 5px 0 0;
+}
+
+div#feed-download-list div#feed-download-list-box input {
+  width: 25px;
+  padding: 0 0 0 10px;
+}
+
+div#feed-download-list div#feed-download-list-box span.middle {
+  flex-grow: 1;
+  border-bottom: dotted 1px black;
+}
+
+div#feed-download-list div#feed-download-list-box div:focus label {
+  background: none;
   color: blue;
 }
 
-div#news-feed div#feed-download-list div {
-  padding: 5px;
-}
-
-div#news-feed div#feed-download-list div:focus {
-  background: pink;
-}
-
-div#news-feed div#feed-download-list div:focus input {
-  background: pink;
-}
-
-div#options {
-  display: none;
-  background: white;
-  position: fixed;
-  top: 0;
-  z-index: 5;
-}
-
-div#options ul li {
-  background: var(--color-three);
+div#feed-download-list div#feed-download-list-box div:focus input {
+  background: none;
   color: white;
-  padding: 5px;
-  margin: 0 0 5px 0;
-  font-style: normal !important;
+  margin: 0 0px 0 0;
+  color: blue;
 }
 
-div#options ul li:focus {
-  background: rgb(92, 90, 90);
-}
-
-div#select-box {
-  display: none;
-  background: white;
-  position: fixed;
-  top: 0;
-  z-index: 5;
-  height: 100vh;
-}
-
-div#select-box div {
-  background: silver;
-  min-width: 100vw;
-  text-align: center;
-  margin: 0 0 5px 0;
-  padding: 3px;
-}
-
-div#select-box div:focus {
-  background: rgb(179, 179, 179);
+div#feed-download-list div#feed-download-list-box div:focus {
+  background: none;
+  color: white;
 }
 
 /*FEED*/
@@ -312,7 +321,7 @@ div#news-feed {
   position: relative;
   background: white;
   color: black;
-  max-height: 85vh;
+  max-height: 100vh;
   width: 100vw;
   overflow: hidden;
   font-weight: normal;
@@ -320,11 +329,11 @@ div#news-feed {
 }
 
 div#news-feed div#news-feed-list {
-  height: 85vh;
+  height: 100vh;
   width: 100%;
   min-width: 100%;
   padding: 0px 0 50px 0;
-  overflow-y: scroll;
+  overflow: hidden;
   position: absolute;
   top: 27px;
 }
@@ -335,6 +344,9 @@ div#news-feed div#news-feed-list article {
   background: white;
 }
 
+div#news-feed div#news-feed-list article:last-child {
+  margin: 5px 0 50px 0;
+}
 div#news-feed div#news-feed-list article div.summary img {
   max-width: 95vw !important;
   min-width: 95vw !important;
@@ -343,8 +355,8 @@ div#news-feed div#news-feed-list article div.summary img {
 }
 
 div#news-feed div#news-feed-list article[data-read="read"] {
-  font-style: italic;
-  color: gray;
+  font-style: italic !important;
+  color: rgb(107, 98, 112);
 }
 
 div#news-feed div#news-feed-list article[data-read="not-read"] {
@@ -356,10 +368,12 @@ div#news-feed div#news-feed-list div.division {
   background: rgb(69, 73, 67);
   display: block;
   text-align: center;
+  display: none;
 }
 
 div#news-feed div#news-feed-list article:focus {
-  background: silver;
+  background: var(--color-four);
+  color: white;
 }
 
 div#news-feed div#news-feed-list article h1 {
@@ -422,6 +436,10 @@ article[data-media*="podcast"] div.duration-filesize:empty {
   display: none;
 }
 
+article[data-media*="rss"] div.duration {
+  display: none;
+}
+
 div#news-feed div#news-feed-list article div.summary {
   display: none;
   padding: 0 0 30px 0;
@@ -463,6 +481,10 @@ div#news-feed div#news-feed-list article h1.title {
 div#news-feed div#news-feed-list article.view h1.title {
   display: block;
   max-height: 100vh;
+}
+
+div#news-feed div#news-feed-list article.view {
+  background: white !important;
 }
 
 div#news-feed
@@ -528,7 +550,7 @@ div#video-player {
   background: black;
 }
 
-video {
+#videoplayer {
   position: absolute;
   transform: rotate(90deg);
 
@@ -578,7 +600,7 @@ div#bottom-bar {
   left: 0px;
   height: 18px;
   z-index: 6;
-  background: black;
+  background: none;
   min-width: 100vw;
 }
 
@@ -587,36 +609,62 @@ div#bottom-bar div#inner {
 }
 
 div#bottom-bar div {
-  background: black;
+  background: none;
   color: white;
   padding: 2px;
-}
-
-div#bottom-bar div#button-center {
-  background: black;
-  color: white;
-  padding: 2px;
-  width: 30%;
+  font-size: 0.8rem;
   text-align: center;
 }
 
-div#bottom-bar div#button-left {
-  background: black;
+div#bottom-bar div#button-center {
+  background: none;
   color: white;
   padding: 2px;
-  width: 20px;
+  width: 32%;
+  text-align: center;
+}
+
+div#bottom-bar div#button-center img {
+  position: fixed;
+  bottom: 5px;
+  filter: hue-rotate(10deg);
+
+  left: 46%;
+  width: 30px;
+}
+
+div#bottom-bar div#button-left {
+  background: none;
+  color: white;
+  padding: 2px;
+  width: 32%;
   text-align: left;
-  width: 30%;
+  width: 32%;
+}
+
+div#bottom-bar div#button-left img {
+  position: fixed;
+  bottom: 5px;
+  left: 10px;
+  width: 30px;
+  filter: hue-rotate(10deg);
+}
+
+div#bottom-bar div#button-right img {
+  position: fixed;
+  bottom: 5px;
+  right: 10px;
+  width: 30px;
+  filter: hue-rotate(10deg);
 }
 
 div#bottom-bar div#button-right {
-  background: black;
+  background: none;
   color: white;
   padding: 2px;
-  width: 30%;
+  width: 32%;
   text-align: right;
 }
-
 /*/////////////////
 ///TOP-BAR///////*/
 
@@ -765,13 +813,14 @@ div#top {
 
 div#settings {
   display: none;
-  height: 92vh;
+  height: 100vh;
   width: 100%;
-  padding: 0px 0 50px 0;
+  padding: 10px 0 50px 0;
   overflow: hidden;
   position: absolute;
   top: 0px;
   z-index: 3;
+  font-size: 1rem;
   background: rgb(231, 231, 231);
 }
 
@@ -788,7 +837,9 @@ div#settings div.input-parent {
 
 div#settings div.input-parent:focus {
   padding: 10px 10px 20px 10px;
-  background: rgb(179, 179, 179);
+
+  background: var(--color-four);
+  color: white;
 }
 
 div#settings label {
@@ -816,60 +867,60 @@ div#settings input:focus {
   background: rgb(255, 240, 240);
 }
 
-#goodbye {
-  position: fixed;
-  z-index: 50000;
-  left: 0;
-  top: 0;
-  background: black;
+div#options {
+  background: white;
   color: white;
-  font-size: 18px;
-  padding: 70px 5px 5px 5px;
-  display: none;
-}
-
-#ciao {
-  padding: 5px;
-  text-align: center;
-  display: none;
-}
-
-#ciao ul {
-  margin: 20px 0 0px 0;
-}
-
-#ciao ul li {
+  padding: 2px 5px 2px 5px;
   margin: 0 0 0px 0;
-  font-size: 14px;
-  list-style: none;
+  font-style: normal !important;
+  font-size: 1rem !important;
+  display: none;
+  top: 0;
+  z-index: 5;
+  height: 100vh;
+  overflow: hidden;
+  position: absolute;
 }
 
-#ciao ul li:first-child {
-  color: yellow;
+div#options h2 {
+  text-align: right;
+  color: rgb(207, 109, 129);
+  padding: 0 20px 0 0;
+  width: 100vw;
+}
+
+div#options div.item {
+  color: black !important;
+  font-weight: normal !important;
+  font-size: 1rem;
+  background: none;
+  display: flex;
   margin: 0 0 5px 0;
 }
 
-#donation {
-  padding: 5px;
-  text-align: center;
-  display: none;
+div#options div.item:last-child {
+  margin: 0 0 50px 0;
 }
 
-.overscrolling {
-  /* Start the shake animation and make the animation last for 0.5 seconds */
-  animation: jump 0.5s;
-
-  /* When the animation is finished, start again */
-
-  animation-iteration-count: 1;
+div#options div.item span.middle {
+  flex-grow: 1;
+  height: 1rem;
+  border-bottom: 1px dotted black;
 }
 
-@keyframes jump {
-  0% {
-    transform: translateY(0);
-  }
+div#options div.item span.text {
+  padding: 0 5px 0 0px;
+}
 
-  100% {
-    transform: translateY(-30px);
-  }
+div#options div.item span.key {
+  padding: 0 10px 0 5px;
+  font-size: 0.8rem !important;
+}
+
+div#options div:focus {
+  color: white;
+  font-weight: bold;
+  color: blue !important;
+  font-size: 1rem !important;
+  background: none !important;
 }

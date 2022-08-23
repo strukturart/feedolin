@@ -5,7 +5,9 @@
     </head>
     <body>
 
-
+        <outline text="How to" title="How to">
+            <outline type="rss" text="What can this app do?" title="KaiOs Reddit" xmlUrl="https://raw.githubusercontent.com/strukturart/feedolin/master/how-to.xml" htmlUrl=""/>
+        </outline>
         <outline text="Forum" title="Forum">
             <outline type="rss" text="KaiOs Reddit" title="KaiOs Reddit" xmlUrl="https://www.reddit.com/r/KaiOS/.rss" htmlUrl=""/>
             <outline type="rss" text="getKirby Forum" title="getKirby Forum" xmlUrl="https://forum.getkirby.com/latest.rss" htmlUrl=""/>

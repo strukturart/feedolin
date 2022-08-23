@@ -1,11 +1,56 @@
 "use strict";
-import { setting } from "../../app.js";
+import { default_opml } from "../../app.js";
 import { toaster, validate } from "./helper.js";
+
+export let setting = {
+  sleep_time:
+    localStorage.getItem("sleep_time") != null
+      ? localStorage.getItem("sleep_time")
+      : 20,
+
+  interval:
+    localStorage.getItem("interval") != null
+      ? localStorage.getItem("interval")
+      : 0,
+  source_local:
+    localStorage.getItem("source_local") != null
+      ? localStorage.getItem("source_local")
+      : "",
+
+  source:
+    localStorage.getItem("source") != null
+      ? localStorage.getItem("source")
+      : "",
+
+  local_file: false,
+  wwww_file: false,
+  ads: false,
+};
+
+export let load_settings = function () {
+  document.getElementById("time").value = setting.interval;
+
+  if (localStorage.getItem("source") != null) {
+    document.getElementById("source").value = localStorage.getItem("source");
+  } else {
+    document.getElementById("source").value = "";
+  }
+
+  if (localStorage.getItem("source_local") != null) {
+    document.getElementById("source-local").value =
+      localStorage.getItem("source_local");
+  }
+
+  if (localStorage.getItem("sleep_time") !== null) {
+    document.getElementById("sleep-mode").value =
+      localStorage.getItem("sleep_time");
+  }
+};
 
 export let save_settings = function () {
   if (
     document.getElementById("source-local").value == "" &&
-    document.getElementById("source").value == ""
+    document.getElementById("source").value == default_opml
   ) {
     toaster("please fill in the location of the source file", 3000);
     return false;
@@ -28,10 +73,6 @@ export let save_settings = function () {
     "sleep_time",
     document.getElementById("sleep-mode").value
   );
-  localStorage.setItem(
-    "epsiodes_download",
-    document.getElementById("episodes-download").value
-  );
 
   toaster(
     "saved, the settings will be active the next time the app is started.",
@@ -40,31 +81,6 @@ export let save_settings = function () {
 
   toaster("saved successfully", 2000);
   return true;
-};
-
-export let load_settings = function () {
-  if (localStorage.getItem("epsiodes_download") !== null) {
-    document.getElementById("episodes-download").value =
-      localStorage.getItem("epsiodes_download");
-  }
-
-  if (localStorage.getItem("interval") != null) {
-    document.getElementById("time").value = localStorage.getItem("interval");
-  }
-
-  if (localStorage.getItem("source") != null) {
-    document.getElementById("source").value = localStorage.getItem("source");
-  }
-
-  if (localStorage.getItem("source_local") != null) {
-    document.getElementById("source-local").value =
-      localStorage.getItem("source_local");
-  }
-
-  if (localStorage.getItem("sleep_time") !== null) {
-    document.getElementById("sleep-mode").value =
-      localStorage.getItem("sleep_time");
-  }
 };
 
 export let load_settings_from_file = function () {
@@ -95,8 +111,7 @@ export let load_settings_from_file = function () {
       document.getElementById("source-local").value = settings.source_local;
       document.getElementById("source").value = settings.source;
       document.getElementById("time").value = settings.interval;
-      document.getElementById("episodes-download").value =
-        settings.epsiodes_download;
+
       document.getElementById("sleep-mode").value = settings.sleep_time;
 
       toaster(

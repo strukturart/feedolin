@@ -5,6 +5,8 @@ import Mustache from "mustache";
 import DOMPurify from "dompurify";
 import { sort_array } from "./assets/js/helper.js";
 import { toaster } from "./assets/js/helper.js";
+import { share } from "./assets/js/helper.js";
+
 import {
   screenlock,
   hashCode,
@@ -12,15 +14,11 @@ import {
   formatFileSize,
 } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
-import {
-  bottom_bar,
-  top_bar,
-  list_files,
-  screenlock,
-} from "./assets/js/helper.js";
+import { bottom_bar, top_bar, list_files } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
 import {
+  setting,
   load_settings,
   save_settings,
   export_settings,
@@ -35,18 +33,19 @@ import {
 
 let article_array;
 var content_arr = [];
-var source_array = [];
 var k = 0;
 var panels = ["channels"];
 var current_panel = 0;
 const parser = new DOMParser();
 
-let video = "";
+let video_player = "";
 let youtube_player;
 let video_time;
 let youtube_time;
 let video_status = "";
 let youtube_status = "";
+let video = document.getElementById("videoplayer");
+let source_url_cleaner = ["$$", "mm"];
 
 //store all used article ids
 var all_cid = [];
@@ -80,8 +79,6 @@ let item_cid = "";
 let item_image = "";
 let yt_thumbnail = "";
 
-let select_box = [];
-
 screenlock("lock");
 setTimeout(function () {
   screenlock("unlock");
@@ -93,36 +90,7 @@ if (!translations[userLang]) {
   userLang = "en-EN";
 }
 
-export let setting = {
-  sleep_time:
-    localStorage.getItem("sleep_time") != null
-      ? localStorage.getItem("sleep_time")
-      : 20,
-  epsiodes_download:
-    localStorage.getItem("episodes_download") != null
-      ? localStorage.getItem("epsiodes_download")
-      : 5,
-
-  interval:
-    localStorage.getItem("interval") != null
-      ? localStorage.getItem("interval")
-      : 0,
-  source_local:
-    localStorage.getItem("source_local") != null
-      ? localStorage.getItem("source_local")
-      : "",
-
-  source:
-    localStorage.getItem("source") != null
-      ? localStorage.getItem("source")
-      : "",
-
-  local_file: false,
-  wwww_file: false,
-  ads: false,
-};
-
-let default_opml =
+export let default_opml =
   "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml";
 
 export let status = {
@@ -134,6 +102,7 @@ export let status = {
   audio_duration: "",
   audio_status: "play",
   sleepmode: false,
+  sort: "number",
 };
 
 let reload = function () {
@@ -172,7 +141,6 @@ if (navigator.mozApps) {
     if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
       document.querySelector("#KaiOsAds-Wrapper iframe").src = "ads.html";
     } else {
-      console.log("Ads free");
       t.style.display = "none";
     }
   }
@@ -185,142 +153,6 @@ if (localStorage.getItem("audio_memory") != null) {
   let d = JSON.parse(localStorage.getItem("audio_memory"));
   audio_memory = d;
 }
-
-setTimeout(() => {
-  if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
-
-  if (localStorage["source_local"] == null && localStorage["source"] == null) {
-    localStorage.setItem("source", default_opml);
-    load_source_opml();
-  }
-  //get update time; cache || download
-  let a = localStorage.getItem("interval");
-
-  //reload content without caching
-  if (localStorage.getItem("reload") == null)
-    localStorage.setItem("reload", "false");
-
-  if (localStorage.getItem("reload") == "true") {
-    a = 0;
-  }
-  localStorage.setItem("reload", "false");
-  document.getElementById("intro-message").innerText = "checking feed list";
-  //download
-  if (getTime(a) && navigator.onLine) {
-    let check = false;
-    if (
-      localStorage["source"] &&
-      localStorage["source"] != "" &&
-      localStorage["source"] != undefined
-    ) {
-      load_source_opml();
-      check = true;
-    }
-    if (
-      localStorage["source_local"] &&
-      localStorage["source_local"] != "" &&
-      localStorage["source_local"] != undefined
-    ) {
-      load_local_file_opml();
-      check = true;
-    }
-    if (!check) {
-      localStorage.setItem("source", default_opml);
-      load_source_opml();
-    }
-
-    //load cache
-  } else {
-    document.getElementById("intro-message").innerText =
-      "your device is offline, loading cached data";
-
-    content_arr = loadCache();
-    if (content_arr) {
-      document.getElementById("intro-message").innerText = "load cached data";
-      setTimeout(function () {
-        build();
-      }, 1000);
-    } else {
-      document.getElementById("intro-message").innerText =
-        "no internet connection and no cached data available";
-      setTimeout(function () {
-        goodbye();
-      }, 4000);
-    }
-  }
-}, 1000);
-
-//start loading feeds
-let feed_download_list = [];
-if (localStorage.getItem("feed_download_list") == null) {
-  localStorage.setItem("feed_download_list", feed_download_list);
-} else {
-  feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
-}
-
-let load_feeds = function (data) {
-  var xmlDoc = parser.parseFromString(data, "text/xml");
-  let content = xmlDoc.getElementsByTagName("body")[0];
-  let index = 0;
-
-  let m = content.querySelectorAll("outline");
-  for (var i = 0; i < m.length; i++) {
-    var nested = m[i].querySelectorAll("outline");
-    if (nested.length > 0) {
-      for (var z = 0; z < nested.length; z++) {
-        //feed_download_list
-
-        let result = false;
-
-        for (var k = 0; k < feed_download_list.length; k++) {
-          if (feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
-            result = true;
-            break;
-          }
-        }
-        //put in list
-        if (result == false) {
-          feed_download_list.push({
-            title: nested[z].getAttribute("title"),
-            url: nested[z].getAttribute("xmlUrl"),
-            amount: setting.epsiodes_download,
-            index: index++,
-            channel: m[i].getAttribute("text"),
-          });
-        }
-
-        //set download list
-        source_array.push([
-          nested[z].getAttribute("xmlUrl"),
-          setting.epsiodes_download,
-          m[i].getAttribute("text"),
-          m[i].getAttribute("text"),
-        ]);
-      }
-    }
-
-    localStorage.setItem(
-      "feed_download_list",
-      JSON.stringify(feed_download_list)
-    );
-  }
-  /*
-  rss_fetcher(
-    source_array[0][0],
-    source_array[0][1],
-    source_array[0][2],
-    source_array[0][3]
-  );
-
-  */
-
-  rss_fetcher(
-    feed_download_list[0].url,
-    feed_download_list[0].amount,
-    feed_download_list[0].channel,
-    feed_download_list[0].channel
-  );
-};
 
 /////////////////////////////
 ////////////////////////////
@@ -417,6 +249,133 @@ let load_source_opml = function () {
   xhttp.send(null);
 };
 
+setTimeout(() => {
+  if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
+
+  if (localStorage["source_local"] == null && localStorage["source"] == null) {
+    localStorage.setItem("source", default_opml);
+  }
+  //get update time; cache || download
+  let a = localStorage.getItem("interval");
+
+  //reload content without caching
+  if (localStorage.getItem("reload") == null)
+    localStorage.setItem("reload", "false");
+
+  if (localStorage.getItem("reload") == "true") {
+    a = 0;
+  }
+  localStorage.setItem("reload", "false");
+  document.getElementById("intro-message").innerText = "checking feed list";
+  //download
+  if (getTime(a) && navigator.onLine) {
+    let check = false;
+    if (
+      localStorage["source"] &&
+      localStorage["source"] != "" &&
+      localStorage["source"] != undefined
+    ) {
+      load_source_opml();
+      check = true;
+    }
+    if (
+      localStorage["source_local"] &&
+      localStorage["source_local"] != "" &&
+      localStorage["source_local"] != undefined
+    ) {
+      load_local_file_opml();
+      check = true;
+    }
+    if (!check) {
+      localStorage.setItem("source", default_opml);
+      load_source_opml();
+    }
+
+    //load cache
+  } else {
+    document.getElementById("intro-message").innerText =
+      "your device is offline, loading cached data";
+
+    content_arr = loadCache();
+    if (content_arr) {
+      document.getElementById("intro-message").innerText = "load cached data";
+      setTimeout(function () {
+        build();
+      }, 1000);
+    } else {
+      document.getElementById("intro-message").innerText =
+        "no internet connection and no cached data available";
+      setTimeout(function () {
+        //goodbye();
+        build();
+      }, 4000);
+    }
+  }
+}, 1000);
+
+//start loading feeds
+let feed_download_list = [];
+if (localStorage.getItem("feed_download_list") == null) {
+  localStorage.setItem("feed_download_list", feed_download_list);
+} else {
+  feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+}
+let load_feeds = function (data) {
+  var xmlDoc = parser.parseFromString(data, "text/xml");
+  let content = xmlDoc.getElementsByTagName("body")[0];
+  let index = 0;
+
+  let m = content.querySelectorAll("outline");
+  for (var i = 0; i < m.length; i++) {
+    var nested = m[i].querySelectorAll("outline");
+
+    if (nested.length > 0) {
+      for (var z = 0; z < nested.length; z++) {
+        //feed_download_list
+
+        let result = false;
+
+        for (var k = 0; k < feed_download_list.length; k++) {
+          if (feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
+            source_url_cleaner.push(nested[z].getAttribute("xmlUrl"));
+            result = true;
+            break;
+          }
+        }
+        //put in list
+        if (result == false) {
+          feed_download_list.push({
+            title: nested[z].getAttribute("title"),
+            url: nested[z].getAttribute("xmlUrl"),
+            amount: 5,
+            index: index++,
+            channel: nested[z].parentElement.getAttribute("text"),
+          });
+        }
+      }
+    }
+
+    localStorage.setItem(
+      "feed_download_list",
+      JSON.stringify(feed_download_list)
+    );
+  }
+
+  rss_fetcher(
+    feed_download_list[0].url,
+    feed_download_list[0].amount,
+    feed_download_list[0].channel,
+    feed_download_list[0].channel
+  );
+
+  //clean source feed
+  for (let p = 0; p < feed_download_list.length; p++) {
+    if (source_url_cleaner.includes(feed_download_list[p].url) == false) {
+      feed_download_list.splice(p, 1);
+    }
+  }
+};
+
 //////////////////////////////
 //download content////
 //////////////////////////////
@@ -440,9 +399,7 @@ let rss_fetcher = function (
   xhttp.addEventListener("error", transferFailed);
   xhttp.addEventListener("loadend", loadEnd);
 
-  function transferFailed() {
-    //console.log("failed" + param_channel, 1000);
-  }
+  function transferFailed() {}
 
   xhttp.onload = function () {
     document.getElementById("intro-message").innerText = "loading data";
@@ -472,7 +429,7 @@ let rss_fetcher = function (
 
       param_channel = rss_title;
 
-      let p = Number(source_array.length - 1);
+      let p = Number(feed_download_list.length - 1);
       precent = (100 / p) * k;
       document.querySelector(
         "div#intro div#loading-progress div div"
@@ -563,6 +520,7 @@ let rss_fetcher = function (
                 .getElementsByTagNameNS("*", "duration")
                 .item(0).textContent;
               item_duration = duration;
+              console.log(duration);
               if (item_duration == "Invalid date") item_duration = "";
             }
           }
@@ -611,6 +569,7 @@ let rss_fetcher = function (
           }
 
           content_arr.push({
+            index: 0,
             title: DOMPurify.sanitize(item_title),
             summary: DOMPurify.sanitize(item_summary),
             link: item_link,
@@ -620,7 +579,7 @@ let rss_fetcher = function (
             category: param_category,
             type: item_type,
             image: item_image,
-            duration: item_duration,
+            duration: toTime(item_duration),
             media: item_media,
             filesize: item_filesize,
             cid: item_cid,
@@ -695,7 +654,6 @@ let rss_fetcher = function (
             if (el[i].querySelector("enclosure").getAttribute("type"))
               item_type = el[i].querySelector("enclosure").getAttribute("type");
 
-            console.log(item_type);
             if (
               item_type == "audio/mpeg" ||
               item_type == "audio/aac" ||
@@ -729,6 +687,9 @@ let rss_fetcher = function (
                 .getElementsByTagNameNS("*", "duration")
                 .item(0).textContent;
               item_duration = duration;
+
+              console.log(duration);
+
               if (item_duration == "Invalid date") item_duration = "";
             }
           }
@@ -739,6 +700,7 @@ let rss_fetcher = function (
           }
 
           content_arr.push({
+            index: 0,
             title: DOMPurify.sanitize(item_title),
             summary: DOMPurify.sanitize(item_summary),
             link: item_link,
@@ -748,7 +710,7 @@ let rss_fetcher = function (
             category: param_category,
             type: item_type,
             image: item_image,
-            duration: item_duration,
+            duration: toTime(item_duration),
             media: item_media,
             filesize: item_filesize,
             cid: item_cid,
@@ -782,6 +744,7 @@ let rss_fetcher = function (
       rss_fetcher(
         xhttp.getResponseHeader("Location"),
         param_limit,
+        param_channel,
         param_channel
       );
     }
@@ -796,18 +759,18 @@ let rss_fetcher = function (
 
   function loadEnd(e) {
     //after download build html objects
-    if (k == source_array.length - 1) {
+    if (k == feed_download_list.length - 1) {
       build();
       saveCache(content_arr);
     }
-    if (k < source_array.length - 1) {
+    if (k < feed_download_list.length - 1) {
       document.getElementById("intro-message").innerText = "loading data";
       k++;
       rss_fetcher(
-        source_array[k][0],
-        source_array[k][1],
-        source_array[k][2],
-        source_array[k][3]
+        feed_download_list[k].url,
+        feed_download_list[k].amount,
+        feed_download_list[k].channel,
+        feed_download_list[k].channel
       );
     }
   }
@@ -820,6 +783,7 @@ let rss_fetcher = function (
 let read_articles = function () {
   //if element in read list
   //mark article as read
+  if (content_arr.length == 0) return false;
   content_arr.forEach(function (index) {
     all_cid.push(index.cid);
     index.read = "not-read";
@@ -836,6 +800,8 @@ let read_articles = function () {
 //end to listen
 //to show icon
 let listened_articles = function () {
+  if (content_arr.length == 0) return false;
+
   content_arr.forEach(function (index) {
     index.listened = "not-listened";
 
@@ -852,6 +818,8 @@ let listened_articles = function () {
 //started to listen
 //add to list recently played
 let listened_podcast_articles = function () {
+  if (content_arr.length == 0) return false;
+
   content_arr.forEach(function (index) {
     index.recently_played = "";
     index.recently_order = "";
@@ -911,15 +879,18 @@ function renderSB(arr) {
   var rendered = Mustache.render(template, {
     data: arr,
   });
-  document.getElementById("select-box").innerHTML = rendered;
+  document.getElementById("source-local").innerHTML = rendered;
 }
 
 //filter view
 let heroArray = [];
 let filter_data = function (cat) {
   heroArray.length = 0;
+  let index = 0;
   for (let i = 0; i < content_arr.length; i++) {
     if (content_arr[i].category == cat) {
+      index++;
+      content_arr[i].index = index;
       heroArray.push(content_arr[i]);
     }
   }
@@ -968,10 +939,11 @@ function build() {
   tabs();
   clean_localstorage();
   bottom_bar(
-    translations[userLang].app_settings,
-    translations[userLang].app_select,
-    translations[userLang].app_options
+    "<img src='assets/icons/option.svg'>",
+    "",
+    "<img src='assets/icons/list.svg'>"
   );
+
   top_bar("", panels[0], "");
 
   panels.push("recently-played");
@@ -979,7 +951,7 @@ function build() {
   renderHello(content_arr);
   render_feed_download_list(feed_download_list);
 
-  division_remove();
+  //division_remove();
 
   status.window_status = "article-list";
 
@@ -1040,6 +1012,8 @@ let mark_as_read = function (un_read) {
 ////////////////////////
 //NAVIGATION
 /////////////////////////
+
+let division_count = 0;
 
 function nav_panels(left_right) {
   if (left_right == "left") {
@@ -1106,12 +1080,8 @@ function nav_panels(left_right) {
   }
   //channels
   if (panels[current_panel] == "channels") {
-    document.querySelectorAll("div.division").forEach(function (index, key) {
-      document.querySelectorAll("div.division")[key].style.display = "block";
-    });
     sort_array(content_arr, "channel", "string");
     renderHello(content_arr);
-    division_remove();
   }
 
   set_tabindex();
@@ -1122,14 +1092,10 @@ function nav_panels(left_right) {
 ////////////
 //TABINDEX NAVIGATION
 ///////////
-let tabIndex = 0;
 
 function nav(move) {
-  //let elem = document.activeElement;
   // Setup siblings array and get the first sibling
-  //document.activeElement.classList.remove("overscrolling");
   let siblings = [];
-  //let sibling = elem.parentNode.firstChild;
 
   //nested input field
   if (document.activeElement.parentNode.classList.contains("input-parent")) {
@@ -1137,11 +1103,7 @@ function nav(move) {
   }
 
   if (document.activeElement.classList.contains("input-parent")) {
-    bottom_bar(
-      "",
-      translations[userLang].app_edit,
-      translations[userLang].app_back
-    );
+    bottom_bar("", "", "");
   }
 
   let b = document.activeElement.parentNode;
@@ -1182,7 +1144,7 @@ function nav(move) {
 //navigation between channels into channels view
 division_count = 0;
 let channel_navigation = function (direction) {
-  let elements = document.getElementsByClassName("division");
+  let elements = document.getElementsByClassName("channel");
 
   if (direction == "down" && division_count < elements.length) {
     let current = document.activeElement;
@@ -1190,7 +1152,9 @@ let channel_navigation = function (direction) {
 
     while (nextSibling) {
       nextSibling = nextSibling.nextElementSibling;
-      if (nextSibling.classList.contains("division")) {
+
+      if (nextSibling.classList.contains("channel")) {
+        console.log(nextSibling);
         nextSibling.nextElementSibling.focus();
         tab_index = document.activeElement.getAttribute("tabindex");
         const rect = document.activeElement.getBoundingClientRect();
@@ -1214,7 +1178,7 @@ let channel_navigation = function (direction) {
 
     while (previousSibling) {
       previousSibling = previousSibling.previousElementSibling;
-      if (previousSibling.classList.contains("division")) {
+      if (previousSibling.classList.contains("channel")) {
         previousSibling.nextElementSibling.focus();
         tab_index = document.activeElement.getAttribute("tabindex");
         const rect = document.activeElement.getBoundingClientRect();
@@ -1234,19 +1198,30 @@ let channel_navigation = function (direction) {
   }
 };
 
+let sleep_mode = function () {
+  let st = setting.sleep_time;
+  st = st * 60 * 1000;
+
+  status.sleepmode = true;
+  toaster("sleepmode activ", 3000);
+  setTimeout(() => {
+    play_podcast();
+    show_article_list();
+    status.sleepmode = false;
+  }, st);
+};
+
 let show_article = function () {
+  mark_as_read(true);
+  status.window_status = "single-article";
+  document.getElementById("news-feed-list").scrollTo(0, 0);
+
   document.querySelector("div#youtube-player").style.display = "none";
   document.querySelector("div#video-player").style.display = "none";
   document.querySelector("div#audio-player").style.display = "none";
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("options").style.display = "none";
 
-  document.querySelectorAll("div.division").forEach(function (index, key) {
-    document.querySelectorAll("div.division")[key].style.display = "none";
-  });
-
-  status.window_status = "single-article";
-  navigator.spatialNavigationEnabled = false;
-
-  document.querySelector("div#news-feed").style.background = "silver";
   link_type = document.activeElement.getAttribute("data-audio-type");
 
   let elem = document.querySelectorAll("article");
@@ -1259,6 +1234,8 @@ let show_article = function () {
     elem[i].style.display = "block";
   }
 
+  document.activeElement.style.background = "white";
+
   document.activeElement.style.fontStyle = "normal";
   document.activeElement.style.color = "black";
 
@@ -1266,68 +1243,42 @@ let show_article = function () {
   document.activeElement.classList.add("view");
 
   document.getElementById("top-bar").style.display = "none";
-  document.getElementById("settings").style.display = "none";
 
   if (document.activeElement.getAttribute("data-media") == "podcast") {
-    if (document.activeElement.classList.contains("audio-playing")) {
-      bottom_bar(
-        translations[userLang].player_pause,
-        "",
-        translations[userLang].app_options
-      );
-    } else {
-      bottom_bar(
-        translations[userLang].player_play,
-        "",
-        translations[userLang].app_options
-      );
-    }
+    bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
   }
 
   if (document.activeElement.getAttribute("data-media") == "video") {
-    bottom_bar(
-      translations[userLang].player_play,
-      "",
-      translations[userLang].app_options
-    );
+    bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
   }
 
   if (document.activeElement.getAttribute("data-media") == "rss") {
-    bottom_bar(
-      translations[userLang].app_visit,
-      "",
-      translations[userLang].app_options
-    );
+    bottom_bar("<img src='assets/icons/E24F.svg'>", "", "");
   }
 
   if (document.activeElement.getAttribute("data-media") == "youtube") {
-    bottom_bar(
-      translations[userLang].app_open,
-      "",
-      translations[userLang].app_options
-    );
+    bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
   }
 
-  document.activeElement.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-
-  if (status.panel == "channel") {
-    document.querySelectorAll("div.division").forEach(function (index, key) {
-      document.querySelectorAll("div.division")[key].style.display = "none";
-    });
-  }
-
-  mark_as_read(true);
+  document.querySelector("div#news-feed").style.background = "white";
 
   document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
+
+  document.querySelector("div#news-feed div#news-feed-list").style.overflow =
+    "scroll";
 };
 
 let toTime = function (seconds) {
-  var date = new Date(null);
-  date.setSeconds(seconds);
-  return date.toISOString().substr(11, 8);
+  let n = "";
+  if (seconds == "") {
+    n = "";
+  } else {
+    var date = new Date(null);
+    date.setSeconds(seconds);
+    n = date.toISOString().substr(11, 8);
+  }
+
+  return n;
 };
 
 let youtube_seeking = function (param) {
@@ -1369,25 +1320,24 @@ function open_url() {
   }
   //video
   if (document.activeElement.getAttribute("data-media") == "video") {
-    video = document.getElementById("videoplayer");
+    video_player = document.getElementById("videoplayer");
 
     video.src = document.activeElement.getAttribute("data-video-url");
-    console.log(document.activeElement.getAttribute("data-video-url"));
 
     open_video_player();
     document.getElementById("progress-bar").style.display = "block";
 
     status.window_status = "video";
-    bottom_bar(translations[userLang].player_pause, "", "");
+    if (document.activeElement.getAttribute("data-media") == "podcast") {
+      bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
+    }
 
-    video.onloadedmetadata = function () {
+    video_player.onloadedmetadata = function () {
       document.getElementById("message").style.top = "0px";
       document.getElementById("message-inner").innerText = "please wait ";
     };
 
-    video.onplay = function () {};
-
-    video.onplaying = function () {
+    video_player.onplaying = function () {
       stop_player(); //stop audio player
 
       document.getElementById("message").style.top = "-1000px";
@@ -1403,22 +1353,18 @@ function open_url() {
           percent + "%";
 
         if (video_status == "playing") {
-          bottom_bar(translations[userLang].player_pause, toTime(t), "");
+          bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
         }
         if (video_status == "paused") {
-          bottom_bar(translations[userLang].player_play, toTime(t), "");
+          bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
         }
       }, 1000);
     };
 
-    video.onpause = function () {
+    video_player.onpause = function () {
       document.getElementById("message").style.top = "-1000px";
       video_status = "paused";
-      bottom_bar(
-        translations[userLang].player_pause,
-        toTime(video.duration),
-        ""
-      );
+      bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
     };
 
     return;
@@ -1429,7 +1375,7 @@ function open_url() {
   if (document.activeElement.getAttribute("data-media") == "youtube") {
     stop_player();
     status.window_status = "youtube";
-    bottom_bar(translations[userLang].player_play, "", "");
+    bottom_bar("", "", "");
 
     document.getElementById("message").style.top = "0px";
     document.getElementById("message-inner").innerText = "please wait ";
@@ -1447,7 +1393,7 @@ function open_url() {
     function onPlayerStateChange(event) {
       if (event.data == YT.PlayerState.PLAYING) {
         youtube_status = "playing";
-        bottom_bar("pause", toTime(t), "");
+        bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
       }
 
       if (event.data == YT.PlayerState.PAUSED) {
@@ -1466,10 +1412,10 @@ function open_url() {
           percent + "%";
 
         if (youtube_status == "playing") {
-          bottom_bar("pause", toTime(t), "");
+          bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
         }
         if (youtube_status == "paused") {
-          bottom_bar("play", toTime(t), "");
+          bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
         }
       }, 1000);
     }
@@ -1487,27 +1433,33 @@ function open_url() {
 //show article list
 //////////////////
 let show_article_list = function () {
+  document.querySelector("div#video-player").style.display = "none";
+  document.getElementById("audio-player").style.display = "none";
+  document.querySelector("div#youtube-player").style.display = "none";
+  document.getElementById("progress-bar").style.display = "none";
+  document.querySelector("div#settings").style.display = "none";
+
+  document.querySelector("div#news-feed div#news-feed-list").style.overflow =
+    "hidden";
+
   document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
   bottom_bar(
-    translations[userLang].app_select,
-    translations[userLang].app_select,
-    translations[userLang].app_options
+    "<img src='assets/icons/option.svg'>",
+    "",
+    "<img src='assets/icons/list.svg'>"
   );
   top_bar("", panels[current_panel], "");
-  document.getElementById("progress-bar").style.display = "none";
 
   if (youtube_player) {
     youtube_player.stopVideo();
     youtube_player.destroy();
     youtube_player = "";
     clearInterval(youtube_time);
-    document.querySelector("div#youtube-player").style.display = "none";
   }
-
   video.src = "";
-  clearInterval(video_time);
+  article_array[tab_index];
 
-  document.querySelector("div#video-player").style.display = "none";
+  document.querySelector("div#youtube-player iframe").setAttribute("src", "");
 
   if (status.sleepmode) {
     top_bar("sleep", panels[current_panel], "");
@@ -1521,9 +1473,6 @@ let show_article_list = function () {
     });
   }
 
-  document.getElementById("audio-player").style.display = "none";
-  document.querySelector("div#news-feed").style.background = "white";
-
   document.getElementById("top-bar").style.display = "block";
 
   let elem = document.querySelectorAll("article");
@@ -1533,8 +1482,7 @@ let show_article_list = function () {
     let rd = elem[i].getAttribute("data-read");
 
     if (rd == "read") {
-      document.activeElement.style.fontStyle = "italic";
-      document.activeElement.style.color = "gray";
+      // document.activeElement.style.fontStyle = "italic";
     }
   }
 
@@ -1543,13 +1491,10 @@ let show_article_list = function () {
     elem[i].style.display = "none";
   }
 
-  document.querySelector("div#settings").style.display = "none";
-  article_array[tab_index];
-  document.querySelector("div#youtube-player").style.display = "none";
-  document.querySelector("div#youtube-player iframe").setAttribute("src", "");
-
   status.window_status = "article-list";
-  document.activeElement.focus();
+  document
+    .querySelector("[data-id='" + status.active_element_id + "']")
+    .focus();
   document.activeElement.classList.remove("view");
 
   const rect = document.activeElement.getBoundingClientRect();
@@ -1563,12 +1508,17 @@ let show_article_list = function () {
   });
 
   tab_index = document.activeElement.getAttribute("tabIndex");
+
+  video.src = "";
+  clearInterval(video_time);
 };
 
 let show_feed_download_list = function () {
-  tabIndex = 0;
+  tab_index = 0;
+  bottom_bar("", "<img src='assets/icons/pencil.svg'>", "");
   status.window_status = "download-list";
   document.getElementById("feed-download-list").style.display = "block";
+  document.getElementById("options").style.display = "none";
 
   document.querySelector("div#feed-download-list div:first-child").focus();
 
@@ -1589,12 +1539,27 @@ let show_feed_download_list = function () {
   });
 };
 
+let focus_after_selection = function () {
+  if (document.querySelectorAll(".select-box") == null) return false;
+  document.querySelectorAll(".select-box").forEach(function (e) {
+    e.addEventListener("blur", function (k) {
+      setTimeout(function () {
+        e.parentElement.focus();
+      }, 200);
+    });
+  });
+};
+
 //settings view
 
 let show_settings = function () {
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+
   status.window_status = "settings";
 
-  bottom_bar("", "", translations[userLang].app_back);
+  load_settings();
+
+  bottom_bar("", "", "");
 
   document.querySelectorAll("div#settings .item").forEach(function (e, index) {
     if (e.style.display != "none") {
@@ -1602,25 +1567,24 @@ let show_settings = function () {
     }
   });
 
-  status.active_element_id = document.activeElement.getAttribute("data-id");
-  status.window_status = "settings";
   tab_index = 0;
   document.getElementById("top-bar").style.display = "none";
 
   document.getElementById("settings").style.display = "block";
   document.getElementById("settings").children[0].focus();
-  load_settings();
+  list_files("opml", list_files_callback);
+  focus_after_selection();
 };
 
 //options view
 
 let open_options = function () {
-  bottom_bar("", translations[userLang].app_select, "");
+  bottom_bar("", "", "");
   tab_index = 0;
   status.active_element_id = document.activeElement.getAttribute("data-id");
   status.window_status = "options";
   document.getElementById("options").style.display = "block";
-  document.querySelectorAll("div#options button")[0].focus();
+  document.querySelectorAll("div#options div")[0].focus();
 };
 
 let start_options = function () {
@@ -1629,6 +1593,14 @@ let start_options = function () {
   }
   if (document.activeElement.getAttribute("data-function") == "sleepmode") {
     sleep_mode();
+  }
+
+  if (document.activeElement.getAttribute("data-function") == "reload") {
+    reload();
+  }
+
+  if (document.activeElement.getAttribute("data-function") == "download-list") {
+    show_feed_download_list();
   }
 
   if (document.activeElement.getAttribute("data-function") == "share") {
@@ -1649,18 +1621,7 @@ let start_options = function () {
   }
 };
 
-let sleep_mode = function () {
-  let st = setting.sleep_time;
-  st = st * 60 * 1000;
-
-  status.sleepmode = true;
-
-  toaster("sleepmode activ", 3000);
-  setTimeout(() => {
-    play_podcast();
-    status.sleepmode = false;
-  }, st);
-};
+//video-player view
 
 let open_video_player = function () {
   document.getElementById("video-player").style.display = "block";
@@ -1669,6 +1630,8 @@ let open_video_player = function () {
 };
 
 let open_player = function (reopen) {
+  status.active_element_id = document.activeElement.getAttribute("data-id");
+
   document.getElementById("audio-player").style.display = "block";
   status.window_status = "audio-player";
   document.getElementById("options").style.display = "none";
@@ -1683,8 +1646,6 @@ let open_player = function (reopen) {
       )
       .focus();
   }
-
-  status.active_element_id = document.activeElement.getAttribute("data-id");
 
   if (!reopen) {
     if (document.activeElement.getAttribute("data-image") != "") {
@@ -1707,76 +1668,37 @@ let open_player = function (reopen) {
 const qr_listener = document.querySelector("input#source");
 let qrscan = false;
 qr_listener.addEventListener("focus", (event) => {
-  bottom_bar(
-    "",
-    translations[userLang].app_qr,
-    translations[userLang].app_back
-  );
+  bottom_bar("<img src='assets/icons/E1D8.svg'>", "", "");
   qrscan = true;
 });
 
 qr_listener.addEventListener("blur", (event) => {
-  bottom_bar("", "", translations[userLang].app_back);
+  bottom_bar("", "", "");
   qrscan = false;
 });
 
-//button actions
-let button_action = function () {
-  bottom_bar(
-    "",
-    translations[userLang].app_select,
-    translations[userLang].app_back
-  );
+document.querySelector("#source-local").addEventListener("change", (event) => {
+  localStorage.setItem("source_local", this.value);
+  console.log(this.value);
+});
 
-  let p = document.activeElement.getAttribute("data-action");
-
-  if (p == "list-opml-files") {
-    document.getElementById("select-box").style.display = "block";
-    status.window_status = "select-box";
-    bottom_bar(
-      translations[userLang].app_,
-      translations[userLang].app_select,
-      translations[userLang].app_back
-    );
-
-    document
-      .querySelectorAll("div#select-box .item")
-      .forEach(function (e, index) {
-        e.setAttribute("tabIndex", index);
-        document.querySelectorAll("div#select-box div.item")[0].focus();
-        tab_index = 0;
-      });
-  }
-
-  if (p == "set-filename") {
-    select_box_selected();
-  }
-};
-document.querySelector("div.source-local-wrapper").style.display = "none";
+let select_box = [];
 
 let list_files_callback = function (filename) {
-  document.querySelector("div.source-local-wrapper").style.display = "block";
-
+  if (filename == "error") {
+  }
   select_box.push({ filename: filename });
   renderSB(select_box);
 };
 
-list_files("opml", list_files_callback);
+let callback_scan = function (url) {
+  document.activeElement.value = url;
 
-//custom select box
-let select_box_selected = function () {
-  localStorage.setItem("source_local", document.activeElement.innerText);
-  close_select_box();
+  status.window_status = "settings";
 };
 
-let select_box_clear = function () {
-  localStorage.setItem("source_local", "");
-  close_select_box();
-};
-
-let close_select_box = function () {
-  document.getElementById("select-box").style.display = "none";
-  show_settings();
+let stop_scan_callback = function () {
+  document.getElementById("qr-screen").style.display = "none";
 };
 
 //////////////////////////////
@@ -1836,11 +1758,12 @@ function shortpress_action(param) {
       channel_navigation("down");
       break;
     case "Enter":
-      if (document.activeElement.hasAttributes("data-action")) {
-        button_action();
-      }
       if (document.activeElement.classList.contains("input-parent")) {
-        document.activeElement.querySelector("input").focus();
+        if (document.activeElement.querySelector("input") != null)
+          document.activeElement.querySelector("input").focus();
+
+        if (document.activeElement.querySelector("select") != null)
+          document.activeElement.querySelector("select").focus();
         return true;
       }
 
@@ -1856,13 +1779,6 @@ function shortpress_action(param) {
       if (status.window_status == "options") {
         start_options();
         break;
-      }
-
-      if (
-        status.window_status == "settings" &&
-        document.activeElement.classList.contains("reload")
-      ) {
-        reload();
       }
 
       if (
@@ -1884,19 +1800,6 @@ function shortpress_action(param) {
         document.activeElement.classList.contains("save")
       ) {
         save_settings();
-      }
-
-      if (status.window_status == "settings" && qrscan == true) {
-        status.window_status = "scan";
-
-        start_scan(function (callback) {
-          status.window_status = "settings";
-
-          let slug = callback;
-          document.getElementById("source").value = slug;
-        });
-
-        break;
       }
 
       break;
@@ -2026,6 +1929,13 @@ function shortpress_action(param) {
         break;
       }
 
+      if (status.window_status == "settings" && qrscan == true) {
+        start_scan(callback_scan);
+        status.window_status = "scan";
+
+        break;
+      }
+
       if (
         status.window_status == "single-article" &&
         document.activeElement.getAttribute("data-media") == "podcast"
@@ -2037,11 +1947,6 @@ function shortpress_action(param) {
 
       if (status.window_status == "single-article") {
         open_url();
-        break;
-      }
-
-      if (status.window_status == "settings") {
-        save_settings();
         break;
       }
 
@@ -2075,10 +1980,6 @@ function shortpress_action(param) {
         }
         break;
       }
-      if (status.window_status == "select-box") {
-        select_box_clear();
-        break;
-      }
 
       break;
 
@@ -2088,6 +1989,13 @@ function shortpress_action(param) {
         open_options();
         break;
       }
+
+      if (status.window_status == "scan") {
+        status.window_status = "settings";
+        stop_scan(stop_scan_callback);
+        break;
+      }
+
       if (status.window_status == "settings") {
         show_article_list();
 
@@ -2110,16 +2018,15 @@ function shortpress_action(param) {
       break;
 
     case "Backspace":
+      console.log(status.window_status);
       if (status.window_status == "intro") {
         bottom_bar("", "", "");
         break;
       }
 
-      if (status.window_status == "select-box") {
-        bottom_bar("", "", translations[userLang].app_back);
-        close_select_box();
+      if (status.window_status == "scan") {
         status.window_status = "settings";
-        show_settings();
+        stop_scan(stop_scan_callback);
         break;
       }
 
@@ -2160,12 +2067,6 @@ function shortpress_action(param) {
       if (status.window_status == "settings") {
         show_article_list();
 
-        break;
-      }
-
-      if (status.window_status == "scan") {
-        stop_scan();
-        status.window_status = "settings";
         break;
       }
 

@@ -18,11 +18,7 @@ Feedolin is an RSS / Atom reader and podcast player. It is intended for users wh
 - open rss feedlink
 - offline use (caching)
 
-![image-4](/images/image-4.png)
-![image-5](/images/image-5.png)
-![image-1](/images/image-1.png)
-![image-2](/images/image-2.png)
-![image-3](/images/image-3.png)
+![feedolin_mockup](/images/feedolin_mockup.png)
 
 ## Installation
 
