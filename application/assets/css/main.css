@@ -240,6 +240,25 @@ ul#icons-shortcuts li span {
   margin: 0 0 0 20px;
 }
 
+div#side-toast {
+  position: fixed;
+  height: auto;
+  overflow: none;
+  background: orange;
+  color: white;
+  z-index: 10;
+  padding: 5px;
+  top: 70vh;
+
+  transition: all 0.5s ease-in-out;
+  transform-origin: left top;
+  transform: translate(-100vw, 0px);
+}
+
+div#side-toast img {
+  width: 60px;
+}
+
 /*///////////////////////////
 ///FEED////////////////*/
 
@@ -357,7 +376,10 @@ div#news-feed div#news-feed-list article div.summary img {
 div#news-feed div#news-feed-list article[data-read="read"] {
   font-style: italic !important;
   color: rgb(107, 98, 112);
+  opacity: 0.8;
 }
+
+
 
 div#news-feed div#news-feed-list article[data-read="not-read"] {
   font-style: normal;

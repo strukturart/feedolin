@@ -67,6 +67,35 @@ export let notify = function (
   }
 };
 
+//side toaster
+
+let queue_st = [];
+let ttimeout;
+export let side_toaster = function (text, time) {
+  queue_st.push({ text: text, time: time });
+  if (queue_st.length === 1) {
+    toast_qq(text, time);
+  }
+};
+
+let toast_qq = function (text, time) {
+  var x = document.querySelector("div#side-toast");
+  x.innerHTML = queue_st[0].text;
+
+  x.style.transform = "translate(0vh, 0px)";
+
+  timeout = setTimeout(function () {
+    ttimeout = null;
+    x.style.transform = "translate(-100vh,0px)";
+    queue_st = queue.slice(1);
+    if (queue_st.length > 0) {
+      setTimeout(() => {
+        toast_qq(text, time);
+      }, 1000);
+    }
+  }, time);
+};
+
 //bottom bar
 export let bottom_bar = function (left, center, right) {
   document.querySelector("div#bottom-bar div#button-left").innerHTML = left;

@@ -50,7 +50,7 @@ export let load_settings = function () {
 export let save_settings = function () {
   if (
     document.getElementById("source-local").value == "" &&
-    document.getElementById("source").value == default_opml
+    document.getElementById("source").value == ""
   ) {
     toaster("please fill in the location of the source file", 3000);
     return false;

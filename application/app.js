@@ -3,7 +3,7 @@ import { translations } from "./assets/js/translations.js";
 
 import Mustache from "mustache";
 import DOMPurify from "dompurify";
-import { sort_array } from "./assets/js/helper.js";
+import { side_toaster, sort_array } from "./assets/js/helper.js";
 import { toaster } from "./assets/js/helper.js";
 import { share } from "./assets/js/helper.js";
 
@@ -516,12 +516,12 @@ let rss_fetcher = function (
           }
           if (item_media == "podcast") {
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-              var duration = el[i]
-                .getElementsByTagNameNS("*", "duration")
-                .item(0).textContent;
-              item_duration = duration;
-              console.log(duration);
-              if (item_duration == "Invalid date") item_duration = "";
+              console.log(
+                el[i].getElementsByTagNameNS("*", "duration")[0].textContent
+              );
+
+              item_duration = el[i].getElementsByTagNameNS("*", "duration")[0]
+                .textContent;
             }
           }
 
@@ -683,14 +683,12 @@ let rss_fetcher = function (
           }
           if (item_media == "podcast") {
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-              var duration = el[i]
-                .getElementsByTagNameNS("*", "duration")
-                .item(0).textContent;
-              item_duration = duration;
+              console.log(
+                el[i].getElementsByTagNameNS("*", "duration")[0].textContent
+              );
 
-              console.log(duration);
-
-              if (item_duration == "Invalid date") item_duration = "";
+              item_duration = el[i].getElementsByTagNameNS("*", "duration")[0]
+                .textContent;
             }
           }
 
@@ -740,7 +738,7 @@ let rss_fetcher = function (
 
     ////Redirection
     if (xhttp.status === 301) {
-      //console.log(param_channel + " redirection", 3000);
+      console.log(param_channel + " redirection", 3000);
       rss_fetcher(
         xhttp.getResponseHeader("Location"),
         param_limit,
@@ -750,7 +748,7 @@ let rss_fetcher = function (
     }
 
     xhttp.ontimeout = function (e) {
-      //console.log(param_channel + "Time out", 3000);
+      console.log(param_channel + "Time out", 3000);
     };
 
     if (xhttp.status === 0) {
@@ -908,29 +906,6 @@ let tabs = function () {
   }
 };
 
-let division_remove = function () {
-  //remove division element
-  if (document.querySelectorAll("div.division").length > 0) {
-    let pp = [];
-    document
-      .querySelectorAll("div.division")
-      .forEach(function (item, index, object) {
-        if (document.querySelectorAll("div.division")[index].classList) {
-          let k = document.querySelectorAll("div.division")[index].className;
-          if (pp.indexOf(k) > -1) {
-            item.classList.add("remove");
-          }
-          pp.push(k);
-        }
-      });
-
-    document
-      .querySelectorAll("div.remove")
-      .forEach(function (item, index, object) {
-        item.remove();
-      });
-  }
-};
 //build html
 function build() {
   sort_array(content_arr, "channel", "string");
@@ -988,6 +963,11 @@ let set_tabindex = function () {
 let mark_as_read = function (un_read) {
   if (un_read == true) {
     document.activeElement.setAttribute("data-read", "read");
+
+    document.activeElement.style.fontStyle = "normal";
+    document.activeElement.style.opacity = "1";
+    document.activeElement.style.color = "rgb(107, 98, 112)";
+
     status.active_element_id = document.activeElement.getAttribute("data-id");
     read_elem.push(status.active_element_id);
     localStorage.setItem("read_elem", JSON.stringify(read_elem));
@@ -998,15 +978,33 @@ let mark_as_read = function (un_read) {
       .querySelector("[data-id ='" + status.active_element_id + "']")
       .getAttribute("data-id");
 
+    document
+      .querySelector("[data-id ='" + status.active_element_id + "']")
+      .setAttribute("data-read", "not-read");
+
     let test = [];
     for (var i = 0; i < read_elem.length; i++) {
       if (read_elem[i] != kk) test.push(read_elem[i]);
     }
-    localStorage.setItem("read", JSON.stringify(test));
-    document.activeElement.setAttribute("data-read", "not-read");
+    localStorage.setItem("read_elem", JSON.stringify(test));
+    read_elem = test;
 
-    toaster("article marked as not read", 2000);
+    side_toaster("article marked as not read", 2000);
   }
+};
+
+let sort_tab = function (type) {
+  console.log(heroArray, status.current_panel);
+  filter_data(status.current_panel);
+  //sort
+  if (type == "string") sort_array(heroArray, "title", "string");
+
+  if (type == "number") sort_array(heroArray, "dateunix", "number");
+  //build html
+  renderHello(heroArray);
+  show_article_list();
+
+  side_toaster("sorted", 2000);
 };
 
 ////////////////////////
@@ -1025,13 +1023,18 @@ function nav_panels(left_right) {
   }
 
   current_panel = current_panel % panels.length;
+
   if (current_panel < 0) {
     current_panel += panels.length;
   }
 
+  status.current_panel = panels[current_panel];
+  console.log(status);
+
   top_bar("", panels[current_panel], "");
   if (status.sleepmode) top_bar("sleep", panels[current_panel], "");
 
+  read_articles();
   //filter data
   //default
   //view
@@ -1273,9 +1276,14 @@ let toTime = function (seconds) {
   if (seconds == "") {
     n = "";
   } else {
-    var date = new Date(null);
-    date.setSeconds(seconds);
-    n = date.toISOString().substr(11, 8);
+    try {
+      var date = new Date();
+      date.setSeconds(seconds);
+      n = date.toISOString().substr(11, 8);
+    } catch (error) {
+      console.log(seconds);
+      n = seconds;
+    }
   }
 
   return n;
@@ -1438,6 +1446,7 @@ let show_article_list = function () {
   document.querySelector("div#youtube-player").style.display = "none";
   document.getElementById("progress-bar").style.display = "none";
   document.querySelector("div#settings").style.display = "none";
+  document.querySelector("div#options").style.display = "none";
 
   document.querySelector("div#news-feed div#news-feed-list").style.overflow =
     "hidden";
@@ -1482,7 +1491,9 @@ let show_article_list = function () {
     let rd = elem[i].getAttribute("data-read");
 
     if (rd == "read") {
-      // document.activeElement.style.fontStyle = "italic";
+      document.activeElement.style.fontStyle = "italic";
+      document.activeElement.style.opacity = "0.8";
+      document.activeElement.style.color = "rgb(107, 98, 112)";
     }
   }
 
@@ -1601,6 +1612,14 @@ let start_options = function () {
 
   if (document.activeElement.getAttribute("data-function") == "download-list") {
     show_feed_download_list();
+  }
+
+  if (document.activeElement.getAttribute("data-function") == "sort-by-name") {
+    sort_tab("string");
+  }
+
+  if (document.activeElement.getAttribute("data-function") == "sort-by-date") {
+    sort_tab("number");
   }
 
   if (document.activeElement.getAttribute("data-function") == "share") {

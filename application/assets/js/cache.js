@@ -12,7 +12,7 @@ export let getTime = function (cache_buffer) {
     //download
     return true;
   } else {
-    //cache
+    //load cache
     return false;
   }
 };

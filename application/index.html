@@ -146,13 +146,13 @@
           <span class="text">episodes downlad</span><span class="middle"></span
           ><span class="key"></span>
         </div>
-        <!---
+
         <div
           data-function="sort-by-name"
           class="item flex width-100"
           tabindex="7"
         >
-          <span class="text">soert by name</span><span class="middle"></span
+          <span class="text">sort tab by title</span><span class="middle"></span
           ><span class="key"></span>
         </div>
 
@@ -161,10 +161,9 @@
           class="item flex width-100"
           tabindex="8"
         >
-          <span class="text">sort by date</span><span class="middle"></span>
+          <span class="text">sort tab by date</span><span class="middle"></span>
           <span class="key"></span>
         </div>
-      -->
 
         <div id="KaiOsAds-Wrapper" class="item" tabindex="7">
           <iframe></iframe>
@@ -199,7 +198,16 @@
             content can be reloaded when the app is restarted. how many minutes
             should the content be cached?</label
           >
-          <input type="tel" pattern="^[0-9]*$" id="time" name="time" />
+          <select id="time" class="select-box">
+            <option value="0">0</option>
+            <option value="10">10min</option>
+            <option value="20">20min</option>
+            <option value="30">30min</option>
+            <option value="60">1h</option>
+            <option value="120">2h</option>
+            <option value="360">6h</option>
+            <option value="1440">24h</option>
+          </select>
         </div>
 
         <h2>where should the list of the rss feed be loaded from?</h2>
