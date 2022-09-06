@@ -1,12 +1,10 @@
 {
-	"version": "1.2.1",
+	"version": "1.2.3",
 	"name": "feedolin",
 	"description": "Feedolin is an RSS / Atom reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml file.",
 	"launch_path": "/index.html",
 	"type": "privileged",
 	"fullscreen": "true",
-
-
 
 	"icons": {
 		"56": "/assets/icons/icon-56-56.png",

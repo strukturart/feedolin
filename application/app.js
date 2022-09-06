@@ -103,6 +103,7 @@ export let status = {
   audio_status: "play",
   sleepmode: false,
   sort: "number",
+  current_panel: "channels",
 };
 
 let reload = function () {
@@ -121,6 +122,47 @@ if (localStorage.getItem("audio_memory") != null) {
 if (navigator.mozApps) {
   //ads || ads free
 
+  let load_ads = function () {
+    var js = document.createElement("script");
+    js.type = "text/javascript";
+    js.src = "assets/js/kaiads.v5.min.js";
+
+    js.onload = function () {
+      getKaiAd({
+        publisher: "4408b6fa-4e1d-438f-af4d-f3be2fa97208",
+        app: "feedolin",
+        slot: "feedolin",
+        test: 0,
+        timeout: 10000,
+        h: 100,
+        w: 240,
+        container: document.getElementById("KaiOsAds-Wrapper"),
+        onerror: (err) => console.error("Error:", err),
+        onready: (ad) => {
+          // user clicked the ad
+          ad.on("click", function () {
+            open_options();
+          });
+
+          // user closed the ad (currently only with fullscreen)
+          ad.on("close", () => console.log("close event"));
+
+          // the ad succesfully displayed
+          ad.on("display", () => console.log("display event"));
+
+          // Ad is ready to be displayed
+          // calling 'display' will display the ad
+          ad.call("display", {
+            navClass: "item",
+            tabindex: 9,
+            display: "block",
+          });
+        },
+      });
+    };
+    document.head.appendChild(js);
+  };
+
   //KaioOs ads
   let getManifest = function (callback) {
     if (!navigator.mozApps) {
@@ -137,11 +179,13 @@ if (navigator.mozApps) {
   //KaiOs store true||false
   function manifest(a) {
     self = a.origin;
-    let t = document.getElementById("KaiOsAds-Wrapper");
+    document.getElementById("version").innerText =
+      "Version: " + a.manifest.version;
+    console.log(a.manifest.version);
     if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
-      document.querySelector("#KaiOsAds-Wrapper iframe").src = "ads.html";
+      load_ads();
     } else {
-      t.style.display = "none";
+      load_ads();
     }
   }
 
@@ -306,7 +350,6 @@ setTimeout(() => {
       document.getElementById("intro-message").innerText =
         "no internet connection and no cached data available";
       setTimeout(function () {
-        //goodbye();
         build();
       }, 4000);
     }
@@ -516,10 +559,6 @@ let rss_fetcher = function (
           }
           if (item_media == "podcast") {
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-              console.log(
-                el[i].getElementsByTagNameNS("*", "duration")[0].textContent
-              );
-
               item_duration = el[i].getElementsByTagNameNS("*", "duration")[0]
                 .textContent;
             }
@@ -683,10 +722,6 @@ let rss_fetcher = function (
           }
           if (item_media == "podcast") {
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
-              console.log(
-                el[i].getElementsByTagNameNS("*", "duration")[0].textContent
-              );
-
               item_duration = el[i].getElementsByTagNameNS("*", "duration")[0]
                 .textContent;
             }
@@ -953,7 +988,7 @@ let set_tabindex = function () {
 
   tab_index = 0;
   setTimeout(function () {
-    article_array = document.querySelectorAll("article");
+    article_array = document.querySelectorAll("article .item");
     if (article_array > 0) article_array[0].focus();
   }, 1500);
 };
@@ -963,17 +998,16 @@ let set_tabindex = function () {
 let mark_as_read = function (un_read) {
   if (un_read == true) {
     document.activeElement.setAttribute("data-read", "read");
-
-    document.activeElement.style.fontStyle = "normal";
-    document.activeElement.style.opacity = "1";
-    document.activeElement.style.color = "rgb(107, 98, 112)";
-
     status.active_element_id = document.activeElement.getAttribute("data-id");
     read_elem.push(status.active_element_id);
     localStorage.setItem("read_elem", JSON.stringify(read_elem));
+    document.activeElement.style.color = "silver";
+    return true;
   }
 
   if (un_read == false) {
+    status.active_element_id = document.activeElement.getAttribute("data-id");
+
     let kk = document
       .querySelector("[data-id ='" + status.active_element_id + "']")
       .getAttribute("data-id");
@@ -988,21 +1022,37 @@ let mark_as_read = function (un_read) {
     }
     localStorage.setItem("read_elem", JSON.stringify(test));
     read_elem = test;
+    document.activeElement.style.color = "black";
 
     side_toaster("article marked as not read", 2000);
   }
 };
 
 let sort_tab = function (type) {
+  if (
+    status.current_panel == "channels" ||
+    status.current_panel == "recently-played"
+  ) {
+    side_toaster("this tab can't be sorted", 2000);
+    return false;
+  }
+
   console.log(heroArray, status.current_panel);
   filter_data(status.current_panel);
   //sort
-  if (type == "string") sort_array(heroArray, "title", "string");
+  if (type == "string") {
+    sort_array(heroArray, "title", "string");
+    status.tabsort = "string";
+  }
 
-  if (type == "number") sort_array(heroArray, "dateunix", "number");
+  if (type == "date") {
+    sort_array(heroArray, "dateunix", "number");
+    status.tabsort = "date";
+  }
   //build html
   renderHello(heroArray);
-  show_article_list();
+  set_tabindex();
+  document.querySelectorAll("div#news-feed-list article")[0].focus();
 
   side_toaster("sorted", 2000);
 };
@@ -1059,9 +1109,6 @@ function nav_panels(left_right) {
     });
   }, 1000);
 
-  document.querySelectorAll("div.division").forEach(function (index, key) {
-    document.querySelectorAll("div.division")[key].style.display = "none";
-  });
   //recently played
   if (panels[current_panel] == "recently-played") {
     //to do
@@ -1129,6 +1176,11 @@ function nav(move) {
 
   if (move == "-1" && tab_index > 0) {
     tab_index--;
+
+    console.log(document.activeElement.parentElement.id);
+    if (document.activeElement.parentElement.id == "KaiOsAds-Wrapper")
+      open_options();
+
     siblings[tab_index].focus();
   }
 
@@ -1145,21 +1197,25 @@ function nav(move) {
 }
 
 //navigation between channels into channels view
-division_count = 0;
 let channel_navigation = function (direction) {
-  let elements = document.getElementsByClassName("channel");
+  let el = document.activeElement;
 
-  if (direction == "down" && division_count < elements.length) {
-    let current = document.activeElement;
-    let nextSibling = current.nextElementSibling;
+  if (direction == "down") {
+    // Get the next sibling element
+    var sibling = el.nextElementSibling;
 
-    while (nextSibling) {
-      nextSibling = nextSibling.nextElementSibling;
-
-      if (nextSibling.classList.contains("channel")) {
-        console.log(nextSibling);
-        nextSibling.nextElementSibling.focus();
-        tab_index = document.activeElement.getAttribute("tabindex");
+    // If the sibling matches our selector, use it
+    // If not, jump to the next sibling and continue the loop
+    while (sibling) {
+      console.log(
+        sibling.getAttribute("data-channel") +
+          "/" +
+          el.getAttribute("data-channel")
+      );
+      if (
+        sibling.getAttribute("data-channel") != el.getAttribute("data-channel")
+      ) {
+        sibling.focus();
         const rect = document.activeElement.getBoundingClientRect();
         const elY =
           rect.top -
@@ -1171,19 +1227,23 @@ let channel_navigation = function (direction) {
           top: elY - window.innerHeight / 2,
           behavior: "smooth",
         });
-        return true;
+        return sibling;
       }
+      sibling = sibling.nextElementSibling;
     }
   }
   if (direction == "up") {
-    let current = document.activeElement;
-    let previousSibling = current.previousElementSibling;
+    // Get the next sibling element
+    var sibling = el.previousElementSibling;
 
-    while (previousSibling) {
-      previousSibling = previousSibling.previousElementSibling;
-      if (previousSibling.classList.contains("channel")) {
-        previousSibling.nextElementSibling.focus();
-        tab_index = document.activeElement.getAttribute("tabindex");
+    // If the sibling matches our selector, use it
+    // If not, jump to the next sibling and continue the loop
+    while (sibling) {
+      if (
+        sibling.getAttribute("data-channel") !=
+        document.activeElement.getAttribute("data-channel")
+      ) {
+        sibling.focus();
         const rect = document.activeElement.getBoundingClientRect();
         const elY =
           rect.top -
@@ -1195,8 +1255,9 @@ let channel_navigation = function (direction) {
           top: elY - window.innerHeight / 2,
           behavior: "smooth",
         });
-        return true;
+        return sibling;
       }
+      sibling = sibling.previousElementSibling;
     }
   }
 };
@@ -1491,7 +1552,6 @@ let show_article_list = function () {
     let rd = elem[i].getAttribute("data-read");
 
     if (rd == "read") {
-      document.activeElement.style.fontStyle = "italic";
       document.activeElement.style.opacity = "0.8";
       document.activeElement.style.color = "rgb(107, 98, 112)";
     }
@@ -1776,6 +1836,21 @@ function shortpress_action(param) {
     case "5":
       channel_navigation("down");
       break;
+
+    case "1":
+      mark_as_read(false);
+      break;
+
+    case "3":
+      sleep_mode();
+
+      break;
+
+    case "7":
+      status.tabsort == "string" ? sort_tab("date") : sort_tab("string");
+
+      break;
+
     case "Enter":
       if (document.activeElement.classList.contains("input-parent")) {
         if (document.activeElement.querySelector("input") != null)

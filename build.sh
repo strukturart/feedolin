@@ -32,7 +32,7 @@ zip -r ../build/feedolin.zip ./*
 
 
 #create bHaCkers zip
-rm ../build/feedolon-omnisd.zip
+rm ../build/feedolin-omnisd.zip
 zip -r ../build/application.zip ./*
 cd ../build/
 mkdir -p feedolin-omnisd

@@ -48,6 +48,7 @@
       <div id="intro" class="width-100 height-100">
         <img src="assets/icons/intro.png" />
         <div class="width-100" id="version"></div>
+
         <div class="width-100" id="intro-message"></div>
         <div
           class="width-100 flex justify-content-spacearound"
@@ -106,12 +107,12 @@
         <h2>Options</h2>
         <div class="item flex width-100" data-function="unread" tabindex="0">
           <span class="text">mark as unread</span><span class="middle"></span
-          ><span class="key"></span>
+          ><span class="key">1</span>
         </div>
 
         <div class="item flex width-100" data-function="sleepmode" tabindex="1">
           <span class="text">activate sleep mode</span
-          ><span class="middle"></span><span class="key"></span>
+          ><span class="middle"></span><span class="key">3</span>
         </div>
 
         <div
@@ -153,7 +154,7 @@
           tabindex="7"
         >
           <span class="text">sort tab by title</span><span class="middle"></span
-          ><span class="key"></span>
+          ><span class="key">7</span>
         </div>
 
         <div
@@ -162,12 +163,10 @@
           tabindex="8"
         >
           <span class="text">sort tab by date</span><span class="middle"></span>
-          <span class="key"></span>
+          <span class="key">7</span>
         </div>
 
-        <div id="KaiOsAds-Wrapper" class="item" tabindex="7">
-          <iframe></iframe>
-        </div>
+        <div id="KaiOsAds-Wrapper"></div>
       </div>
 
       <div id="settings">
@@ -270,7 +269,7 @@
         <script id="template" type="x-tmpl-mustache">
 
           {{#data}}
-              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}"  data-channel="{{channel}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                   <div class="flex grid-col-10">
                       <div class="podcast-icon"><img src="assets/icons/podcast.png"></div>
                       <div class="youtube-icon"><img src="assets/icons/youtube.png"></div>
