@@ -10,7 +10,7 @@ let player = new Audio();
 player.mozAudioChannelType = "content";
 player.type = "audio/mpeg";
 player.mozaudiochannel = "content";
-player.preload = "none";
+player.preload = "metadata";
 let getduration;
 let duration = "";
 
@@ -175,6 +175,7 @@ player.addEventListener("playing", (event) => {
       status.audio_duration = toTime(time);
       if (status.window_status == "audio-player")
         bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(time), "");
+      remember();
     }
   }, 1000);
 });
