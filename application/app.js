@@ -1344,10 +1344,13 @@ let toTime = function (seconds) {
     n = "";
   } else {
     try {
+      /*
       console.log(dayjs(seconds).format("hh:mm:ss"));
       var date = new Date();
       date.setSeconds(seconds);
       n = date.toISOString().substr(11, 8);
+      */
+      n = dayjs(seconds).format("hh:mm:ss");
     } catch (e) {
       console.log(e);
       n = seconds;

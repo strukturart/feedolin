@@ -14324,9 +14324,11 @@ $fa0566b078e52ad5$var$player.addEventListener("pause", function(event) {
 });
 var $fa0566b078e52ad5$var$toTime = function toTime(seconds) {
     try {
-        var date = new Date(null);
-        date.setSeconds(seconds);
-        return date.toISOString().substr(11, 8);
+        /*
+    var date = new Date(null);
+    date.setSeconds(seconds);
+    return date.toISOString().substr(11, 8);
+    */ return dayjs(seconds).format("hh:mm:ss");
     } catch (e) {
         console.log(e);
     }
@@ -14348,9 +14350,8 @@ $fa0566b078e52ad5$var$player.addEventListener("playing", function(event) {
         localStorage.setItem("recently_played", JSON.stringify((0, $3e4edb8379ebf8a3$exports.recently_played)));
     }
     $fa0566b078e52ad5$var$getduration = setInterval(function() {
-        if (!$fa0566b078e52ad5$var$player.paused) {
+        if (!$fa0566b078e52ad5$var$player.paused && $fa0566b078e52ad5$var$player.duration && $fa0566b078e52ad5$var$player.currentTime) {
             var time = $fa0566b078e52ad5$var$player.duration - $fa0566b078e52ad5$var$player.currentTime;
-            console.log(time);
             var percent = $fa0566b078e52ad5$var$player.currentTime / $fa0566b078e52ad5$var$player.duration * 100;
             document.querySelector("div#progress-bar div").style.width = percent + "%";
             (0, $3e4edb8379ebf8a3$exports.status).audio_duration = $fa0566b078e52ad5$var$toTime(time);
@@ -15535,10 +15536,12 @@ var $3e4edb8379ebf8a3$var$toTime = function toTime(seconds) {
     var n = "";
     if (seconds == "") n = "";
     else try {
-        console.log($165c91a1b129545b$exports(seconds).format("hh:mm:ss"));
-        var date = new Date();
-        date.setSeconds(seconds);
-        n = date.toISOString().substr(11, 8);
+        /*
+      console.log(dayjs(seconds).format("hh:mm:ss"));
+      var date = new Date();
+      date.setSeconds(seconds);
+      n = date.toISOString().substr(11, 8);
+      */ n = $165c91a1b129545b$exports(seconds).format("hh:mm:ss");
     } catch (e) {
         console.log(e);
         n = seconds;

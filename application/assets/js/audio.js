@@ -135,9 +135,12 @@ player.addEventListener("pause", (event) => {
 
 let toTime = function (seconds) {
   try {
+    /*
     var date = new Date(null);
     date.setSeconds(seconds);
     return date.toISOString().substr(11, 8);
+    */
+    return dayjs(seconds).format("hh:mm:ss");
   } catch (e) {
     console.log(e);
   }
@@ -173,9 +176,8 @@ player.addEventListener("playing", (event) => {
   }
 
   getduration = setInterval(function () {
-    if (!player.paused) {
+    if (!player.paused && player.duration && player.currentTime) {
       var time = player.duration - player.currentTime;
-      console.log(time);
       let percent = (player.currentTime / player.duration) * 100;
 
       document.querySelector("div#progress-bar div").style.width =
