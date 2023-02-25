@@ -134,14 +134,22 @@ player.addEventListener("pause", (event) => {
 });
 
 let toTime = function (seconds) {
-  var date = new Date(null);
-  date.setSeconds(seconds);
-  return date.toISOString().substr(11, 8);
+  try {
+    var date = new Date(null);
+    date.setSeconds(seconds);
+    return date.toISOString().substr(11, 8);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 player.addEventListener("playing", (event) => {
   if (player.networkState === 2) {
-    toaster("loading media", 1000);
+    console.log("loading media", 1000);
+  }
+
+  if (player.networkState === 3) {
+    clearInterval(getduration);
   }
   let articles = document.querySelectorAll("article");
   for (var i = 0; i < articles.length; i++) {
@@ -167,6 +175,7 @@ player.addEventListener("playing", (event) => {
   getduration = setInterval(function () {
     if (!player.paused) {
       var time = player.duration - player.currentTime;
+      console.log(time);
       let percent = (player.currentTime / player.duration) * 100;
 
       document.querySelector("div#progress-bar div").style.width =
@@ -176,6 +185,8 @@ player.addEventListener("playing", (event) => {
       if (status.window_status == "audio-player")
         bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(time), "");
       remember();
+    } else {
+      clearInterval(getduration);
     }
   }, 1000);
 });

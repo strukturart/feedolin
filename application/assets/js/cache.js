@@ -4,8 +4,6 @@ export let getTime = function (cache_buffer) {
   let lastupdate = Number(localStorage.getItem("last_update"));
 
   let update_time = cache_buffer + lastupdate;
-  //alert(timestamp + "/" + lastupdate + "/" + cache_buffer)
-  //document.getElementById("nextdownload").innerText = moment(update_time * 60000).format("DD.MM.YYYY,hh:mm");
 
   if (lastupdate == null || timestamp > update_time) {
     localStorage.setItem("last_update", timestamp.toString());

@@ -11,7 +11,7 @@ mkdir ./build
 
 
 
-npm run  build --no-source-maps --no-optimize  ./ application/index.html 
+npm run  build --no-source-maps --no-optimize --public-url ./ application/index.html 
 
 cp -r ./application/assets/icons ./dist/assets/icons
 cp -r ./application/assets/image ./dist/assets/image
@@ -24,11 +24,19 @@ cp  ./application/assets/js/kaiads.v5.min.js ./dist/assets/js/
 cp ./application/manifest.webapp ./dist/
 cp ./application/manifest.webmanifest ./dist/
 
+
+
+
 #!/bin/bash
 #create default app zip
 cd dist/
+mv manifest.webmanifest ../
 rm ../build/feedolin.zip
 zip -r ../build/feedolin.zip ./*
+mv  ../manifest.webmanifest ./
+
+
+
 
 
 #create bHaCkers zip
@@ -46,11 +54,18 @@ rm -fr ../feedolin-omnisd
 rm ../application.zip
 
 
-#github page
-cd ../..
-rm -fr ./docs
-mkdir docs
-cp -r ./dist/* ./docs/
+#create KaiOS 3.0 app zip
+
+#rm ../build/greg-kaios3.zip
+cd ../../
+cd dist/
+mv manifest.webapp ../
+zip -r ../build/feedolin-kaios3.zip ./*
+mv  ../manifest.webapp ./
 exit
+
+
+
+
 
 
