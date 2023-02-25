@@ -3,6 +3,8 @@ import { userLang } from "../../app.js";
 import { status } from "../../app.js";
 import { recently_played } from "../../app.js";
 
+import { toTime } from "../../app.js";
+
 //status, listened_elem, recently_played,
 import { toaster, bottom_bar } from "./helper.js";
 import { translations } from "../../assets/js/translations.js";
@@ -16,6 +18,13 @@ let duration = "";
 
 if (navigator.mozAudioChannelManager) {
   navigator.mozAudioChannelManager.volumeControlChannel = "content";
+}
+
+if ("b2g" in navigator) {
+  navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
+  AudioChannelClient("content");
+  HTMLMediaElement.mozAudioChannelType = "content";
+  AudioContext.mozAudioChannelType = "content";
 }
 
 let stream_id = "";
@@ -74,24 +83,33 @@ export let seeking = function (param) {
 ///////////////////////
 
 export let volume_control = function (param) {
-  if (param == "up") {
-    navigator.volumeManager.requestUp();
-    setTimeout(function () {
-      volume_status = false;
-      if (status.window_status == "source-page") {
-        navigator.spatialNavigationEnabled = true;
-      }
-    }, 3000);
-  }
+  if ("b2g" in navigator) {
+    const session = new lib_session.Session();
+    const sessionstate = {};
+    let _audiovolumeManager = null;
+    sessionstate.onsessionconnected = function () {
+      console.log(`AudioVolumeManager onsessionconnected`);
+      lib_audiovolume.AudioVolumeManager.get(session)
+        .then((AudioVolumeManagerService) => {
+          console.log(
+            `Got AudioVolumeManager : #AudioVolumeManagerService.service_id}`
+          );
+          _audiovolumeManager = AudioVolumeManagerService;
+          if (param == "up") {
+            _audiovolumeManager.VOLUME_UP;
+          }
 
-  if (param == "down") {
-    navigator.volumeManager.requestDown();
-    setTimeout(function () {
-      volume_status = false;
-      if (status.window_status == "source-page") {
-        navigator.spatialNavigationEnabled = true;
-      }
-    }, 3000);
+          if (param == "down") {
+            _audiovolumeManager.VOLUME_DOWN;
+          }
+        })
+        .catch((e) => {
+          console.log(
+            `Error calling AudioVolumeManager service${JSON.stringify(e)}`
+          );
+          _audiovolumeManager = null;
+        });
+    };
   }
 };
 
@@ -133,22 +151,9 @@ player.addEventListener("pause", (event) => {
   clearInterval(getduration);
 });
 
-let toTime = function (seconds) {
-  try {
-    /*
-    var date = new Date(null);
-    date.setSeconds(seconds);
-    return date.toISOString().substr(11, 8);
-    */
-    return dayjs(seconds).format("hh:mm:ss");
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 player.addEventListener("playing", (event) => {
   if (player.networkState === 2) {
-    console.log("loading media", 1000);
+    console.log("loading media");
   }
 
   if (player.networkState === 3) {
@@ -176,16 +181,21 @@ player.addEventListener("playing", (event) => {
   }
 
   getduration = setInterval(function () {
-    if (!player.paused && player.duration && player.currentTime) {
+    if (!player.paused) {
       var time = player.duration - player.currentTime;
+      time = Math.floor(time);
       let percent = (player.currentTime / player.duration) * 100;
 
       document.querySelector("div#progress-bar div").style.width =
         percent + "%";
 
+      var minutes = "0" + Math.floor(time / 60);
+      var seconds = "0" + (time - minutes * 60);
+      var cur = minutes.substr(-2) + ":" + seconds.substr(-2);
+
       status.audio_duration = toTime(time);
       if (status.window_status == "audio-player")
-        bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(time), "");
+        bottom_bar("<img src='assets/icons/23EF.svg'>", cur, "");
       remember();
     } else {
       clearInterval(getduration);
@@ -197,7 +207,7 @@ player.onended = function () {
   if (audio_memory.hasOwnProperty(stream_id)) {
     delete audio_memory.stream_id;
   }
-
+  let listened_elem;
   if (localStorage.getItem("listened_elem")) {
     listened_elem = JSON.parse(localStorage["listened_elem"]);
   }

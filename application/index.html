@@ -90,7 +90,10 @@
         </div>
       </div>
 
-      <div id="progress-bar" class="width-100">
+      <div
+        id="progress-bar"
+        class="width-100 flex debug justify-content-center"
+      >
         <div></div>
       </div>
 
@@ -235,10 +238,20 @@
           <label for="sleep-mode"
             ><strong
               >Timer. <br />Here you can set after how many minutes the audio
-              playback should be stopped.</strong
+              playback should be stopped. You can activate it with key
+              3.</strong
             ></label
           >
-          <input type="tel" pattern="^[0-9]*$" id="sleep-mode" />
+          <select id="sleep-mode" class="select-box">
+            <option value="0">0</option>
+            <option value="10">10min</option>
+            <option value="20">20min</option>
+            <option value="30">30min</option>
+            <option value="40">40min</option>
+            <option value="50">50min</option>
+            <option value="60">1h</option>
+            <option value="120">2h</option>
+          </select>
         </div>
         <button tabindex="6" class="item export">export settings</button>
         <button tabindex="7" class="item loadsettings">load settings</button>
@@ -307,5 +320,6 @@
     <script src="http://127.0.0.1/api/v1/shared/core.js"></script>
     <script src="http://127.0.0.1/api/v1/shared/session.js"></script>
     <script src="http://127.0.0.1/api/v1/apps/service.js"></script>
+    <script src="http://127.0.0.1/api/v1/audiovolumemanager/service.js"></script>
   </body>
 </html>

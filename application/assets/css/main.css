@@ -609,7 +609,7 @@ div#bottom-bar {
   bottom: 10px;
   left: 0px;
   height: 18px;
-  z-index: 6;
+  z-index: 6000;
   background: none;
   min-width: 100vw;
 }
@@ -766,9 +766,24 @@ div#count {
 
 /*AUDIO-PLAYER*/
 
+@keyframes bounce {
+  0% {
+    width: 0;
+    height: 0;
+    left: -10px;
+  }
+
+  100% {
+    width: 60%;
+    max-width: 60%;
+    height: auto;
+    left: 0px;
+  }
+}
+
 div#audio-player {
   background: var(--color-four);
-  z-index: 50000;
+  z-index: 5;
   position: fixed;
   display: none;
 }
@@ -782,7 +797,10 @@ div#audio-player div#audio-title {
   position: fixed;
   overflow: hidden;
   top: 0;
-  left: 0;
+  left: 0px;
+  background-color: black;
+  animation: bounce 3s ease-in-out;
+  animation-duration: 1s;
 }
 
 div#audio-player div#image {
@@ -804,7 +822,7 @@ div#progress-bar {
   height: 15px;
   position: fixed;
   bottom: 20px;
-  z-index: 5;
+  z-index: 5000000;
   display: none;
 }
 

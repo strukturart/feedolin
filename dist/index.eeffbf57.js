@@ -1,14 +1,16 @@
+(function () {
 function $parcel$interopDefault(a) {
   return a && a.__esModule ? a.default : a;
 }
 function $parcel$export(e, n, v, s) {
   Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
 }
-var $3e4edb8379ebf8a3$exports = {};
+var $5535d7a9ff238efe$exports = {};
 
-$parcel$export($3e4edb8379ebf8a3$exports, "recently_played", function () { return $3e4edb8379ebf8a3$export$57ef1bcec6355f64; }, function (v) { return $3e4edb8379ebf8a3$export$57ef1bcec6355f64 = v; });
-$parcel$export($3e4edb8379ebf8a3$exports, "status", function () { return $3e4edb8379ebf8a3$export$471f7ae5c4103ae1; }, function (v) { return $3e4edb8379ebf8a3$export$471f7ae5c4103ae1 = v; });
-var $f18e354a63dd7a2d$export$150b732325d14d04 = {
+$parcel$export($5535d7a9ff238efe$exports, "recently_played", function () { return $5535d7a9ff238efe$export$57ef1bcec6355f64; }, function (v) { return $5535d7a9ff238efe$export$57ef1bcec6355f64 = v; });
+$parcel$export($5535d7a9ff238efe$exports, "status", function () { return $5535d7a9ff238efe$export$471f7ae5c4103ae1; }, function (v) { return $5535d7a9ff238efe$export$471f7ae5c4103ae1 = v; });
+$parcel$export($5535d7a9ff238efe$exports, "toTime", function () { return $5535d7a9ff238efe$export$d33f79e3ffc3dc83; }, function (v) { return $5535d7a9ff238efe$export$d33f79e3ffc3dc83 = v; });
+var $22ed86740f9276dd$export$150b732325d14d04 = {
     "en-EN": {
         app_intro_loading: "loading data",
         player_play: "play",
@@ -30,15 +32,15 @@ var $f18e354a63dd7a2d$export$150b732325d14d04 = {
 };
 
 
-var $7eadabea78850cc1$exports = {};
-function $4cf69b662a37e1e4$export$2e2bcd8739ae039(obj) {
+var $13462400ebaaddfa$exports = {};
+function $ffd930d6675a10cb$export$2e2bcd8739ae039(obj) {
     "@swc/helpers - typeof";
     return obj && obj.constructor === Symbol ? "symbol" : typeof obj;
 }
 
 
 (function(global, factory) {
-    $7eadabea78850cc1$exports = factory();
+    $13462400ebaaddfa$exports = factory();
 })(undefined, function() {
     "use strict";
     var isFunction = function isFunction(object) {
@@ -48,7 +50,7 @@ function $4cf69b662a37e1e4$export$2e2bcd8739ae039(obj) {
    * More correct typeof string handling array
    * which normally returns typeof 'object'
    */ function typeStr(obj) {
-        return isArray(obj) ? "array" : typeof obj === "undefined" ? "undefined" : (0, $4cf69b662a37e1e4$export$2e2bcd8739ae039)(obj);
+        return isArray(obj) ? "array" : typeof obj === "undefined" ? "undefined" : (0, $ffd930d6675a10cb$export$2e2bcd8739ae039)(obj);
     };
     var escapeRegExp = function escapeRegExp(string) {
         return string.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
@@ -631,10 +633,10 @@ function $4cf69b662a37e1e4$export$2e2bcd8739ae039(obj) {
 });
 
 
-var $f817e9c18ea96dab$exports = {};
+var $2449999283207805$exports = {};
 /*! @license DOMPurify 2.4.4 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.4.4/LICENSE */ (function(global, factory) {
-    $f817e9c18ea96dab$exports = factory();
-})($f817e9c18ea96dab$exports, function() {
+    $2449999283207805$exports = factory();
+})($2449999283207805$exports, function() {
     "use strict";
     var _isNativeReflectConstruct = function _isNativeReflectConstruct() {
         if (typeof Reflect === "undefined" || !Reflect.construct) return false;
@@ -2332,21 +2334,21 @@ var $f817e9c18ea96dab$exports = {};
 
 "use strict";
 if (window.NodeList && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
-var $6d3f4b507512327e$export$d41d9ab3de2def3d = function hashCode(str) {
+var $162001cafa2b40fd$export$d41d9ab3de2def3d = function hashCode(str) {
     var hash = 0;
     for(var i = 0; i < str.length; i++)hash = ~~((hash << 5) - hash + str.charCodeAt(i));
     return hash;
 };
-function $6d3f4b507512327e$export$4b1eab49334fb1a0(i) {
+function $162001cafa2b40fd$export$4b1eab49334fb1a0(i) {
     var c = (i & 0x00ffffff).toString(16).toUpperCase();
     return "00000".substring(0, 6 - c.length) + c;
 }
-function $6d3f4b507512327e$var$getRandomInteger(min, max) {
+function $162001cafa2b40fd$var$getRandomInteger(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 }
-var $6d3f4b507512327e$export$5e14cdade93d6f7b = function notify(param_title, param_text, param_silent, requireInteraction) {
+var $162001cafa2b40fd$export$5e14cdade93d6f7b = function notify(param_title, param_text, param_silent, requireInteraction) {
     var options = {
         body: param_text,
         silent: param_silent,
@@ -2368,43 +2370,43 @@ var $6d3f4b507512327e$export$5e14cdade93d6f7b = function notify(param_title, par
     });
 };
 //side toaster
-var $6d3f4b507512327e$var$queue_st = [];
-var $6d3f4b507512327e$var$ttimeout;
-var $6d3f4b507512327e$export$6593825dc0f3a767 = function side_toaster(text, time) {
-    $6d3f4b507512327e$var$queue_st.push({
+var $162001cafa2b40fd$var$queue_st = [];
+var $162001cafa2b40fd$var$ttimeout;
+var $162001cafa2b40fd$export$6593825dc0f3a767 = function side_toaster(text, time) {
+    $162001cafa2b40fd$var$queue_st.push({
         text: text,
         time: time
     });
-    if ($6d3f4b507512327e$var$queue_st.length === 1) $6d3f4b507512327e$var$toast_qq(text, time);
+    if ($162001cafa2b40fd$var$queue_st.length === 1) $162001cafa2b40fd$var$toast_qq(text, time);
 };
-var $6d3f4b507512327e$var$toast_qq = function toast_qq1(text, time) {
+var $162001cafa2b40fd$var$toast_qq = function toast_qq1(text, time) {
     var x = document.querySelector("div#side-toast");
-    x.innerHTML = $6d3f4b507512327e$var$queue_st[0].text;
+    x.innerHTML = $162001cafa2b40fd$var$queue_st[0].text;
     x.style.transform = "translate(0vh, 0px)";
-    $6d3f4b507512327e$var$timeout = setTimeout(function() {
-        $6d3f4b507512327e$var$ttimeout = null;
+    $162001cafa2b40fd$var$timeout = setTimeout(function() {
+        $162001cafa2b40fd$var$ttimeout = null;
         x.style.transform = "translate(-100vh,0px)";
-        $6d3f4b507512327e$var$queue_st = $6d3f4b507512327e$var$queue.slice(1);
-        if ($6d3f4b507512327e$var$queue_st.length > 0) setTimeout(function() {
-            $6d3f4b507512327e$var$toast_qq(text, time);
+        $162001cafa2b40fd$var$queue_st = $162001cafa2b40fd$var$queue.slice(1);
+        if ($162001cafa2b40fd$var$queue_st.length > 0) setTimeout(function() {
+            $162001cafa2b40fd$var$toast_qq(text, time);
         }, 1000);
     }, time);
 };
-var $6d3f4b507512327e$export$247be4ede8e3a24a = function bottom_bar(left, center, right) {
+var $162001cafa2b40fd$export$247be4ede8e3a24a = function bottom_bar(left, center, right) {
     document.querySelector("div#bottom-bar div#button-left").innerHTML = left;
     document.querySelector("div#bottom-bar div#button-center").innerHTML = center;
     document.querySelector("div#bottom-bar div#button-right").innerHTML = right;
     if (left == "" && center == "" && right == "") document.querySelector("div#bottom-bar").style.display = "none";
     else document.querySelector("div#bottom-bar").style.display = "block";
 };
-var $6d3f4b507512327e$export$7ce2ea7c45ae9a07 = function top_bar(left, center, right) {
+var $162001cafa2b40fd$export$7ce2ea7c45ae9a07 = function top_bar(left, center, right) {
     document.querySelector("div#top-bar div.button-left").innerHTML = left;
     document.querySelector("div#top-bar div.button-center").textContent = center;
     document.querySelector("div#top-bar div.button-right").textContent = right;
     if (left == "" && center == "" && right == "") document.querySelector("div#top-bar").style.display = "none";
     else document.querySelector("div#top-bar").style.display = "block";
 };
-var $6d3f4b507512327e$export$ed80d9de1d9df928 = function share(url) {
+var $162001cafa2b40fd$export$ed80d9de1d9df928 = function share(url) {
     var activity = new MozActivity({
         name: "share",
         data: {
@@ -2417,16 +2419,16 @@ var $6d3f4b507512327e$export$ed80d9de1d9df928 = function share(url) {
         console.log("The activity encounter en error: " + this.error);
     };
 };
-function $6d3f4b507512327e$export$e1ab1b7fde603c93() {
+function $162001cafa2b40fd$export$e1ab1b7fde603c93() {
     var updateOfflineStatus = function updateOfflineStatus() {
-        $6d3f4b507512327e$export$a224d1f4f6f98541("Your Browser is offline", 15000);
+        $162001cafa2b40fd$export$a224d1f4f6f98541("Your Browser is offline", 15000);
         return false;
     };
     window.addEventListener("offline", updateOfflineStatus);
 }
-function $6d3f4b507512327e$var$delete_file(filename) {
+function $162001cafa2b40fd$var$delete_file(filename) {
     var sdcard = navigator.getDeviceStorage("sdcard");
-    var request = sdcard["delete"](filename);
+    var request = sdcard.delete(filename);
     request.onsuccess = function() {
     //toaster("File deleted", 2000);
     };
@@ -2434,7 +2436,7 @@ function $6d3f4b507512327e$var$delete_file(filename) {
     //toaster("Unable to delete the file: " + this.error, 2000);
     };
 }
-function $6d3f4b507512327e$export$16146fefff7e9a3b(filename) {
+function $162001cafa2b40fd$export$16146fefff7e9a3b(filename) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2451,7 +2453,7 @@ function $6d3f4b507512327e$export$16146fefff7e9a3b(filename) {
     //alert("Unable to get the file: " + this.error);
     };
 }
-function $6d3f4b507512327e$export$2c24603ae7a64b6(data, filename) {
+function $162001cafa2b40fd$export$2c24603ae7a64b6(data, filename) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2471,10 +2473,10 @@ function $6d3f4b507512327e$export$2c24603ae7a64b6(data, filename) {
     };
     // An error typically occur if a file with the same name already exist
     request.onerror = function() {
-        $6d3f4b507512327e$export$a224d1f4f6f98541("Unable to write the file: " + this.error, 2000);
+        $162001cafa2b40fd$export$a224d1f4f6f98541("Unable to write the file: " + this.error, 2000);
     };
 }
-var $6d3f4b507512327e$export$b04ad9f70842c3f1 = function sort_array(arr, item_key, type) {
+var $162001cafa2b40fd$export$b04ad9f70842c3f1 = function sort_array(arr, item_key, type) {
     //sort by number
     if (type == "number") arr.sort(function(a, b) {
         return b[item_key] - a[item_key];
@@ -2487,7 +2489,7 @@ var $6d3f4b507512327e$export$b04ad9f70842c3f1 = function sort_array(arr, item_ke
         return 0;
     });
 };
-function $6d3f4b507512327e$export$be816da92314cb02(url, limit, categorie, channel) {
+function $162001cafa2b40fd$export$be816da92314cb02(url, limit, categorie, channel) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2505,7 +2507,7 @@ function $6d3f4b507512327e$export$be816da92314cb02(url, limit, categorie, channe
             try {
                 data = JSON.parse(event.target.result);
             } catch (e) {
-                $6d3f4b507512327e$export$a224d1f4f6f98541("JSON is not valid", 2000);
+                $162001cafa2b40fd$export$a224d1f4f6f98541("JSON is not valid", 2000);
                 return false;
             }
             data.push({
@@ -2515,7 +2517,7 @@ function $6d3f4b507512327e$export$be816da92314cb02(url, limit, categorie, channe
                 channel: channel
             });
             var extData = JSON.stringify(data);
-            var request_del = sdcard["delete"]("rss-reader.json");
+            var request_del = sdcard.delete("rss-reader.json");
             request_del.onsuccess = function() {
                 //toaster('File successfully removed.', 2000);
                 var file = new Blob([
@@ -2525,10 +2527,10 @@ function $6d3f4b507512327e$export$be816da92314cb02(url, limit, categorie, channe
                 });
                 var requestAdd = sdcard.addNamed(file, "rss-reader.json");
                 requestAdd.onsuccess = function() {
-                    $6d3f4b507512327e$export$a224d1f4f6f98541("<br><br>the rss feed <br>has been successfully added to your list.", 3000);
+                    $162001cafa2b40fd$export$a224d1f4f6f98541("<br><br>the rss feed <br>has been successfully added to your list.", 3000);
                 };
                 requestAdd.onerror = function() {
-                    $6d3f4b507512327e$export$a224d1f4f6f98541("Unable to write the file: " + this.error);
+                    $162001cafa2b40fd$export$a224d1f4f6f98541("Unable to write the file: " + this.error);
                 };
             };
             request_del.onerror = function() {
@@ -2538,10 +2540,10 @@ function $6d3f4b507512327e$export$be816da92314cb02(url, limit, categorie, channe
         reader.readAsText(fileget);
     };
     request.onerror = function() {
-        $6d3f4b507512327e$export$a224d1f4f6f98541(this.error, 3000);
+        $162001cafa2b40fd$export$a224d1f4f6f98541(this.error, 3000);
     };
 }
-var $6d3f4b507512327e$export$99c802f9c0aea792 = function list_files(filetype, callback) {
+var $162001cafa2b40fd$export$99c802f9c0aea792 = function list_files(filetype, callback) {
     if ("b2g" in navigator) try {
         var sdcard = navigator.b2g.getDeviceStorage("sdcard");
         var iterable = sdcard.enumerate();
@@ -2554,7 +2556,7 @@ var $6d3f4b507512327e$export$99c802f9c0aea792 = function list_files(filetype, ca
                     if (file_type == filetype) callback(file.value.name);
                     next(_files);
                 }
-            })["catch"](function() {
+            }).catch(function() {
                 next(_files);
             });
         }
@@ -2564,12 +2566,12 @@ var $6d3f4b507512327e$export$99c802f9c0aea792 = function list_files(filetype, ca
     }
     var d, cursor;
 };
-function $6d3f4b507512327e$export$a22775fa5e2eebd9(url) {
+function $162001cafa2b40fd$export$a22775fa5e2eebd9(url) {
     var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if (pattern.test(url)) return true;
     return false;
 }
-var $6d3f4b507512327e$export$39e873de56f329d8 = function getManifest(callback) {
+var $162001cafa2b40fd$export$39e873de56f329d8 = function getManifest(callback) {
     if (!navigator.mozApps) //let t = document.getElementById("kaisos-ads");
     //t.remove();
     return false;
@@ -2579,46 +2581,43 @@ var $6d3f4b507512327e$export$39e873de56f329d8 = function getManifest(callback) {
     };
     self.onerror = function() {};
 };
-var $6d3f4b507512327e$var$queue = [];
-var $6d3f4b507512327e$var$timeout;
-var $6d3f4b507512327e$export$a224d1f4f6f98541 = function toaster(text, time) {
-    $6d3f4b507512327e$var$queue.push({
+var $162001cafa2b40fd$var$queue = [];
+var $162001cafa2b40fd$var$timeout;
+var $162001cafa2b40fd$export$a224d1f4f6f98541 = function toaster(text, time) {
+    $162001cafa2b40fd$var$queue.push({
         text: text,
         time: time
     });
-    if ($6d3f4b507512327e$var$queue.length === 1) $6d3f4b507512327e$var$toast_q(text, time);
+    if ($162001cafa2b40fd$var$queue.length === 1) $162001cafa2b40fd$var$toast_q(text, time);
 };
-var $6d3f4b507512327e$var$add_script = function add_script(script) {
-    document.body.appendChild(document.createElement("script")).src = script;
-};
-var $6d3f4b507512327e$var$toast_q = function toast_q1(text, time) {
+var $162001cafa2b40fd$var$toast_q = function toast_q1(text, time) {
     var x = document.querySelector("div#toast");
-    x.innerHTML = $6d3f4b507512327e$var$queue[0].text;
+    x.innerHTML = $162001cafa2b40fd$var$queue[0].text;
     x.style.transform = "translate(0px, 0px)";
-    $6d3f4b507512327e$var$timeout = setTimeout(function() {
-        $6d3f4b507512327e$var$timeout = null;
+    $162001cafa2b40fd$var$timeout = setTimeout(function() {
+        $162001cafa2b40fd$var$timeout = null;
         x.style.transform = "translate(0px, -100px)";
-        $6d3f4b507512327e$var$queue = $6d3f4b507512327e$var$queue.slice(1);
-        if ($6d3f4b507512327e$var$queue.length > 0) setTimeout(function() {
-            $6d3f4b507512327e$var$toast_q(text, time);
+        $162001cafa2b40fd$var$queue = $162001cafa2b40fd$var$queue.slice(1);
+        if ($162001cafa2b40fd$var$queue.length > 0) setTimeout(function() {
+            $162001cafa2b40fd$var$toast_q(text, time);
         }, 1000);
     }, time);
 };
-var $6d3f4b507512327e$var$lock;
-var $6d3f4b507512327e$export$19d2b7c667666dbd = function screenlock(stat) {
+var $162001cafa2b40fd$var$lock;
+var $162001cafa2b40fd$export$19d2b7c667666dbd = function screenlock(stat) {
     if (typeof window.navigator.requestWakeLock === "undefined") return false;
     if (stat == "lock") {
-        $6d3f4b507512327e$var$lock = window.navigator.requestWakeLock("screen");
-        $6d3f4b507512327e$var$lock.onsuccess = function() {};
-        $6d3f4b507512327e$var$lock.onerror = function() {
+        $162001cafa2b40fd$var$lock = window.navigator.requestWakeLock("screen");
+        $162001cafa2b40fd$var$lock.onsuccess = function() {};
+        $162001cafa2b40fd$var$lock.onerror = function() {
             console.log("An error occurred: " + this.error.name);
         };
     }
     if (stat == "unlock") {
-        if ($6d3f4b507512327e$var$lock.topic == "screen") $6d3f4b507512327e$var$lock.unlock();
+        if ($162001cafa2b40fd$var$lock.topic == "screen") $162001cafa2b40fd$var$lock.unlock();
     }
 };
-var $6d3f4b507512327e$export$c3e8f8508bab224b = function(_) {
+var $162001cafa2b40fd$export$c3e8f8508bab224b = function(_) {
     var ll = function ll() {
         var handleIntersection = function handleIntersection(entries) {
             entries.map(function(entry) {
@@ -2643,8 +2642,8 @@ var $6d3f4b507512327e$export$c3e8f8508bab224b = function(_) {
         ll: ll
     };
 }();
-function $6d3f4b507512327e$export$a55dc7d9a051abe5(bytes, decimalPoint) {
-    if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
+function $162001cafa2b40fd$export$a55dc7d9a051abe5(bytes, decimalPoint) {
+    if (bytes || bytes > 0 || bytes != undefined || bytes != NaN || bytes != null) {
         var k = 1000, dm = decimalPoint || 2, sizes = [
             "Bytes",
             "KB",
@@ -2659,7 +2658,7 @@ function $6d3f4b507512327e$export$a55dc7d9a051abe5(bytes, decimalPoint) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
     }
 }
-function $6d3f4b507512327e$export$dccb98b97a3cb8be(storage, path, notification) {
+function $162001cafa2b40fd$export$dccb98b97a3cb8be(storage, path, notification) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2667,7 +2666,7 @@ function $6d3f4b507512327e$export$dccb98b97a3cb8be(storage, path, notification) 
     } catch (e) {
         console.log(e);
     }
-    var requestDel = sdcard["delete"](path);
+    var requestDel = sdcard.delete(path);
     requestDel.onsuccess = function() {
         if (notification == "notification") helper.toaster('File "' + name + '" successfully deleted frome the sdcard storage area');
     };
@@ -2680,7 +2679,7 @@ function $6d3f4b507512327e$export$dccb98b97a3cb8be(storage, path, notification) 
 
 
 
-var $6c138793da69922c$export$1428f42a7de81803 = function getTime(cache_buffer) {
+var $01385e9633cc7ced$export$1428f42a7de81803 = function getTime(cache_buffer) {
     var timestamp = Math.floor(new Date().getTime() / 60000);
     cache_buffer = Number(cache_buffer);
     var lastupdate = Number(localStorage.getItem("last_update"));
@@ -2692,20 +2691,20 @@ var $6c138793da69922c$export$1428f42a7de81803 = function getTime(cache_buffer) {
     } else //load cache
     return false;
 };
-var $6c138793da69922c$export$d5dd531629745216 = function loadCache() {
+var $01385e9633cc7ced$export$d5dd531629745216 = function loadCache() {
     if (localStorage.getItem("data") == "" || localStorage.getItem("data") == undefined) return false;
     else return JSON.parse(localStorage.getItem("data"));
 };
-var $6c138793da69922c$export$7a1d85371c4f69 = function saveCache(data) {
+var $01385e9633cc7ced$export$7a1d85371c4f69 = function saveCache(data) {
     localStorage.setItem("data", JSON.stringify(data));
 };
 
 
 
-var $ba501d359f0081e2$exports = {};
+var $39e0152360893de3$exports = {};
 (function webpackUniversalModuleDefinition(root, factory) {
-    $ba501d359f0081e2$exports = factory();
-})(typeof self !== "undefined" ? self : $ba501d359f0081e2$exports, function() {
+    $39e0152360893de3$exports = factory();
+})(typeof self !== "undefined" ? self : $39e0152360893de3$exports, function() {
     return /******/ function(modules) {
         /******/ // The module cache
         /******/ var installedModules = {};
@@ -2809,10 +2808,10 @@ var $ba501d359f0081e2$exports = {};
                         if (x >= this.size) x = (x ^ this.primitive) & this.size - 1; // tslint:disable-line:no-bitwise
                     }
                     for(var i = 0; i < this.size - 1; i++)this.logTable[this.expTable[i]] = i;
-                    this.zero = new GenericGFPoly_1["default"](this, Uint8ClampedArray.from([
+                    this.zero = new GenericGFPoly_1.default(this, Uint8ClampedArray.from([
                         0
                     ]));
-                    this.one = new GenericGFPoly_1["default"](this, Uint8ClampedArray.from([
+                    this.one = new GenericGFPoly_1.default(this, Uint8ClampedArray.from([
                         1
                     ]));
                 };
@@ -2829,7 +2828,7 @@ var $ba501d359f0081e2$exports = {};
                     if (coefficient === 0) return this.zero;
                     var coefficients = new Uint8ClampedArray(degree + 1);
                     coefficients[0] = coefficient;
-                    return new GenericGFPoly_1["default"](this, coefficients);
+                    return new GenericGFPoly_1.default(this, coefficients);
                 };
                 GenericGF.prototype.log = function(a) {
                     if (a === 0) throw new Error("Can't take log(0)");
@@ -2840,7 +2839,7 @@ var $ba501d359f0081e2$exports = {};
                 };
                 return GenericGF;
             }();
-            exports["default"] = GenericGF;
+            exports.default = GenericGF;
         /***/ },
         /* 2 */ /***/ function(module1, exports, __webpack_require__) {
             "use strict";
@@ -2936,7 +2935,7 @@ var $ba501d359f0081e2$exports = {};
                 };
                 return GenericGFPoly;
             }();
-            exports["default"] = GenericGFPoly;
+            exports.default = GenericGFPoly;
         /***/ },
         /* 3 */ /***/ function(module1, exports, __webpack_require__) {
             "use strict";
@@ -2989,8 +2988,8 @@ var $ba501d359f0081e2$exports = {};
             var defaultOptions = {
                 inversionAttempts: "attemptBoth"
             };
-            jsQR["default"] = jsQR;
-            exports["default"] = jsQR;
+            jsQR.default = jsQR;
+            exports.default = jsQR;
         /***/ },
         /* 4 */ /***/ function(module1, exports, __webpack_require__) {
             "use strict";
@@ -3100,8 +3099,8 @@ var $ba501d359f0081e2$exports = {};
                 }
                 return bitCount;
             };
-            var pushBit = function pushBit(bit, _byte) {
-                return _byte << 1 | bit;
+            var pushBit = function pushBit(bit, byte) {
+                return byte << 1 | bit;
             };
             var buildFunctionPatternMask = function buildFunctionPatternMask(version) {
                 var dimension = 17 + 4 * version.versionNumber;
@@ -10989,8 +10988,8 @@ var $ba501d359f0081e2$exports = {};
             var decode = function decode(bytes, twoS) {
                 var outputBytes = new Uint8ClampedArray(bytes.length);
                 outputBytes.set(bytes);
-                var field = new GenericGF_1["default"](0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
-                var poly = new GenericGFPoly_1["default"](field, outputBytes);
+                var field = new GenericGF_1.default(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
+                var poly = new GenericGFPoly_1.default(field, outputBytes);
                 var syndromeCoefficients = new Uint8ClampedArray(twoS);
                 var error = false;
                 for(var s = 0; s < twoS; s++){
@@ -10999,7 +10998,7 @@ var $ba501d359f0081e2$exports = {};
                     if (evaluation !== 0) error = true;
                 }
                 if (!error) return outputBytes;
-                var syndrome = new GenericGFPoly_1["default"](field, syndromeCoefficients);
+                var syndrome = new GenericGFPoly_1.default(field, syndromeCoefficients);
                 var sigmaOmega = runEuclideanAlgorithm(field, field.buildMonomial(twoS, 1), syndrome, twoS);
                 if (sigmaOmega === null) return null;
                 var errorLocations = findErrorLocations(field, sigmaOmega[0]);
@@ -14076,17 +14075,17 @@ var $ba501d359f0081e2$exports = {};
 });
 
 
-var $da5c51e5866985e6$var$video = document.querySelector("video#video");
-var $da5c51e5866985e6$var$intv;
-var $da5c51e5866985e6$var$mediaStream;
-var $da5c51e5866985e6$export$55e6c60a43cc74e2 = function stop_scan(callback) {
-    $da5c51e5866985e6$var$mediaStream.getTracks().map(function(val) {
+var $2b0cc46421a6d3fe$var$video = document.querySelector("video#video");
+var $2b0cc46421a6d3fe$var$intv;
+var $2b0cc46421a6d3fe$var$mediaStream;
+var $2b0cc46421a6d3fe$export$55e6c60a43cc74e2 = function stop_scan(callback) {
+    $2b0cc46421a6d3fe$var$mediaStream.getTracks().map(function(val) {
         val.stop();
     });
     document.getElementById("qr-screen").style.display = "none";
     callback();
 };
-var $da5c51e5866985e6$export$be96fe42679d1b7e = function start_scan(callback) {
+var $2b0cc46421a6d3fe$export$be96fe42679d1b7e = function start_scan(callback) {
     document.getElementById("qr-screen").style.display = "block";
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     if (navigator.getUserMedia) navigator.getUserMedia({
@@ -14096,25 +14095,25 @@ var $da5c51e5866985e6$export$be96fe42679d1b7e = function start_scan(callback) {
             height: 200
         }
     }, function(stream) {
-        $da5c51e5866985e6$var$video.srcObject = stream;
+        $2b0cc46421a6d3fe$var$video.srcObject = stream;
         console.log(stream);
-        $da5c51e5866985e6$var$mediaStream = stream;
-        $da5c51e5866985e6$var$video.onloadedmetadata = function(e) {
-            $da5c51e5866985e6$var$video.play();
+        $2b0cc46421a6d3fe$var$mediaStream = stream;
+        $2b0cc46421a6d3fe$var$video.onloadedmetadata = function(e) {
+            $2b0cc46421a6d3fe$var$video.play();
             var barcodeCanvas = document.createElement("canvas");
-            $da5c51e5866985e6$var$intv = setInterval(function() {
-                barcodeCanvas.width = $da5c51e5866985e6$var$video.videoWidth;
-                barcodeCanvas.height = $da5c51e5866985e6$var$video.videoHeight;
+            $2b0cc46421a6d3fe$var$intv = setInterval(function() {
+                barcodeCanvas.width = $2b0cc46421a6d3fe$var$video.videoWidth;
+                barcodeCanvas.height = $2b0cc46421a6d3fe$var$video.videoHeight;
                 var barcodeContext = barcodeCanvas.getContext("2d");
-                var imageWidth = Math.max(1, Math.floor($da5c51e5866985e6$var$video.videoWidth)), imageHeight = Math.max(1, Math.floor($da5c51e5866985e6$var$video.videoHeight));
-                barcodeContext.drawImage($da5c51e5866985e6$var$video, 0, 0, imageWidth, imageHeight);
+                var imageWidth = Math.max(1, Math.floor($2b0cc46421a6d3fe$var$video.videoWidth)), imageHeight = Math.max(1, Math.floor($2b0cc46421a6d3fe$var$video.videoHeight));
+                barcodeContext.drawImage($2b0cc46421a6d3fe$var$video, 0, 0, imageWidth, imageHeight);
                 var imageData = barcodeContext.getImageData(0, 0, imageWidth, imageHeight);
                 var idd = imageData.data;
-                var code = (0, (/*@__PURE__*/$parcel$interopDefault($ba501d359f0081e2$exports)))(idd, imageWidth, imageHeight);
+                var code = (0, (/*@__PURE__*/$parcel$interopDefault($39e0152360893de3$exports)))(idd, imageWidth, imageHeight);
                 if (code) {
-                    clearInterval($da5c51e5866985e6$var$intv);
+                    clearInterval($2b0cc46421a6d3fe$var$intv);
                     callback(code.data);
-                    $da5c51e5866985e6$export$55e6c60a43cc74e2();
+                    $2b0cc46421a6d3fe$export$55e6c60a43cc74e2();
                 }
             }, 1000);
         };
@@ -14127,9 +14126,8 @@ var $da5c51e5866985e6$export$be96fe42679d1b7e = function start_scan(callback) {
 
 
 
-
 "use strict";
-var $e9640ea827150915$export$60d2a73d9c319f71 = {
+var $011f805697d8f593$export$60d2a73d9c319f71 = {
     sleep_time: localStorage.getItem("sleep_time") != null ? localStorage.getItem("sleep_time") : 20,
     interval: localStorage.getItem("interval") != null ? localStorage.getItem("interval") : 0,
     source_local: localStorage.getItem("source_local") != null ? localStorage.getItem("source_local") : "",
@@ -14138,21 +14136,21 @@ var $e9640ea827150915$export$60d2a73d9c319f71 = {
     wwww_file: false,
     ads: false
 };
-var $e9640ea827150915$export$49927c207fac7a54 = function load_settings() {
-    document.getElementById("time").value = $e9640ea827150915$export$60d2a73d9c319f71.interval;
+var $011f805697d8f593$export$49927c207fac7a54 = function load_settings() {
+    document.getElementById("time").value = $011f805697d8f593$export$60d2a73d9c319f71.interval;
     if (localStorage.getItem("source") != null) document.getElementById("source").value = localStorage.getItem("source");
     else document.getElementById("source").value = "";
     if (localStorage.getItem("source_local") != null) document.getElementById("source-local").value = localStorage.getItem("source_local");
     if (localStorage.getItem("sleep_time") !== null) document.getElementById("sleep-mode").value = localStorage.getItem("sleep_time");
 };
-var $e9640ea827150915$export$f5d05897b0194561 = function save_settings() {
+var $011f805697d8f593$export$f5d05897b0194561 = function save_settings() {
     if (document.getElementById("source-local").value == "" && document.getElementById("source").value == "") {
-        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("please fill in the location of the source file", 3000);
+        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("please fill in the location of the source file", 3000);
         return false;
     }
     if (document.getElementById("source").value != "") {
-        if (!(0, $6d3f4b507512327e$export$a22775fa5e2eebd9)(document.getElementById("source").value)) {
-            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("url not valid", 2000);
+        if (!(0, $162001cafa2b40fd$export$a22775fa5e2eebd9)(document.getElementById("source").value)) {
+            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("url not valid", 2000);
             return false;
         }
     }
@@ -14160,11 +14158,11 @@ var $e9640ea827150915$export$f5d05897b0194561 = function save_settings() {
     localStorage.setItem("source", document.getElementById("source").value);
     localStorage.setItem("source_local", document.getElementById("source-local").value);
     localStorage.setItem("sleep_time", document.getElementById("sleep-mode").value);
-    (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("saved, the settings will be active the next time the app is started.", 5000);
-    (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("saved successfully", 2000);
+    (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("saved, the settings will be active the next time the app is started.", 5000);
+    (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("saved successfully", 2000);
     return true;
 };
-var $e9640ea827150915$export$556c64630c31efa4 = function load_settings_from_file() {
+var $011f805697d8f593$export$556c64630c31efa4 = function load_settings_from_file() {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -14173,15 +14171,15 @@ var $e9640ea827150915$export$556c64630c31efa4 = function load_settings_from_file
         console.log(e);
     }
     var file = sdcard.get("feedolin_settings.json");
-    (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("search setting file", 2000);
+    (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("search setting file", 2000);
     file.onerror = function() {
-        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("error", 2000);
+        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("error", 2000);
     };
     file.onerror = function() {
-        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("error", 2000);
+        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("error", 2000);
     };
     file.onsuccess = function() {
-        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)(file.result, 2000);
+        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)(file.result, 2000);
         var reader = new FileReader();
         reader.readAsText(file.result);
         reader.onload = function() {
@@ -14192,14 +14190,14 @@ var $e9640ea827150915$export$556c64630c31efa4 = function load_settings_from_file
             document.getElementById("source").value = settings.source;
             document.getElementById("time").value = settings.interval;
             document.getElementById("sleep-mode").value = settings.sleep_time;
-            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("the settings were loaded from the file, if you want to use them permanently don't forget to save.", 3000);
+            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("the settings were loaded from the file, if you want to use them permanently don't forget to save.", 3000);
             reader.onerror = function() {
-                (0, $6d3f4b507512327e$export$a224d1f4f6f98541)(reader.error);
+                (0, $162001cafa2b40fd$export$a224d1f4f6f98541)(reader.error);
             };
         };
     };
 };
-var $e9640ea827150915$export$875389d4757e8c73 = function export_settings() {
+var $011f805697d8f593$export$875389d4757e8c73 = function export_settings() {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -14207,11 +14205,11 @@ var $e9640ea827150915$export$875389d4757e8c73 = function export_settings() {
     } catch (e) {
         console.log(e);
     }
-    var request_del = sdcard["delete"]("feedolin_settings.json");
+    var request_del = sdcard.delete("feedolin_settings.json");
     request_del.onsuccess = function() {};
     request_del.onerror = function() {};
     setTimeout(function() {
-        var data = JSON.stringify($e9640ea827150915$export$60d2a73d9c319f71);
+        var data = JSON.stringify($011f805697d8f593$export$60d2a73d9c319f71);
         var file = new Blob([
             "[" + data + "]"
         ], {
@@ -14220,10 +14218,10 @@ var $e9640ea827150915$export$875389d4757e8c73 = function export_settings() {
         var request = sdcard.addNamed(file, "feedolin_settings.json");
         request.onsuccess = function() {
             var name = this.result;
-            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("settings exported, feedolin_settings.json", 5000);
+            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("settings exported, feedolin_settings.json", 5000);
         };
         request.onerror = function() {
-            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("Unable to write the file", 2000);
+            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("Unable to write the file", 2000);
         };
     }, 2000);
 };
@@ -14234,152 +14232,156 @@ var $e9640ea827150915$export$875389d4757e8c73 = function export_settings() {
 
 
 
+
 "use strict";
-var $fa0566b078e52ad5$var$player = new Audio();
-$fa0566b078e52ad5$var$player.mozAudioChannelType = "content";
-$fa0566b078e52ad5$var$player.type = "audio/mpeg";
-$fa0566b078e52ad5$var$player.mozaudiochannel = "content";
-$fa0566b078e52ad5$var$player.preload = "metadata";
-var $fa0566b078e52ad5$var$getduration;
-var $fa0566b078e52ad5$var$duration = "";
+var $987aec5199ae6065$var$player = new Audio();
+$987aec5199ae6065$var$player.mozAudioChannelType = "content";
+$987aec5199ae6065$var$player.type = "audio/mpeg";
+$987aec5199ae6065$var$player.mozaudiochannel = "content";
+$987aec5199ae6065$var$player.preload = "metadata";
+var $987aec5199ae6065$var$getduration;
+var $987aec5199ae6065$var$duration = "";
 if (navigator.mozAudioChannelManager) navigator.mozAudioChannelManager.volumeControlChannel = "content";
-var $fa0566b078e52ad5$var$stream_id = "";
-var $fa0566b078e52ad5$var$audio_memory;
+if ("b2g" in navigator) {
+    navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
+    AudioChannelClient("content");
+    HTMLMediaElement.mozAudioChannelType = "content";
+    AudioContext.mozAudioChannelType = "content";
+}
+var $987aec5199ae6065$var$stream_id = "";
+var $987aec5199ae6065$var$audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
-    var $fa0566b078e52ad5$var$d = JSON.parse(localStorage.getItem("audio_memory"));
-    $fa0566b078e52ad5$var$audio_memory = $fa0566b078e52ad5$var$d;
-} else $fa0566b078e52ad5$var$audio_memory = {};
-var $fa0566b078e52ad5$export$3c97237bc3c17cae = function play_podcast(url) {
-    if (url != $fa0566b078e52ad5$var$player.src) {
-        $fa0566b078e52ad5$var$player.src = url;
-        $fa0566b078e52ad5$var$player.play();
-        (0, $3e4edb8379ebf8a3$exports.status).audio_status = "play";
+    var $987aec5199ae6065$var$d = JSON.parse(localStorage.getItem("audio_memory"));
+    $987aec5199ae6065$var$audio_memory = $987aec5199ae6065$var$d;
+} else $987aec5199ae6065$var$audio_memory = {};
+var $987aec5199ae6065$export$3c97237bc3c17cae = function play_podcast(url) {
+    if (url != $987aec5199ae6065$var$player.src) {
+        $987aec5199ae6065$var$player.src = url;
+        $987aec5199ae6065$var$player.play();
+        (0, $5535d7a9ff238efe$exports.status).audio_status = "play";
         return true;
     }
-    if (!$fa0566b078e52ad5$var$player.paused) {
-        $fa0566b078e52ad5$var$player.pause();
-        (0, $3e4edb8379ebf8a3$exports.status).audio_status = "pause";
+    if (!$987aec5199ae6065$var$player.paused) {
+        $987aec5199ae6065$var$player.pause();
+        (0, $5535d7a9ff238efe$exports.status).audio_status = "pause";
         return false;
     }
-    if ($fa0566b078e52ad5$var$player.paused) {
-        (0, $3e4edb8379ebf8a3$exports.status).audio_status = "play";
-        $fa0566b078e52ad5$var$player.play();
+    if ($987aec5199ae6065$var$player.paused) {
+        (0, $5535d7a9ff238efe$exports.status).audio_status = "play";
+        $987aec5199ae6065$var$player.play();
     }
 };
-var $fa0566b078e52ad5$export$cf7ee0e0d20a7077 = function stop_player() {
-    $fa0566b078e52ad5$var$player.src = "";
-    clearInterval($fa0566b078e52ad5$var$getduration);
+var $987aec5199ae6065$export$cf7ee0e0d20a7077 = function stop_player() {
+    $987aec5199ae6065$var$player.src = "";
+    clearInterval($987aec5199ae6065$var$getduration);
 };
-var $fa0566b078e52ad5$export$c8243f3943339030 = function seeking(param) {
+var $987aec5199ae6065$export$c8243f3943339030 = function seeking(param) {
     var step = 10;
-    if (param == "backward") $fa0566b078e52ad5$var$player.currentTime = $fa0566b078e52ad5$var$player.currentTime - step++;
-    if (param == "forward") $fa0566b078e52ad5$var$player.currentTime = $fa0566b078e52ad5$var$player.currentTime + step++;
+    if (param == "backward") $987aec5199ae6065$var$player.currentTime = $987aec5199ae6065$var$player.currentTime - step++;
+    if (param == "forward") $987aec5199ae6065$var$player.currentTime = $987aec5199ae6065$var$player.currentTime + step++;
 };
-var $fa0566b078e52ad5$export$5f8df7563bfeaf14 = function volume_control(param) {
-    if (param == "up") {
-        navigator.volumeManager.requestUp();
-        setTimeout(function() {
-            volume_status = false;
-            if ((0, $3e4edb8379ebf8a3$exports.status).window_status == "source-page") navigator.spatialNavigationEnabled = true;
-        }, 3000);
-    }
-    if (param == "down") {
-        navigator.volumeManager.requestDown();
-        setTimeout(function() {
-            volume_status = false;
-            if ((0, $3e4edb8379ebf8a3$exports.status).window_status == "source-page") navigator.spatialNavigationEnabled = true;
-        }, 3000);
+var $987aec5199ae6065$export$5f8df7563bfeaf14 = function volume_control(param) {
+    if ("b2g" in navigator) {
+        var session = new lib_session.Session();
+        var sessionstate = {};
+        var _audiovolumeManager = null;
+        sessionstate.onsessionconnected = function() {
+            console.log("AudioVolumeManager onsessionconnected");
+            lib_audiovolume.AudioVolumeManager.get(session).then(function(AudioVolumeManagerService) {
+                console.log("Got AudioVolumeManager : #AudioVolumeManagerService.service_id}");
+                _audiovolumeManager = AudioVolumeManagerService;
+                if (param == "up") _audiovolumeManager.VOLUME_UP;
+                if (param == "down") _audiovolumeManager.VOLUME_DOWN;
+            }).catch(function(e) {
+                console.log("Error calling AudioVolumeManager service".concat(JSON.stringify(e)));
+                _audiovolumeManager = null;
+            });
+        };
     }
 };
-$fa0566b078e52ad5$var$player.onloadedmetadata = function() {
-    $fa0566b078e52ad5$var$stream_id = document.activeElement.getAttribute("data-id");
-    if ($fa0566b078e52ad5$var$audio_memory.hasOwnProperty($fa0566b078e52ad5$var$stream_id)) {
-        $fa0566b078e52ad5$var$player.pause();
+$987aec5199ae6065$var$player.onloadedmetadata = function() {
+    $987aec5199ae6065$var$stream_id = document.activeElement.getAttribute("data-id");
+    if ($987aec5199ae6065$var$audio_memory.hasOwnProperty($987aec5199ae6065$var$stream_id)) {
+        $987aec5199ae6065$var$player.pause();
         var w = confirm("would you like to continue the podcast ?");
         if (w) {
-            $fa0566b078e52ad5$var$player.play();
-            $fa0566b078e52ad5$var$player.currentTime = $fa0566b078e52ad5$var$audio_memory[$fa0566b078e52ad5$var$stream_id];
+            $987aec5199ae6065$var$player.play();
+            $987aec5199ae6065$var$player.currentTime = $987aec5199ae6065$var$audio_memory[$987aec5199ae6065$var$stream_id];
         }
         if (!w) {
-            $fa0566b078e52ad5$var$player.play();
-            delete $fa0566b078e52ad5$var$audio_memory[$fa0566b078e52ad5$var$stream_id];
+            $987aec5199ae6065$var$player.play();
+            delete $987aec5199ae6065$var$audio_memory[$987aec5199ae6065$var$stream_id];
         }
     }
 };
-var $fa0566b078e52ad5$var$remember = function remember() {
+var $987aec5199ae6065$var$remember = function remember() {
     //rember position
-    if ($fa0566b078e52ad5$var$player.currentTime > 10) {
-        $fa0566b078e52ad5$var$audio_memory[$fa0566b078e52ad5$var$stream_id] = $fa0566b078e52ad5$var$player.currentTime;
-        var tt = JSON.stringify($fa0566b078e52ad5$var$audio_memory);
+    if ($987aec5199ae6065$var$player.currentTime > 10) {
+        $987aec5199ae6065$var$audio_memory[$987aec5199ae6065$var$stream_id] = $987aec5199ae6065$var$player.currentTime;
+        var tt = JSON.stringify($987aec5199ae6065$var$audio_memory);
         localStorage.setItem("audio_memory", tt);
     }
 };
-$fa0566b078e52ad5$var$player.addEventListener("play", function(event) {
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $fa0566b078e52ad5$var$duration, "");
+$987aec5199ae6065$var$player.addEventListener("play", function(event) {
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $987aec5199ae6065$var$duration, "");
 });
-$fa0566b078e52ad5$var$player.addEventListener("pause", function(event) {
-    $fa0566b078e52ad5$var$remember();
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $fa0566b078e52ad5$var$duration, "");
-    clearInterval($fa0566b078e52ad5$var$getduration);
+$987aec5199ae6065$var$player.addEventListener("pause", function(event) {
+    $987aec5199ae6065$var$remember();
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $987aec5199ae6065$var$duration, "");
+    clearInterval($987aec5199ae6065$var$getduration);
 });
-var $fa0566b078e52ad5$var$toTime = function toTime(seconds) {
-    try {
-        /*
-    var date = new Date(null);
-    date.setSeconds(seconds);
-    return date.toISOString().substr(11, 8);
-    */ return dayjs(seconds).format("hh:mm:ss");
-    } catch (e) {
-        console.log(e);
-    }
-};
-$fa0566b078e52ad5$var$player.addEventListener("playing", function(event) {
-    if ($fa0566b078e52ad5$var$player.networkState === 2) console.log("loading media", 1000);
-    if ($fa0566b078e52ad5$var$player.networkState === 3) clearInterval($fa0566b078e52ad5$var$getduration);
+$987aec5199ae6065$var$player.addEventListener("playing", function(event) {
+    if ($987aec5199ae6065$var$player.networkState === 2) console.log("loading media");
+    if ($987aec5199ae6065$var$player.networkState === 3) clearInterval($987aec5199ae6065$var$getduration);
     var articles = document.querySelectorAll("article");
     for(var i = 0; i < articles.length; i++)articles[i].classList.remove("audio-playing");
     document.activeElement.classList.add("audio-playing");
     document.getElementById("progress-bar").style.display = "block";
-    (0, $3e4edb8379ebf8a3$exports.status).active_audio_element_id = document.activeElement.getAttribute("data-id");
-    (0, $3e4edb8379ebf8a3$exports.status).active_element_id = document.activeElement.getAttribute("data-id");
+    (0, $5535d7a9ff238efe$exports.status).active_audio_element_id = document.activeElement.getAttribute("data-id");
+    (0, $5535d7a9ff238efe$exports.status).active_element_id = document.activeElement.getAttribute("data-id");
     document.getElementById("audio-title").innerText = document.activeElement.getAttribute("data-title");
     //add recently played tracks in list
-    if ((0, $3e4edb8379ebf8a3$exports.recently_played).indexOf((0, $3e4edb8379ebf8a3$exports.status).active_element_id) == -1) {
-        if ((0, $3e4edb8379ebf8a3$exports.recently_played).length > 4) (0, $3e4edb8379ebf8a3$exports.recently_played).shift();
-        (0, $3e4edb8379ebf8a3$exports.recently_played).push((0, $3e4edb8379ebf8a3$exports.status).active_element_id);
-        localStorage.setItem("recently_played", JSON.stringify((0, $3e4edb8379ebf8a3$exports.recently_played)));
+    if ((0, $5535d7a9ff238efe$exports.recently_played).indexOf((0, $5535d7a9ff238efe$exports.status).active_element_id) == -1) {
+        if ((0, $5535d7a9ff238efe$exports.recently_played).length > 4) (0, $5535d7a9ff238efe$exports.recently_played).shift();
+        (0, $5535d7a9ff238efe$exports.recently_played).push((0, $5535d7a9ff238efe$exports.status).active_element_id);
+        localStorage.setItem("recently_played", JSON.stringify((0, $5535d7a9ff238efe$exports.recently_played)));
     }
-    $fa0566b078e52ad5$var$getduration = setInterval(function() {
-        if (!$fa0566b078e52ad5$var$player.paused && $fa0566b078e52ad5$var$player.duration && $fa0566b078e52ad5$var$player.currentTime) {
-            var time = $fa0566b078e52ad5$var$player.duration - $fa0566b078e52ad5$var$player.currentTime;
-            var percent = $fa0566b078e52ad5$var$player.currentTime / $fa0566b078e52ad5$var$player.duration * 100;
+    $987aec5199ae6065$var$getduration = setInterval(function() {
+        if (!$987aec5199ae6065$var$player.paused) {
+            var time = $987aec5199ae6065$var$player.duration - $987aec5199ae6065$var$player.currentTime;
+            time = Math.floor(time);
+            var percent = $987aec5199ae6065$var$player.currentTime / $987aec5199ae6065$var$player.duration * 100;
             document.querySelector("div#progress-bar div").style.width = percent + "%";
-            (0, $3e4edb8379ebf8a3$exports.status).audio_duration = $fa0566b078e52ad5$var$toTime(time);
-            if ((0, $3e4edb8379ebf8a3$exports.status).window_status == "audio-player") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $fa0566b078e52ad5$var$toTime(time), "");
-            $fa0566b078e52ad5$var$remember();
-        } else clearInterval($fa0566b078e52ad5$var$getduration);
+            var minutes = "0" + Math.floor(time / 60);
+            var seconds = "0" + (time - minutes * 60);
+            var cur = minutes.substr(-2) + ":" + seconds.substr(-2);
+            (0, $5535d7a9ff238efe$exports.status).audio_duration = (0, $5535d7a9ff238efe$exports.toTime)(time);
+            if ((0, $5535d7a9ff238efe$exports.status).window_status == "audio-player") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", cur, "");
+            $987aec5199ae6065$var$remember();
+        } else clearInterval($987aec5199ae6065$var$getduration);
     }, 1000);
 });
-$fa0566b078e52ad5$var$player.onended = function() {
-    if ($fa0566b078e52ad5$var$audio_memory.hasOwnProperty($fa0566b078e52ad5$var$stream_id)) delete $fa0566b078e52ad5$var$audio_memory.stream_id;
+$987aec5199ae6065$var$player.onended = function() {
+    if ($987aec5199ae6065$var$audio_memory.hasOwnProperty($987aec5199ae6065$var$stream_id)) delete $987aec5199ae6065$var$audio_memory.stream_id;
+    var listened_elem;
     if (localStorage.getItem("listened_elem")) listened_elem = JSON.parse(localStorage["listened_elem"]);
-    listened_elem.push((0, $3e4edb8379ebf8a3$exports.status).active_audio_element_id);
+    listened_elem.push((0, $5535d7a9ff238efe$exports.status).active_audio_element_id);
     localStorage.setItem("listened_elem", JSON.stringify(listened_elem));
-    clearInterval($fa0566b078e52ad5$var$getduration);
-    (0, $3e4edb8379ebf8a3$exports.status).audio_duration = 0;
+    clearInterval($987aec5199ae6065$var$getduration);
+    (0, $5535d7a9ff238efe$exports.status).audio_duration = 0;
     document.getElementById("progress-bar").style.display = "none";
 };
-$fa0566b078e52ad5$var$player.addEventListener("error", function() {
-    clearInterval($fa0566b078e52ad5$var$getduration);
+$987aec5199ae6065$var$player.addEventListener("error", function() {
+    clearInterval($987aec5199ae6065$var$getduration);
 });
 
 
 "use strict";
-var $3e4edb8379ebf8a3$var$_this = undefined;
-var $165c91a1b129545b$exports = {};
+var $5535d7a9ff238efe$var$_this = undefined;
+var $e758799baacea373$exports = {};
 !function(t, e) {
-    $165c91a1b129545b$exports = e();
-}($165c91a1b129545b$exports, function() {
+    $e758799baacea373$exports = e();
+}($e758799baacea373$exports, function() {
     "use strict";
     var t = 1e3, e = 6e4, n = 36e5, r = "millisecond", i = "second", s = "minute", u = "hour", a = "day", o = "week", f = "month", h = "quarter", c = "year", d = "date", l = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = {
         name: "en",
@@ -14672,53 +14674,53 @@ var $165c91a1b129545b$exports = {};
 });
 
 
-var $3e4edb8379ebf8a3$var$debug = true;
-var $3e4edb8379ebf8a3$var$article_array;
-var $3e4edb8379ebf8a3$var$content_arr = [];
-var $3e4edb8379ebf8a3$var$k = 0;
-var $3e4edb8379ebf8a3$var$panels = [
+var $5535d7a9ff238efe$var$debug = true;
+var $5535d7a9ff238efe$var$article_array;
+var $5535d7a9ff238efe$var$content_arr = [];
+var $5535d7a9ff238efe$var$k = 0;
+var $5535d7a9ff238efe$var$panels = [
     "channels"
 ];
-var $3e4edb8379ebf8a3$var$current_panel = 0;
-var $3e4edb8379ebf8a3$var$parser = new DOMParser();
-var $3e4edb8379ebf8a3$var$video_player = "";
-var $3e4edb8379ebf8a3$var$youtube_player;
-var $3e4edb8379ebf8a3$var$video_time;
-var $3e4edb8379ebf8a3$var$youtube_time;
-var $3e4edb8379ebf8a3$var$video_status = "";
-var $3e4edb8379ebf8a3$var$youtube_status = "";
-var $3e4edb8379ebf8a3$var$video = document.getElementById("videoplayer");
-var $3e4edb8379ebf8a3$var$source_url_cleaner = [
+var $5535d7a9ff238efe$var$current_panel = 0;
+var $5535d7a9ff238efe$var$parser = new DOMParser();
+var $5535d7a9ff238efe$var$video_player = "";
+var $5535d7a9ff238efe$var$youtube_player;
+var $5535d7a9ff238efe$var$video_time;
+var $5535d7a9ff238efe$var$youtube_time;
+var $5535d7a9ff238efe$var$video_status = "";
+var $5535d7a9ff238efe$var$youtube_status = "";
+var $5535d7a9ff238efe$var$video = document.getElementById("videoplayer");
+var $5535d7a9ff238efe$var$source_url_cleaner = [
     "$$",
     "mm"
 ];
+if ($5535d7a9ff238efe$var$debug) window.onerror = function(msg, url, linenumber) {
+    alert("Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber);
+    return true;
+};
+//screenlock("lock");
 //store all used article ids
-var $3e4edb8379ebf8a3$var$all_cid = [];
-//get read articles
-var $3e4edb8379ebf8a3$var$read_elem = localStorage.getItem("read_elem") != null ? JSON.parse(localStorage.getItem("read_elem")) : [];
-var $3e4edb8379ebf8a3$export$57ef1bcec6355f64 = localStorage.getItem("recently_played") != null ? JSON.parse(localStorage.getItem("recently_played")) : [];
-var $3e4edb8379ebf8a3$export$1063e5a38a205ce2 = localStorage.getItem("listened_elem") != null ? JSON.parse(localStorage.getItem("listened_elem")) : [];
-var $3e4edb8379ebf8a3$var$tab_index = 0;
+var $5535d7a9ff238efe$var$all_cid = [];
+var $5535d7a9ff238efe$export$8cd9ad5416e75e48 = localStorage.getItem("read_elem") != null ? JSON.parse(localStorage.getItem("read_elem")) : [];
+var $5535d7a9ff238efe$export$57ef1bcec6355f64 = localStorage.getItem("recently_played") != null ? JSON.parse(localStorage.getItem("recently_played")) : [];
+var $5535d7a9ff238efe$export$1063e5a38a205ce2 = localStorage.getItem("listened_elem") != null ? JSON.parse(localStorage.getItem("listened_elem")) : [];
+var $5535d7a9ff238efe$var$tab_index = 0;
 //xml items
-var $3e4edb8379ebf8a3$var$rss_title = "";
-var $3e4edb8379ebf8a3$var$item_title = "";
-var $3e4edb8379ebf8a3$var$item_summary = "";
-var $3e4edb8379ebf8a3$var$item_link = "";
-var $3e4edb8379ebf8a3$var$item_date_unix = "";
-var $3e4edb8379ebf8a3$var$item_duration = "";
-var $3e4edb8379ebf8a3$var$item_type = "";
-var $3e4edb8379ebf8a3$var$item_filesize = "";
-var $3e4edb8379ebf8a3$var$item_cid = "";
-var $3e4edb8379ebf8a3$var$item_image = "";
-var $3e4edb8379ebf8a3$var$yt_thumbnail = "";
-(0, $6d3f4b507512327e$export$19d2b7c667666dbd)("lock");
-setTimeout(function() {
-    (0, $6d3f4b507512327e$export$19d2b7c667666dbd)("unlock");
-}, 3000);
-var $3e4edb8379ebf8a3$export$e013ba7cfce73b7a = navigator.language || navigator.userLanguage;
-if (!(0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a]) $3e4edb8379ebf8a3$export$e013ba7cfce73b7a = "en-EN";
-var $3e4edb8379ebf8a3$export$6a795054a646acb4 = "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml";
-var $3e4edb8379ebf8a3$export$471f7ae5c4103ae1 = {
+var $5535d7a9ff238efe$var$rss_title = "";
+var $5535d7a9ff238efe$var$item_title = "";
+var $5535d7a9ff238efe$var$item_summary = "";
+var $5535d7a9ff238efe$var$item_link = "";
+var $5535d7a9ff238efe$var$item_date_unix = "";
+var $5535d7a9ff238efe$var$item_duration = "";
+var $5535d7a9ff238efe$var$item_type = "";
+var $5535d7a9ff238efe$var$item_filesize = "";
+var $5535d7a9ff238efe$var$item_cid = "";
+var $5535d7a9ff238efe$var$item_image = "";
+var $5535d7a9ff238efe$var$yt_thumbnail = "";
+var $5535d7a9ff238efe$export$e013ba7cfce73b7a = navigator.language || navigator.userLanguage;
+if (!(0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a]) $5535d7a9ff238efe$export$e013ba7cfce73b7a = "en-EN";
+var $5535d7a9ff238efe$export$6a795054a646acb4 = "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml";
+var $5535d7a9ff238efe$export$471f7ae5c4103ae1 = {
     active_element_id: "",
     window_status: "intro",
     active_audio_element_id: "",
@@ -14730,26 +14732,24 @@ var $3e4edb8379ebf8a3$export$471f7ae5c4103ae1 = {
     sort: "number",
     current_panel: "channels"
 };
-var $3e4edb8379ebf8a3$var$reload = function reload() {
+var $5535d7a9ff238efe$var$reload = function reload() {
     window.location.reload(true);
     localStorage.setItem("reload", "true");
 };
-var $3e4edb8379ebf8a3$var$audio_memory;
+var $5535d7a9ff238efe$var$audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
-    var $3e4edb8379ebf8a3$var$d = JSON.parse(localStorage.getItem("audio_memory"));
-    $3e4edb8379ebf8a3$var$audio_memory = $3e4edb8379ebf8a3$var$d;
-} else $3e4edb8379ebf8a3$var$audio_memory = {};
+    var $5535d7a9ff238efe$var$d = JSON.parse(localStorage.getItem("audio_memory"));
+    $5535d7a9ff238efe$var$audio_memory = $5535d7a9ff238efe$var$d;
+} else $5535d7a9ff238efe$var$audio_memory = {};
 if (navigator.mozApps) {
-    var $3e4edb8379ebf8a3$var$manifest = //KaiOs store true||false
+    var $5535d7a9ff238efe$var$manifest = //KaiOs store true||false
     function manifest(a) {
-        $3e4edb8379ebf8a3$var$self = a.origin;
+        $5535d7a9ff238efe$var$self = a.origin;
         document.getElementById("version").innerText = "Version: " + a.manifest.version;
-        console.log(a.manifest.version);
-        if (a.installOrigin == "app://kaios-plus.kaiostech.com") $3e4edb8379ebf8a3$var$load_ads();
-        else $3e4edb8379ebf8a3$var$load_ads();
+        if (a.installOrigin == "app://kaios-plus.kaiostech.com") $5535d7a9ff238efe$var$load_ads();
     };
     //ads || ads free
-    var $3e4edb8379ebf8a3$var$load_ads = function load_ads() {
+    var $5535d7a9ff238efe$var$load_ads = function load_ads() {
         var js = document.createElement("script");
         js.type = "text/javascript";
         js.src = "assets/js/kaiads.v5.min.js";
@@ -14769,7 +14769,7 @@ if (navigator.mozApps) {
                 onready: function(ad) {
                     // user clicked the ad
                     ad.on("click", function() {
-                        $3e4edb8379ebf8a3$var$open_options();
+                        $5535d7a9ff238efe$var$open_options();
                     });
                     // user closed the ad (currently only with fullscreen)
                     ad.on("close", function() {
@@ -14791,8 +14791,9 @@ if (navigator.mozApps) {
         };
         document.head.appendChild(js);
     };
+    //if ("b2g" in navigator) load_ads();
     //KaioOs ads
-    var $3e4edb8379ebf8a3$var$getManifest = function getManifest(callback) {
+    var $5535d7a9ff238efe$var$getManifest = function getManifest(callback) {
         if (!navigator.mozApps) return false;
         var self = navigator.mozApps.getSelf();
         self.onsuccess = function() {
@@ -14800,13 +14801,13 @@ if (navigator.mozApps) {
         };
         self.onerror = function() {};
     };
-    var $3e4edb8379ebf8a3$var$self;
-    $3e4edb8379ebf8a3$var$getManifest($3e4edb8379ebf8a3$var$manifest);
+    var $5535d7a9ff238efe$var$self;
+    $5535d7a9ff238efe$var$getManifest($5535d7a9ff238efe$var$manifest);
 }
 //let audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
-    var $3e4edb8379ebf8a3$var$d1 = JSON.parse(localStorage.getItem("audio_memory"));
-    $3e4edb8379ebf8a3$var$audio_memory = $3e4edb8379ebf8a3$var$d1;
+    var $5535d7a9ff238efe$var$d1 = JSON.parse(localStorage.getItem("audio_memory"));
+    $5535d7a9ff238efe$var$audio_memory = $5535d7a9ff238efe$var$d1;
 }
 /////////////////////////////
 ////////////////////////////
@@ -14814,11 +14815,11 @@ if (localStorage.getItem("audio_memory") != null) {
 //from local file or online source
 //////////////////////////
 //////////////////////////
-var $3e4edb8379ebf8a3$var$nocaching = Math.floor(Date.now() / 1000);
+var $5535d7a9ff238efe$var$nocaching = Math.floor(Date.now() / 1000);
 ///////////
 ///load source opml file from local source
 //////////
-var $3e4edb8379ebf8a3$var$load_local_file_opml = function load_local_file_opml() {
+var $5535d7a9ff238efe$var$load_local_file_opml = function load_local_file_opml() {
     var a = localStorage.getItem("source_local");
     if (localStorage.getItem("source_local") == "" || localStorage.getItem("source_local") == null) return false;
     var sdcard;
@@ -14830,7 +14831,7 @@ var $3e4edb8379ebf8a3$var$load_local_file_opml = function load_local_file_opml()
     }
     var request = sdcard.get(a);
     request.onerror = function() {
-        document.getElementById("intro-message").innerHTML = (0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a].app_error_0;
+        document.getElementById("intro-message").innerHTML = (0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a].app_error_0;
     };
     request.onsuccess = function() {
         var file = this.result;
@@ -14840,8 +14841,8 @@ var $3e4edb8379ebf8a3$var$load_local_file_opml = function load_local_file_opml()
         };
         reader.onloadend = function(event) {
             var data = event.target.result;
-            document.getElementById("intro-message").innerText = (0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a].app_load_file;
-            $3e4edb8379ebf8a3$var$load_feeds(data);
+            document.getElementById("intro-message").innerText = (0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a].app_load_file;
+            $5535d7a9ff238efe$var$load_feeds(data);
         };
         reader.readAsText(file);
     };
@@ -14849,30 +14850,30 @@ var $3e4edb8379ebf8a3$var$load_local_file_opml = function load_local_file_opml()
 ///////////
 ///load source opml file from online source
 //////////
-var $3e4edb8379ebf8a3$var$load_source_opml = function load_source_opml() {
+var $5535d7a9ff238efe$var$load_source_opml = function load_source_opml() {
     var source_url = localStorage.getItem("source");
     var xhttp = new XMLHttpRequest({
         mozSystem: true
     });
-    xhttp.open("GET", source_url + "?time=" + $3e4edb8379ebf8a3$var$nocaching, true);
+    xhttp.open("GET", source_url + "?time=" + $5535d7a9ff238efe$var$nocaching, true);
     xhttp.timeout = 25000;
     xhttp.onload = function() {
         if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-            document.getElementById("intro-message").innerText = (0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a].app_load_file;
+            document.getElementById("intro-message").innerText = (0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a].app_load_file;
             var data = xhttp.response;
-            $3e4edb8379ebf8a3$var$load_feeds(data);
+            $5535d7a9ff238efe$var$load_feeds(data);
         }
     };
     xhttp.onerror = function() {
         document.getElementById("intro-message").innerHTML = "\uD83D\uDE34<br>the source file cannot be loaded";
         document.getElementById("intro").style.display = "none";
         setTimeout(function() {
-            $3e4edb8379ebf8a3$var$content_arr = cache.loadCache();
-            if ($3e4edb8379ebf8a3$var$content_arr) {
-                $3e4edb8379ebf8a3$var$build();
+            $5535d7a9ff238efe$var$content_arr = cache.loadCache();
+            if ($5535d7a9ff238efe$var$content_arr) {
+                $5535d7a9ff238efe$var$build();
                 document.getElementById("intro-message").innerText = "cached data loaded";
             } else setTimeout(function() {
-                $3e4edb8379ebf8a3$var$show_settings();
+                $5535d7a9ff238efe$var$show_settings();
             }, 3000);
         }, 4000);
     };
@@ -14880,10 +14881,7 @@ var $3e4edb8379ebf8a3$var$load_source_opml = function load_source_opml() {
 };
 setTimeout(function() {
     if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
-    if (localStorage["source_local"] == null && localStorage["source"] == null) {
-        console.log("set default opml");
-        localStorage.setItem("source", $3e4edb8379ebf8a3$export$6a795054a646acb4);
-    }
+    if (localStorage["source_local"] == null && localStorage["source"] == null) localStorage.setItem("source", $5535d7a9ff238efe$export$6a795054a646acb4);
     //get update time; cache || download
     var a = localStorage.getItem("interval");
     //reload content without caching
@@ -14892,43 +14890,43 @@ setTimeout(function() {
     localStorage.setItem("reload", "false");
     document.getElementById("intro-message").innerText = "checking feed list";
     //download
-    if ((0, $6c138793da69922c$export$1428f42a7de81803)(a) && navigator.onLine) {
+    if ((0, $01385e9633cc7ced$export$1428f42a7de81803)(a) && navigator.onLine) {
         var check = false;
         if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) {
-            $3e4edb8379ebf8a3$var$load_source_opml();
+            $5535d7a9ff238efe$var$load_source_opml();
             check = true;
         }
         if (localStorage["source_local"] && localStorage["source_local"] != "" && localStorage["source_local"] != undefined) {
-            $3e4edb8379ebf8a3$var$load_local_file_opml();
+            $5535d7a9ff238efe$var$load_local_file_opml();
             check = true;
         }
         if (!check) {
-            localStorage.setItem("source", $3e4edb8379ebf8a3$export$6a795054a646acb4);
-            $3e4edb8379ebf8a3$var$load_source_opml();
+            localStorage.setItem("source", $5535d7a9ff238efe$export$6a795054a646acb4);
+            $5535d7a9ff238efe$var$load_source_opml();
         }
     //load cache
     } else {
         document.getElementById("intro-message").innerText = "your device is offline, loading cached data";
-        $3e4edb8379ebf8a3$var$content_arr = (0, $6c138793da69922c$export$d5dd531629745216)();
-        if ($3e4edb8379ebf8a3$var$content_arr) {
+        $5535d7a9ff238efe$var$content_arr = (0, $01385e9633cc7ced$export$d5dd531629745216)();
+        if ($5535d7a9ff238efe$var$content_arr) {
             document.getElementById("intro-message").innerText = "load cached data";
             setTimeout(function() {
-                $3e4edb8379ebf8a3$var$build();
+                $5535d7a9ff238efe$var$build();
             }, 1000);
         } else {
             document.getElementById("intro-message").innerText = "no internet connection and no cached data available";
             setTimeout(function() {
-                $3e4edb8379ebf8a3$var$build();
+                $5535d7a9ff238efe$var$build();
             }, 4000);
         }
     }
 }, 1000);
 //start loading feeds
-var $3e4edb8379ebf8a3$var$feed_download_list = [];
-if (localStorage.getItem("feed_download_list") == null) localStorage.setItem("feed_download_list", $3e4edb8379ebf8a3$var$feed_download_list);
-else $3e4edb8379ebf8a3$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
-var $3e4edb8379ebf8a3$var$load_feeds = function load_feeds(data) {
-    var xmlDoc = $3e4edb8379ebf8a3$var$parser.parseFromString(data, "text/xml");
+var $5535d7a9ff238efe$var$feed_download_list = [];
+if (localStorage.getItem("feed_download_list") == null) localStorage.setItem("feed_download_list", $5535d7a9ff238efe$var$feed_download_list);
+else $5535d7a9ff238efe$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+var $5535d7a9ff238efe$var$load_feeds = function load_feeds(data) {
+    var xmlDoc = $5535d7a9ff238efe$var$parser.parseFromString(data, "text/xml");
     var content = xmlDoc.getElementsByTagName("body")[0];
     var index = 0;
     var m = content.querySelectorAll("outline");
@@ -14937,13 +14935,13 @@ var $3e4edb8379ebf8a3$var$load_feeds = function load_feeds(data) {
         if (nested.length > 0) for(var z = 0; z < nested.length; z++){
             //feed_download_list
             var result = false;
-            for(var k = 0; k < $3e4edb8379ebf8a3$var$feed_download_list.length; k++)if ($3e4edb8379ebf8a3$var$feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
-                $3e4edb8379ebf8a3$var$source_url_cleaner.push(nested[z].getAttribute("xmlUrl"));
+            for(var k = 0; k < $5535d7a9ff238efe$var$feed_download_list.length; k++)if ($5535d7a9ff238efe$var$feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
+                $5535d7a9ff238efe$var$source_url_cleaner.push(nested[z].getAttribute("xmlUrl"));
                 result = true;
                 break;
             }
             //put in list
-            if (result == false) $3e4edb8379ebf8a3$var$feed_download_list.push({
+            if (result == false) $5535d7a9ff238efe$var$feed_download_list.push({
                 title: nested[z].getAttribute("title"),
                 url: nested[z].getAttribute("xmlUrl"),
                 amount: 5,
@@ -14951,30 +14949,29 @@ var $3e4edb8379ebf8a3$var$load_feeds = function load_feeds(data) {
                 channel: nested[z].parentElement.getAttribute("text")
             });
         }
-        localStorage.setItem("feed_download_list", JSON.stringify($3e4edb8379ebf8a3$var$feed_download_list));
+        localStorage.setItem("feed_download_list", JSON.stringify($5535d7a9ff238efe$var$feed_download_list));
     }
-    $3e4edb8379ebf8a3$var$rss_fetcher($3e4edb8379ebf8a3$var$feed_download_list[0].url, $3e4edb8379ebf8a3$var$feed_download_list[0].amount, $3e4edb8379ebf8a3$var$feed_download_list[0].channel, $3e4edb8379ebf8a3$var$feed_download_list[0].channel);
+    $5535d7a9ff238efe$var$rss_fetcher($5535d7a9ff238efe$var$feed_download_list[0].url, $5535d7a9ff238efe$var$feed_download_list[0].amount, $5535d7a9ff238efe$var$feed_download_list[0].channel, $5535d7a9ff238efe$var$feed_download_list[0].channel);
     //clean source feed
-    for(var p = 0; p < $3e4edb8379ebf8a3$var$feed_download_list.length; p++)if ($3e4edb8379ebf8a3$var$source_url_cleaner.includes($3e4edb8379ebf8a3$var$feed_download_list[p].url) == false) $3e4edb8379ebf8a3$var$feed_download_list.splice(p, 1);
+    for(var p = 0; p < $5535d7a9ff238efe$var$feed_download_list.length; p++)if ($5535d7a9ff238efe$var$source_url_cleaner.includes($5535d7a9ff238efe$var$feed_download_list[p].url) == false) $5535d7a9ff238efe$var$feed_download_list.splice(p, 1);
 };
 //////////////////////////////
 //download content////
 //////////////////////////////
-var $3e4edb8379ebf8a3$var$error;
-var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_limit, param_channel, param_category) {
+var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_limit, param_channel, param_category) {
     var transferFailed = function transferFailed() {
-        $3e4edb8379ebf8a3$var$error = "transferFailed";
+        error = "transferFailed";
     };
     var loadEnd = function loadEnd(e) {
         //after download build html objects
-        if ($3e4edb8379ebf8a3$var$k == $3e4edb8379ebf8a3$var$feed_download_list.length - 1) {
-            $3e4edb8379ebf8a3$var$build();
-            (0, $6c138793da69922c$export$7a1d85371c4f69)($3e4edb8379ebf8a3$var$content_arr);
+        if ($5535d7a9ff238efe$var$k == $5535d7a9ff238efe$var$feed_download_list.length - 1) {
+            $5535d7a9ff238efe$var$build();
+            (0, $01385e9633cc7ced$export$7a1d85371c4f69)($5535d7a9ff238efe$var$content_arr);
         }
-        if ($3e4edb8379ebf8a3$var$k < $3e4edb8379ebf8a3$var$feed_download_list.length - 1) {
+        if ($5535d7a9ff238efe$var$k < $5535d7a9ff238efe$var$feed_download_list.length - 1) {
             document.getElementById("intro-message").innerText = "loading data";
-            $3e4edb8379ebf8a3$var$k++;
-            $3e4edb8379ebf8a3$var$rss_fetcher($3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$k].url, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$k].amount, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$k].channel, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$k].channel);
+            $5535d7a9ff238efe$var$k++;
+            $5535d7a9ff238efe$var$rss_fetcher($5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$k].url, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$k].amount, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$k].channel, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$k].channel);
         }
     };
     var xhttp = new XMLHttpRequest({
@@ -14987,7 +14984,11 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
     xhttp.send();
     xhttp.addEventListener("error", transferFailed);
     xhttp.addEventListener("loadend", loadEnd);
-    if (xhttp.status != 200) $3e4edb8379ebf8a3$var$error = xhttp.status;
+    var error = "";
+    if (xhttp.status != 200) {
+        console.log("can't load");
+        error = xhttp.status;
+    }
     xhttp.onload = function() {
         document.getElementById("intro-message").innerText = "loading data";
         if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
@@ -15007,18 +15008,21 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
             var youtube_id = "";
             var yt_thumbnail = "";
             var item_video_url = "";
+            var el;
             //Channel
-            $3e4edb8379ebf8a3$var$rss_title = data.querySelector("title").textContent || param_channel;
-            param_channel = $3e4edb8379ebf8a3$var$rss_title;
-            var p = Number($3e4edb8379ebf8a3$var$feed_download_list.length - 1);
-            var precent = 100 / p * $3e4edb8379ebf8a3$var$k;
+            $5535d7a9ff238efe$var$rss_title = data.querySelector("title").textContent || param_channel;
+            param_channel = $5535d7a9ff238efe$var$rss_title;
+            var p = Number($5535d7a9ff238efe$var$feed_download_list.length - 1);
+            var precent = 100 / p * $5535d7a9ff238efe$var$k;
             document.querySelector("div#intro div#loading-progress div div").style.width = precent + "%";
             if (data.getElementsByTagName("url")[0]) item_image = data.getElementsByTagName("url")[0].textContent;
             //ATOM
-            var el = data.querySelectorAll("entry");
+            try {
+                el = data.querySelectorAll("entry");
+            } catch (e) {}
             if (el.length > 0) for(var i = 0; i < param_limit; i++){
                 item_title = el[i].querySelector("title").innerHTML;
-                item_cid = (0, $6d3f4b507512327e$export$d41d9ab3de2def3d)(item_title);
+                item_cid = (0, $162001cafa2b40fd$export$d41d9ab3de2def3d)(item_title);
                 var elem = el[i].querySelector("summary");
                 if (elem) {
                     item_summary = el[i].querySelector("summary").textContent;
@@ -15048,7 +15052,7 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                     if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
                         var en_length = el[i].querySelector("enclosure").getAttribute("length");
-                        item_filesize = (0, $6d3f4b507512327e$export$a55dc7d9a051abe5)(en_length, 2);
+                        if (en_length) item_filesize = (0, $162001cafa2b40fd$export$a55dc7d9a051abe5)(en_length, 2);
                     }
                 }
                 if (item_media == "podcast") {
@@ -15057,11 +15061,11 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                 //check valid date
                 if (el[i].querySelector("updated") != null || el[i].querySelector("updated") != undefined) {
                     if (el[i].querySelector("updated").innerHTML == "") {
-                        $3e4edb8379ebf8a3$var$item_date_unix = new Date().valueOf();
+                        $5535d7a9ff238efe$var$item_date_unix = new Date().valueOf();
                         item_date = "";
                     } else {
                         item_date = new Date(el[i].querySelector("updated").innerHTML);
-                        $3e4edb8379ebf8a3$var$item_date_unix = item_date.valueOf();
+                        $5535d7a9ff238efe$var$item_date_unix = item_date.valueOf();
                         item_date = item_date.toDateString();
                     }
                 }
@@ -15077,19 +15081,19 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                 }
                 startlistened = "";
-                if ($3e4edb8379ebf8a3$var$audio_memory.hasOwnProperty(item_cid)) start_listened = "start_listened";
-                $3e4edb8379ebf8a3$var$content_arr.push({
+                if ($5535d7a9ff238efe$var$audio_memory.hasOwnProperty(item_cid)) start_listened = "start_listened";
+                $5535d7a9ff238efe$var$content_arr.push({
                     index: 0,
-                    title: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_title),
-                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_summary),
+                    title: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_title),
+                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_summary),
                     link: item_link,
                     date: item_date,
-                    dateunix: $3e4edb8379ebf8a3$var$item_date_unix,
+                    dateunix: $5535d7a9ff238efe$var$item_date_unix,
                     channel: param_channel,
                     category: param_category,
                     type: item_type,
                     image: item_image,
-                    duration: $3e4edb8379ebf8a3$var$toTime(item_duration),
+                    duration: $5535d7a9ff238efe$export$d33f79e3ffc3dc83(item_duration),
                     media: item_media,
                     filesize: item_filesize,
                     cid: item_cid,
@@ -15102,20 +15106,22 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     youtube_thumbnail: yt_thumbnail,
                     video_url: item_video_url,
                     url: item_download,
-                    error: $3e4edb8379ebf8a3$var$error
+                    error: error
                 });
             }
             ////////////
             //RSS
             ///////////
-            var el = data.querySelectorAll("item");
+            try {
+                el = data.querySelectorAll("item");
+            } catch (e) {}
             if (el.length > 0) for(var i1 = 0; i1 < param_limit; i1++){
                 if (el[i1].querySelector("title") && el[i1].querySelector("title") != undefined) {
                     item_title = el[i1].querySelector("title").innerHTML;
                     item_title = item_title.replace("<![CDATA[", "");
                     item_title = item_title.replace("]]>", "");
                 }
-                item_cid = (0, $6d3f4b507512327e$export$d41d9ab3de2def3d)(item_title);
+                item_cid = (0, $162001cafa2b40fd$export$d41d9ab3de2def3d)(item_title);
                 if (el[i1].querySelector("description")) {
                     item_summary = el[i1].querySelector("description").textContent;
                     item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
@@ -15130,11 +15136,11 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                 //check valid date
                 if (el[i1].querySelector("pubDate") != null || el[i1].querySelector("pubDate") != undefined) {
                     if (el[i1].querySelector("pubDate").innerHTML == "") {
-                        $3e4edb8379ebf8a3$var$item_date_unix = new Date().valueOf();
+                        $5535d7a9ff238efe$var$item_date_unix = new Date().valueOf();
                         item_date = "";
                     } else {
                         item_date = new Date(el[i1].querySelector("pubDate").innerHTML);
-                        $3e4edb8379ebf8a3$var$item_date_unix = item_date.valueOf();
+                        $5535d7a9ff238efe$var$item_date_unix = item_date.valueOf();
                         item_date = item_date.toDateString();
                     }
                 }
@@ -15149,26 +15155,26 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                     if (el[i1].querySelector("enclosure").getAttribute("length") > 0) {
                         var en_length1 = el[i1].querySelector("enclosure").getAttribute("length");
-                        item_filesize = (0, $6d3f4b507512327e$export$a55dc7d9a051abe5)(en_length1, 2);
+                        if (en_length1) item_filesize = (0, $162001cafa2b40fd$export$a55dc7d9a051abe5)(en_length1, 2);
                     }
                 }
                 if (item_media == "podcast") {
                     if (el[i1].getElementsByTagNameNS("*", "duration").length > 0) item_duration = el[i1].getElementsByTagNameNS("*", "duration")[0].textContent;
                 }
                 startlistened = "";
-                if ($3e4edb8379ebf8a3$var$audio_memory.hasOwnProperty(item_cid)) startlistened = "start_listened";
-                $3e4edb8379ebf8a3$var$content_arr.push({
+                if ($5535d7a9ff238efe$var$audio_memory.hasOwnProperty(item_cid)) startlistened = "start_listened";
+                $5535d7a9ff238efe$var$content_arr.push({
                     index: 0,
-                    title: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_title),
-                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_summary),
+                    title: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_title),
+                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_summary),
                     link: item_link,
                     date: item_date,
-                    dateunix: $3e4edb8379ebf8a3$var$item_date_unix,
+                    dateunix: $5535d7a9ff238efe$var$item_date_unix,
                     channel: param_channel,
                     category: param_category,
                     type: item_type,
                     image: item_image,
-                    duration: $3e4edb8379ebf8a3$var$toTime(item_duration),
+                    duration: $5535d7a9ff238efe$export$d33f79e3ffc3dc83(item_duration),
                     media: item_media,
                     filesize: item_filesize,
                     cid: item_cid,
@@ -15188,7 +15194,7 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
         ////Redirection
         if (xhttp.status === 301) {
             console.log(param_channel + " redirection", 3000);
-            $3e4edb8379ebf8a3$var$rss_fetcher(xhttp.getResponseHeader("Location"), param_limit, param_channel, param_channel);
+            $5535d7a9ff238efe$var$rss_fetcher(xhttp.getResponseHeader("Location"), param_limit, param_channel, param_channel);
         }
         xhttp.ontimeout = function(e) {
             console.log(param_channel + "Time out", 3000);
@@ -15199,38 +15205,37 @@ var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_l
 //sort content by date
 //build
 //write html
-var $3e4edb8379ebf8a3$var$read_articles = function read_articles() {
-    //if element in read list
-    //mark article as read
-    if ($3e4edb8379ebf8a3$var$content_arr.length == 0) return false;
-    $3e4edb8379ebf8a3$var$content_arr.forEach(function(index) {
-        $3e4edb8379ebf8a3$var$all_cid.push(index.cid);
+var $5535d7a9ff238efe$var$read_articles = function read_articles() {
+    $5535d7a9ff238efe$var$content_arr.length;
+    return false;
+    $5535d7a9ff238efe$var$content_arr.forEach(function(index) {
+        $5535d7a9ff238efe$var$all_cid.push(index.cid);
         index.read = "not-read";
-        if ($3e4edb8379ebf8a3$var$read_elem.length > 0) $3e4edb8379ebf8a3$var$read_elem.forEach(function(p) {
+        if ($5535d7a9ff238efe$export$8cd9ad5416e75e48.length > 0) $5535d7a9ff238efe$export$8cd9ad5416e75e48.forEach(function(p) {
             if (p == index.cid) index.read = "read";
         });
     });
 };
 //end to listen
 //to show icon
-var $3e4edb8379ebf8a3$var$listened_articles = function listened_articles() {
-    if ($3e4edb8379ebf8a3$var$content_arr.length == 0) return false;
-    $3e4edb8379ebf8a3$var$content_arr.forEach(function(index) {
+var $5535d7a9ff238efe$var$listened_articles = function listened_articles() {
+    if ($5535d7a9ff238efe$var$content_arr.length == 0) return false;
+    $5535d7a9ff238efe$var$content_arr.forEach(function(index) {
         index.listened = "not-listened";
-        if ($3e4edb8379ebf8a3$export$1063e5a38a205ce2.length > 0) {
-            for(t = 0; t < $3e4edb8379ebf8a3$export$1063e5a38a205ce2.length; t++)if ($3e4edb8379ebf8a3$export$1063e5a38a205ce2[t] == index.cid) index.listened = "listened";
+        if ($5535d7a9ff238efe$export$1063e5a38a205ce2.length > 0) {
+            for(t = 0; t < $5535d7a9ff238efe$export$1063e5a38a205ce2.length; t++)if ($5535d7a9ff238efe$export$1063e5a38a205ce2[t] == index.cid) index.listened = "listened";
         }
     });
 };
 //started to listen
 //add to list recently played
-var $3e4edb8379ebf8a3$var$listened_podcast_articles = function listened_podcast_articles() {
-    if ($3e4edb8379ebf8a3$var$content_arr.length == 0) return false;
-    $3e4edb8379ebf8a3$var$content_arr.forEach(function(index) {
+var $5535d7a9ff238efe$var$listened_podcast_articles = function listened_podcast_articles() {
+    if ($5535d7a9ff238efe$var$content_arr.length == 0) return false;
+    $5535d7a9ff238efe$var$content_arr.forEach(function(index) {
         index.recently_played = "";
         index.recently_order = "";
-        if ($3e4edb8379ebf8a3$export$57ef1bcec6355f64.length > 0) {
-            for(var t1 = 0; t1 < $3e4edb8379ebf8a3$export$57ef1bcec6355f64.length; t1++)if ($3e4edb8379ebf8a3$export$57ef1bcec6355f64[t1] == index.cid) {
+        if ($5535d7a9ff238efe$export$57ef1bcec6355f64.length > 0) {
+            for(var t1 = 0; t1 < $5535d7a9ff238efe$export$57ef1bcec6355f64.length; t1++)if ($5535d7a9ff238efe$export$57ef1bcec6355f64[t1] == index.cid) {
                 index.recently_played = "recently-played";
                 index.recently_order = t1;
             }
@@ -15238,73 +15243,73 @@ var $3e4edb8379ebf8a3$var$listened_podcast_articles = function listened_podcast_
     });
 };
 //clear local storage
-var $3e4edb8379ebf8a3$var$clean_localstorage = function clean_localstorage() {
-    for(var i = 0; i < $3e4edb8379ebf8a3$var$read_elem.length; i++)if ($3e4edb8379ebf8a3$var$all_cid.indexOf($3e4edb8379ebf8a3$var$read_elem[i]) == -1) $3e4edb8379ebf8a3$var$read_elem.slice(i, 1);
-    localStorage.setItem("read_elem", JSON.stringify($3e4edb8379ebf8a3$var$read_elem));
+var $5535d7a9ff238efe$var$clean_localstorage = function clean_localstorage() {
+    for(var i = 0; i < $5535d7a9ff238efe$export$8cd9ad5416e75e48.length; i++)if ($5535d7a9ff238efe$var$all_cid.indexOf($5535d7a9ff238efe$export$8cd9ad5416e75e48[i]) == -1) $5535d7a9ff238efe$export$8cd9ad5416e75e48.slice(i, 1);
+    localStorage.setItem("read_elem", JSON.stringify($5535d7a9ff238efe$export$8cd9ad5416e75e48));
     //recently played
-    for(var i1 = 0; i1 < $3e4edb8379ebf8a3$export$57ef1bcec6355f64.length; i1++)if ($3e4edb8379ebf8a3$var$all_cid.indexOf($3e4edb8379ebf8a3$export$57ef1bcec6355f64[i1]) == -1) $3e4edb8379ebf8a3$export$57ef1bcec6355f64.slice(i1, 1);
-    localStorage.setItem("recently_played", JSON.stringify($3e4edb8379ebf8a3$export$57ef1bcec6355f64));
+    for(var i1 = 0; i1 < $5535d7a9ff238efe$export$57ef1bcec6355f64.length; i1++)if ($5535d7a9ff238efe$var$all_cid.indexOf($5535d7a9ff238efe$export$57ef1bcec6355f64[i1]) == -1) $5535d7a9ff238efe$export$57ef1bcec6355f64.slice(i1, 1);
+    localStorage.setItem("recently_played", JSON.stringify($5535d7a9ff238efe$export$57ef1bcec6355f64));
 };
 //render html
-function $3e4edb8379ebf8a3$var$renderHello(arr) {
+function $5535d7a9ff238efe$var$renderHello(arr) {
     var template = document.getElementById("template").innerHTML;
-    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($13462400ebaaddfa$exports))).render(template, {
         data: arr
     });
     document.querySelector("#news-feed-list").innerHTML = rendered;
 }
 //render download-list
-function $3e4edb8379ebf8a3$var$render_feed_download_list(arr) {
+function $5535d7a9ff238efe$var$render_feed_download_list(arr) {
     var template = document.getElementById("feed-download-list-template").innerHTML;
-    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($13462400ebaaddfa$exports))).render(template, {
         data: arr
     });
     document.querySelector("#feed-download-list div").innerHTML = rendered;
 }
 //render selectbox
-function $3e4edb8379ebf8a3$var$renderSB(arr) {
+function $5535d7a9ff238efe$var$renderSB(arr) {
     var template = document.getElementById("sb").innerHTML;
-    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($13462400ebaaddfa$exports))).render(template, {
         data: arr
     });
     document.getElementById("source-local").innerHTML = rendered;
 }
 //filter view
-var $3e4edb8379ebf8a3$var$heroArray = [];
-var $3e4edb8379ebf8a3$var$filter_data = function filter_data(cat) {
-    $3e4edb8379ebf8a3$var$heroArray.length = 0;
+var $5535d7a9ff238efe$var$heroArray = [];
+var $5535d7a9ff238efe$var$filter_data = function filter_data(cat) {
+    $5535d7a9ff238efe$var$heroArray.length = 0;
     var index = 0;
-    for(var i = 0; i < $3e4edb8379ebf8a3$var$content_arr.length; i++)if ($3e4edb8379ebf8a3$var$content_arr[i].category == cat) {
+    for(var i = 0; i < $5535d7a9ff238efe$var$content_arr.length; i++)if ($5535d7a9ff238efe$var$content_arr[i].category == cat) {
         index++;
-        $3e4edb8379ebf8a3$var$content_arr[i].index = index;
-        $3e4edb8379ebf8a3$var$heroArray.push($3e4edb8379ebf8a3$var$content_arr[i]);
+        $5535d7a9ff238efe$var$content_arr[i].index = index;
+        $5535d7a9ff238efe$var$heroArray.push($5535d7a9ff238efe$var$content_arr[i]);
     }
 };
-var $3e4edb8379ebf8a3$var$tabs = function tabs() {
-    for(var i = 0; i < $3e4edb8379ebf8a3$var$content_arr.length; i++)//set panel category
-    if ($3e4edb8379ebf8a3$var$panels.includes($3e4edb8379ebf8a3$var$content_arr[i].category) === false && $3e4edb8379ebf8a3$var$content_arr[i].category != 0) $3e4edb8379ebf8a3$var$panels.push($3e4edb8379ebf8a3$var$content_arr[i].category);
+var $5535d7a9ff238efe$var$tabs = function tabs() {
+    for(var i = 0; i < $5535d7a9ff238efe$var$content_arr.length; i++)//set panel category
+    if ($5535d7a9ff238efe$var$panels.includes($5535d7a9ff238efe$var$content_arr[i].category) === false && $5535d7a9ff238efe$var$content_arr[i].category != 0) $5535d7a9ff238efe$var$panels.push($5535d7a9ff238efe$var$content_arr[i].category);
 };
 //build html
-function $3e4edb8379ebf8a3$var$build() {
-    if ($3e4edb8379ebf8a3$var$content_arr.lenght > 0) (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$content_arr, "channel", "string");
-    $3e4edb8379ebf8a3$var$read_articles();
-    $3e4edb8379ebf8a3$var$listened_articles();
-    $3e4edb8379ebf8a3$var$tabs();
-    $3e4edb8379ebf8a3$var$clean_localstorage();
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
-    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", $3e4edb8379ebf8a3$var$panels[0], "");
-    $3e4edb8379ebf8a3$var$panels.push("recently-played");
-    $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$content_arr);
-    $3e4edb8379ebf8a3$var$render_feed_download_list($3e4edb8379ebf8a3$var$feed_download_list);
-    //division_remove();
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "article-list";
+var $5535d7a9ff238efe$var$build = function build() {
+    if ($5535d7a9ff238efe$var$content_arr.lenght > 0) (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$content_arr, "channel", "string");
     document.getElementById("intro").style.display = "none";
-    $3e4edb8379ebf8a3$var$set_tabindex();
-    $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article");
-    $3e4edb8379ebf8a3$var$article_array[0].focus();
-}
+    $5535d7a9ff238efe$var$read_articles();
+    $5535d7a9ff238efe$var$listened_articles();
+    $5535d7a9ff238efe$var$tabs();
+    $5535d7a9ff238efe$var$clean_localstorage();
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
+    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", $5535d7a9ff238efe$var$panels[0], "");
+    $5535d7a9ff238efe$var$panels.push("recently-played");
+    $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$content_arr);
+    $5535d7a9ff238efe$var$render_feed_download_list($5535d7a9ff238efe$var$feed_download_list);
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "article-list";
+    $5535d7a9ff238efe$var$set_tabindex();
+    $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article");
+    $5535d7a9ff238efe$var$article_array[0].focus();
+//screenlock("unlock");
+};
 //set tabindex
-var $3e4edb8379ebf8a3$var$set_tabindex = function set_tabindex() {
+var $5535d7a9ff238efe$var$set_tabindex = function set_tabindex() {
     var divs = document.querySelectorAll("article");
     var t1 = -1;
     for(var i = 0; i < divs.length; i++){
@@ -15312,80 +15317,79 @@ var $3e4edb8379ebf8a3$var$set_tabindex = function set_tabindex() {
         t1++;
         divs[i].tabIndex = t1;
     }
-    $3e4edb8379ebf8a3$var$tab_index = 0;
+    $5535d7a9ff238efe$var$tab_index = 0;
     setTimeout(function() {
-        $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article .item");
-        if ($3e4edb8379ebf8a3$var$article_array > 0) $3e4edb8379ebf8a3$var$article_array[0].focus();
+        $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article .item");
+        if ($5535d7a9ff238efe$var$article_array > 0) $5535d7a9ff238efe$var$article_array[0].focus();
     }, 1500);
 };
 //mark as read
-var $3e4edb8379ebf8a3$var$mark_as_read = function mark_as_read(un_read) {
+var $5535d7a9ff238efe$var$mark_as_read = function mark_as_read(un_read) {
     if (un_read == true) {
         document.activeElement.setAttribute("data-read", "read");
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-        $3e4edb8379ebf8a3$var$read_elem.push($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id);
-        localStorage.setItem("read_elem", JSON.stringify($3e4edb8379ebf8a3$var$read_elem));
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+        $5535d7a9ff238efe$export$8cd9ad5416e75e48.push($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id);
+        localStorage.setItem("read_elem", JSON.stringify($5535d7a9ff238efe$export$8cd9ad5416e75e48));
         document.activeElement.style.color = "silver";
         return true;
     }
     if (un_read == false) {
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-        var kk = document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-id");
-        document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").setAttribute("data-read", "not-read");
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+        var kk = document.querySelector("[data-id ='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-id");
+        document.querySelector("[data-id ='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").setAttribute("data-read", "not-read");
         var test = [];
-        for(var i = 0; i < $3e4edb8379ebf8a3$var$read_elem.length; i++)if ($3e4edb8379ebf8a3$var$read_elem[i] != kk) test.push($3e4edb8379ebf8a3$var$read_elem[i]);
+        for(var i = 0; i < $5535d7a9ff238efe$export$8cd9ad5416e75e48.length; i++)if ($5535d7a9ff238efe$export$8cd9ad5416e75e48[i] != kk) test.push($5535d7a9ff238efe$export$8cd9ad5416e75e48[i]);
         localStorage.setItem("read_elem", JSON.stringify(test));
-        $3e4edb8379ebf8a3$var$read_elem = test;
+        $5535d7a9ff238efe$export$8cd9ad5416e75e48 = test;
         document.activeElement.style.color = "black";
-        (0, $6d3f4b507512327e$export$6593825dc0f3a767)("article marked as not read", 2000);
+        (0, $162001cafa2b40fd$export$6593825dc0f3a767)("article marked as not read", 2000);
     }
 };
-var $3e4edb8379ebf8a3$var$sort_tab = function sort_tab(type) {
-    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel == "channels" || $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel == "recently-played") {
-        (0, $6d3f4b507512327e$export$6593825dc0f3a767)("this tab can't be sorted", 2000);
+var $5535d7a9ff238efe$var$sort_tab = function sort_tab(type) {
+    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel == "channels" || $5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel == "recently-played") {
+        (0, $162001cafa2b40fd$export$6593825dc0f3a767)("this tab can't be sorted", 2000);
         return false;
     }
-    $3e4edb8379ebf8a3$var$filter_data($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel);
+    $5535d7a9ff238efe$var$filter_data($5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel);
     //sort
     if (type == "string") {
-        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "title", "string");
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.tabsort = "string";
+        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "title", "string");
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.tabsort = "string";
     }
     if (type == "date") {
-        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "dateunix", "number");
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.tabsort = "date";
+        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "dateunix", "number");
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.tabsort = "date";
     }
     //build html
-    $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$heroArray);
-    $3e4edb8379ebf8a3$var$set_tabindex();
+    $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$heroArray);
+    $5535d7a9ff238efe$var$set_tabindex();
     document.querySelectorAll("div#news-feed-list article")[0].focus();
-    (0, $6d3f4b507512327e$export$6593825dc0f3a767)("sorted", 2000);
+    (0, $162001cafa2b40fd$export$6593825dc0f3a767)("sorted", 2000);
 };
 ////////////////////////
 //NAVIGATION
 /////////////////////////
-var $3e4edb8379ebf8a3$var$division_count = 0;
-function $3e4edb8379ebf8a3$var$nav_panels(left_right) {
-    if (left_right == "left") $3e4edb8379ebf8a3$var$current_panel--;
-    if (left_right == "right") $3e4edb8379ebf8a3$var$current_panel++;
-    $3e4edb8379ebf8a3$var$current_panel = $3e4edb8379ebf8a3$var$current_panel % $3e4edb8379ebf8a3$var$panels.length;
-    if ($3e4edb8379ebf8a3$var$current_panel < 0) $3e4edb8379ebf8a3$var$current_panel += $3e4edb8379ebf8a3$var$panels.length;
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel = $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel];
-    console.log($3e4edb8379ebf8a3$export$471f7ae5c4103ae1);
-    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
-    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode) (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("sleep", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
-    $3e4edb8379ebf8a3$var$read_articles();
+var $5535d7a9ff238efe$var$division_count = 0;
+function $5535d7a9ff238efe$var$nav_panels(left_right) {
+    if (left_right == "left") $5535d7a9ff238efe$var$current_panel--;
+    if (left_right == "right") $5535d7a9ff238efe$var$current_panel++;
+    $5535d7a9ff238efe$var$current_panel = $5535d7a9ff238efe$var$current_panel % $5535d7a9ff238efe$var$panels.length;
+    if ($5535d7a9ff238efe$var$current_panel < 0) $5535d7a9ff238efe$var$current_panel += $5535d7a9ff238efe$var$panels.length;
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel = $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel];
+    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
+    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode) (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("sleep", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
+    $5535d7a9ff238efe$var$read_articles();
     //filter data
     //default
     //view
-    $3e4edb8379ebf8a3$var$filter_data($3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel]);
+    $5535d7a9ff238efe$var$filter_data($5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel]);
     //sort
-    (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "dateunix", "number");
+    (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "dateunix", "number");
     //build html
-    $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$heroArray);
+    $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$heroArray);
     setTimeout(function() {
         if (document.querySelectorAll("article").length < 1) return false;
-        $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article")[0].focus();
+        $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article")[0].focus();
         //smooth scrolling
         var rect = document.activeElement.getBoundingClientRect();
         var elY = rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
@@ -15396,50 +15400,50 @@ function $3e4edb8379ebf8a3$var$nav_panels(left_right) {
         });
     }, 1000);
     //recently played
-    if ($3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel] == "recently-played") {
+    if ($5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel] == "recently-played") {
         //to do
-        $3e4edb8379ebf8a3$var$heroArray.length = 0;
-        $3e4edb8379ebf8a3$var$listened_podcast_articles();
-        for(var i = 0; i < $3e4edb8379ebf8a3$var$content_arr.length; i++)if ($3e4edb8379ebf8a3$var$content_arr[i].recently_played == "recently-played") $3e4edb8379ebf8a3$var$heroArray.push($3e4edb8379ebf8a3$var$content_arr[i]);
-        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "recently_order", "number");
-        $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$heroArray);
+        $5535d7a9ff238efe$var$heroArray.length = 0;
+        $5535d7a9ff238efe$var$listened_podcast_articles();
+        for(var i = 0; i < $5535d7a9ff238efe$var$content_arr.length; i++)if ($5535d7a9ff238efe$var$content_arr[i].recently_played == "recently-played") $5535d7a9ff238efe$var$heroArray.push($5535d7a9ff238efe$var$content_arr[i]);
+        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "recently_order", "number");
+        $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$heroArray);
         document.querySelectorAll("div.division").forEach(function(index, key) {
             document.querySelectorAll("div.division")[key].style.display = "none";
         });
     }
     //channels
-    if ($3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel] == "channels") {
-        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$content_arr, "channel", "string");
-        $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$content_arr);
+    if ($5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel] == "channels") {
+        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$content_arr, "channel", "string");
+        $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$content_arr);
     }
-    $3e4edb8379ebf8a3$var$set_tabindex();
+    $5535d7a9ff238efe$var$set_tabindex();
     document.activeElement.classList.remove("overscrolling");
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.panel = $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel];
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.panel = $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel];
 }
 ////////////
 //TABINDEX NAVIGATION
 ///////////
-function $3e4edb8379ebf8a3$var$nav(move) {
+function $5535d7a9ff238efe$var$nav(move) {
     // Setup siblings array and get the first sibling
     var siblings = [];
     //nested input field
     if (document.activeElement.parentNode.classList.contains("input-parent")) document.activeElement.parentNode.focus();
-    if (document.activeElement.classList.contains("input-parent")) (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+    if (document.activeElement.classList.contains("input-parent")) (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
     var b = document.activeElement.parentNode;
     var items = b.querySelectorAll(".item");
     for(var i = 0; i < items.length; i++)siblings.push(items[i]);
     if (move == "+1") {
-        $3e4edb8379ebf8a3$var$tab_index++;
-        if ($3e4edb8379ebf8a3$var$tab_index >= siblings.length) {
-            $3e4edb8379ebf8a3$var$tab_index = siblings.length - 1;
+        $5535d7a9ff238efe$var$tab_index++;
+        if ($5535d7a9ff238efe$var$tab_index >= siblings.length) {
+            $5535d7a9ff238efe$var$tab_index = siblings.length - 1;
             return true;
         }
-        siblings[$3e4edb8379ebf8a3$var$tab_index].focus();
+        siblings[$5535d7a9ff238efe$var$tab_index].focus();
     }
-    if (move == "-1" && $3e4edb8379ebf8a3$var$tab_index > 0) {
-        $3e4edb8379ebf8a3$var$tab_index--;
-        if (document.activeElement.parentElement.id == "KaiOsAds-Wrapper") $3e4edb8379ebf8a3$var$open_options();
-        siblings[$3e4edb8379ebf8a3$var$tab_index].focus();
+    if (move == "-1" && $5535d7a9ff238efe$var$tab_index > 0) {
+        $5535d7a9ff238efe$var$tab_index--;
+        if (document.activeElement.parentElement.id == "KaiOsAds-Wrapper") $5535d7a9ff238efe$var$open_options();
+        siblings[$5535d7a9ff238efe$var$tab_index].focus();
     }
     //smooth scrolling
     var rect = document.activeElement.getBoundingClientRect();
@@ -15451,7 +15455,7 @@ function $3e4edb8379ebf8a3$var$nav(move) {
     });
 }
 //navigation between channels into channels view
-var $3e4edb8379ebf8a3$var$channel_navigation = function channel_navigation(direction) {
+var $5535d7a9ff238efe$var$channel_navigation = function channel_navigation(direction) {
     var el = document.activeElement;
     if (direction == "down") {
         // Get the next sibling element
@@ -15494,20 +15498,20 @@ var $3e4edb8379ebf8a3$var$channel_navigation = function channel_navigation(direc
         }
     }
 };
-var $3e4edb8379ebf8a3$var$sleep_mode = function sleep_mode() {
-    var st = (0, $e9640ea827150915$export$60d2a73d9c319f71).sleep_time;
+var $5535d7a9ff238efe$var$sleep_mode = function sleep_mode() {
+    var st = (0, $011f805697d8f593$export$60d2a73d9c319f71).sleep_time;
     st = st * 60000;
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode = true;
-    (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("sleepmode activ", 3000);
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode = true;
+    (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("sleepmode activ", 3000);
     setTimeout(function() {
-        (0, $fa0566b078e52ad5$export$3c97237bc3c17cae)();
-        $3e4edb8379ebf8a3$var$show_article_list();
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode = false;
+        (0, $987aec5199ae6065$export$3c97237bc3c17cae)();
+        $5535d7a9ff238efe$var$show_article_list();
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode = false;
     }, st);
 };
-var $3e4edb8379ebf8a3$var$show_article = function show_article() {
-    $3e4edb8379ebf8a3$var$mark_as_read(true);
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "single-article";
+var $5535d7a9ff238efe$var$show_article = function show_article() {
+    $5535d7a9ff238efe$var$mark_as_read(true);
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "single-article";
     document.getElementById("news-feed-list").scrollTo(0, 0);
     document.querySelector("div#youtube-player").style.display = "none";
     document.querySelector("div#video-player").style.display = "none";
@@ -15524,88 +15528,84 @@ var $3e4edb8379ebf8a3$var$show_article = function show_article() {
     document.activeElement.style.display = "block";
     document.activeElement.classList.add("view");
     document.getElementById("top-bar").style.display = "none";
-    if (document.activeElement.getAttribute("data-media") == "podcast") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-    if (document.activeElement.getAttribute("data-media") == "video") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-    if (document.activeElement.getAttribute("data-media") == "rss") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/E24F.svg'>", "", "");
-    if (document.activeElement.getAttribute("data-media") == "youtube") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+    if (document.activeElement.getAttribute("data-media") == "podcast") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+    if (document.activeElement.getAttribute("data-media") == "video") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+    if (document.activeElement.getAttribute("data-media") == "rss") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/E24F.svg'>", "", "");
+    if (document.activeElement.getAttribute("data-media") == "youtube") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
     document.querySelector("div#news-feed").style.background = "white";
     document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
     document.querySelector("div#news-feed div#news-feed-list").style.overflow = "scroll";
 };
-var $3e4edb8379ebf8a3$var$toTime = function toTime(seconds) {
+var $5535d7a9ff238efe$export$d33f79e3ffc3dc83 = function toTime(seconds) {
     var n = "";
     if (seconds == "") n = "";
     else try {
-        /*
-      console.log(dayjs(seconds).format("hh:mm:ss"));
-      var date = new Date();
-      date.setSeconds(seconds);
-      n = date.toISOString().substr(11, 8);
-      */ n = $165c91a1b129545b$exports(seconds).format("hh:mm:ss");
-    } catch (e) {
-        console.log(e);
+        var date = new Date();
+        date.setSeconds(seconds);
+        n = date.toISOString().substr(11, 8);
+    } catch (error) {
         n = seconds;
     }
     return n;
 };
-var $3e4edb8379ebf8a3$var$youtube_seeking = function youtube_seeking(param) {
+var $5535d7a9ff238efe$var$youtube_seeking = function youtube_seeking(param) {
     var step = 10;
     var new_time;
     if (param == "backward") {
-        new_time = $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime() - step++;
-        $3e4edb8379ebf8a3$var$youtube_player.seekTo(new_time, true);
+        new_time = $5535d7a9ff238efe$var$youtube_player.getCurrentTime() - step++;
+        $5535d7a9ff238efe$var$youtube_player.seekTo(new_time, true);
     }
     if (param == "forward") {
-        new_time = $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime() + step++;
-        $3e4edb8379ebf8a3$var$youtube_player.seekTo(new_time, true);
+        new_time = $5535d7a9ff238efe$var$youtube_player.getCurrentTime() + step++;
+        $5535d7a9ff238efe$var$youtube_player.seekTo(new_time, true);
     }
 };
-var $3e4edb8379ebf8a3$var$video_seeking = function video_seeking(param) {
+var $5535d7a9ff238efe$var$video_seeking = function video_seeking(param) {
     var step = 10;
-    if (param == "backward") $3e4edb8379ebf8a3$var$video.currentTime = $3e4edb8379ebf8a3$var$video.currentTime - step++;
-    if (param == "forward") $3e4edb8379ebf8a3$var$video.currentTime = $3e4edb8379ebf8a3$var$video.currentTime + step++;
+    if (param == "backward") $5535d7a9ff238efe$var$video.currentTime = $5535d7a9ff238efe$var$video.currentTime - step++;
+    if (param == "forward") $5535d7a9ff238efe$var$video.currentTime = $5535d7a9ff238efe$var$video.currentTime + step++;
 };
 //open source or youtube
-function $3e4edb8379ebf8a3$var$open_url() {
+function $5535d7a9ff238efe$var$open_url() {
     //rss
     if (document.activeElement.getAttribute("data-media") == "rss") {
         var link_target = document.activeElement.getAttribute("data-link");
         var title = document.activeElement.querySelector("h1.title").textContent;
         title = title.replace(/\s/g, "-");
-        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
-        $3e4edb8379ebf8a3$var$show_article_list();
+        (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+        $5535d7a9ff238efe$var$show_article_list();
         window.open(link_target);
         return true;
     }
     //video
     if (document.activeElement.getAttribute("data-media") == "video") {
-        $3e4edb8379ebf8a3$var$video_player = document.getElementById("videoplayer");
-        $3e4edb8379ebf8a3$var$video.src = document.activeElement.getAttribute("data-video-url");
-        $3e4edb8379ebf8a3$var$open_video_player();
+        $5535d7a9ff238efe$var$video_player = document.getElementById("videoplayer");
+        $5535d7a9ff238efe$var$video.src = document.activeElement.getAttribute("data-video-url");
+        $5535d7a9ff238efe$var$open_video_player();
         document.getElementById("progress-bar").style.display = "block";
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "video";
-        if (document.activeElement.getAttribute("data-media") == "podcast") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-        $3e4edb8379ebf8a3$var$video_player.onloadedmetadata = function() {
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "video";
+        if (document.activeElement.getAttribute("data-media") == "podcast") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+        $5535d7a9ff238efe$var$video_player.onloadedmetadata = function() {
             document.getElementById("message").style.top = "0px";
             document.getElementById("message-inner").innerText = "please wait ";
         };
-        $3e4edb8379ebf8a3$var$video_player.onplaying = function() {
-            (0, $fa0566b078e52ad5$export$cf7ee0e0d20a7077)(); //stop audio player
+        $5535d7a9ff238efe$var$video_player.onplaying = function() {
+            (0, $987aec5199ae6065$export$cf7ee0e0d20a7077)(); //stop audio player
             document.getElementById("message").style.top = "-1000px";
-            $3e4edb8379ebf8a3$var$video_status = "playing";
-            $3e4edb8379ebf8a3$var$video_time = setInterval(function() {
-                t = $3e4edb8379ebf8a3$var$video.duration - $3e4edb8379ebf8a3$var$video.currentTime;
-                var percent = $3e4edb8379ebf8a3$var$video.currentTime / $3e4edb8379ebf8a3$var$video.duration * 100;
+            $5535d7a9ff238efe$var$video_status = "playing";
+            $5535d7a9ff238efe$var$video_time = setInterval(function() {
+                t = $5535d7a9ff238efe$var$video.duration - $5535d7a9ff238efe$var$video.currentTime;
+                var percent = $5535d7a9ff238efe$var$video.currentTime / $5535d7a9ff238efe$var$video.duration * 100;
                 document.getElementById("progress-bar").style.display = "block";
                 document.querySelector("div#progress-bar div").style.width = percent + "%";
-                if ($3e4edb8379ebf8a3$var$video_status == "playing") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$var$toTime(t), "");
-                if ($3e4edb8379ebf8a3$var$video_status == "paused") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$var$toTime(t), "");
+                if ($5535d7a9ff238efe$var$video_status == "playing") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t), "");
+                if ($5535d7a9ff238efe$var$video_status == "paused") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t), "");
             }, 1000);
         };
-        $3e4edb8379ebf8a3$var$video_player.onpause = function() {
+        $5535d7a9ff238efe$var$video_player.onpause = function() {
             document.getElementById("message").style.top = "-1000px";
-            $3e4edb8379ebf8a3$var$video_status = "paused";
-            (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$var$toTime(t), "");
+            $5535d7a9ff238efe$var$video_status = "paused";
+            (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t), "");
         };
         return;
     }
@@ -15613,30 +15613,30 @@ function $3e4edb8379ebf8a3$var$open_url() {
     if (document.activeElement.getAttribute("data-media") == "youtube") {
         var onPlayerStateChange = function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
-                $3e4edb8379ebf8a3$var$youtube_status = "playing";
-                (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$var$toTime(t1), "");
+                $5535d7a9ff238efe$var$youtube_status = "playing";
+                (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t1), "");
             }
-            if (event.data == YT.PlayerState.PAUSED) $3e4edb8379ebf8a3$var$youtube_status = "paused";
-            $3e4edb8379ebf8a3$var$youtube_time = setInterval(function() {
-                var t1 = $3e4edb8379ebf8a3$var$youtube_player.getDuration() - $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime();
-                var percent = $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime() / $3e4edb8379ebf8a3$var$youtube_player.getDuration() * 100;
+            if (event.data == YT.PlayerState.PAUSED) $5535d7a9ff238efe$var$youtube_status = "paused";
+            $5535d7a9ff238efe$var$youtube_time = setInterval(function() {
+                var t1 = $5535d7a9ff238efe$var$youtube_player.getDuration() - $5535d7a9ff238efe$var$youtube_player.getCurrentTime();
+                var percent = $5535d7a9ff238efe$var$youtube_player.getCurrentTime() / $5535d7a9ff238efe$var$youtube_player.getDuration() * 100;
                 document.getElementById("progress-bar").style.display = "block";
                 document.querySelector("div#progress-bar div").style.width = percent + "%";
-                if ($3e4edb8379ebf8a3$var$youtube_status == "playing") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$var$toTime(t1), "");
-                if ($3e4edb8379ebf8a3$var$youtube_status == "paused") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$var$toTime(t1), "");
+                if ($5535d7a9ff238efe$var$youtube_status == "playing") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t1), "");
+                if ($5535d7a9ff238efe$var$youtube_status == "paused") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t1), "");
             }, 1000);
         };
         var onPlayerReady = function onPlayerReady(event) {
             event.target.playVideo();
             document.getElementById("message").style.top = "-1000px";
         };
-        (0, $fa0566b078e52ad5$export$cf7ee0e0d20a7077)();
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "youtube";
-        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+        (0, $987aec5199ae6065$export$cf7ee0e0d20a7077)();
+        $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "youtube";
+        (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
         document.getElementById("message").style.top = "0px";
         document.getElementById("message-inner").innerText = "please wait ";
         document.getElementById("youtube-player").style.display = "block";
-        $3e4edb8379ebf8a3$var$youtube_player = new YT.Player("iframe-wrapper", {
+        $5535d7a9ff238efe$var$youtube_player = new YT.Player("iframe-wrapper", {
             videoId: document.activeElement.getAttribute("data-youtube-id"),
             events: {
                 onReady: onPlayerReady,
@@ -15650,29 +15650,30 @@ function $3e4edb8379ebf8a3$var$open_url() {
 /////////////////
 //show article list
 //////////////////
-var $3e4edb8379ebf8a3$var$show_article_list = function show_article_list() {
+var $5535d7a9ff238efe$var$show_article_list = function show_article_list() {
     document.querySelector("div#video-player").style.display = "none";
     document.getElementById("audio-player").style.display = "none";
+    //document.querySelector("#audio-title").style.display = "none";
     document.querySelector("div#youtube-player").style.display = "none";
     document.getElementById("progress-bar").style.display = "none";
     document.querySelector("div#settings").style.display = "none";
     document.querySelector("div#options").style.display = "none";
     document.querySelector("div#news-feed div#news-feed-list").style.overflow = "hidden";
     document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
-    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
-    if ($3e4edb8379ebf8a3$var$youtube_player) {
-        $3e4edb8379ebf8a3$var$youtube_player.stopVideo();
-        $3e4edb8379ebf8a3$var$youtube_player.destroy();
-        $3e4edb8379ebf8a3$var$youtube_player = "";
-        clearInterval($3e4edb8379ebf8a3$var$youtube_time);
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
+    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
+    if ($5535d7a9ff238efe$var$youtube_player) {
+        $5535d7a9ff238efe$var$youtube_player.stopVideo();
+        $5535d7a9ff238efe$var$youtube_player.destroy();
+        $5535d7a9ff238efe$var$youtube_player = "";
+        clearInterval($5535d7a9ff238efe$var$youtube_time);
     }
-    $3e4edb8379ebf8a3$var$video.src = "";
-    $3e4edb8379ebf8a3$var$article_array[$3e4edb8379ebf8a3$var$tab_index];
+    $5535d7a9ff238efe$var$video.src = "";
+    $5535d7a9ff238efe$var$article_array[$5535d7a9ff238efe$var$tab_index];
     document.querySelector("div#youtube-player iframe").setAttribute("src", "");
-    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode) (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("sleep", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
+    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode) (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("sleep", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
     //show hide channels division
-    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.panel == "channels") document.querySelectorAll("div.division").forEach(function(index, key) {
+    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.panel == "channels") document.querySelectorAll("div.division").forEach(function(index, key) {
         document.querySelectorAll("div.division")[key].style.display = "block";
         document.querySelectorAll("div.division")[key].style.background = "black";
     });
@@ -15688,8 +15689,8 @@ var $3e4edb8379ebf8a3$var$show_article_list = function show_article_list() {
     }
     elem = document.querySelectorAll("div.summary");
     for(var i1 = 0; i1 < elem.length; i1++)elem[i1].style.display = "none";
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "article-list";
-    document.querySelector("[data-id='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").focus();
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "article-list";
+    document.querySelector("[data-id='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").focus();
     document.activeElement.classList.remove("view");
     var rect = document.activeElement.getBoundingClientRect();
     var elY = rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
@@ -15698,30 +15699,30 @@ var $3e4edb8379ebf8a3$var$show_article_list = function show_article_list() {
         top: elY - window.innerHeight / 2,
         behavior: "smooth"
     });
-    $3e4edb8379ebf8a3$var$tab_index = document.activeElement.getAttribute("tabIndex");
-    $3e4edb8379ebf8a3$var$video.src = "";
-    clearInterval($3e4edb8379ebf8a3$var$video_time);
+    $5535d7a9ff238efe$var$tab_index = document.activeElement.getAttribute("tabIndex");
+    $5535d7a9ff238efe$var$video.src = "";
+    clearInterval($5535d7a9ff238efe$var$video_time);
 };
-var $3e4edb8379ebf8a3$var$show_feed_download_list = function show_feed_download_list() {
-    $3e4edb8379ebf8a3$var$tab_index = 0;
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "<img src='assets/icons/pencil.svg'>", "");
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "download-list";
+var $5535d7a9ff238efe$var$show_feed_download_list = function show_feed_download_list() {
+    $5535d7a9ff238efe$var$tab_index = 0;
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "<img src='assets/icons/pencil.svg'>", "");
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "download-list";
     document.getElementById("feed-download-list").style.display = "block";
     document.getElementById("options").style.display = "none";
     document.querySelector("div#feed-download-list div:first-child").focus();
     document.querySelectorAll("#feed-download-list input").forEach(function(e) {
         e.addEventListener("change", function() {
-            $3e4edb8379ebf8a3$var$feed_download_list.forEach(function(f) {
+            $5535d7a9ff238efe$var$feed_download_list.forEach(function(f) {
                 if (f.url == e.getAttribute("data-url")) {
                     f.amount = e.value;
                     //save list
-                    localStorage.setItem("feed_download_list", JSON.stringify($3e4edb8379ebf8a3$var$feed_download_list));
+                    localStorage.setItem("feed_download_list", JSON.stringify($5535d7a9ff238efe$var$feed_download_list));
                 }
             });
         });
     });
 };
-var $3e4edb8379ebf8a3$var$focus_after_selection = function focus_after_selection() {
+var $5535d7a9ff238efe$var$focus_after_selection = function focus_after_selection() {
     if (document.querySelectorAll(".select-box") == null) return false;
     document.querySelectorAll(".select-box").forEach(function(e) {
         e.addEventListener("blur", function(k) {
@@ -15732,127 +15733,144 @@ var $3e4edb8379ebf8a3$var$focus_after_selection = function focus_after_selection
     });
 };
 //settings view
-var $3e4edb8379ebf8a3$var$show_settings = function show_settings() {
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
-    (0, $e9640ea827150915$export$49927c207fac7a54)();
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+var $5535d7a9ff238efe$var$show_settings = function show_settings() {
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
+    (0, $011f805697d8f593$export$49927c207fac7a54)();
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
     document.querySelectorAll("div#settings .item").forEach(function(e, index) {
         if (e.style.display != "none") e.setAttribute("tabindex", index);
     });
-    $3e4edb8379ebf8a3$var$tab_index = 0;
+    $5535d7a9ff238efe$var$tab_index = 0;
     document.getElementById("top-bar").style.display = "none";
     document.getElementById("settings").style.display = "block";
     document.getElementById("settings").children[0].focus();
-    (0, $6d3f4b507512327e$export$99c802f9c0aea792)("opml", $3e4edb8379ebf8a3$var$list_files_callback);
-    $3e4edb8379ebf8a3$var$focus_after_selection();
+    (0, $162001cafa2b40fd$export$99c802f9c0aea792)("opml", $5535d7a9ff238efe$var$list_files_callback);
+    $5535d7a9ff238efe$var$focus_after_selection();
 };
 //options view
-var $3e4edb8379ebf8a3$var$open_options = function open_options() {
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
-    $3e4edb8379ebf8a3$var$tab_index = 0;
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "options";
+var $5535d7a9ff238efe$var$open_options = function open_options() {
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+    $5535d7a9ff238efe$var$tab_index = 0;
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "options";
     document.getElementById("options").style.display = "block";
     document.querySelectorAll("div#options div")[0].focus();
 };
-var $3e4edb8379ebf8a3$var$start_options = function start_options() {
-    if (document.activeElement.getAttribute("data-function") == "unread") $3e4edb8379ebf8a3$var$mark_as_read(false);
-    if (document.activeElement.getAttribute("data-function") == "sleepmode") $3e4edb8379ebf8a3$var$sleep_mode();
-    if (document.activeElement.getAttribute("data-function") == "reload") $3e4edb8379ebf8a3$var$reload();
-    if (document.activeElement.getAttribute("data-function") == "download-list") $3e4edb8379ebf8a3$var$show_feed_download_list();
-    if (document.activeElement.getAttribute("data-function") == "sort-by-name") $3e4edb8379ebf8a3$var$sort_tab("string");
-    if (document.activeElement.getAttribute("data-function") == "sort-by-date") $3e4edb8379ebf8a3$var$sort_tab("number");
+var $5535d7a9ff238efe$var$start_options = function start_options() {
+    if (document.activeElement.getAttribute("data-function") == "unread") $5535d7a9ff238efe$var$mark_as_read(false);
+    if (document.activeElement.getAttribute("data-function") == "sleepmode") $5535d7a9ff238efe$var$sleep_mode();
+    if (document.activeElement.getAttribute("data-function") == "reload") $5535d7a9ff238efe$var$reload();
+    if (document.activeElement.getAttribute("data-function") == "download-list") $5535d7a9ff238efe$var$show_feed_download_list();
+    if (document.activeElement.getAttribute("data-function") == "sort-by-name") $5535d7a9ff238efe$var$sort_tab("string");
+    if (document.activeElement.getAttribute("data-function") == "sort-by-date") $5535d7a9ff238efe$var$sort_tab("number");
     if (document.activeElement.getAttribute("data-function") == "share") {
-        var k = document.querySelector("[data-id='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-link");
-        (0, $6d3f4b507512327e$export$ed80d9de1d9df928)(k);
+        var k = document.querySelector("[data-id='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-link");
+        (0, $162001cafa2b40fd$export$ed80d9de1d9df928)(k);
     }
-    if (document.activeElement.getAttribute("data-function") == "audio-player") $3e4edb8379ebf8a3$var$open_player(true);
-    if (document.activeElement.getAttribute("data-function") == "volume") {
-        navigator.volumeManager.requestShow();
-        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.volume_status = true;
-        navigator.spatialNavigationEnabled = false;
+    if (document.activeElement.getAttribute("data-function") == "audio-player") {
+        if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id != "") $5535d7a9ff238efe$var$open_player(true);
     }
+    if (document.activeElement.getAttribute("data-function") == "volume") navigator.volumeManager.requestShow();
 };
 //video-player view
-var $3e4edb8379ebf8a3$var$open_video_player = function open_video_player() {
+function $5535d7a9ff238efe$var$reset_animation() {
+    var el = document.getElementById("audio-title");
+    el.style.animation = "none";
+    el.offsetHeight; /* trigger reflow */ 
+    el.style.animation = null;
+}
+var $5535d7a9ff238efe$var$open_video_player = function open_video_player() {
     document.getElementById("video-player").style.display = "block";
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "video";
-    $3e4edb8379ebf8a3$var$video.src = document.activeElement.getAttribute("data-video-url");
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "video";
+    $5535d7a9ff238efe$var$video.src = document.activeElement.getAttribute("data-video-url");
 };
-var $3e4edb8379ebf8a3$var$open_player = function open_player(reopen) {
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+var $5535d7a9ff238efe$var$open_player = function open_player(reopen) {
+    //clear background image and title
+    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", "", "");
+    $5535d7a9ff238efe$var$reset_animation();
+    document.getElementById("image").style.backgroundImage = "url('#')";
+    document.getElementById("audio-title").innerText = "";
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
     document.getElementById("audio-player").style.display = "block";
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "audio-player";
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "audio-player";
     document.getElementById("options").style.display = "none";
-    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id != "") document.querySelector('[data-id="' + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id + '"]').focus();
+    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id != "") document.querySelector('[data-id="' + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id + '"]').focus();
     else document.querySelector('[data-id="' + document.activeElement.getAttribute("data-id") + '"]').focus();
     var audio_cover;
     if (!reopen) {
-        if (document.activeElement.getAttribute("data-image") != "") {
-            audio_cover = document.activeElement.getAttribute("data-image");
-            document.getElementById("image").style.backgroundImage = "url(" + document.activeElement.getAttribute("data-image") + ")";
-        }
-        document.getElementById("audio-title").innerText = document.activeElement.querySelector(".title");
+        /*
+    if (document.activeElement.getAttribute("data-image") != "") {
+      audio_cover = document.activeElement.getAttribute("data-image");
+      document.getElementById("image").style.backgroundImage =
+        "url(" + document.activeElement.getAttribute("data-image") + ")";
+    }
+
+    document.getElementById("audio-title").innerText =
+      document.activeElement.querySelector(".title");
+    */ var w = $5535d7a9ff238efe$var$content_arr.filter(function(i) {
+            if (i.cid == $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id) return i;
+        });
+        document.getElementById("audio-title").innerText = w[0].title;
+        if (w[0].image != "") document.getElementById("image").style.backgroundImage = "url(" + w[0].image + ")";
     }
     if (reopen) {
-        var w = $3e4edb8379ebf8a3$var$content_arr.filter(function(i) {
-            if (i.cid == $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id) return i;
+        var w1 = $5535d7a9ff238efe$var$content_arr.filter(function(i) {
+            if (i.cid == $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id) return i;
         });
-        document.getElementById("image").style.backgroundImage = "url(" + w.image + ")";
-        document.getElementById("audio-title").innerText = w.title;
+        document.getElementById("audio-title").innerText = w1[0].title;
+        if (w1[0].image != "") document.getElementById("image").style.backgroundImage = "url(" + w1[0].image + ")";
     }
-    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", "", "");
 };
 //qr scan listener
-var $3e4edb8379ebf8a3$var$qr_listener = document.querySelector("input#source");
-var $3e4edb8379ebf8a3$var$qrscan = false;
-$3e4edb8379ebf8a3$var$qr_listener.addEventListener("focus", function(event) {
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/E1D8.svg'>", "", "");
-    $3e4edb8379ebf8a3$var$qrscan = true;
+var $5535d7a9ff238efe$var$qr_listener = document.querySelector("input#source");
+var $5535d7a9ff238efe$var$qrscan = false;
+$5535d7a9ff238efe$var$qr_listener.addEventListener("focus", function(event) {
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/E1D8.svg'>", "", "");
+    $5535d7a9ff238efe$var$qrscan = true;
 });
-$3e4edb8379ebf8a3$var$qr_listener.addEventListener("blur", function(event) {
-    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
-    $3e4edb8379ebf8a3$var$qrscan = false;
+$5535d7a9ff238efe$var$qr_listener.addEventListener("blur", function(event) {
+    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+    $5535d7a9ff238efe$var$qrscan = false;
 });
 document.querySelector("#source-local").addEventListener("change", function(event) {
-    localStorage.setItem("source_local", $3e4edb8379ebf8a3$var$_this.value);
-    console.log($3e4edb8379ebf8a3$var$_this.value);
+    localStorage.setItem("source_local", $5535d7a9ff238efe$var$_this.value);
+    console.log($5535d7a9ff238efe$var$_this.value);
 });
-var $3e4edb8379ebf8a3$var$select_box = [];
-var $3e4edb8379ebf8a3$var$list_files_callback = function list_files_callback(filename) {
+var $5535d7a9ff238efe$var$select_box = [];
+var $5535d7a9ff238efe$var$list_files_callback = function list_files_callback(filename) {
     filename;
-    $3e4edb8379ebf8a3$var$select_box.push({
+    $5535d7a9ff238efe$var$select_box.push({
         filename: filename
     });
-    $3e4edb8379ebf8a3$var$renderSB($3e4edb8379ebf8a3$var$select_box);
+    $5535d7a9ff238efe$var$renderSB($5535d7a9ff238efe$var$select_box);
 };
-var $3e4edb8379ebf8a3$var$callback_scan = function callback_scan(url) {
+var $5535d7a9ff238efe$var$callback_scan = function callback_scan(url) {
     document.activeElement.value = url;
-    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
+    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
 };
-var $3e4edb8379ebf8a3$var$stop_scan_callback = function stop_scan_callback() {
+var $5535d7a9ff238efe$var$stop_scan_callback = function stop_scan_callback() {
     document.getElementById("qr-screen").style.display = "none";
 };
 //////////////////////////////
 ////KEYPAD HANDLER////////////
 //////////////////////////////
-var $3e4edb8379ebf8a3$var$longpress = false;
-var $3e4edb8379ebf8a3$var$longpress_timespan = 1000;
-var $3e4edb8379ebf8a3$var$timeout;
-function $3e4edb8379ebf8a3$var$repeat_action(param) {
+var $5535d7a9ff238efe$var$longpress = false;
+var $5535d7a9ff238efe$var$longpress_timespan = 1000;
+var $5535d7a9ff238efe$var$timeout;
+function $5535d7a9ff238efe$var$repeat_action(param) {
     switch(param.key){
         case "0":
             break;
         case "ArrowLeft":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $fa0566b078e52ad5$export$c8243f3943339030)("backward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $987aec5199ae6065$export$c8243f3943339030)("backward");
                 break;
             }
             break;
         case "ArrowRight":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $fa0566b078e52ad5$export$c8243f3943339030)("forward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $987aec5199ae6065$export$c8243f3943339030)("forward");
                 break;
             }
             break;
@@ -15861,35 +15879,35 @@ function $3e4edb8379ebf8a3$var$repeat_action(param) {
 //////////////
 ////LONGPRESS
 /////////////
-function $3e4edb8379ebf8a3$var$longpress_action(param) {
+function $5535d7a9ff238efe$var$longpress_action(param) {
     switch(param.key){
         case "Backspace":
             window.close();
             break;
         case "0":
-            $3e4edb8379ebf8a3$var$reload();
+            $5535d7a9ff238efe$var$reload();
             break;
     }
 }
 ///////////////
 ////SHORTPRESS
 //////////////
-function $3e4edb8379ebf8a3$var$shortpress_action(param) {
+function $5535d7a9ff238efe$var$shortpress_action(param) {
     switch(param.key){
         case "2":
-            $3e4edb8379ebf8a3$var$channel_navigation("up");
+            $5535d7a9ff238efe$var$channel_navigation("up");
             break;
         case "5":
-            $3e4edb8379ebf8a3$var$channel_navigation("down");
+            $5535d7a9ff238efe$var$channel_navigation("down");
             break;
         case "1":
-            $3e4edb8379ebf8a3$var$mark_as_read(false);
+            $5535d7a9ff238efe$var$mark_as_read(false);
             break;
         case "3":
-            $3e4edb8379ebf8a3$var$sleep_mode();
+            $5535d7a9ff238efe$var$sleep_mode();
             break;
         case "7":
-            $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.tabsort == "string" ? $3e4edb8379ebf8a3$var$sort_tab("date") : $3e4edb8379ebf8a3$var$sort_tab("string");
+            $5535d7a9ff238efe$export$471f7ae5c4103ae1.tabsort == "string" ? $5535d7a9ff238efe$var$sort_tab("date") : $5535d7a9ff238efe$var$sort_tab("string");
             break;
         case "Enter":
             if (document.activeElement.classList.contains("input-parent")) {
@@ -15898,152 +15916,148 @@ function $3e4edb8379ebf8a3$var$shortpress_action(param) {
                 return true;
             }
             if (document.activeElement.classList.contains("set-download-amount")) {
-                $3e4edb8379ebf8a3$var$show_feed_download_list();
+                $5535d7a9ff238efe$var$show_feed_download_list();
                 return true;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$show_article();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$show_article();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
-                $3e4edb8379ebf8a3$var$start_options();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
+                $5535d7a9ff238efe$var$start_options();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("loadsettings")) (0, $e9640ea827150915$export$556c64630c31efa4)();
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("export")) (0, $e9640ea827150915$export$875389d4757e8c73)();
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("save")) (0, $e9640ea827150915$export$f5d05897b0194561)();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("loadsettings")) (0, $011f805697d8f593$export$556c64630c31efa4)();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("export")) (0, $011f805697d8f593$export$875389d4757e8c73)();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("save")) (0, $011f805697d8f593$export$f5d05897b0194561)();
             break;
         case "ArrowLeft":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$nav_panels("left");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$nav_panels("left");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $fa0566b078e52ad5$export$c8243f3943339030)("backward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $987aec5199ae6065$export$c8243f3943339030)("backward");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
-                $3e4edb8379ebf8a3$var$youtube_seeking("backward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
+                $5535d7a9ff238efe$var$youtube_seeking("backward");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("backward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("backward");
             break;
         case "ArrowRight":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$nav_panels("right");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$nav_panels("right");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $fa0566b078e52ad5$export$c8243f3943339030)("forward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $987aec5199ae6065$export$c8243f3943339030)("forward");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
-                $3e4edb8379ebf8a3$var$youtube_seeking("forward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
+                $5535d7a9ff238efe$var$youtube_seeking("forward");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("forward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("forward");
             break;
         case "ArrowDown":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
-                $3e4edb8379ebf8a3$var$nav("+1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
+                $5535d7a9ff238efe$var$nav("+1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$nav("+1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$nav("+1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
-                $3e4edb8379ebf8a3$var$nav("+1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
+                $5535d7a9ff238efe$var$nav("+1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "download-list") {
-                $3e4edb8379ebf8a3$var$nav("+1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "download-list") {
+                $5535d7a9ff238efe$var$nav("+1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "select-box") {
-                $3e4edb8379ebf8a3$var$nav("+1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "select-box") {
+                $5535d7a9ff238efe$var$nav("+1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.volume_status === true) {
-                (0, $fa0566b078e52ad5$export$5f8df7563bfeaf14)("down");
-                break;
-            }
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.volume_status) break;
             break;
         case "ArrowUp":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "select-box") {
-                $3e4edb8379ebf8a3$var$nav("-1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "select-box") {
+                $5535d7a9ff238efe$var$nav("-1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
-                $3e4edb8379ebf8a3$var$nav("-1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
+                $5535d7a9ff238efe$var$nav("-1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
-                $3e4edb8379ebf8a3$var$nav("-1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
+                $5535d7a9ff238efe$var$nav("-1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$nav("-1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$nav("-1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "download-list") {
-                $3e4edb8379ebf8a3$var$nav("-1");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "download-list") {
+                $5535d7a9ff238efe$var$nav("-1");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.volume_status === true) {
-                (0, $fa0566b078e52ad5$export$5f8df7563bfeaf14)("up");
-                break;
-            }
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.volume_status) break;
             break;
         case "*":
-            $3e4edb8379ebf8a3$var$open_player(true);
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id != "") $5535d7a9ff238efe$var$open_player(true);
             break;
         case "#":
-            navigator.volumeManager.requestShow();
-            $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.volume_status = true;
-            navigator.spatialNavigationEnabled = false;
+            var m = navigator.volumeManager;
+            m.requestShow();
+            setTimeout(function() {
+                m = null;
+            }, 2000);
             break;
         case "SoftLeft":
         case "Control":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$show_settings();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$show_settings();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && $3e4edb8379ebf8a3$var$qrscan == true) {
-                (0, $da5c51e5866985e6$export$be96fe42679d1b7e)($3e4edb8379ebf8a3$var$callback_scan);
-                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "scan";
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && $5535d7a9ff238efe$var$qrscan == true) {
+                (0, $2b0cc46421a6d3fe$export$be96fe42679d1b7e)($5535d7a9ff238efe$var$callback_scan);
+                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "scan";
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article" && document.activeElement.getAttribute("data-media") == "podcast") {
-                $3e4edb8379ebf8a3$var$open_player(false);
-                (0, $fa0566b078e52ad5$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article" && document.activeElement.getAttribute("data-media") == "podcast") {
+                $5535d7a9ff238efe$var$open_player(false);
+                (0, $987aec5199ae6065$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article") {
-                $3e4edb8379ebf8a3$var$open_url();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article") {
+                $5535d7a9ff238efe$var$open_url();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $fa0566b078e52ad5$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $987aec5199ae6065$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") {
-                if ($3e4edb8379ebf8a3$var$video_status == "paused" || $3e4edb8379ebf8a3$var$video_status == "") {
-                    $3e4edb8379ebf8a3$var$video.play();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") {
+                if ($5535d7a9ff238efe$var$video_status == "paused" || $5535d7a9ff238efe$var$video_status == "") {
+                    $5535d7a9ff238efe$var$video.play();
                     return false;
                 }
-                if ($3e4edb8379ebf8a3$var$video_status == "playing") {
-                    $3e4edb8379ebf8a3$var$video.pause();
+                if ($5535d7a9ff238efe$var$video_status == "playing") {
+                    $5535d7a9ff238efe$var$video.pause();
                     return false;
                 }
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
-                if ($3e4edb8379ebf8a3$var$youtube_status == "paused" || $3e4edb8379ebf8a3$var$youtube_status == "") {
-                    $3e4edb8379ebf8a3$var$youtube_player.playVideo();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
+                if ($5535d7a9ff238efe$var$youtube_status == "paused" || $5535d7a9ff238efe$var$youtube_status == "") {
+                    $5535d7a9ff238efe$var$youtube_player.playVideo();
                     return false;
                 }
-                if ($3e4edb8379ebf8a3$var$youtube_status == "playing") {
-                    $3e4edb8379ebf8a3$var$youtube_player.pauseVideo();
+                if ($5535d7a9ff238efe$var$youtube_status == "playing") {
+                    $5535d7a9ff238efe$var$youtube_player.pauseVideo();
                     return false;
                 }
                 break;
@@ -16051,75 +16065,74 @@ function $3e4edb8379ebf8a3$var$shortpress_action(param) {
             break;
         case "SoftRight":
         case "Alt":
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article") {
-                $3e4edb8379ebf8a3$var$open_options();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article") {
+                $5535d7a9ff238efe$var$open_options();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "scan") {
-                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
-                (0, $da5c51e5866985e6$export$55e6c60a43cc74e2)($3e4edb8379ebf8a3$var$stop_scan_callback);
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "scan") {
+                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
+                (0, $2b0cc46421a6d3fe$export$55e6c60a43cc74e2)($5535d7a9ff238efe$var$stop_scan_callback);
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
-                $3e4edb8379ebf8a3$var$show_article_list();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
+                $5535d7a9ff238efe$var$show_article_list();
                 setTimeout(function() {
-                    $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article");
-                    $3e4edb8379ebf8a3$var$article_array[0].focus();
+                    $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article");
+                    $5535d7a9ff238efe$var$article_array[0].focus();
                 }, 1000);
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $3e4edb8379ebf8a3$var$open_options();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $5535d7a9ff238efe$var$open_options();
                 break;
             }
             break;
         case "EndCall":
             break;
         case "Backspace":
-            console.log($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status);
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "intro") {
-                (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "intro") {
+                (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "scan") {
-                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
-                (0, $da5c51e5866985e6$export$55e6c60a43cc74e2)($3e4edb8379ebf8a3$var$stop_scan_callback);
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "scan") {
+                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
+                (0, $2b0cc46421a6d3fe$export$55e6c60a43cc74e2)($5535d7a9ff238efe$var$stop_scan_callback);
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
-                (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
+                (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article") {
-                $3e4edb8379ebf8a3$var$show_article_list();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article") {
+                $5535d7a9ff238efe$var$show_article_list();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                $3e4edb8379ebf8a3$var$show_article_list();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                $5535d7a9ff238efe$var$show_article_list();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") {
-                $3e4edb8379ebf8a3$var$show_article_list();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") {
+                $5535d7a9ff238efe$var$show_article_list();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
-                $3e4edb8379ebf8a3$var$show_article_list();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
+                $5535d7a9ff238efe$var$show_article_list();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
                 document.getElementById("options").style.display = "none";
-                $3e4edb8379ebf8a3$var$show_article_list();
-                document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").focus();
+                $5535d7a9ff238efe$var$show_article_list();
+                document.querySelector("[data-id ='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").focus();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
-                $3e4edb8379ebf8a3$var$show_article_list();
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
+                $5535d7a9ff238efe$var$show_article_list();
                 break;
             }
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "download-list") {
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "download-list") {
                 document.getElementById("feed-download-list").style.display = "none";
-                $3e4edb8379ebf8a3$var$show_settings();
-                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
+                $5535d7a9ff238efe$var$show_settings();
+                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
                 break;
             }
             break;
@@ -16128,45 +16141,38 @@ function $3e4edb8379ebf8a3$var$shortpress_action(param) {
 /////////////////////////////////
 ////shortpress / longpress logic
 ////////////////////////////////
-function $3e4edb8379ebf8a3$var$handleKeyDown(evt) {
-    if (evt.key === "Backspace" && $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status != "article-list") evt.preventDefault();
-    if (evt.key === "EndCall") {
-        evt.preventDefault();
-        (0, $6d3f4b507512327e$exports.goodbye)();
-    }
+function $5535d7a9ff238efe$var$handleKeyDown(evt) {
+    if (evt.key === "Backspace" && $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status != "article-list") evt.preventDefault();
+    if (evt.key === "EndCall") evt.preventDefault();
     if (!evt.repeat) {
-        $3e4edb8379ebf8a3$var$longpress = false;
-        $3e4edb8379ebf8a3$var$timeout = setTimeout(function() {
-            $3e4edb8379ebf8a3$var$longpress = true;
-            $3e4edb8379ebf8a3$var$longpress_action(evt);
-        }, $3e4edb8379ebf8a3$var$longpress_timespan);
+        $5535d7a9ff238efe$var$longpress = false;
+        $5535d7a9ff238efe$var$timeout = setTimeout(function() {
+            $5535d7a9ff238efe$var$longpress = true;
+            $5535d7a9ff238efe$var$longpress_action(evt);
+        }, $5535d7a9ff238efe$var$longpress_timespan);
     }
     if (evt.repeat) {
         if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
         if (evt.key == "ArrowLeft") {
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") $3e4edb8379ebf8a3$var$youtube_seeking("backward");
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("backward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") $5535d7a9ff238efe$var$youtube_seeking("backward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("backward");
         }
         if (evt.key == "ArrowRight") {
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") $3e4edb8379ebf8a3$var$youtube_seeking("forward");
-            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("forward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") $5535d7a9ff238efe$var$youtube_seeking("forward");
+            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("forward");
         }
-        $3e4edb8379ebf8a3$var$longpress = false;
-        $3e4edb8379ebf8a3$var$repeat_action(evt);
+        $5535d7a9ff238efe$var$longpress = false;
+        $5535d7a9ff238efe$var$repeat_action(evt);
     }
 }
-function $3e4edb8379ebf8a3$var$handleKeyUp(evt) {
+function $5535d7a9ff238efe$var$handleKeyUp(evt) {
     evt.preventDefault();
     if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
-    if (evt.key == "Backspace" && $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status != "article-list" && document.activeElement.tagName == "INPUT") evt.preventDefault();
-    clearTimeout($3e4edb8379ebf8a3$var$timeout);
-    if (!$3e4edb8379ebf8a3$var$longpress) $3e4edb8379ebf8a3$var$shortpress_action(evt);
+    if (evt.key == "Backspace" && $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status != "article-list" && document.activeElement.tagName == "INPUT") evt.preventDefault();
+    clearTimeout($5535d7a9ff238efe$var$timeout);
+    if (!$5535d7a9ff238efe$var$longpress) $5535d7a9ff238efe$var$shortpress_action(evt);
 }
-if ($3e4edb8379ebf8a3$var$debug) window.onerror = function(msg, url, linenumber) {
-    alert("Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber);
-    return true;
-};
-document.addEventListener("keydown", $3e4edb8379ebf8a3$var$handleKeyDown);
-document.addEventListener("keyup", $3e4edb8379ebf8a3$var$handleKeyUp);
+document.addEventListener("keydown", $5535d7a9ff238efe$var$handleKeyDown);
+document.addEventListener("keyup", $5535d7a9ff238efe$var$handleKeyUp);
 
-
+})();

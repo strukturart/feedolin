@@ -392,10 +392,6 @@ export let toaster = function (text, time) {
   }
 };
 
-let add_script = function (script) {
-  document.body.appendChild(document.createElement("script")).src = script;
-};
-
 let toast_q = function (text, time) {
   var x = document.querySelector("div#toast");
   x.innerHTML = queue[0].text;
@@ -467,7 +463,13 @@ export const lazyload = ((_) => {
 
 //filesize
 export function formatFileSize(bytes, decimalPoint) {
-  if (bytes || bytes > 0 || bytes != undefined || bytes != NaN) {
+  if (
+    bytes ||
+    bytes > 0 ||
+    bytes != undefined ||
+    bytes != NaN ||
+    bytes != null
+  ) {
     var k = 1000,
       dm = decimalPoint || 2,
       sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],

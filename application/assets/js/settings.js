@@ -1,5 +1,4 @@
 "use strict";
-import { default_opml } from "../../app.js";
 import { toaster, validate } from "./helper.js";
 
 export let setting = {

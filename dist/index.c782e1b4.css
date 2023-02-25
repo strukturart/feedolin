@@ -534,7 +534,7 @@ div#youtube-player iframe {
 div#bottom-bar {
   z-index: 2000;
   height: 18px;
-  z-index: 6;
+  z-index: 6000;
   min-width: 100vw;
   background: none;
   position: fixed;
@@ -685,9 +685,24 @@ div#count {
   color: #fff !important;
 }
 
+@keyframes bounce {
+  0% {
+    width: 0;
+    height: 0;
+    left: -10px;
+  }
+
+  100% {
+    width: 60%;
+    max-width: 60%;
+    height: auto;
+    left: 0;
+  }
+}
+
 div#audio-player {
   background: var(--color-four);
-  z-index: 50000;
+  z-index: 5;
   display: none;
   position: fixed;
 }
@@ -698,6 +713,7 @@ div#audio-player div#audio-title {
   background: #000;
   padding: 5px;
   font-size: 1.2rem;
+  animation: 1s ease-in-out bounce;
   position: fixed;
   top: 0;
   left: 0;
@@ -721,7 +737,7 @@ div#audio-player div#background-pattern div {
 
 div#progress-bar {
   height: 15px;
-  z-index: 5;
+  z-index: 5000000;
   display: none;
   position: fixed;
   bottom: 20px;
