@@ -11,7 +11,7 @@ import {
   screenlock,
   hashCode,
   goodbye,
-  formatFileSize,
+  formatFileSize
 } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files } from "./assets/js/helper.js";
@@ -22,20 +22,23 @@ import {
   load_settings,
   save_settings,
   export_settings,
-  load_settings_from_file,
+  load_settings_from_file
 } from "./assets/js/settings.js";
 import {
   play_podcast,
   volume_control,
   seeking,
-  stop_player,
+  stop_player
 } from "./assets/js/audio.js";
 
+const dayjs = require("dayjs");
+
+const debug = true;
 let article_array;
-var content_arr = [];
-var k = 0;
-var panels = ["channels"];
-var current_panel = 0;
+let content_arr = [];
+let k = 0;
+let panels = ["channels"];
+let current_panel = 0;
 const parser = new DOMParser();
 
 let video_player = "";
@@ -74,7 +77,6 @@ let item_date_unix = "";
 let item_duration = "";
 let item_type = "";
 let item_filesize = "";
-let item_category = "";
 let item_cid = "";
 let item_image = "";
 let yt_thumbnail = "";
@@ -103,7 +105,7 @@ export let status = {
   audio_status: "play",
   sleepmode: false,
   sort: "number",
-  current_panel: "channels",
+  current_panel: "channels"
 };
 
 let reload = function () {
@@ -155,9 +157,9 @@ if (navigator.mozApps) {
           ad.call("display", {
             navClass: "item",
             tabindex: 9,
-            display: "block",
+            display: "block"
           });
-        },
+        }
       });
     };
     document.head.appendChild(js);
@@ -221,7 +223,15 @@ let load_local_file_opml = function () {
     return false;
   }
 
-  var sdcard = navigator.getDeviceStorage("sdcard");
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
 
   var request = sdcard.get(a);
   request.onerror = function () {
@@ -230,9 +240,9 @@ let load_local_file_opml = function () {
   };
 
   request.onsuccess = function () {
-    var file = this.result;
+    let file = this.result;
 
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onerror = function (event) {
       reader.abort();
     };
@@ -255,7 +265,7 @@ let load_source_opml = function () {
   let source_url = localStorage.getItem("source");
 
   let xhttp = new XMLHttpRequest({
-    mozSystem: true,
+    mozSystem: true
   });
 
   xhttp.open("GET", source_url + "?time=" + nocaching, true);
@@ -297,6 +307,7 @@ setTimeout(() => {
   if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
   if (localStorage["source_local"] == null && localStorage["source"] == null) {
+    console.log("set default opml");
     localStorage.setItem("source", default_opml);
   }
   //get update time; cache || download
@@ -392,7 +403,7 @@ let load_feeds = function (data) {
             url: nested[z].getAttribute("xmlUrl"),
             amount: 5,
             index: index++,
-            channel: nested[z].parentElement.getAttribute("text"),
+            channel: nested[z].parentElement.getAttribute("text")
           });
         }
       }
@@ -422,7 +433,7 @@ let load_feeds = function (data) {
 //////////////////////////////
 //download content////
 //////////////////////////////
-
+let error;
 let rss_fetcher = function (
   param_url,
   param_limit,
@@ -430,7 +441,7 @@ let rss_fetcher = function (
   param_category
 ) {
   var xhttp = new XMLHttpRequest({
-    mozSystem: true,
+    mozSystem: true
   });
 
   xhttp.open("GET", param_url, true);
@@ -442,30 +453,32 @@ let rss_fetcher = function (
   xhttp.addEventListener("error", transferFailed);
   xhttp.addEventListener("loadend", loadEnd);
 
-  function transferFailed() {}
+  function transferFailed() {
+    error = "transferFailed";
+  }
+
+  if (xhttp.status != 200) error = xhttp.status;
 
   xhttp.onload = function () {
     document.getElementById("intro-message").innerText = "loading data";
     if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
       let data = xhttp.response;
 
-      item_image = "";
-      item_summary = "";
-      item_link = "";
-      item_title = "";
-      item_type = "";
-      item_media = "rss";
-      item_duration = "";
-      item_filesize = "";
-      listened = "false";
-      play_track = "false";
-      item_cid = "";
-      item_read = "not-read";
-      item_date = "";
-      startlistened = "";
-      youtube_id = "";
-      yt_thumbnail = "";
-      item_video_url = "";
+      let item_image = "";
+      let item_summary = "";
+      let item_link = "";
+      let item_title = "";
+      let item_type = "";
+      let item_media = "rss";
+      let item_duration = "";
+      let item_filesize = "";
+      let item_download = "";
+      let item_cid = "";
+      let item_date = "";
+      let startlistened = "";
+      let youtube_id = "";
+      let yt_thumbnail = "";
+      let item_video_url = "";
 
       //Channel
       rss_title = data.querySelector("title").textContent || param_channel;
@@ -473,7 +486,7 @@ let rss_fetcher = function (
       param_channel = rss_title;
 
       let p = Number(feed_download_list.length - 1);
-      precent = (100 / p) * k;
+      let precent = (100 / p) * k;
       document.querySelector(
         "div#intro div#loading-progress div div"
       ).style.width = precent + "%";
@@ -483,7 +496,7 @@ let rss_fetcher = function (
       }
 
       //ATOM
-      el = data.querySelectorAll("entry");
+      let el = data.querySelectorAll("entry");
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
@@ -630,6 +643,8 @@ let rss_fetcher = function (
             youtube_id: youtube_id,
             youtube_thumbnail: yt_thumbnail,
             video_url: item_video_url,
+            url: item_download,
+            error: error
           });
         }
       }
@@ -638,7 +653,7 @@ let rss_fetcher = function (
       //RSS
       ///////////
 
-      el = data.querySelectorAll("item");
+      let el = data.querySelectorAll("item");
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
@@ -753,7 +768,7 @@ let rss_fetcher = function (
             read: "not-read",
             start_listened: startlistened,
             youtube_thumbnail: yt_thumbnail,
-            video_url: item_video_url,
+            video_url: item_video_url
           });
         }
       }
@@ -890,7 +905,7 @@ let clean_localstorage = function () {
 function renderHello(arr) {
   var template = document.getElementById("template").innerHTML;
   var rendered = Mustache.render(template, {
-    data: arr,
+    data: arr
   });
   document.querySelector("#news-feed-list").innerHTML = rendered;
 }
@@ -901,7 +916,7 @@ function render_feed_download_list(arr) {
     "feed-download-list-template"
   ).innerHTML;
   var rendered = Mustache.render(template, {
-    data: arr,
+    data: arr
   });
   document.querySelector("#feed-download-list div").innerHTML = rendered;
 }
@@ -910,7 +925,7 @@ function render_feed_download_list(arr) {
 function renderSB(arr) {
   var template = document.getElementById("sb").innerHTML;
   var rendered = Mustache.render(template, {
-    data: arr,
+    data: arr
   });
   document.getElementById("source-local").innerHTML = rendered;
 }
@@ -943,7 +958,7 @@ let tabs = function () {
 
 //build html
 function build() {
-  sort_array(content_arr, "channel", "string");
+  if (content_arr.lenght > 0) sort_array(content_arr, "channel", "string");
   read_articles();
   listened_articles();
   tabs();
@@ -1037,7 +1052,6 @@ let sort_tab = function (type) {
     return false;
   }
 
-  console.log(heroArray, status.current_panel);
   filter_data(status.current_panel);
   //sort
   if (type == "string") {
@@ -1105,7 +1119,7 @@ function nav_panels(left_right) {
     document.activeElement.parentNode.scrollBy({
       left: 0,
       top: elY - window.innerHeight / 2,
-      behavior: "smooth",
+      behavior: "smooth"
     });
   }, 1000);
 
@@ -1177,7 +1191,6 @@ function nav(move) {
   if (move == "-1" && tab_index > 0) {
     tab_index--;
 
-    console.log(document.activeElement.parentElement.id);
     if (document.activeElement.parentElement.id == "KaiOsAds-Wrapper")
       open_options();
 
@@ -1192,7 +1205,7 @@ function nav(move) {
   document.activeElement.parentNode.scrollBy({
     left: 0,
     top: elY - window.innerHeight / 2,
-    behavior: "smooth",
+    behavior: "smooth"
   });
 }
 
@@ -1207,11 +1220,6 @@ let channel_navigation = function (direction) {
     // If the sibling matches our selector, use it
     // If not, jump to the next sibling and continue the loop
     while (sibling) {
-      console.log(
-        sibling.getAttribute("data-channel") +
-          "/" +
-          el.getAttribute("data-channel")
-      );
       if (
         sibling.getAttribute("data-channel") != el.getAttribute("data-channel")
       ) {
@@ -1225,7 +1233,7 @@ let channel_navigation = function (direction) {
         document.activeElement.parentNode.scrollBy({
           left: 0,
           top: elY - window.innerHeight / 2,
-          behavior: "smooth",
+          behavior: "smooth"
         });
         return sibling;
       }
@@ -1253,7 +1261,7 @@ let channel_navigation = function (direction) {
         document.activeElement.parentNode.scrollBy({
           left: 0,
           top: elY - window.innerHeight / 2,
-          behavior: "smooth",
+          behavior: "smooth"
         });
         return sibling;
       }
@@ -1285,8 +1293,6 @@ let show_article = function () {
   document.querySelector("div#audio-player").style.display = "none";
   document.getElementById("settings").style.display = "none";
   document.getElementById("options").style.display = "none";
-
-  link_type = document.activeElement.getAttribute("data-audio-type");
 
   let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
@@ -1338,11 +1344,12 @@ let toTime = function (seconds) {
     n = "";
   } else {
     try {
+      console.log(dayjs(seconds).format("hh:mm:ss"));
       var date = new Date();
       date.setSeconds(seconds);
       n = date.toISOString().substr(11, 8);
-    } catch (error) {
-      console.log(seconds);
+    } catch (e) {
+      console.log(e);
       n = seconds;
     }
   }
@@ -1454,8 +1461,8 @@ function open_url() {
       videoId: document.activeElement.getAttribute("data-youtube-id"),
       events: {
         onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange,
-      },
+        onStateChange: onPlayerStateChange
+      }
     });
     let t;
 
@@ -1470,7 +1477,7 @@ function open_url() {
       }
 
       youtube_time = setInterval(function () {
-        t = youtube_player.getDuration() - youtube_player.getCurrentTime();
+        let t = youtube_player.getDuration() - youtube_player.getCurrentTime();
 
         let percent =
           (youtube_player.getCurrentTime() / youtube_player.getDuration()) *
@@ -1575,7 +1582,7 @@ let show_article_list = function () {
   document.activeElement.parentNode.scrollBy({
     left: 0,
     top: elY - window.innerHeight / 2,
-    behavior: "smooth",
+    behavior: "smooth"
   });
 
   tab_index = document.activeElement.getAttribute("tabIndex");
@@ -1726,20 +1733,30 @@ let open_player = function (reopen) {
       .focus();
   }
 
+  let audio_cover;
   if (!reopen) {
     if (document.activeElement.getAttribute("data-image") != "") {
       audio_cover = document.activeElement.getAttribute("data-image");
       document.getElementById("image").style.backgroundImage =
         "url(" + document.activeElement.getAttribute("data-image") + ")";
-    } else {
-      document.getElementById("image").style.backgroundImage = "url(null)";
     }
+
+    document.getElementById("audio-title").innerText =
+      document.activeElement.querySelector(".title");
   }
 
   if (reopen) {
+    let w = content_arr.filter(function (i) {
+      if (i.cid == status.active_audio_element_id) {
+        return i;
+      }
+    });
+
     document.getElementById("image").style.backgroundImage =
-      "url(" + audio_cover + ")";
+      "url(" + w.image + ")";
+    document.getElementById("audio-title").innerText = w.title;
   }
+
   top_bar("", "", "");
 };
 
@@ -2108,7 +2125,6 @@ function shortpress_action(param) {
       break;
 
     case "EndCall":
-      goodbye();
       break;
 
     case "Backspace":
@@ -2241,6 +2257,15 @@ function handleKeyUp(evt) {
   if (!longpress) {
     shortpress_action(evt);
   }
+}
+
+if (debug) {
+  window.onerror = function (msg, url, linenumber) {
+    alert(
+      "Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber
+    );
+    return true;
+  };
 }
 
 document.addEventListener("keydown", handleKeyDown);

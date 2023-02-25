@@ -33,7 +33,7 @@ export let notify = function (
   var options = {
     body: param_text,
     silent: param_silent,
-    requireInteraction: requireInteraction,
+    requireInteraction: requireInteraction
   };
 
   // Let's check if the browser supports notifications
@@ -58,8 +58,6 @@ export let notify = function (
           if (document.visibilityState === "visible") {
             // The tab has become visible so clear the now-stale Notification.
             notification.close();
-
-            toaster("yes", 2000);
           }
         });
       }
@@ -127,8 +125,8 @@ export let share = function (url) {
     name: "share",
     data: {
       type: "url",
-      url: url,
-    },
+      url: url
+    }
   });
 
   activity.onsuccess = function () {};
@@ -149,8 +147,8 @@ export function check_iconnection() {
 }
 
 function delete_file(filename) {
-  var sdcard = navigator.getDeviceStorages("sdcard");
-  var request = sdcard[1].delete(filename);
+  var sdcard = navigator.getDeviceStorage("sdcard");
+  var request = sdcard.delete(filename);
 
   request.onsuccess = function () {
     //toaster("File deleted", 2000);
@@ -162,8 +160,16 @@ function delete_file(filename) {
 }
 
 export function get_file(filename) {
-  var sdcard = navigator.getDeviceStorages("sdcard");
-  var request = sdcard[1].get(filename);
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
+  var request = sdcard.get(filename);
 
   request.onsuccess = function () {
     var file = this.result;
@@ -176,9 +182,17 @@ export function get_file(filename) {
 }
 
 export function write_file(data, filename) {
-  var sdcard = navigator.getDeviceStorages("sdcard");
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
   var file = new Blob([data], {
-    type: "text/plain",
+    type: "text/plain"
   });
   var request = sdcard[1].addNamed(file, filename);
 
@@ -219,8 +233,16 @@ export let sort_array = function (arr, item_key, type) {
 };
 
 export function add_source(url, limit, categorie, channel) {
-  let sdcard = navigator.getDeviceStorages("sdcard");
-  let request = sdcard[1].get("rss-reader.json");
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
+  let request = sdcard.get("rss-reader.json");
 
   request.onsuccess = function () {
     let fileget = this.result;
@@ -232,7 +254,7 @@ export function add_source(url, limit, categorie, channel) {
       try {
         data = JSON.parse(event.target.result);
       } catch (e) {
-        toaster("Json is not valid", 2000);
+        toaster("JSON is not valid", 2000);
         return false;
       }
 
@@ -240,20 +262,20 @@ export function add_source(url, limit, categorie, channel) {
         categorie: categorie,
         url: url,
         limit: limit,
-        channel: channel,
+        channel: channel
       });
 
       let extData = JSON.stringify(data);
 
-      var request_del = sdcard[1].delete("rss-reader.json");
+      var request_del = sdcard.delete("rss-reader.json");
 
       request_del.onsuccess = function () {
         //toaster('File successfully removed.', 2000);
 
         let file = new Blob([extData], {
-          type: "application/json",
+          type: "application/json"
         });
-        let requestAdd = sdcard[1].addNamed(file, "rss-reader.json");
+        let requestAdd = sdcard.addNamed(file, "rss-reader.json");
 
         requestAdd.onsuccess = function () {
           toaster(
@@ -281,32 +303,62 @@ export function add_source(url, limit, categorie, channel) {
 }
 
 export let list_files = function (filetype, callback) {
-  console.log("hey");
-  if (!navigator.getDeviceStorage) return false;
-  var d = navigator.getDeviceStorage("sdcard");
+  if ("b2g" in navigator) {
+    try {
+      var sdcard = navigator.b2g.getDeviceStorage("sdcard");
 
-  var cursor = d.enumerate();
+      var iterable = sdcard.enumerate();
+      var iterFiles = iterable.values();
+      function next(_files) {
+        _files
+          .next()
+          .then((file) => {
+            if (!file.done) {
+              let n = file.value.name.split(".");
+              let file_type = n[n.length - 1];
 
-  cursor.onsuccess = function () {
-    if (!this.result) {
-      console.log("finished");
-    }
-    if (cursor.result.name !== null) {
-      var file = cursor.result;
-      let n = file.name.split(".");
-      let file_type = n[n.length - 1];
-
-      if (file_type == filetype) {
-        callback(file.name);
+              if (file_type == filetype) {
+                callback(file.value.name);
+              }
+              next(_files);
+            }
+          })
+          .catch(() => {
+            next(_files);
+          });
       }
-      this.continue();
+      next(iterFiles);
+    } catch (e) {
+      console.log(e);
     }
-  };
+  }
+  try {
+  } catch (e) {
+    var d = navigator.getDeviceStorage("sdcard");
 
-  cursor.onerror = function () {
-    console.warn("No file found: " + this.error);
-    callback("error");
-  };
+    var cursor = d.enumerate();
+
+    cursor.onsuccess = function () {
+      if (!this.result) {
+        console.log("finished");
+      }
+      if (cursor.result.name !== null) {
+        var file = cursor.result;
+        let n = file.name.split(".");
+        let file_type = n[n.length - 1];
+
+        if (file_type == filetype) {
+          callback(file.name);
+        }
+        this.continue();
+      }
+    };
+
+    cursor.onerror = function () {
+      console.warn("No file found: " + this.error);
+      callback("error");
+    };
+  }
 };
 
 export function validate(url) {
@@ -371,7 +423,7 @@ export let screenlock = function (stat) {
     lock = window.navigator.requestWakeLock("screen");
     lock.onsuccess = function () {};
     lock.onerror = function () {
-      alert("An error occurred: " + this.error.name);
+      console.log("An error occurred: " + this.error.name);
     };
   }
 
@@ -424,42 +476,19 @@ export function formatFileSize(bytes, decimalPoint) {
   }
 }
 
-//goodbye
-
-export let goodbye = function () {
-  document.getElementById("goodbye").style.display = "block";
-  bottom_bar("", "", "");
-
-  if (localStorage.clickcount) {
-    localStorage.clickcount = Number(localStorage.clickcount) + 1;
-  } else {
-    localStorage.clickcount = 1;
-  }
-
-  if (localStorage.clickcount == 300000) {
-    message();
-  } else {
-    document.getElementById("ciao").style.display = "block";
-    setTimeout(function () {
-      window.close();
-    }, 4000);
-  }
-
-  function message() {
-    document.getElementById("donation").style.display = "block";
-    setTimeout(function () {
-      localStorage.clickcount = 1;
-
-      window.close();
-    }, 6000);
-  }
-};
-
 //delete file
 export function deleteFile(storage, path, notification) {
-  let sdcard = navigator.getDeviceStorages("sdcard");
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
 
-  let requestDel = sdcard[storage].delete(path);
+  let requestDel = sdcard.delete(path);
 
   requestDel.onsuccess = function () {
     if (notification == "notification") {

@@ -24,7 +24,7 @@ export let setting = {
 
   local_file: false,
   wwww_file: false,
-  ads: false,
+  ads: false
 };
 
 export let load_settings = function () {
@@ -84,7 +84,15 @@ export let save_settings = function () {
 };
 
 export let load_settings_from_file = function () {
-  const sdcard = navigator.getDeviceStorage("sdcard");
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
   var file = sdcard.get("feedolin_settings.json");
 
   toaster("search setting file", 2000);
@@ -127,7 +135,15 @@ export let load_settings_from_file = function () {
 };
 
 export let export_settings = function () {
-  var sdcard = navigator.getDeviceStorage("sdcard");
+  let sdcard;
+  if ("b2g" in navigator) {
+    sdcard = navigator.b2g.getDeviceStorage("sdcard");
+  }
+  try {
+    sdcard = navigator.getDeviceStorage("sdcard");
+  } catch (e) {
+    console.log(e);
+  }
 
   var request_del = sdcard.delete("feedolin_settings.json");
   request_del.onsuccess = function () {};
@@ -135,7 +151,7 @@ export let export_settings = function () {
   setTimeout(function () {
     let data = JSON.stringify(setting);
     var file = new Blob(["[" + data + "]"], {
-      type: "application/json",
+      type: "application/json"
     });
 
     var request = sdcard.addNamed(file, "feedolin_settings.json");
