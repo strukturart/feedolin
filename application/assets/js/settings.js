@@ -1,5 +1,5 @@
 "use strict";
-import { toaster, validate } from "./helper.js";
+import { toaster, validate, side_toaster } from "./helper.js";
 
 export let setting = {
   sleep_time:
@@ -73,12 +73,7 @@ export let save_settings = function () {
     document.getElementById("sleep-mode").value
   );
 
-  toaster(
-    "saved, the settings will be active the next time the app is started.",
-    5000
-  );
-
-  toaster("saved successfully", 2000);
+  side_toaster("saved successfully", 2000);
   return true;
 };
 
@@ -94,7 +89,7 @@ export let load_settings_from_file = function () {
   }
   var file = sdcard.get("feedolin_settings.json");
 
-  toaster("search setting file", 2000);
+  side_toaster("search setting file", 2000);
 
   file.onerror = function () {
     toaster("error", 2000);
@@ -105,8 +100,6 @@ export let load_settings_from_file = function () {
   };
 
   file.onsuccess = function () {
-    toaster(file.result, 2000);
-
     let reader = new FileReader();
     reader.readAsText(file.result);
 
@@ -123,7 +116,7 @@ export let load_settings_from_file = function () {
 
       toaster(
         "the settings were loaded from the file, if you want to use them permanently don't forget to save.",
-        3000
+        6000
       );
 
       reader.onerror = function () {
@@ -157,7 +150,7 @@ export let export_settings = function () {
 
     request.onsuccess = function () {
       var name = this.result;
-      toaster("settings exported, feedolin_settings.json", 5000);
+      side_toaster("settings exported", 5000);
     };
 
     request.onerror = function () {

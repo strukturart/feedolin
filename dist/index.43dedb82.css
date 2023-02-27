@@ -483,6 +483,55 @@ div#news-feed div#news-feed-list article[data-listened="listened"] div.listened-
   position: relative;
 }
 
+.loading-spinner {
+  width: 80px;
+  height: 80px;
+  z-index: 5000000;
+  margin-top: -40px;
+  margin-left: -40px;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.loading-spinner div {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 64px;
+  height: 64px;
+  border: 8px solid rgba(0, 0, 0, 0);
+  border-top-color: #ee1b1b;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  margin: 8px;
+  animation: 1.2s cubic-bezier(.5, 0, .5, 1) infinite lds-ring;
+  display: block;
+  position: absolute;
+}
+
+.loading-spinner div:nth-child(1) {
+  animation-delay: -.45s;
+}
+
+.loading-spinner div:nth-child(2) {
+  animation-delay: -.3s;
+}
+
+.loading-spinner div:nth-child(3) {
+  animation-delay: -.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 div#video-player {
   z-index: 5;
   min-height: 100vh;

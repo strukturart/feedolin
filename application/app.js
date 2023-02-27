@@ -21,9 +21,7 @@ import {
 } from "./assets/js/settings.js";
 import { play_podcast, seeking, stop_player } from "./assets/js/audio.js";
 
-const dayjs = require("dayjs");
-
-const debug = true;
+const debug = false;
 let article_array;
 let content_arr = [];
 let k = 0;
@@ -40,15 +38,7 @@ let youtube_status = "";
 let video = document.getElementById("videoplayer");
 let source_url_cleaner = ["$$", "mm"];
 
-if (debug) {
-  window.onerror = function (msg, url, linenumber) {
-    alert(
-      "Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber
-    );
-    return true;
-  };
-}
-//screenlock("lock");
+screenlock("lock");
 
 //store all used article ids
 var all_cid = [];
@@ -498,7 +488,8 @@ let rss_fetcher = function (
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
-          item_title = el[i].querySelector("title").innerHTML;
+          item_title = el[i].querySelector("title").innerText;
+
           item_cid = hashCode(item_title);
 
           var elem = el[i].querySelector("summary");
@@ -985,7 +976,7 @@ let build = function () {
   article_array = document.querySelectorAll("article");
   article_array[0].focus();
 
-  //screenlock("unlock");
+  screenlock("unlock");
 };
 
 //set tabindex
@@ -1406,14 +1397,12 @@ function open_url() {
     }
 
     video_player.onloadedmetadata = function () {
-      document.getElementById("message").style.top = "0px";
-      document.getElementById("message-inner").innerText = "please wait ";
+      document.querySelector(".loading-spinner").style.display = "block";
     };
 
     video_player.onplaying = function () {
       stop_player(); //stop audio player
 
-      document.getElementById("message").style.top = "-1000px";
       video_status = "playing";
 
       video_time = setInterval(function () {
@@ -1435,7 +1424,6 @@ function open_url() {
     };
 
     video_player.onpause = function () {
-      document.getElementById("message").style.top = "-1000px";
       video_status = "paused";
       bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
     };
@@ -1449,9 +1437,7 @@ function open_url() {
     stop_player();
     status.window_status = "youtube";
     bottom_bar("", "", "");
-
-    document.getElementById("message").style.top = "0px";
-    document.getElementById("message-inner").innerText = "please wait ";
+    document.querySelector(".loading-spinner").style.display = "block";
     document.getElementById("youtube-player").style.display = "block";
 
     youtube_player = new YT.Player("iframe-wrapper", {
@@ -1461,41 +1447,49 @@ function open_url() {
         onStateChange: onPlayerStateChange
       }
     });
+
+    let tt = function () {
+      youtube_time = setInterval(function () {
+        if (youtube_player.getDuration() && youtube_player.getCurrentTime()) {
+          let t =
+            youtube_player.getDuration() - youtube_player.getCurrentTime();
+
+          let percent =
+            (youtube_player.getCurrentTime() / youtube_player.getDuration()) *
+            100;
+          document.getElementById("progress-bar").style.display = "block";
+
+          document.querySelector("div#progress-bar div").style.width =
+            percent + "%";
+
+          if (youtube_status == "playing") {
+            bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+          }
+          if (youtube_status == "paused") {
+            bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+          }
+        }
+      }, 1000);
+    };
     let t;
 
     function onPlayerStateChange(event) {
+      console.log(event.data);
       if (event.data == YT.PlayerState.PLAYING) {
         youtube_status = "playing";
         bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+        tt();
       }
 
       if (event.data == YT.PlayerState.PAUSED) {
         youtube_status = "paused";
+        clearInterval(youtube_time);
       }
-
-      youtube_time = setInterval(function () {
-        let t = youtube_player.getDuration() - youtube_player.getCurrentTime();
-
-        let percent =
-          (youtube_player.getCurrentTime() / youtube_player.getDuration()) *
-          100;
-        document.getElementById("progress-bar").style.display = "block";
-
-        document.querySelector("div#progress-bar div").style.width =
-          percent + "%";
-
-        if (youtube_status == "playing") {
-          bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
-        }
-        if (youtube_status == "paused") {
-          bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
-        }
-      }, 1000);
     }
 
     function onPlayerReady(event) {
       event.target.playVideo();
-      document.getElementById("message").style.top = "-1000px";
+      document.querySelector(".loading-spinner").style.display = "none";
     }
 
     return;
@@ -1508,7 +1502,6 @@ function open_url() {
 let show_article_list = function () {
   document.querySelector("div#video-player").style.display = "none";
   document.getElementById("audio-player").style.display = "none";
-  //document.querySelector("#audio-title").style.display = "none";
 
   document.querySelector("div#youtube-player").style.display = "none";
   document.getElementById("progress-bar").style.display = "none";
@@ -1724,67 +1717,33 @@ let open_player = function (reopen) {
   top_bar("", "", "");
   reset_animation();
 
-  document.getElementById("image").style.backgroundImage = "url('#')";
+  document.getElementById("image").style.backgroundImage =
+    "url('/assets/image/fallback.png')";
   document.getElementById("audio-title").innerText = "";
-
-  status.active_element_id = document.activeElement.getAttribute("data-id");
-
   document.getElementById("audio-player").style.display = "block";
   status.window_status = "audio-player";
   document.getElementById("options").style.display = "none";
-  if (status.active_audio_element_id != "") {
-    document
-      .querySelector('[data-id="' + status.active_audio_element_id + '"]')
-      .focus();
-  } else {
-    document
-      .querySelector(
-        '[data-id="' + document.activeElement.getAttribute("data-id") + '"]'
-      )
-      .focus();
-  }
 
-  let audio_cover;
   if (!reopen) {
-    /*
-    if (document.activeElement.getAttribute("data-image") != "") {
-      audio_cover = document.activeElement.getAttribute("data-image");
-      document.getElementById("image").style.backgroundImage =
-        "url(" + document.activeElement.getAttribute("data-image") + ")";
+    console.log("new");
+    status.active_element_id = document.activeElement.getAttribute("data-id");
+    status.active_audio_element_id = status.active_element_id;
+  }
+
+  let w = content_arr.filter(function (i) {
+    if (i.cid == status.active_audio_element_id) {
+      return i;
     }
+  });
 
-    document.getElementById("audio-title").innerText =
-      document.activeElement.querySelector(".title");
-    */
-
-    let w = content_arr.filter(function (i) {
-      if (i.cid == status.active_audio_element_id) {
-        return i;
-      }
-    });
-
+  setTimeout(function () {
     document.getElementById("audio-title").innerText = w[0].title;
 
     if (w[0].image != "") {
       document.getElementById("image").style.backgroundImage =
         "url(" + w[0].image + ")";
     }
-  }
-
-  if (reopen) {
-    let w = content_arr.filter(function (i) {
-      if (i.cid == status.active_audio_element_id) {
-        return i;
-      }
-    });
-
-    document.getElementById("audio-title").innerText = w[0].title;
-
-    if (w[0].image != "") {
-      document.getElementById("image").style.backgroundImage =
-        "url(" + w[0].image + ")";
-    }
-  }
+  }, 500);
 };
 
 //qr scan listener
@@ -2189,7 +2148,11 @@ function shortpress_action(param) {
       }
 
       if (status.window_status == "youtube") {
-        show_article_list();
+        clearInterval(youtube_time);
+        setTimeout(() => {
+          show_article_list();
+        }, 1000);
+
         break;
       }
 
@@ -2288,3 +2251,12 @@ function handleKeyUp(evt) {
 
 document.addEventListener("keydown", handleKeyDown);
 document.addEventListener("keyup", handleKeyUp);
+
+if (debug) {
+  window.onerror = function (msg, url, linenumber) {
+    alert(
+      "Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber
+    );
+    return true;
+  };
+}
