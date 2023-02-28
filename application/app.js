@@ -19,7 +19,16 @@ import {
   export_settings,
   load_settings_from_file
 } from "./assets/js/settings.js";
-import { play_podcast, seeking, stop_player } from "./assets/js/audio.js";
+import {
+  play_podcast,
+  seeking,
+  stop_player,
+  volume_control
+} from "./assets/js/audio.js";
+
+const dayjs = require("dayjs");
+var duration = require("dayjs/plugin/duration");
+dayjs.extend(duration);
 
 const debug = false;
 let article_array;
@@ -106,50 +115,47 @@ if (localStorage.getItem("audio_memory") != null) {
   audio_memory = {};
 }
 
-if (navigator.mozApps) {
-  //ads || ads free
+//ads || ads free
 
-  let load_ads = function () {
-    var js = document.createElement("script");
-    js.type = "text/javascript";
-    js.src = "assets/js/kaiads.v5.min.js";
+let load_ads = function () {
+  var js = document.createElement("script");
+  js.type = "text/javascript";
+  js.src = "assets/js/kaiads.v5.min.js";
 
-    js.onload = function () {
-      getKaiAd({
-        publisher: "4408b6fa-4e1d-438f-af4d-f3be2fa97208",
-        app: "feedolin",
-        slot: "feedolin",
-        test: 0,
-        timeout: 10000,
-        h: 100,
-        w: 240,
-        container: document.getElementById("KaiOsAds-Wrapper"),
-        onerror: (err) => console.error("Error:", err),
-        onready: (ad) => {
-          // user clicked the ad
-          ad.on("click", function () {
-            open_options();
-          });
+  js.onload = function () {
+    getKaiAd({
+      publisher: "4408b6fa-4e1d-438f-af4d-f3be2fa97208",
+      app: "feedolin",
+      slot: "feedolin",
+      test: 0,
+      timeout: 10000,
+      h: 100,
+      w: 240,
+      container: document.getElementById("KaiOsAds-Wrapper"),
+      onerror: (err) => console.error("Error:", err),
+      onready: (ad) => {
+        // user clicked the ad
+        ad.on("click", function () {
+          open_options();
+        });
 
-          // user closed the ad (currently only with fullscreen)
-          ad.on("close", () => console.log("close event"));
+        // user closed the ad (currently only with fullscreen)
+        ad.on("close", () => console.log("close event"));
 
-          // the ad succesfully displayed
-          ad.on("display", () => console.log("display event"));
+        // the ad succesfully displayed
+        ad.on("display", () => console.log("display event"));
 
-          // Ad is ready to be displayed
-          // calling 'display' will display the ad
-          ad.call("display", {
-            navClass: "item",
-            tabindex: 9,
-            display: "block"
-          });
-        }
-      });
-    };
-    document.head.appendChild(js);
+        // Ad is ready to be displayed
+        // calling 'display' will display the ad
+        ad.call("display", {
+          navClass: "item",
+          tabindex: 9,
+          display: "block"
+        });
+      }
+    });
   };
-  //if ("b2g" in navigator) load_ads();
+  document.head.appendChild(js);
 
   //KaioOs ads
   let getManifest = function (callback) {
@@ -173,9 +179,12 @@ if (navigator.mozApps) {
       load_ads();
     }
   }
+  if (navigator.mozApps) {
+    getManifest(manifest);
+  }
+};
 
-  getManifest(manifest);
-}
+if ("b2g" in navigator) load_ads();
 
 //let audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
@@ -488,7 +497,7 @@ let rss_fetcher = function (
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
-          item_title = el[i].querySelector("title").innerText;
+          item_title = el[i].querySelector("title").innerHTML;
 
           item_cid = hashCode(item_title);
 
@@ -648,15 +657,11 @@ let rss_fetcher = function (
 
       if (el.length > 0) {
         for (let i = 0; i < param_limit; i++) {
-          if (
-            el[i].querySelector("title") &&
-            el[i].querySelector("title") != undefined
-          ) {
-            item_title = el[i].querySelector("title").innerHTML;
+          item_title = el[i].querySelector("title").innerHTML;
 
-            item_title = item_title.replace("<![CDATA[", "");
-            item_title = item_title.replace("]]>", "");
-          }
+          item_title = item_title.replace("<![CDATA[", "");
+          item_title = item_title.replace("]]>", "");
+
           item_cid = hashCode(item_title);
           if (el[i].querySelector("description")) {
             item_summary = el[i].querySelector("description").textContent;
@@ -1277,6 +1282,7 @@ let show_article = function () {
   mark_as_read(true);
   status.window_status = "single-article";
   document.getElementById("news-feed-list").scrollTo(0, 0);
+  document.getElementById("progress-bar").style.display = "none";
 
   document.querySelector("div#youtube-player").style.display = "none";
   document.querySelector("div#video-player").style.display = "none";
@@ -1402,7 +1408,9 @@ function open_url() {
 
     video_player.onplaying = function () {
       stop_player(); //stop audio player
+      screenlock("lock");
 
+      document.querySelector(".loading-spinner").style.display = "none";
       video_status = "playing";
 
       video_time = setInterval(function () {
@@ -1426,6 +1434,7 @@ function open_url() {
     video_player.onpause = function () {
       video_status = "paused";
       bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+      screenlock("unlock");
     };
 
     return;
@@ -1474,16 +1483,17 @@ function open_url() {
     let t;
 
     function onPlayerStateChange(event) {
-      console.log(event.data);
       if (event.data == YT.PlayerState.PLAYING) {
         youtube_status = "playing";
         bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
         tt();
+        screenlock("lock");
       }
 
       if (event.data == YT.PlayerState.PAUSED) {
         youtube_status = "paused";
         clearInterval(youtube_time);
+        screenlock("unlock");
       }
     }
 
@@ -1715,6 +1725,8 @@ let open_video_player = function () {
 let open_player = function (reopen) {
   //clear background image and title
   top_bar("", "", "");
+  bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
+
   reset_animation();
 
   document.getElementById("image").style.backgroundImage =
@@ -1725,7 +1737,6 @@ let open_player = function (reopen) {
   document.getElementById("options").style.display = "none";
 
   if (!reopen) {
-    console.log("new");
     status.active_element_id = document.activeElement.getAttribute("data-id");
     status.active_audio_element_id = status.active_element_id;
   }
@@ -1968,9 +1979,9 @@ function shortpress_action(param) {
         nav("+1");
         break;
       }
+      if (status.window_status == "volume") {
+        navigator.volumeManager.requestVolumeDown();
 
-      if (status.volume_status) {
-        // volume_control("down");
         break;
       }
 
@@ -2002,11 +2013,11 @@ function shortpress_action(param) {
         nav("-1");
         break;
       }
-
-      if (status.volume_status) {
-        // volume_control("up");
+      if (status.window_status == "volume") {
+        navigator.volumeManager.requestVolumeUp();
         break;
       }
+
       break;
 
     case "*":
@@ -2014,11 +2025,7 @@ function shortpress_action(param) {
       break;
 
     case "#":
-      let m = navigator.volumeManager;
-      m.requestShow();
-      setTimeout(function () {
-        m = null;
-      }, 2000);
+      volume_control();
       break;
 
     case "SoftLeft":
@@ -2233,7 +2240,7 @@ function handleKeyDown(evt) {
 function handleKeyUp(evt) {
   evt.preventDefault();
 
-  if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
+  //if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
 
   if (
     evt.key == "Backspace" &&
@@ -2243,6 +2250,8 @@ function handleKeyUp(evt) {
     evt.preventDefault();
   }
 
+  if (evt.key == "Backspace" && status.window_status == "article-list")
+    window.close();
   clearTimeout(timeout);
   if (!longpress) {
     shortpress_action(evt);

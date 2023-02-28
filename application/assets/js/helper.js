@@ -303,7 +303,9 @@ export function add_source(url, limit, categorie, channel) {
 }
 
 export let list_files = function (filetype, callback) {
+  
   if ("b2g" in navigator) {
+    
     try {
       var sdcard = navigator.b2g.getDeviceStorage("sdcard");
 
@@ -417,7 +419,9 @@ export let screenlock = function (stat) {
   }
   if (stat == "lock") {
     lock = window.navigator.requestWakeLock("screen");
-    lock.onsuccess = function () {};
+    lock.onsuccess = function () {
+      console.log("yesah");
+    };
     lock.onerror = function () {
       console.log("An error occurred: " + this.error.name);
     };

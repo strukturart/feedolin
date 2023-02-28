@@ -8,23 +8,31 @@ import { toTime } from "../../app.js";
 //status, listened_elem, recently_played,
 import { toaster, bottom_bar } from "./helper.js";
 import { translations } from "../../assets/js/translations.js";
+const dayjs = require("dayjs");
+var duration = require("dayjs/plugin/duration");
+dayjs.extend(duration);
+
 let player = new Audio();
 player.mozAudioChannelType = "content";
 player.type = "audio/mpeg";
 player.mozaudiochannel = "content";
-player.preload = "metadata";
+player.preload = "auto";
 let getduration;
-let duration = "";
+let dduration = "";
 
 if (navigator.mozAudioChannelManager) {
   navigator.mozAudioChannelManager.volumeControlChannel = "content";
 }
 
 if ("b2g" in navigator) {
-  navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
-  AudioChannelClient("content");
-  HTMLMediaElement.mozAudioChannelType = "content";
-  AudioContext.mozAudioChannelType = "content";
+  try {
+    navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
+    AudioChannelClient("content");
+    HTMLMediaElement.mozAudioChannelType = "content";
+    AudioContext.mozAudioChannelType = "content";
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 let stream_id = "";
@@ -82,35 +90,45 @@ export let seeking = function (param) {
 ////VOLUME CONTROL//////
 ///////////////////////
 
-export let volume_control = function (param) {
-  if ("b2g" in navigator) {
-    const session = new lib_session.Session();
-    const sessionstate = {};
-    let _audiovolumeManager = null;
-    sessionstate.onsessionconnected = function () {
-      console.log(`AudioVolumeManager onsessionconnected`);
-      lib_audiovolume.AudioVolumeManager.get(session)
-        .then((AudioVolumeManagerService) => {
-          console.log(
-            `Got AudioVolumeManager : #AudioVolumeManagerService.service_id}`
-          );
-          _audiovolumeManager = AudioVolumeManagerService;
-          if (param == "up") {
-            _audiovolumeManager.VOLUME_UP;
-          }
+function startVolumeManager() {
+  const session = new lib_session.Session();
+  const sessionstate = {};
+  navigator.volumeManager = null;
+  sessionstate.onsessionconnected = function () {
+    // console.log(AudioVolumeManager onsessionconnected);
+    lib_audiovolume.AudioVolumeManager.get(session)
+      .then((AudioVolumeManagerService) => {
+        navigator.volumeManager = AudioVolumeManagerService;
+      })
+      .catch((e) => {
+        // console.log(Error calling AudioVolumeManager service${JSON.stringify(e)});
+        navigator.volumeManager = null;
+      });
+  };
+  sessionstate.onsessiondisconnected = function () {
+    startVolumeManager();
+  };
+  session.open("websocket", "localhost", "secrettoken", sessionstate, true);
+}
 
-          if (param == "down") {
-            _audiovolumeManager.VOLUME_DOWN;
-          }
-        })
-        .catch((e) => {
-          console.log(
-            `Error calling AudioVolumeManager service${JSON.stringify(e)}`
-          );
-          _audiovolumeManager = null;
-        });
-    };
+setTimeout(startVolumeManager, 5000);
+
+export let volume_control = function (t) {
+  //KaiOS 3.x
+  if (navigator.b2g.audioChannelManager && navigator.volumeManager) {
+    try {
+      navigator.volumeManager.requestVolumeShow();
+      let f = status.window_status;
+      status.window_status = "volume";
+      setTimeout(() => {
+        status.window_status = f;
+      }, 3000);
+    } catch (e) {}
   }
+  //KaiOS 2.x
+  try {
+    navigator.volumeManager.requestShow();
+  } catch (e) {}
 };
 
 player.onloadedmetadata = function () {
@@ -141,12 +159,12 @@ let remember = function () {
 };
 
 player.addEventListener("play", (event) => {
-  bottom_bar("<img src='assets/icons/23EF.svg'>", duration, "");
+  bottom_bar("<img src='assets/icons/23EF.svg'>", dduration, "");
 });
 
 player.addEventListener("pause", (event) => {
   remember();
-  bottom_bar("<img src='assets/icons/23EF.svg'>", duration, "");
+  bottom_bar("<img src='assets/icons/23EF.svg'>", dduration, "");
 
   clearInterval(getduration);
 });
@@ -183,19 +201,22 @@ player.addEventListener("playing", (event) => {
   getduration = setInterval(function () {
     if (!player.paused) {
       var time = player.duration - player.currentTime;
+      let f = typeof time;
+      if (f != "number") return false;
+
       time = Math.floor(time);
+      let l = dayjs.duration(time, "seconds").format("hh");
+      let ff = l == "undefined" ? "mm:ss" : "hh:mm:ss";
+      let d = dayjs.duration(time, "seconds").format(ff);
+
       let percent = (player.currentTime / player.duration) * 100;
 
       document.querySelector("div#progress-bar div").style.width =
         percent + "%";
 
-      var minutes = "0" + Math.floor(time / 60);
-      var seconds = "0" + (time - minutes * 60);
-      var cur = minutes.substr(-2) + ":" + seconds.substr(-2);
-
       status.audio_duration = toTime(time);
-      if (status.window_status == "audio-player")
-        bottom_bar("<img src='assets/icons/23EF.svg'>", cur, "");
+      if (status.window_status == "audio-player" && f == "number")
+        bottom_bar("<img src='assets/icons/23EF.svg'>", d, "");
       remember();
     } else {
       clearInterval(getduration);

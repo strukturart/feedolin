@@ -863,7 +863,7 @@ div#audio-player div#background-pattern div {
 div#progress-bar {
   height: 15px;
   position: fixed;
-  bottom: 20px;
+  bottom: 30px;
   z-index: 5000000;
   display: none;
 }

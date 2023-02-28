@@ -57,6 +57,10 @@ RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
 
 - https://activitypub.rocks/
 
+## Credits
+
+- bananahackers community 💘
+
 ## Donation
 
 If you use the app often, please donate an amount to me.

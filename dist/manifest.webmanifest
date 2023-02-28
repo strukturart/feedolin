@@ -53,6 +53,10 @@
       "mobiledata": {},
       "wifidata": {},
       "calllog": {},
+      "audio-channel-content": {
+        "description": ""
+      },
+      "volumemanager": { "description": "" },
       "device-storage:sdcard": {
         "description": "Read/Write from/to sd-card",
         "access": "readwrite"
