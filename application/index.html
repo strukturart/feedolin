@@ -78,10 +78,7 @@
 
       <div id="video-player" class="width-100 height-100">
         <video id="videoplayer" width="100%" height="240" autoplay="true">
-          <source
-            src="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217"
-            type="video/mp4"
-          />
+          <source src="#" type="video/mp4" />
         </video>
       </div>
 
@@ -298,7 +295,7 @@
                   </div>
                   <div class="channel">{{channel}}<span></span></div>
                   <time>{{date}}</time>
-                  <div class="flex duration-filesize debug">
+                  <div class="flex duration-filesize">
                       <div class="duration flex">{{{duration}}}</div>
                       <div class="filesize">{{filesize}}</div>
                   </div>
@@ -307,6 +304,10 @@
                   {{#youtube_thumbnail}}
                   <img src="{{youtube_thumbnail}}">
                   {{/youtube_thumbnail}}
+
+                  {{#image}}
+                  <img src="{{image}}">
+                  {{/image}}
 
 
                   </div>

@@ -80,13 +80,14 @@ select {
 }
 
 button {
-  width: 100vw;
+  width: 90vw;
   color: #000;
   background: silver;
-  -moz-border-radius: 0%;
-  border-radius: 0%;
+  -moz-border-radius: 10%;
+  border-radius: 10%;
   margin: 0 0 5px;
   padding: 5px;
+  font-family: Lato-Regular;
   font-size: 1rem;
   font-style: normal !important;
 }
@@ -94,6 +95,10 @@ button {
 button:focus {
   background: var(--color-four);
   color: #fff;
+}
+
+input {
+  font-family: Lato-Regular;
 }
 
 .item:focus {

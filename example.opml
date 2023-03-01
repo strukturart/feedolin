@@ -45,6 +45,10 @@
             <outline type="rss" text="t-online" title="t-online" xmlUrl="https://feeds.t-online.de/rss/ausland" htmlUrl=""/>
         </outline>
 
+        <outline text="Mastodon" title="Mastodon">
+            <outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
+        </outline>
+
 
 
     </body>

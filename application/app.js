@@ -394,7 +394,11 @@ let load_feeds = function (data) {
             url: nested[z].getAttribute("xmlUrl"),
             amount: 5,
             index: index++,
-            channel: nested[z].parentElement.getAttribute("text")
+            channel: nested[z].parentElement.getAttribute("text"),
+            type:
+              nested[z].getAttribute("type") == undefined
+                ? "rss"
+                : nested[z].getAttribute("type")
           });
         }
       }
@@ -409,8 +413,9 @@ let load_feeds = function (data) {
   rss_fetcher(
     feed_download_list[0].url,
     feed_download_list[0].amount,
+    feed_download_list[0].title,
     feed_download_list[0].channel,
-    feed_download_list[0].channel
+    feed_download_list[0].type
   );
 
   //clean source feed
@@ -429,8 +434,72 @@ let rss_fetcher = function (
   param_url,
   param_limit,
   param_channel,
-  param_category
+  param_category,
+  param_type
 ) {
+  if (param_type == "mastodon") {
+    try {
+      fetch(param_url, {
+        method: "GET"
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach(function (i, e) {
+            let item_image = "";
+
+            if (i.media_attachments.length > 0) {
+              if (i.media_attachments[0].type == "image")
+                item_image = i.media_attachments[0].preview_url;
+            }
+
+            let item_type = "";
+
+            let item_media = "rss";
+            let item_filesize = "";
+            let item_download = "";
+            let startlistened = "";
+
+            //date
+            let item_date = new Date(i.created_at);
+            item_date_unix = item_date.valueOf();
+            item_date = item_date.toDateString();
+
+            content_arr.push({
+              index: 0,
+              title: DOMPurify.sanitize(i.account.display_name),
+              summary: DOMPurify.sanitize(i.content),
+              link: i.uri,
+              date: item_date,
+              dateunix: item_date_unix,
+              channel: param_channel,
+              category: param_category,
+              type: item_type,
+              image: item_image,
+              duration: "",
+              media: item_media,
+              filesize: item_filesize,
+              cid: i.id,
+              listened: "not-listened",
+              recently_played: null,
+              recently_order: null,
+              read: "not-read",
+              start_listened: startlistened,
+              youtube_id: "",
+              youtube_thumbnail: "",
+              video_url: "",
+              url: item_download,
+              error: error
+            });
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   var xhttp = new XMLHttpRequest({
     mozSystem: true
   });
@@ -449,7 +518,6 @@ let rss_fetcher = function (
   }
 
   if (xhttp.status != 200) {
-    console.log("can't load");
     error = xhttp.status;
   }
 
@@ -463,6 +531,7 @@ let rss_fetcher = function (
       let item_link = "";
       let item_title = "";
       let item_type = "";
+
       let item_media = "rss";
       let item_duration = "";
       let item_filesize = "";
@@ -813,8 +882,9 @@ let rss_fetcher = function (
       rss_fetcher(
         feed_download_list[k].url,
         feed_download_list[k].amount,
+        feed_download_list[k].title,
         feed_download_list[k].channel,
-        feed_download_list[k].channel
+        feed_download_list[k].type
       );
     }
   }

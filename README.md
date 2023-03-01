@@ -13,6 +13,7 @@ Feedolin is an RSS / Atom reader and podcast player. It is intended for users wh
 - read you favorit rss/atom feeds
 - stream your podcasts
 - show youtube/soundcloud channels
+- read mastodon publice timeline
 - listen spotify->rss podcasts
 - read reddit.com ->rss
 - open rss feedlink
@@ -26,14 +27,17 @@ You have to save the list of urls in a .opml file as in the example.
 In the settings you can set where the app should get this file from.
 It can be stored locally or online on a server.
 
+if you want to show mastodon public timelines you have to set the type="mastodon" in the link list
+For example:
+`<outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>`
+
 https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
 
 ## How to install
 
-The app is not available through the https://www.kaiostech.com/store/ They are only accepting apps that are monetized using <a href="https://developer.kaiostech.com/submit-to-kaistore">KaiAds SDK</a>, and that's something I'm not interested in integrating.
-For this reason, you have to side-load (upload) the app to your phone if you want to use it.
-Martin Kaptein wrote a comprehensive, <a href="https://www.martinkaptein.com/blog/sideloading-and-deploying-apps-to-kai-os/">step-by-step article</a> that you can use to side-load the app. If you prefer a video, this one on YouTube walks you through the process.
-The Developer Portal also contains a guide, and if nothing seems to work, you can <a href="https://discord.com/invite/rQ93zEu">ask for help on Discord</a>.
+- KaiOs Store
+- Sideloading <a href="https://www.martinkaptein.com/blog/sideloading-and-deploying-apps-to-kai-os/">step-by-step article</a> by martinkaptein
+
 You can download the latest version from the Releases page.
 The app is not auto-updating. To update it, you have to follow the same steps you took when installing it.
 

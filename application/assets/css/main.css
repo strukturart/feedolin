@@ -99,16 +99,22 @@ button {
   font-size: 1rem;
   background: silver;
   padding: 5px;
-  width: 100vw;
-  border-radius: 0%;
+  width: 90vw;
+  margin: 0 0 0 5vw;
+  border-radius: 10%;
   margin: 0 0 5px 0;
   color: black;
   font-style: normal !important;
+  font-family: "Lato-Regular";
 }
 
 button:focus {
   background: var(--color-four);
   color: white;
+}
+
+input {
+  font-family: "Lato-Regular";
 }
 
 .item:focus {
