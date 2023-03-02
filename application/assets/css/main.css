@@ -926,6 +926,12 @@ div#settings div.input-parent {
   padding: 10px 10px 20px 10px;
 }
 
+div#settings div#last-update {
+  font-size: 0.8rem;
+  padding: 10px;
+  margin: 10px 0 10px 0;
+}
+
 div#settings div.input-parent:focus {
   padding: 10px 10px 20px 10px;
 

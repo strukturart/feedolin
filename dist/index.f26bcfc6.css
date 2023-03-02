@@ -847,6 +847,12 @@ div#settings div.input-parent {
   padding: 10px 10px 20px;
 }
 
+div#settings div#last-update {
+  margin: 10px 0;
+  padding: 10px;
+  font-size: .8rem;
+}
+
 div#settings div.input-parent:focus {
   background: var(--color-four);
   color: #fff;

@@ -10,7 +10,7 @@ export let setting = {
   interval:
     localStorage.getItem("interval") != null
       ? localStorage.getItem("interval")
-      : 0,
+      : "never",
   source_local:
     localStorage.getItem("source_local") != null
       ? localStorage.getItem("source_local")

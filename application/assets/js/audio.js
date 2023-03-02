@@ -110,12 +110,11 @@ function startVolumeManager() {
   };
   session.open("websocket", "localhost", "secrettoken", sessionstate, true);
 }
+if ("b2g" in navigator) setTimeout(startVolumeManager, 5000);
 
-setTimeout(startVolumeManager, 5000);
-
-export let volume_control = function (t) {
+export let volume_control = function () {
   //KaiOS 3.x
-  if (navigator.b2g.audioChannelManager && navigator.volumeManager) {
+  if ("b2g" in navigator) {
     try {
       navigator.volumeManager.requestVolumeShow();
       let f = status.window_status;
@@ -125,10 +124,13 @@ export let volume_control = function (t) {
       }, 3000);
     } catch (e) {}
   }
+
   //KaiOS 2.x
   try {
     navigator.volumeManager.requestShow();
-  } catch (e) {}
+  } catch (e) {
+    alert("jj");
+  }
 };
 
 player.onloadedmetadata = function () {

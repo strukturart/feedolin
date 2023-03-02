@@ -9,7 +9,7 @@ import { share } from "./assets/js/helper.js";
 
 import { screenlock, hashCode, formatFileSize } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
-import { bottom_bar, top_bar, list_files } from "./assets/js/helper.js";
+import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
 import {
@@ -26,15 +26,22 @@ import {
   volume_control
 } from "./assets/js/audio.js";
 
+import { v4 as uuidv4 } from "uuid";
+
 const dayjs = require("dayjs");
 var duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);
 
 const debug = false;
 let article_array;
+//data layer
 let content_arr = [];
-let k = 0;
-let panels = ["channels"];
+//store all used article ids
+var all_cid = [];
+let feed_download_list_count = 0;
+
+let panels = ["channels", "recently-played"];
+
 let current_panel = 0;
 const parser = new DOMParser();
 
@@ -46,11 +53,10 @@ let video_status = "";
 let youtube_status = "";
 let video = document.getElementById("videoplayer");
 let source_url_cleaner = ["$$", "mm"];
+try {
+  //screenlock("lock");
+} catch (e) {}
 
-screenlock("lock");
-
-//store all used article ids
-var all_cid = [];
 //get read articles
 export let read_elem =
   localStorage.getItem("read_elem") != null
@@ -67,18 +73,10 @@ export let listened_elem =
     ? JSON.parse(localStorage.getItem("listened_elem"))
     : [];
 let tab_index = 0;
-//xml items
-let rss_title = "";
-let item_title = "";
-let item_summary = "";
-let item_link = "";
-let item_date_unix = "";
-let item_duration = "";
-let item_type = "";
-let item_filesize = "";
-let item_cid = "";
-let item_image = "";
-let yt_thumbnail = "";
+
+if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
+
+const sync_time = Number(localStorage.getItem("interval"));
 
 //translation
 export let userLang = navigator.language || navigator.userLanguage;
@@ -96,21 +94,15 @@ export let status = {
   volume_status: false,
   panel: "",
   audio_duration: "",
-  audio_status: "play",
+  audio_status: "",
   sleepmode: false,
   sort: "number",
   current_panel: "channels"
 };
 
-let reload = function () {
-  window.location.reload(true);
-  localStorage.setItem("reload", "true");
-};
-
 let audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
-  let d = JSON.parse(localStorage.getItem("audio_memory"));
-  audio_memory = d;
+  audio_memory = JSON.parse(localStorage.getItem("audio_memory"));
 } else {
   audio_memory = {};
 }
@@ -186,20 +178,12 @@ let load_ads = function () {
 
 if ("b2g" in navigator) load_ads();
 
-//let audio_memory;
-if (localStorage.getItem("audio_memory") != null) {
-  let d = JSON.parse(localStorage.getItem("audio_memory"));
-  audio_memory = d;
-}
-
 /////////////////////////////
 ////////////////////////////
 //GET URL LIST/////////////
 //from local file or online source
 //////////////////////////
 //////////////////////////
-
-let nocaching = Math.floor(Date.now() / 1000);
 
 ///////////
 ///load source opml file from local source
@@ -259,6 +243,7 @@ let load_source_opml = function () {
   let xhttp = new XMLHttpRequest({
     mozSystem: true
   });
+  let nocaching = Math.floor(Date.now() / 1000);
 
   xhttp.open("GET", source_url + "?time=" + nocaching, true);
   xhttp.timeout = 25000;
@@ -296,22 +281,12 @@ let load_source_opml = function () {
 };
 
 setTimeout(() => {
-  if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
-
   if (localStorage["source_local"] == null && localStorage["source"] == null) {
     localStorage.setItem("source", default_opml);
   }
   //get update time; cache || download
   let a = localStorage.getItem("interval");
 
-  //reload content without caching
-  if (localStorage.getItem("reload") == null)
-    localStorage.setItem("reload", "false");
-
-  if (localStorage.getItem("reload") == "true") {
-    a = 0;
-  }
-  localStorage.setItem("reload", "false");
   document.getElementById("intro-message").innerText = "checking feed list";
   //download
   if (getTime(a) && navigator.onLine) {
@@ -360,14 +335,50 @@ setTimeout(() => {
   }
 }, 1000);
 
+//sync test
+const sync = () => {
+  //download
+  if (localStorage.getItem("feed_download_list") == null) {
+    localStorage.setItem("feed_download_list", feed_download_list);
+  } else {
+    try {
+      feed_download_list = JSON.parse(
+        localStorage.getItem("feed_download_list")
+      );
+    } catch (e) {}
+  }
+
+  if (navigator.onLine) {
+    content_arr.length = 0;
+    article_array = "";
+    feed_download_list_count = 0;
+    feed_download_list.length = 0;
+
+    try {
+      load_local_file_opml();
+    } catch (e) {}
+
+    try {
+      load_source_opml();
+    } catch (e) {}
+  }
+};
+/////////////////
+
 //start loading feeds
 let feed_download_list = [];
+
 if (localStorage.getItem("feed_download_list") == null) {
   localStorage.setItem("feed_download_list", feed_download_list);
 } else {
   feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
 }
+
 let load_feeds = function (data) {
+  try {
+    feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+  } catch (e) {} //load feed list to compare and store again
+
   var xmlDoc = parser.parseFromString(data, "text/xml");
   let content = xmlDoc.getElementsByTagName("body")[0];
   let index = 0;
@@ -380,17 +391,19 @@ let load_feeds = function (data) {
       for (var z = 0; z < nested.length; z++) {
         //feed_download_list
 
+        //only push in list when not exist
         let result = false;
 
-        for (var k = 0; k < feed_download_list.length; k++) {
+        for (let k = 0; k < feed_download_list.length; k++) {
           if (feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
             source_url_cleaner.push(nested[z].getAttribute("xmlUrl"));
             result = true;
+            k == feed_download_list.length;
             break;
           }
         }
         //put in list
-        if (result == false) {
+        if (!result) {
           feed_download_list.push({
             error: "",
             title: nested[z].getAttribute("title"),
@@ -406,20 +419,21 @@ let load_feeds = function (data) {
         }
       }
     }
-
-    localStorage.setItem(
-      "feed_download_list",
-      JSON.stringify(feed_download_list)
-    );
   }
+  //start downloading feeds
+  setTimeout(function () {
+    document.querySelector(".loading-spinner").style.display = "block";
+    if (status.window_status == "intro")
+      document.querySelector(".loading-spinner").style.top = "80%";
 
-  rss_fetcher(
-    feed_download_list[0].url,
-    feed_download_list[0].amount,
-    feed_download_list[0].title,
-    feed_download_list[0].channel,
-    feed_download_list[0].type
-  );
+    rss_fetcher(
+      feed_download_list[0].url,
+      feed_download_list[0].amount,
+      feed_download_list[0].title,
+      feed_download_list[0].channel,
+      feed_download_list[0].type
+    );
+  }, 1000);
 
   //clean source feed
   for (let p = 0; p < feed_download_list.length; p++) {
@@ -427,6 +441,11 @@ let load_feeds = function (data) {
       feed_download_list.splice(p, 1);
     }
   }
+
+  localStorage.setItem(
+    "feed_download_list",
+    JSON.stringify(feed_download_list)
+  );
 };
 
 //////////////////////////////
@@ -445,9 +464,11 @@ let rss_fetcher = function (
       fetch(param_url, {
         method: "GET"
       })
-        .then((response) => response.json())
+        .then(function (response) {
+          return response.json();
+        })
         .then((data) => {
-          data.forEach(function (i, e) {
+          data.forEach(function (i) {
             let item_image = "";
 
             if (i.media_attachments.length > 0) {
@@ -494,7 +515,9 @@ let rss_fetcher = function (
             });
           });
         })
-        .catch((error) => {});
+        .catch((error) => {
+          alert("json parser error: " + error);
+        });
     } catch (e) {
       console.log(e);
     }
@@ -512,25 +535,30 @@ let rss_fetcher = function (
 
   let loadEnd = function (e) {
     //after download build html objects
-    if (k == feed_download_list.length - 1) {
+    if (feed_download_list_count == feed_download_list.length - 1) {
       build();
       saveCache(content_arr);
-      console.log(feed_download_list);
+      localStorage.setItem("updated", new Date());
+      document.querySelector(".loading-spinner").style.top = "50%";
+
+      document.querySelector(".loading-spinner").style.display = "none";
+
+      localStorage.setItem("last-update", new Date());
     }
-    if (k < feed_download_list.length - 1) {
+    if (feed_download_list_count < feed_download_list.length - 1) {
       document.getElementById("intro-message").innerText = "loading data";
 
       //error log
       if (xhttp.status != 200) {
-        feed_download_list[k].error = "error";
+        feed_download_list[feed_download_list_count].error = "error";
       }
-      k++;
+      feed_download_list_count++;
       rss_fetcher(
-        feed_download_list[k].url,
-        feed_download_list[k].amount,
-        feed_download_list[k].title,
-        feed_download_list[k].channel,
-        feed_download_list[k].type
+        feed_download_list[feed_download_list_count].url,
+        feed_download_list[feed_download_list_count].amount,
+        feed_download_list[feed_download_list_count].title,
+        feed_download_list[feed_download_list_count].channel,
+        feed_download_list[feed_download_list_count].type
       );
     }
   };
@@ -542,11 +570,13 @@ let rss_fetcher = function (
     if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
       let data = xhttp.response;
 
+      let rss_title = "";
       let item_image = "";
       let item_summary = "";
       let item_link = "";
       let item_title = "";
       let item_type = "";
+      let item_date_unix = "";
 
       let item_media = "rss";
       let item_duration = "";
@@ -558,18 +588,22 @@ let rss_fetcher = function (
       let youtube_id = "";
       let yt_thumbnail = "";
       let item_video_url = "";
-      let el;
+      let el = "";
 
-      //Channel
-      rss_title = data.querySelector("title").textContent || param_channel;
-
-      param_channel = rss_title;
+      //xml items
 
       let p = Number(feed_download_list.length - 1);
-      let precent = (100 / p) * k;
+      let precent = (100 / p) * feed_download_list_count;
+      /*
       document.querySelector(
         "div#intro div#loading-progress div div"
       ).style.width = precent + "%";
+      */
+      document.querySelector(".loading-spinner").style.display = "block";
+
+      //Channel
+      rss_title = data.querySelector("title").textContent || param_channel;
+      param_channel = rss_title;
 
       if (data.getElementsByTagName("url")[0]) {
         item_image = data.getElementsByTagName("url")[0].textContent;
@@ -602,13 +636,6 @@ let rss_fetcher = function (
               item_summary = item_summary.replace(/(&lt;!\[CDATA\[)/g, "");
               item_summary = item_summary.replace(/(]]&gt;)/g, "");
             }
-          }
-
-          if (el[i].getElementsByTagNameNS("*", "thumbnail").length > 0) {
-            item_image = el[i]
-              .getElementsByTagNameNS("*", "thumbnail")
-              .item(0)
-              .getAttribute("url");
           }
 
           if (el[i].querySelector("link") !== null) {
@@ -734,6 +761,26 @@ let rss_fetcher = function (
       ////////////
       //RSS
       ///////////
+      //reset vars
+      rss_title = "";
+      item_image = "";
+      item_summary = "";
+      item_link = "";
+      item_title = "";
+      item_type = "";
+      item_date_unix = "";
+
+      item_media = "rss";
+      item_duration = "";
+      item_filesize = "";
+      item_download = "";
+      item_cid = "";
+      item_date = "";
+      startlistened = "";
+      youtube_id = "";
+      yt_thumbnail = "";
+      item_video_url = "";
+      el = "";
 
       try {
         el = data.querySelectorAll("item");
@@ -873,7 +920,7 @@ let rss_fetcher = function (
 let read_articles = function () {
   //if element in read list
   //mark article as read
-  if (content_arr.length == 0 || "undefined") return false;
+  if (content_arr.length == 0 || undefined) return false;
   content_arr.forEach(function (index) {
     all_cid.push(index.cid);
     index.read = "not-read";
@@ -1000,7 +1047,7 @@ let tabs = function () {
 
 //build html
 let build = function () {
-  if (content_arr.lenght > 0) sort_array(content_arr, "channel", "string");
+  // if (content_arr.lenght > 0) sort_array(content_arr, "channel", "string");
   document.getElementById("intro").style.display = "none";
 
   read_articles();
@@ -1015,8 +1062,6 @@ let build = function () {
 
   top_bar("", panels[0], "");
 
-  panels.push("recently-played");
-
   renderHello(content_arr);
   render_feed_download_list(feed_download_list);
 
@@ -1027,7 +1072,7 @@ let build = function () {
   article_array = document.querySelectorAll("article");
   article_array[0].focus();
 
-  screenlock("unlock");
+  // screenlock("unlock");
 };
 
 //set tabindex
@@ -1191,7 +1236,6 @@ function nav_panels(left_right) {
 
   set_tabindex();
 
-  document.activeElement.classList.remove("overscrolling");
   status.panel = panels[current_panel];
 }
 ////////////
@@ -1454,7 +1498,7 @@ function open_url() {
 
     video_player.onplaying = function () {
       stop_player(); //stop audio player
-      screenlock("lock");
+      //  screenlock("lock");
 
       document.querySelector(".loading-spinner").style.display = "none";
       video_status = "playing";
@@ -1480,7 +1524,7 @@ function open_url() {
     video_player.onpause = function () {
       video_status = "paused";
       bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
-      screenlock("unlock");
+      //  screenlock("unlock");
     };
 
     return;
@@ -1533,13 +1577,13 @@ function open_url() {
         youtube_status = "playing";
         bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
         tt();
-        screenlock("lock");
+        // screenlock("lock");
       }
 
       if (event.data == YT.PlayerState.PAUSED) {
         youtube_status = "paused";
         clearInterval(youtube_time);
-        screenlock("unlock");
+        // screenlock("unlock");
       }
     }
 
@@ -1649,7 +1693,7 @@ let show_feed_download_list = function () {
   document.querySelector("div#feed-download-list div:first-child").focus();
 
   let htmlStr =
-    "<p class='item info width-100 justify-content-spacebetween'> if you want to set the number of episodes of a channel, click on the corresponding title and change the value.the entries are savedautomatically and are valid the next time the app is started.< br > The red titles could not be downloaded <br> <br></p>";
+    "<p class='item info width-100 justify-content-spacebetween'>you can define the downloads of the episodes/articles of a channel, click on the corresponding title and change the value. the entries are saved automatically and are valid the next time the app is started.<br><br> The red titles could not be downloaded <br> <br></p>";
 
   console.log(
     document.querySelectorAll("div#feed-download-list-box p.item").length
@@ -1718,6 +1762,8 @@ let show_settings = function () {
 
   document.getElementById("settings").style.display = "block";
   document.getElementById("settings").children[0].focus();
+  document.getElementById("last-update").innerText =
+    "last update: " + localStorage.getItem("last-update");
   list_files("opml", list_files_callback);
   focus_after_selection();
 };
@@ -1742,7 +1788,7 @@ let start_options = function () {
   }
 
   if (document.activeElement.getAttribute("data-function") == "reload") {
-    reload();
+    sync();
   }
 
   if (document.activeElement.getAttribute("data-function") == "download-list") {
@@ -1758,7 +1804,7 @@ let start_options = function () {
   }
 
   if (document.activeElement.getAttribute("data-function") == "share") {
-    var k = document
+    let k = document
       .querySelector("[data-id='" + status.active_element_id + "']")
       .getAttribute("data-link");
     share(k);
@@ -1769,7 +1815,7 @@ let start_options = function () {
   }
 
   if (document.activeElement.getAttribute("data-function") == "volume") {
-    navigator.volumeManager.requestShow();
+    volume_control();
   }
 };
 
@@ -1823,6 +1869,192 @@ let open_player = function (reopen) {
   }, 500);
 };
 
+//sync
+
+if ("b2g" in Navigator) {
+  try {
+    navigator.serviceWorker
+      .register(new URL("sw.js", import.meta.url), {
+        type: "module",
+        scope: "/"
+      })
+      .then((registration) => {
+        registration.systemMessageManager.subscribe("alarm").then(
+          (rv) => {
+            alert('Successfully subscribe system messages of name "alarm".');
+          },
+          (error) => {
+            console.log("Fail to subscribe system message, error: " + error);
+          }
+        );
+        registration.systemMessageManager.subscribe("activity").then(
+          (rv) => {},
+          (error) => {}
+        );
+      });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+let add_alarm = function (date, message_text, id) {
+  // KaiOs  2.xx
+  if ("mozAlarms" in navigator) {
+    // This is arbitrary data pass to the alarm
+    var data = {
+      note: message_text,
+      event_id: id
+    };
+
+    var request = navigator.mozAlarms.add(date, "honorTimezone", data);
+
+    request.onsuccess = function (e) {
+      // notify("alarm set", data.note, false, false);
+      localStorage.setItem("next-update", data.note);
+    };
+
+    request.onerror = function () {
+      console.log("An error occurred: " + this.error.name);
+    };
+  }
+
+  // KaiOs  3.xx
+  if ("b2g" in navigator) {
+    try {
+      let options = {
+        date: date,
+        data: { note: message_text },
+        ignoreTimezone: false
+      };
+
+      navigator.b2g.alarmManager.add(options).then(
+        (id) => console.log("add id: " + id),
+        (err) => console.log("add err: " + err)
+      );
+    } catch (e) {
+      alert(e);
+    }
+  }
+};
+
+let remove_alarm = function () {
+  // KaiOs  2.xx
+
+  try {
+    let request = navigator.mozAlarms.getAll();
+
+    request.onsuccess = function () {
+      this.result.forEach(function (alarm) {
+        let r = navigator.mozAlarms.remove(alarm.id);
+
+        r.onsuccess = function () {
+          console.log("removed");
+        };
+
+        r.onerror = function () {
+          console.log("An error occurred: " + this.error.name);
+        };
+      });
+    };
+
+    request.onerror = function () {
+      console.log("An error occurred:", this.error.name);
+    };
+  } catch (e) {}
+
+  // KaiOs  3.xx
+  if ("b2g" in navigator) {
+    try {
+      let request = navigator.b2g.alarmManager.getAll();
+      request.onsuccess = function () {
+        this.result.forEach(function (alarm) {
+          if (id == "all") {
+            let req = navigator.b2g.alarmManager.remove(alarm.id);
+
+            req.onsuccess = function () {
+              console.log("removed");
+            };
+
+            req.onerror = function () {
+              console.log("An error occurred: " + this.error.name);
+            };
+          } else {
+            if (alarm.data.event_id == id) {
+              let req = navigator.b2g.alarmManager.remove(alarm.id);
+
+              req.onsuccess = function () {
+                console.log("removed");
+              };
+
+              req.onerror = function () {
+                console.log("An error occurred: " + this.error.name);
+              };
+            } else {
+              console.log("no alarm founded");
+            }
+          }
+        });
+      };
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
+
+//sync KaiOS 2.x
+
+try {
+  if ("mozAlarms" in navigator) {
+    //set alarm
+    let m = function () {
+      if (localStorage.getItem("interval") == "never") return false;
+
+      var d = new Date();
+      d.setMinutes(d.getMinutes() + Number(localStorage.getItem("interval")));
+      add_alarm(d, d, uuidv4());
+      sync();
+    };
+
+    //reset alarm
+    navigator.mozSetMessageHandler("alarm", function (message) {
+      remove_alarm();
+      if (navigator.onLine) m();
+    });
+
+    //start sync loop
+
+    if (
+      navigator.mozHasPendingMessage("alarm") == false &&
+      localStorage.getItem("interval") != "never" &&
+      localStorage.getItem("interval") != null
+    ) {
+      let d = new Date();
+      let f = Number(localStorage.getItem("interval"));
+      d.setMinutes(d.getMinutes() + f);
+
+      let request = navigator.mozAlarms.getAll();
+      let action = true;
+
+      request.onsuccess = function () {
+        this.result.forEach(function (alarm) {
+          //alert("alarm: " + alarm.date);
+          if (dayjs(alarm.date).isAfter(dayjs()) == true && action == true) {
+            action = false;
+          }
+        });
+        //no alarm in the future set alarm
+        if (action == true) {
+          // alert("none alarm" + d);
+          // remove_alarm();
+          add_alarm(d, d, uuidv4());
+        }
+      };
+    }
+  }
+} catch (e) {
+  console.log(e);
+}
+
 //qr scan listener
 const qr_listener = document.querySelector("input#source");
 let qrscan = false;
@@ -1838,7 +2070,6 @@ qr_listener.addEventListener("blur", (event) => {
 
 document.querySelector("#source-local").addEventListener("change", (event) => {
   localStorage.setItem("source_local", this.value);
-  console.log(this.value);
 });
 
 let select_box = [];
@@ -1871,6 +2102,10 @@ let timeout;
 function repeat_action(param) {
   switch (param.key) {
     case "0":
+      let k = document
+        .querySelector("[data-id='" + status.active_element_id + "']")
+        .getAttribute("data-link");
+      share(k);
       break;
     case "ArrowLeft":
       if (status.window_status == "audio-player") {
@@ -1899,7 +2134,7 @@ function longpress_action(param) {
       break;
 
     case "0":
-      reload();
+      sync();
       break;
   }
 }
@@ -1910,6 +2145,9 @@ function longpress_action(param) {
 
 function shortpress_action(param) {
   switch (param.key) {
+    case "0":
+      share(document.activeElement.getAttribute("data-url"));
+      break;
     case "2":
       channel_navigation("up");
       break;
@@ -1923,6 +2161,17 @@ function shortpress_action(param) {
 
     case "3":
       sleep_mode();
+
+      break;
+
+    case "4":
+      var d = new Date();
+      d.setMinutes(d.getMinutes() + 5);
+      add_alarm(d, d, uuidv4());
+      break;
+
+    case "8":
+      alert(localStorage.getItem("updated"));
 
       break;
 
@@ -2246,8 +2495,7 @@ function shortpress_action(param) {
 
       if (status.window_status == "download-list") {
         document.getElementById("feed-download-list").style.display = "none";
-        show_settings();
-        status.window_status = "settings";
+        open_options();
         break;
       }
 
@@ -2307,9 +2555,13 @@ function handleKeyDown(evt) {
 }
 
 function handleKeyUp(evt) {
-  evt.preventDefault();
+  //evt.preventDefault();
 
-  if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
+  if (evt.key == "Backspace") {
+    if (status.audio_status != "play" && status.window_status == "article-list")
+      window.close();
+    if (status.audio_status == "play") evt.preventDefault();
+  }
 
   if (
     evt.key == "Backspace" &&

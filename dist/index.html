@@ -4,7 +4,7 @@
     <title>feedolin</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
-    <link rel="stylesheet" href="/index.c2546b2e.css">
+    <link rel="stylesheet" href="/index.f26bcfc6.css">
     <link rel="stylesheet" href="/index.df449edd.css">
     <link rel="stylesheet" href="/index.cfa8f397.css">
   </head>
@@ -112,11 +112,11 @@
         </div>
 
         <div data-function="reload" class="item flex width-100" tabindex="5">
-          <span class="text">reload content</span><span class="middle"></span><span class="key">0</span>
+          <span class="text">update content</span><span class="middle"></span><span class="key">0</span>
         </div>
 
         <div data-function="download-list" class="item flex width-100" tabindex="6">
-          <span class="text">episodes downlad</span><span class="middle"></span><span class="key"></span>
+          <span class="text">download manager</span><span class="middle"></span><span class="key"></span>
         </div>
 
         <div data-function="sort-by-name" class="item flex width-100" tabindex="7">
@@ -154,20 +154,19 @@
         </ul>
         <h2>Settings</h2>
         <div class="item input-parent">
-          <label for="time">The loaded articles are temporarily saved on your device. New
-            content can be reloaded when the app is restarted. how many minutes
-            should the content be cached?</label>
+          <label for="time">automatic download of new content</label>
           <select id="time" class="select-box">
-            <option value="5">5min</option>
-            <option value="10">10min</option>
+            <option value="never">on start</option>
             <option value="20">20min</option>
-            <option value="30">30min</option>
+            <option value="40">40min</option>
             <option value="60">1h</option>
             <option value="120">2h</option>
             <option value="360">6h</option>
             <option value="1440">24h</option>
           </select>
         </div>
+
+        <div id="last-update"></div>
 
         <h2>where should the list of the rss feed be loaded from?</h2>
 
@@ -182,10 +181,6 @@
           <label for="source"><strong>url</strong></label>
           <input placeholder="https://xyz.com/feeds.opml" type="url" id="source">
         </div>
-
-        <button class="item set-download-amount">
-          How many episodes should be loaded ?
-        </button>
 
         <div class="item input-parent">
           <label for="sleep-mode"><strong>Timer. <br>Here you can set after how many minutes the audio
@@ -269,7 +264,7 @@
       </div>
     </div>
 
-    <script type="module" src="/index.0ba6fc97.js"></script><script src="/index.a54bca1c.js" nomodule="" defer=""></script>
+    <script type="module" src="/index.94f606aa.js"></script><script src="/index.bedf0511.js" nomodule="" defer=""></script>
     <script src="/index.73733a47.js"></script>
     <script src="http://127.0.0.1/api/v1/shared/core.js"></script>
     <script src="http://127.0.0.1/api/v1/shared/session.js"></script>
