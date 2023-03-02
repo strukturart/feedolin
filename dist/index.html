@@ -4,7 +4,7 @@
     <title>feedolin</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
-    <link rel="stylesheet" href="/index.8ae9792a.css">
+    <link rel="stylesheet" href="/index.c2546b2e.css">
     <link rel="stylesheet" href="/index.df449edd.css">
     <link rel="stylesheet" href="/index.cfa8f397.css">
   </head>
@@ -209,6 +209,7 @@
 
       <div id="feed-download-list" class="width-100">
         <h2>Number of episodes</h2>
+
         <div id="feed-download-list-box"></div>
       </div>
 
@@ -216,7 +217,7 @@
 
         {{#data}}
         <div class="item input-parent flex width-100 justify-content-spacebetween" tabindex={{index}}>
-          <label>{{title}}</label><span class="middle"></span>
+          <label class="{{#error}}error{{/error}}">{{title}}</label><span class="middle"></span>
         <input data-url={{url}} type="tel" min="1" max="100" value={{amount}}>
         </div>
         {{/data}}
@@ -268,7 +269,7 @@
       </div>
     </div>
 
-    <script type="module" src="/index.60a807db.js"></script><script src="/index.57fa07f7.js" nomodule="" defer=""></script>
+    <script type="module" src="/index.0ba6fc97.js"></script><script src="/index.a54bca1c.js" nomodule="" defer=""></script>
     <script src="/index.73733a47.js"></script>
     <script src="http://127.0.0.1/api/v1/shared/core.js"></script>
     <script src="http://127.0.0.1/api/v1/shared/session.js"></script>

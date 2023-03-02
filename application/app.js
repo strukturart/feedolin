@@ -316,6 +316,7 @@ setTimeout(() => {
   //download
   if (getTime(a) && navigator.onLine) {
     let check = false;
+    //load online opml
     if (
       localStorage["source"] &&
       localStorage["source"] != "" &&
@@ -324,6 +325,7 @@ setTimeout(() => {
       load_source_opml();
       check = true;
     }
+    //load local opml
     if (
       localStorage["source_local"] &&
       localStorage["source_local"] != "" &&
@@ -390,6 +392,7 @@ let load_feeds = function (data) {
         //put in list
         if (result == false) {
           feed_download_list.push({
+            error: "",
             title: nested[z].getAttribute("title"),
             url: nested[z].getAttribute("xmlUrl"),
             amount: 5,
@@ -487,14 +490,11 @@ let rss_fetcher = function (
               youtube_id: "",
               youtube_thumbnail: "",
               video_url: "",
-              url: item_download,
-              error: error
+              url: item_download
             });
           });
         })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+        .catch((error) => {});
     } catch (e) {
       console.log(e);
     }
@@ -510,16 +510,32 @@ let rss_fetcher = function (
   xhttp.overrideMimeType("text/xml");
   xhttp.send();
 
-  xhttp.addEventListener("error", transferFailed);
-  xhttp.addEventListener("loadend", loadEnd);
-  let error = "";
-  function transferFailed() {
-    error = "transferFailed";
-  }
+  let loadEnd = function (e) {
+    //after download build html objects
+    if (k == feed_download_list.length - 1) {
+      build();
+      saveCache(content_arr);
+      console.log(feed_download_list);
+    }
+    if (k < feed_download_list.length - 1) {
+      document.getElementById("intro-message").innerText = "loading data";
 
-  if (xhttp.status != 200) {
-    error = xhttp.status;
-  }
+      //error log
+      if (xhttp.status != 200) {
+        feed_download_list[k].error = "error";
+      }
+      k++;
+      rss_fetcher(
+        feed_download_list[k].url,
+        feed_download_list[k].amount,
+        feed_download_list[k].title,
+        feed_download_list[k].channel,
+        feed_download_list[k].type
+      );
+    }
+  };
+
+  xhttp.addEventListener("loadend", loadEnd);
 
   xhttp.onload = function () {
     document.getElementById("intro-message").innerText = "loading data";
@@ -710,8 +726,7 @@ let rss_fetcher = function (
             youtube_id: youtube_id,
             youtube_thumbnail: yt_thumbnail,
             video_url: item_video_url,
-            url: item_download,
-            error: error
+            url: item_download
           });
         }
       }
@@ -839,21 +854,8 @@ let rss_fetcher = function (
       }
     }
 
-    if (xhttp.status === 404) {
-      console.log(param_channel + " url not found", 3000);
-    }
-
-    if (xhttp.status === 408) {
-      console.log(param_channel + "Time out", 3000);
-    }
-
-    if (xhttp.status === 409) {
-      console.log(param_channel + "Conflict", 3000);
-    }
-
     ////Redirection
     if (xhttp.status === 301) {
-      console.log(param_channel + " redirection", 3000);
       rss_fetcher(
         xhttp.getResponseHeader("Location"),
         param_limit,
@@ -861,33 +863,7 @@ let rss_fetcher = function (
         param_channel
       );
     }
-
-    xhttp.ontimeout = function (e) {
-      console.log(param_channel + "Time out", 3000);
-    };
-
-    if (xhttp.status === 0) {
-    }
   };
-
-  function loadEnd(e) {
-    //after download build html objects
-    if (k == feed_download_list.length - 1) {
-      build();
-      saveCache(content_arr);
-    }
-    if (k < feed_download_list.length - 1) {
-      document.getElementById("intro-message").innerText = "loading data";
-      k++;
-      rss_fetcher(
-        feed_download_list[k].url,
-        feed_download_list[k].amount,
-        feed_download_list[k].title,
-        feed_download_list[k].channel,
-        feed_download_list[k].type
-      );
-    }
-  }
 };
 
 //sort content by date
@@ -1672,6 +1648,26 @@ let show_feed_download_list = function () {
 
   document.querySelector("div#feed-download-list div:first-child").focus();
 
+  let htmlStr =
+    "<p class='item info width-100 justify-content-spacebetween'> if you want to set the number of episodes of a channel, click on the corresponding title and change the value.the entries are savedautomatically and are valid the next time the app is started.< br > The red titles could not be downloaded <br> <br></p>";
+
+  console.log(
+    document.querySelectorAll("div#feed-download-list-box p.item").length
+  );
+  if (
+    document.querySelectorAll("div#feed-download-list-box p.item").length == 0
+  ) {
+    document
+      .querySelector("div#feed-download-list-box")
+      .insertAdjacentHTML("beforeend", htmlStr);
+  }
+
+  document
+    .querySelectorAll("div#feed-download-list-box .item")
+    .forEach(function (i, e) {
+      i.setAttribute("tabIndex", e);
+    });
+
   document.querySelectorAll("#feed-download-list input").forEach(function (e) {
     e.addEventListener("change", function () {
       feed_download_list.forEach(function (f) {
@@ -2282,6 +2278,9 @@ function handleKeyDown(evt) {
   if (evt.repeat) {
     if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
 
+    if (evt.key == "Backspace" && status.window_status == "article-list")
+      window.close();
+
     if (evt.key == "ArrowLeft") {
       if (status.window_status == "youtube") {
         youtube_seeking("backward");
@@ -2310,7 +2309,7 @@ function handleKeyDown(evt) {
 function handleKeyUp(evt) {
   evt.preventDefault();
 
-  //if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
+  if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
 
   if (
     evt.key == "Backspace" &&
@@ -2320,8 +2319,6 @@ function handleKeyUp(evt) {
     evt.preventDefault();
   }
 
-  if (evt.key == "Backspace" && status.window_status == "article-list")
-    window.close();
   clearTimeout(timeout);
   if (!longpress) {
     shortpress_action(evt);

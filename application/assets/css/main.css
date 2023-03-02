@@ -100,9 +100,8 @@ button {
   background: silver;
   padding: 5px;
   width: 90vw;
-  margin: 0 0 0 5vw;
-  border-radius: 10%;
-  margin: 0 0 5px 0;
+  border-radius: 5px;
+  margin: 0 0 5px 5vw;
   color: black;
   font-style: normal !important;
   font-family: "Lato-Regular";
@@ -286,7 +285,7 @@ div#feed-download-list {
   z-index: 5;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 div#feed-download-list h2 {
@@ -299,13 +298,23 @@ div#feed-download-list h2 {
 
 div#feed-download-list div#feed-download-list-box {
   overflow: hidden;
-  height: 80vh;
+  height: 83vh;
 }
 
 div#feed-download-list div#feed-download-list-box div {
   margin: 0 0 5px 0;
   background: none !important;
   padding: 0 10px 0 10px;
+}
+
+div#feed-download-list div#feed-download-list-box label.error {
+  color: red;
+}
+
+div#feed-download-list .info {
+  font-size: 0.8rem;
+  padding: 10px;
+  position: relative;
 }
 
 div#feed-download-list div#feed-download-list-box label {
@@ -338,6 +347,11 @@ div#feed-download-list div#feed-download-list-box div:focus input {
 div#feed-download-list div#feed-download-list-box div:focus {
   background: none;
   color: white;
+}
+
+div#feed-download-list div#feed-download-list-box p:focus {
+  background: white !important;
+  color: black;
 }
 
 /*FEED*/

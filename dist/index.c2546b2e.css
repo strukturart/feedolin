@@ -83,9 +83,9 @@ button {
   width: 90vw;
   color: #000;
   background: silver;
-  -moz-border-radius: 10%;
-  border-radius: 10%;
-  margin: 0 0 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin: 0 0 5px 5vw;
   padding: 5px;
   font-family: Lato-Regular;
   font-size: 1rem;
@@ -263,7 +263,7 @@ div#feed-download-list {
   display: none;
   position: absolute;
   top: 0;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 div#feed-download-list h2 {
@@ -275,7 +275,7 @@ div#feed-download-list h2 {
 }
 
 div#feed-download-list div#feed-download-list-box {
-  height: 80vh;
+  height: 83vh;
   overflow: hidden;
 }
 
@@ -283,6 +283,16 @@ div#feed-download-list div#feed-download-list-box div {
   margin: 0 0 5px;
   padding: 0 10px;
   background: none !important;
+}
+
+div#feed-download-list div#feed-download-list-box label.error {
+  color: red;
+}
+
+div#feed-download-list .info {
+  padding: 10px;
+  font-size: .8rem;
+  position: relative;
 }
 
 div#feed-download-list div#feed-download-list-box label {
@@ -316,6 +326,11 @@ div#feed-download-list div#feed-download-list-box div:focus input {
 div#feed-download-list div#feed-download-list-box div:focus {
   color: #fff;
   background: none;
+}
+
+div#feed-download-list div#feed-download-list-box p:focus {
+  color: #000;
+  background: #fff !important;
 }
 
 div#news-feed {
