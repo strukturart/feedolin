@@ -470,18 +470,28 @@ let rss_fetcher = function (
         .then((data) => {
           data.forEach(function (i) {
             let item_image = "";
-
-            if (i.media_attachments.length > 0) {
-              if (i.media_attachments[0].type == "image")
-                item_image = i.media_attachments[0].preview_url;
-            }
-
+            let video_url = "";
             let item_type = "";
-
             let item_media = "rss";
             let item_filesize = "";
             let item_download = "";
             let startlistened = "";
+
+            if (i.media_attachments.length > 0) {
+              if (i.media_attachments[0].type == "image")
+                item_image = i.media_attachments[0].preview_url;
+
+              if (i.media_attachments[0].type == "video") {
+                video_url = i.media_attachments[0].url;
+                item_image = i.media_attachments[0].preview_url;
+                item_media = "video";
+              }
+
+              if (i.media_attachments[0].type == "audio") {
+                video_url = i.media_attachments[0].url;
+                item_media = "audio";
+              }
+            }
 
             //date
             let item_date = new Date(i.created_at);
@@ -510,13 +520,14 @@ let rss_fetcher = function (
               start_listened: startlistened,
               youtube_id: "",
               youtube_thumbnail: "",
-              video_url: "",
+              video_url: video_url,
               url: item_download
             });
           });
+          console.log(content_arr);
         })
         .catch((error) => {
-          alert("json parser error: " + error);
+          console.log("json parser error: " + error);
         });
     } catch (e) {
       console.log(e);
@@ -660,7 +671,7 @@ let rss_fetcher = function (
               item_type == "audio/mp3" ||
               item_type == "audio/x-m4a"
             ) {
-              item_media = "podcast";
+              item_media = "audio";
             }
 
             if (
@@ -680,7 +691,7 @@ let rss_fetcher = function (
               if (en_length) item_filesize = formatFileSize(en_length, 2);
             }
           }
-          if (item_media == "podcast") {
+          if (item_media == "audio") {
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
               item_duration = el[i].getElementsByTagNameNS("*", "duration")[0]
                 .textContent;
@@ -842,7 +853,7 @@ let rss_fetcher = function (
               item_type == "audio/mp3" ||
               item_type == "audio/x-m4a"
             ) {
-              item_media = "podcast";
+              item_media = "audio";
             }
 
             if (
@@ -862,7 +873,7 @@ let rss_fetcher = function (
               if (en_length) item_filesize = formatFileSize(en_length, 2);
             }
           }
-          if (item_media == "podcast") {
+          if (item_media == "audio") {
             if (el[i].getElementsByTagNameNS("*", "duration").length > 0) {
               item_duration = el[i].getElementsByTagNameNS("*", "duration")[0]
                 .textContent;
@@ -1038,11 +1049,12 @@ let tabs = function () {
     //set panel category
     if (
       panels.includes(content_arr[i].category) === false &&
-      content_arr[i].category != 0
+      content_arr.length != 0
     ) {
       panels.push(content_arr[i].category);
     }
   }
+  console.log(panels);
 };
 
 //build html
@@ -1052,7 +1064,7 @@ let build = function () {
 
   read_articles();
   listened_articles();
-  tabs();
+
   clean_localstorage();
   bottom_bar(
     "<img src='assets/icons/option.svg'>",
@@ -1073,6 +1085,7 @@ let build = function () {
   article_array[0].focus();
 
   // screenlock("unlock");
+  tabs();
 };
 
 //set tabindex
@@ -1185,6 +1198,7 @@ function nav_panels(left_right) {
   if (status.sleepmode) top_bar("sleep", panels[current_panel], "");
 
   read_articles();
+  tabs();
   //filter data
   //default
   //view
@@ -1400,7 +1414,7 @@ let show_article = function () {
 
   document.getElementById("top-bar").style.display = "none";
 
-  if (document.activeElement.getAttribute("data-media") == "podcast") {
+  if (document.activeElement.getAttribute("data-media") == "audio") {
     bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
   }
 
@@ -1488,7 +1502,7 @@ function open_url() {
     document.getElementById("progress-bar").style.display = "block";
 
     status.window_status = "video";
-    if (document.activeElement.getAttribute("data-media") == "podcast") {
+    if (document.activeElement.getAttribute("data-media") == "audio") {
       bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
     }
 
@@ -2359,7 +2373,7 @@ function shortpress_action(param) {
 
       if (
         status.window_status == "single-article" &&
-        document.activeElement.getAttribute("data-media") == "podcast"
+        document.activeElement.getAttribute("data-media") == "audio"
       ) {
         open_player(false);
         play_podcast(document.activeElement.getAttribute("data-link"));
