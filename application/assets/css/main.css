@@ -149,6 +149,21 @@ div#intro {
   height: 100%;
 }
 
+#link-list {
+  display: none;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  padding: 10px;
+}
+
+#link-list button:focus {
+  background: rgb(103, 160, 155) !important;
+}
+
+#link-list button {
+  margin: 0px 0 10px 0;
+}
+
 div#intro img {
   width: 100px;
   height: auto;

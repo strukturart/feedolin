@@ -303,9 +303,7 @@ export function add_source(url, limit, categorie, channel) {
 }
 
 export let list_files = function (filetype, callback) {
-  
   if ("b2g" in navigator) {
-    
     try {
       var sdcard = navigator.b2g.getDeviceStorage("sdcard");
 
@@ -334,8 +332,8 @@ export let list_files = function (filetype, callback) {
       console.log(e);
     }
   }
+
   try {
-  } catch (e) {
     var d = navigator.getDeviceStorage("sdcard");
 
     var cursor = d.enumerate();
@@ -360,7 +358,7 @@ export let list_files = function (filetype, callback) {
       console.warn("No file found: " + this.error);
       callback("error");
     };
-  }
+  } catch (e) {}
 };
 
 export function validate(url) {

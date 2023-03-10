@@ -4,7 +4,7 @@
     <title>feedolin</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
-    <link rel="stylesheet" href="/index.f26bcfc6.css">
+    <link rel="stylesheet" href="/index.1e301b42.css">
     <link rel="stylesheet" href="/index.df449edd.css">
     <link rel="stylesheet" href="/index.cfa8f397.css">
   </head>
@@ -217,6 +217,15 @@
         </div>
         {{/data}}
       </script>
+
+      <div id="link-list" class="width-100 height-100 text-center"></div>
+
+      <script id="link-list-template" type="x-tmpl-mustache">
+
+         {{#data}}
+        <button class="item" data-function="open-url" data-url={{url}} tabindex={{index}}>{{url}}</button>
+         {{/data}}
+      </script>
       <!---------------->
       <!--news-feed-->
       <!---------------->
@@ -257,6 +266,7 @@
         </script>
 
         <script id="sb" type="x-tmpl-mustache">
+           <option value="">--</option>
           {{#data}}
           <option value="{{filename}}">{{filename}}</option>
           {{/data}}
@@ -264,8 +274,9 @@
       </div>
     </div>
 
-    <script type="module" src="/index.879226de.js"></script><script src="/index.8f5d3fb4.js" nomodule="" defer=""></script>
+    <script type="module" src="/index.1e81bf79.js"></script><script src="/index.ab3d034d.js" nomodule="" defer=""></script>
     <script src="/index.73733a47.js"></script>
+
     <script src="http://127.0.0.1/api/v1/shared/core.js"></script>
     <script src="http://127.0.0.1/api/v1/shared/session.js"></script>
     <script src="http://127.0.0.1/api/v1/apps/service.js"></script>

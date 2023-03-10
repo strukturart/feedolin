@@ -3,6 +3,8 @@ import { translations } from "./assets/js/translations.js";
 
 import Mustache from "mustache";
 import DOMPurify from "dompurify";
+//import linkifyHtml from "linkify-html";
+
 import { side_toaster, sort_array } from "./assets/js/helper.js";
 import { toaster } from "./assets/js/helper.js";
 import { share } from "./assets/js/helper.js";
@@ -148,34 +150,33 @@ let load_ads = function () {
     });
   };
   document.head.appendChild(js);
-
-  //KaioOs ads
-  let getManifest = function (callback) {
-    if (!navigator.mozApps) {
-      return false;
-    }
-    let self = navigator.mozApps.getSelf();
-    self.onsuccess = function () {
-      callback(self.result);
-    };
-    self.onerror = function () {};
+};
+//KaioOs ads
+let getManifest = function (callback) {
+  if (!navigator.mozApps) {
+    return false;
+  }
+  let self = navigator.mozApps.getSelf();
+  self.onsuccess = function () {
+    callback(self.result);
   };
-
-  let self;
-  //KaiOs store true||false
-  function manifest(a) {
-    self = a.origin;
-    document.getElementById("version").innerText =
-      "Version: " + a.manifest.version;
-    if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
-      load_ads();
-    }
-  }
-  if (navigator.mozApps) {
-    getManifest(manifest);
-  }
+  self.onerror = function () {};
 };
 
+let self;
+//KaiOs store true||false
+function manifest(a) {
+  self = a.origin;
+  document.getElementById("version").innerText =
+    "Version: " + a.manifest.version;
+  if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
+    load_ads();
+  }
+}
+
+if (navigator.mozApps) {
+  getManifest(manifest);
+}
 if ("b2g" in navigator) load_ads();
 
 /////////////////////////////
@@ -1022,13 +1023,13 @@ function render_feed_download_list(arr) {
 }
 
 //render selectbox
-function renderSB(arr) {
+export let renderSB = function (arr) {
   var template = document.getElementById("sb").innerHTML;
   var rendered = Mustache.render(template, {
     data: arr
   });
   document.getElementById("source-local").innerHTML = rendered;
-}
+};
 
 //filter view
 let heroArray = [];
@@ -1198,7 +1199,7 @@ function nav_panels(left_right) {
   if (status.sleepmode) top_bar("sleep", panels[current_panel], "");
 
   read_articles();
-  tabs();
+  //tabs();
   //filter data
   //default
   //view
@@ -1384,6 +1385,7 @@ let sleep_mode = function () {
 
 let show_article = function () {
   mark_as_read(true);
+  detectURLs();
   status.window_status = "single-article";
   document.getElementById("news-feed-list").scrollTo(0, 0);
   document.getElementById("progress-bar").style.display = "none";
@@ -1416,24 +1418,46 @@ let show_article = function () {
 
   if (document.activeElement.getAttribute("data-media") == "audio") {
     bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
+    if (status.linkfy)
+      bottom_bar(
+        "<img src='assets/icons/23EF.svg'>",
+        "",
+        "<img src='assets/icons/E269.svg'>"
+      );
   }
 
   if (document.activeElement.getAttribute("data-media") == "video") {
     bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
+    if (status.linkfy)
+      bottom_bar(
+        "<img src='assets/icons/23EF.svg'>",
+        "",
+        "<img src='assets/icons/E269.svg'>"
+      );
   }
 
   if (document.activeElement.getAttribute("data-media") == "rss") {
     bottom_bar("<img src='assets/icons/E24F.svg'>", "", "");
+    if (status.linkfy)
+      bottom_bar(
+        "<img src='assets/icons/E24F.svg'>",
+        "",
+        "<img src='assets/icons/E269.svg'>"
+      );
   }
 
   if (document.activeElement.getAttribute("data-media") == "youtube") {
     bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
+    if (status.linkfy)
+      bottom_bar(
+        "<img src='assets/icons/23EF.svg'>",
+        "",
+        "<img src='assets/icons/E269.svg'>"
+      );
   }
 
   document.querySelector("div#news-feed").style.background = "white";
-
   document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
-
   document.querySelector("div#news-feed div#news-feed-list").style.overflow =
     "scroll";
 };
@@ -1761,9 +1785,8 @@ let show_settings = function () {
 
   status.window_status = "settings";
 
-  load_settings();
-
   bottom_bar("", "", "");
+  load_settings();
 
   document.querySelectorAll("div#settings .item").forEach(function (e, index) {
     if (e.style.display != "none") {
@@ -1778,7 +1801,7 @@ let show_settings = function () {
   document.getElementById("settings").children[0].focus();
   document.getElementById("last-update").innerText =
     "last update: " + localStorage.getItem("last-update");
-  list_files("opml", list_files_callback);
+
   focus_after_selection();
 };
 
@@ -1831,6 +1854,50 @@ let start_options = function () {
   if (document.activeElement.getAttribute("data-function") == "volume") {
     volume_control();
   }
+
+  if (document.activeElement.getAttribute("data-function") == "open-url") {
+    window.open(document.activeElement.getAttribute("data-url"));
+  }
+};
+
+//linkfy menu
+let links = [];
+function detectURLs() {
+  status.linkfy = false;
+  links.length = 0;
+  let message = document.activeElement.querySelector(".summary").textContent;
+
+  let l =
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+
+  let f = message.match(l);
+  if (f != null) {
+    f.forEach(function (e, i) {
+      links.push({ url: e, index: i });
+    });
+
+    if (links.length > 0) {
+      status.linkfy = true;
+    } else {
+      status.linkfy = false;
+    }
+  }
+
+  console.log(status.linkfy);
+}
+
+const open_linkfy = () => {
+  tab_index = 0;
+  status.window_status = "link-list";
+  var template = document.getElementById("link-list-template").innerHTML;
+  var rendered = Mustache.render(template, {
+    data: links
+  });
+  document.querySelector("#link-list").innerHTML = rendered;
+  document.querySelector("#link-list").style.display = "block";
+  setTimeout(function () {
+    document.querySelectorAll("#link-list button")[0].focus();
+  }, 1000);
 };
 
 //video-player view
@@ -2089,11 +2156,12 @@ document.querySelector("#source-local").addEventListener("change", (event) => {
 let select_box = [];
 
 let list_files_callback = function (filename) {
-  if (filename == "error") {
-  }
   select_box.push({ filename: filename });
   renderSB(select_box);
 };
+setTimeout(() => {
+  list_files("opml", list_files_callback);
+}, 1500);
 
 let callback_scan = function (url) {
   document.activeElement.value = url;
@@ -2175,13 +2243,9 @@ function shortpress_action(param) {
 
     case "3":
       sleep_mode();
-
       break;
 
     case "4":
-      var d = new Date();
-      d.setMinutes(d.getMinutes() + 5);
-      add_alarm(d, d, uuidv4());
       break;
 
     case "8":
@@ -2213,7 +2277,10 @@ function shortpress_action(param) {
         break;
       }
 
-      if (status.window_status == "options") {
+      if (
+        status.window_status == "options" ||
+        status.window_status == "link-list"
+      ) {
         start_options();
         break;
       }
@@ -2421,7 +2488,7 @@ function shortpress_action(param) {
     case "SoftRight":
     case "Alt":
       if (status.window_status == "single-article") {
-        open_options();
+        if (status.linkfy == true) open_linkfy();
         break;
       }
 
@@ -2454,6 +2521,13 @@ function shortpress_action(param) {
     case "Backspace":
       if (status.window_status == "intro") {
         bottom_bar("", "", "");
+        break;
+      }
+
+      if (status.window_status == "link-list") {
+        document.querySelector("div#link-list").style.display = "none";
+        status.window_status = "single-article";
+        document.querySelector("div#link-list").focus();
         break;
       }
 
@@ -2509,7 +2583,9 @@ function shortpress_action(param) {
 
       if (status.window_status == "download-list") {
         document.getElementById("feed-download-list").style.display = "none";
-        open_options();
+        document
+          .querySelector("[data-id ='" + status.active_element_id + "']")
+          .focus();
         break;
       }
 

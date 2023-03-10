@@ -134,6 +134,21 @@ div#intro {
   position: fixed;
 }
 
+#link-list {
+  padding: 10px;
+  display: none;
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+
+#link-list button:focus {
+  background: #67a09b !important;
+}
+
+#link-list button {
+  margin: 0 0 10px;
+}
+
 div#intro img {
   width: 100px;
   height: auto;

@@ -1,4 +1,3 @@
-(function () {
 function $parcel$export(e, n, v, s) {
   Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
 }
@@ -43,79 +42,79 @@ if (parcelRequire == null) {
 
   $parcel$global["parcelRequire94c2"] = parcelRequire;
 }
-parcelRequire.register("kDffi", function(module, exports) {
+parcelRequire.register("8d3OX", function(module, exports) {
 
-$parcel$export(module.exports, "register", function () { return $f05346a33658c95b$export$6503ec6e8aabbaf; }, function (v) { return $f05346a33658c95b$export$6503ec6e8aabbaf = v; });
-$parcel$export(module.exports, "resolve", function () { return $f05346a33658c95b$export$f7ad0328861e2f03; }, function (v) { return $f05346a33658c95b$export$f7ad0328861e2f03 = v; });
-var $f05346a33658c95b$export$6503ec6e8aabbaf;
-var $f05346a33658c95b$export$f7ad0328861e2f03;
+$parcel$export(module.exports, "register", function () { return $5fa280650c599e1a$export$6503ec6e8aabbaf; }, function (v) { return $5fa280650c599e1a$export$6503ec6e8aabbaf = v; });
+$parcel$export(module.exports, "resolve", function () { return $5fa280650c599e1a$export$f7ad0328861e2f03; }, function (v) { return $5fa280650c599e1a$export$f7ad0328861e2f03 = v; });
+var $5fa280650c599e1a$export$6503ec6e8aabbaf;
+var $5fa280650c599e1a$export$f7ad0328861e2f03;
 "use strict";
-var $f05346a33658c95b$var$mapping = {};
-function $f05346a33658c95b$var$register(pairs) {
+var $5fa280650c599e1a$var$mapping = {};
+function $5fa280650c599e1a$var$register(pairs) {
     var keys = Object.keys(pairs);
-    for(var i = 0; i < keys.length; i++)$f05346a33658c95b$var$mapping[keys[i]] = pairs[keys[i]];
+    for(var i = 0; i < keys.length; i++)$5fa280650c599e1a$var$mapping[keys[i]] = pairs[keys[i]];
 }
-function $f05346a33658c95b$var$resolve(id) {
-    var resolved = $f05346a33658c95b$var$mapping[id];
+function $5fa280650c599e1a$var$resolve(id) {
+    var resolved = $5fa280650c599e1a$var$mapping[id];
     if (resolved == null) throw new Error("Could not resolve bundle with id " + id);
     return resolved;
 }
-$f05346a33658c95b$export$6503ec6e8aabbaf = $f05346a33658c95b$var$register;
-$f05346a33658c95b$export$f7ad0328861e2f03 = $f05346a33658c95b$var$resolve;
+$5fa280650c599e1a$export$6503ec6e8aabbaf = $5fa280650c599e1a$var$register;
+$5fa280650c599e1a$export$f7ad0328861e2f03 = $5fa280650c599e1a$var$resolve;
 
 });
 
-parcelRequire.register("xqsiy", function(module, exports) {
+parcelRequire.register("a5ik5", function(module, exports) {
 
-$parcel$export(module.exports, "getBundleURL", function () { return $06479aad94a8f866$export$bdfd709ae4826697; }, function (v) { return $06479aad94a8f866$export$bdfd709ae4826697 = v; });
-var $06479aad94a8f866$export$bdfd709ae4826697;
-var $06479aad94a8f866$export$c9e73fbda7da57b6;
-var $06479aad94a8f866$export$5a759dc7a1cfb72a;
+$parcel$export(module.exports, "getBundleURL", function () { return $75789591d051542a$export$bdfd709ae4826697; }, function (v) { return $75789591d051542a$export$bdfd709ae4826697 = v; });
+var $75789591d051542a$export$bdfd709ae4826697;
+var $75789591d051542a$export$c9e73fbda7da57b6;
+var $75789591d051542a$export$5a759dc7a1cfb72a;
 "use strict";
-var $06479aad94a8f866$var$bundleURL = {};
-function $06479aad94a8f866$var$getBundleURLCached(id) {
-    var value = $06479aad94a8f866$var$bundleURL[id];
+var $75789591d051542a$var$bundleURL = {};
+function $75789591d051542a$var$getBundleURLCached(id) {
+    var value = $75789591d051542a$var$bundleURL[id];
     if (!value) {
-        value = $06479aad94a8f866$var$getBundleURL();
-        $06479aad94a8f866$var$bundleURL[id] = value;
+        value = $75789591d051542a$var$getBundleURL();
+        $75789591d051542a$var$bundleURL[id] = value;
     }
     return value;
 }
-function $06479aad94a8f866$var$getBundleURL() {
+function $75789591d051542a$var$getBundleURL() {
     try {
         throw new Error();
     } catch (err) {
         var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
         if (matches) // The first two stack frames will be this function and getBundleURLCached.
         // Use the 3rd one, which will be a runtime in the original bundle.
-        return $06479aad94a8f866$var$getBaseURL(matches[2]);
+        return $75789591d051542a$var$getBaseURL(matches[2]);
     }
     return "/";
 }
-function $06479aad94a8f866$var$getBaseURL(url) {
+function $75789591d051542a$var$getBaseURL(url) {
     return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
 } // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
-function $06479aad94a8f866$var$getOrigin(url) {
+function $75789591d051542a$var$getOrigin(url) {
     var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
     if (!matches) throw new Error("Origin not found");
     return matches[0];
 }
-$06479aad94a8f866$export$bdfd709ae4826697 = $06479aad94a8f866$var$getBundleURLCached;
-$06479aad94a8f866$export$c9e73fbda7da57b6 = $06479aad94a8f866$var$getBaseURL;
-$06479aad94a8f866$export$5a759dc7a1cfb72a = $06479aad94a8f866$var$getOrigin;
+$75789591d051542a$export$bdfd709ae4826697 = $75789591d051542a$var$getBundleURLCached;
+$75789591d051542a$export$c9e73fbda7da57b6 = $75789591d051542a$var$getBaseURL;
+$75789591d051542a$export$5a759dc7a1cfb72a = $75789591d051542a$var$getOrigin;
 
 });
 
-var $fe58509b491ab66d$exports = {};
+var $6e63492820ba3827$exports = {};
 
-(parcelRequire("kDffi")).register(JSON.parse('{"liILU":"index.8f5d3fb4.js","d4BpT":"sw.js"}'));
+(parcelRequire("8d3OX")).register(JSON.parse('{"gQacM":"index.1e81bf79.js","d4BpT":"sw.js"}'));
 
-var $5535d7a9ff238efe$exports = {};
+var $3e4edb8379ebf8a3$exports = {};
 
-$parcel$export($5535d7a9ff238efe$exports, "recently_played", function () { return $5535d7a9ff238efe$export$57ef1bcec6355f64; }, function (v) { return $5535d7a9ff238efe$export$57ef1bcec6355f64 = v; });
-$parcel$export($5535d7a9ff238efe$exports, "status", function () { return $5535d7a9ff238efe$export$471f7ae5c4103ae1; }, function (v) { return $5535d7a9ff238efe$export$471f7ae5c4103ae1 = v; });
-$parcel$export($5535d7a9ff238efe$exports, "toTime", function () { return $5535d7a9ff238efe$export$d33f79e3ffc3dc83; }, function (v) { return $5535d7a9ff238efe$export$d33f79e3ffc3dc83 = v; });
-var $22ed86740f9276dd$export$150b732325d14d04 = {
+$parcel$export($3e4edb8379ebf8a3$exports, "recently_played", function () { return $3e4edb8379ebf8a3$export$57ef1bcec6355f64; }, function (v) { return $3e4edb8379ebf8a3$export$57ef1bcec6355f64 = v; });
+$parcel$export($3e4edb8379ebf8a3$exports, "status", function () { return $3e4edb8379ebf8a3$export$471f7ae5c4103ae1; }, function (v) { return $3e4edb8379ebf8a3$export$471f7ae5c4103ae1 = v; });
+$parcel$export($3e4edb8379ebf8a3$exports, "toTime", function () { return $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83; }, function (v) { return $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83 = v; });
+var $f18e354a63dd7a2d$export$150b732325d14d04 = {
     "en-EN": {
         app_intro_loading: "loading data",
         player_play: "play",
@@ -137,15 +136,15 @@ var $22ed86740f9276dd$export$150b732325d14d04 = {
 };
 
 
-var $13462400ebaaddfa$exports = {};
-function $ffd930d6675a10cb$export$2e2bcd8739ae039(obj) {
+var $7eadabea78850cc1$exports = {};
+function $4cf69b662a37e1e4$export$2e2bcd8739ae039(obj) {
     "@swc/helpers - typeof";
     return obj && obj.constructor === Symbol ? "symbol" : typeof obj;
 }
 
 
 (function(global, factory) {
-    $13462400ebaaddfa$exports = factory();
+    $7eadabea78850cc1$exports = factory();
 })(undefined, function() {
     "use strict";
     var isFunction = function isFunction(object) {
@@ -155,7 +154,7 @@ function $ffd930d6675a10cb$export$2e2bcd8739ae039(obj) {
    * More correct typeof string handling array
    * which normally returns typeof 'object'
    */ function typeStr(obj) {
-        return isArray(obj) ? "array" : typeof obj === "undefined" ? "undefined" : (0, $ffd930d6675a10cb$export$2e2bcd8739ae039)(obj);
+        return isArray(obj) ? "array" : typeof obj === "undefined" ? "undefined" : (0, $4cf69b662a37e1e4$export$2e2bcd8739ae039)(obj);
     };
     var escapeRegExp = function escapeRegExp(string) {
         return string.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
@@ -738,10 +737,10 @@ function $ffd930d6675a10cb$export$2e2bcd8739ae039(obj) {
 });
 
 
-var $2449999283207805$exports = {};
+var $f817e9c18ea96dab$exports = {};
 /*! @license DOMPurify 2.4.4 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.4.4/LICENSE */ (function(global, factory) {
-    $2449999283207805$exports = factory();
-})($2449999283207805$exports, function() {
+    $f817e9c18ea96dab$exports = factory();
+})($f817e9c18ea96dab$exports, function() {
     "use strict";
     var _isNativeReflectConstruct = function _isNativeReflectConstruct() {
         if (typeof Reflect === "undefined" || !Reflect.construct) return false;
@@ -2439,21 +2438,21 @@ var $2449999283207805$exports = {};
 
 "use strict";
 if (window.NodeList && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
-var $162001cafa2b40fd$export$d41d9ab3de2def3d = function hashCode(str) {
+var $6d3f4b507512327e$export$d41d9ab3de2def3d = function hashCode(str) {
     var hash = 0;
     for(var i = 0; i < str.length; i++)hash = ~~((hash << 5) - hash + str.charCodeAt(i));
     return hash;
 };
-function $162001cafa2b40fd$export$4b1eab49334fb1a0(i) {
+function $6d3f4b507512327e$export$4b1eab49334fb1a0(i) {
     var c = (i & 0x00ffffff).toString(16).toUpperCase();
     return "00000".substring(0, 6 - c.length) + c;
 }
-function $162001cafa2b40fd$var$getRandomInteger(min, max) {
+function $6d3f4b507512327e$var$getRandomInteger(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 }
-var $162001cafa2b40fd$export$5e14cdade93d6f7b = function notify(param_title, param_text, param_silent, requireInteraction) {
+var $6d3f4b507512327e$export$5e14cdade93d6f7b = function notify(param_title, param_text, param_silent, requireInteraction) {
     var options = {
         body: param_text,
         silent: param_silent,
@@ -2475,43 +2474,43 @@ var $162001cafa2b40fd$export$5e14cdade93d6f7b = function notify(param_title, par
     });
 };
 //side toaster
-var $162001cafa2b40fd$var$queue_st = [];
-var $162001cafa2b40fd$var$ttimeout;
-var $162001cafa2b40fd$export$6593825dc0f3a767 = function side_toaster(text, time) {
-    $162001cafa2b40fd$var$queue_st.push({
+var $6d3f4b507512327e$var$queue_st = [];
+var $6d3f4b507512327e$var$ttimeout;
+var $6d3f4b507512327e$export$6593825dc0f3a767 = function side_toaster(text, time) {
+    $6d3f4b507512327e$var$queue_st.push({
         text: text,
         time: time
     });
-    if ($162001cafa2b40fd$var$queue_st.length === 1) $162001cafa2b40fd$var$toast_qq(text, time);
+    if ($6d3f4b507512327e$var$queue_st.length === 1) $6d3f4b507512327e$var$toast_qq(text, time);
 };
-var $162001cafa2b40fd$var$toast_qq = function toast_qq1(text, time) {
+var $6d3f4b507512327e$var$toast_qq = function toast_qq1(text, time) {
     var x = document.querySelector("div#side-toast");
-    x.innerHTML = $162001cafa2b40fd$var$queue_st[0].text;
+    x.innerHTML = $6d3f4b507512327e$var$queue_st[0].text;
     x.style.transform = "translate(0vh, 0px)";
-    $162001cafa2b40fd$var$timeout = setTimeout(function() {
-        $162001cafa2b40fd$var$ttimeout = null;
+    $6d3f4b507512327e$var$timeout = setTimeout(function() {
+        $6d3f4b507512327e$var$ttimeout = null;
         x.style.transform = "translate(-100vh,0px)";
-        $162001cafa2b40fd$var$queue_st = $162001cafa2b40fd$var$queue.slice(1);
-        if ($162001cafa2b40fd$var$queue_st.length > 0) setTimeout(function() {
-            $162001cafa2b40fd$var$toast_qq(text, time);
+        $6d3f4b507512327e$var$queue_st = $6d3f4b507512327e$var$queue.slice(1);
+        if ($6d3f4b507512327e$var$queue_st.length > 0) setTimeout(function() {
+            $6d3f4b507512327e$var$toast_qq(text, time);
         }, 1000);
     }, time);
 };
-var $162001cafa2b40fd$export$247be4ede8e3a24a = function bottom_bar(left, center, right) {
+var $6d3f4b507512327e$export$247be4ede8e3a24a = function bottom_bar(left, center, right) {
     document.querySelector("div#bottom-bar div#button-left").innerHTML = left;
     document.querySelector("div#bottom-bar div#button-center").innerHTML = center;
     document.querySelector("div#bottom-bar div#button-right").innerHTML = right;
     if (left == "" && center == "" && right == "") document.querySelector("div#bottom-bar").style.display = "none";
     else document.querySelector("div#bottom-bar").style.display = "block";
 };
-var $162001cafa2b40fd$export$7ce2ea7c45ae9a07 = function top_bar(left, center, right) {
+var $6d3f4b507512327e$export$7ce2ea7c45ae9a07 = function top_bar(left, center, right) {
     document.querySelector("div#top-bar div.button-left").innerHTML = left;
     document.querySelector("div#top-bar div.button-center").textContent = center;
     document.querySelector("div#top-bar div.button-right").textContent = right;
     if (left == "" && center == "" && right == "") document.querySelector("div#top-bar").style.display = "none";
     else document.querySelector("div#top-bar").style.display = "block";
 };
-var $162001cafa2b40fd$export$ed80d9de1d9df928 = function share(url) {
+var $6d3f4b507512327e$export$ed80d9de1d9df928 = function share(url) {
     var activity = new MozActivity({
         name: "share",
         data: {
@@ -2524,16 +2523,16 @@ var $162001cafa2b40fd$export$ed80d9de1d9df928 = function share(url) {
         console.log("The activity encounter en error: " + this.error);
     };
 };
-function $162001cafa2b40fd$export$e1ab1b7fde603c93() {
+function $6d3f4b507512327e$export$e1ab1b7fde603c93() {
     var updateOfflineStatus = function updateOfflineStatus() {
-        $162001cafa2b40fd$export$a224d1f4f6f98541("Your Browser is offline", 15000);
+        $6d3f4b507512327e$export$a224d1f4f6f98541("Your Browser is offline", 15000);
         return false;
     };
     window.addEventListener("offline", updateOfflineStatus);
 }
-function $162001cafa2b40fd$var$delete_file(filename) {
+function $6d3f4b507512327e$var$delete_file(filename) {
     var sdcard = navigator.getDeviceStorage("sdcard");
-    var request = sdcard.delete(filename);
+    var request = sdcard["delete"](filename);
     request.onsuccess = function() {
     //toaster("File deleted", 2000);
     };
@@ -2541,7 +2540,7 @@ function $162001cafa2b40fd$var$delete_file(filename) {
     //toaster("Unable to delete the file: " + this.error, 2000);
     };
 }
-function $162001cafa2b40fd$export$16146fefff7e9a3b(filename) {
+function $6d3f4b507512327e$export$16146fefff7e9a3b(filename) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2558,7 +2557,7 @@ function $162001cafa2b40fd$export$16146fefff7e9a3b(filename) {
     //alert("Unable to get the file: " + this.error);
     };
 }
-function $162001cafa2b40fd$export$2c24603ae7a64b6(data, filename) {
+function $6d3f4b507512327e$export$2c24603ae7a64b6(data, filename) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2578,10 +2577,10 @@ function $162001cafa2b40fd$export$2c24603ae7a64b6(data, filename) {
     };
     // An error typically occur if a file with the same name already exist
     request.onerror = function() {
-        $162001cafa2b40fd$export$a224d1f4f6f98541("Unable to write the file: " + this.error, 2000);
+        $6d3f4b507512327e$export$a224d1f4f6f98541("Unable to write the file: " + this.error, 2000);
     };
 }
-var $162001cafa2b40fd$export$b04ad9f70842c3f1 = function sort_array(arr, item_key, type) {
+var $6d3f4b507512327e$export$b04ad9f70842c3f1 = function sort_array(arr, item_key, type) {
     //sort by number
     if (type == "number") arr.sort(function(a, b) {
         return b[item_key] - a[item_key];
@@ -2594,7 +2593,7 @@ var $162001cafa2b40fd$export$b04ad9f70842c3f1 = function sort_array(arr, item_ke
         return 0;
     });
 };
-function $162001cafa2b40fd$export$be816da92314cb02(url, limit, categorie, channel) {
+function $6d3f4b507512327e$export$be816da92314cb02(url, limit, categorie, channel) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2612,7 +2611,7 @@ function $162001cafa2b40fd$export$be816da92314cb02(url, limit, categorie, channe
             try {
                 data = JSON.parse(event.target.result);
             } catch (e) {
-                $162001cafa2b40fd$export$a224d1f4f6f98541("JSON is not valid", 2000);
+                $6d3f4b507512327e$export$a224d1f4f6f98541("JSON is not valid", 2000);
                 return false;
             }
             data.push({
@@ -2622,7 +2621,7 @@ function $162001cafa2b40fd$export$be816da92314cb02(url, limit, categorie, channe
                 channel: channel
             });
             var extData = JSON.stringify(data);
-            var request_del = sdcard.delete("rss-reader.json");
+            var request_del = sdcard["delete"]("rss-reader.json");
             request_del.onsuccess = function() {
                 //toaster('File successfully removed.', 2000);
                 var file = new Blob([
@@ -2632,10 +2631,10 @@ function $162001cafa2b40fd$export$be816da92314cb02(url, limit, categorie, channe
                 });
                 var requestAdd = sdcard.addNamed(file, "rss-reader.json");
                 requestAdd.onsuccess = function() {
-                    $162001cafa2b40fd$export$a224d1f4f6f98541("<br><br>the rss feed <br>has been successfully added to your list.", 3000);
+                    $6d3f4b507512327e$export$a224d1f4f6f98541("<br><br>the rss feed <br>has been successfully added to your list.", 3000);
                 };
                 requestAdd.onerror = function() {
-                    $162001cafa2b40fd$export$a224d1f4f6f98541("Unable to write the file: " + this.error);
+                    $6d3f4b507512327e$export$a224d1f4f6f98541("Unable to write the file: " + this.error);
                 };
             };
             request_del.onerror = function() {
@@ -2645,10 +2644,10 @@ function $162001cafa2b40fd$export$be816da92314cb02(url, limit, categorie, channe
         reader.readAsText(fileget);
     };
     request.onerror = function() {
-        $162001cafa2b40fd$export$a224d1f4f6f98541(this.error, 3000);
+        $6d3f4b507512327e$export$a224d1f4f6f98541(this.error, 3000);
     };
 }
-var $162001cafa2b40fd$export$99c802f9c0aea792 = function list_files(filetype, callback) {
+var $6d3f4b507512327e$export$99c802f9c0aea792 = function list_files(filetype, callback) {
     if ("b2g" in navigator) try {
         var sdcard = navigator.b2g.getDeviceStorage("sdcard");
         var iterable = sdcard.enumerate();
@@ -2661,7 +2660,7 @@ var $162001cafa2b40fd$export$99c802f9c0aea792 = function list_files(filetype, ca
                     if (file_type == filetype) callback(file.value.name);
                     next(_files);
                 }
-            }).catch(function() {
+            })["catch"](function() {
                 next(_files);
             });
         }
@@ -2669,14 +2668,31 @@ var $162001cafa2b40fd$export$99c802f9c0aea792 = function list_files(filetype, ca
     } catch (e) {
         console.log(e);
     }
-    var d, cursor;
+    try {
+        var d = navigator.getDeviceStorage("sdcard");
+        var cursor = d.enumerate();
+        cursor.onsuccess = function() {
+            if (!this.result) console.log("finished");
+            if (cursor.result.name !== null) {
+                var file = cursor.result;
+                var n = file.name.split(".");
+                var file_type = n[n.length - 1];
+                if (file_type == filetype) callback(file.name);
+                this["continue"]();
+            }
+        };
+        cursor.onerror = function() {
+            console.warn("No file found: " + this.error);
+            callback("error");
+        };
+    } catch (e) {}
 };
-function $162001cafa2b40fd$export$a22775fa5e2eebd9(url) {
+function $6d3f4b507512327e$export$a22775fa5e2eebd9(url) {
     var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if (pattern.test(url)) return true;
     return false;
 }
-var $162001cafa2b40fd$export$39e873de56f329d8 = function getManifest(callback) {
+var $6d3f4b507512327e$export$39e873de56f329d8 = function getManifest(callback) {
     if (!navigator.mozApps) //let t = document.getElementById("kaisos-ads");
     //t.remove();
     return false;
@@ -2686,45 +2702,45 @@ var $162001cafa2b40fd$export$39e873de56f329d8 = function getManifest(callback) {
     };
     self.onerror = function() {};
 };
-var $162001cafa2b40fd$var$queue = [];
-var $162001cafa2b40fd$var$timeout;
-var $162001cafa2b40fd$export$a224d1f4f6f98541 = function toaster(text, time) {
-    $162001cafa2b40fd$var$queue.push({
+var $6d3f4b507512327e$var$queue = [];
+var $6d3f4b507512327e$var$timeout;
+var $6d3f4b507512327e$export$a224d1f4f6f98541 = function toaster(text, time) {
+    $6d3f4b507512327e$var$queue.push({
         text: text,
         time: time
     });
-    if ($162001cafa2b40fd$var$queue.length === 1) $162001cafa2b40fd$var$toast_q(text, time);
+    if ($6d3f4b507512327e$var$queue.length === 1) $6d3f4b507512327e$var$toast_q(text, time);
 };
-var $162001cafa2b40fd$var$toast_q = function toast_q1(text, time) {
+var $6d3f4b507512327e$var$toast_q = function toast_q1(text, time) {
     var x = document.querySelector("div#toast");
-    x.innerHTML = $162001cafa2b40fd$var$queue[0].text;
+    x.innerHTML = $6d3f4b507512327e$var$queue[0].text;
     x.style.transform = "translate(0px, 0px)";
-    $162001cafa2b40fd$var$timeout = setTimeout(function() {
-        $162001cafa2b40fd$var$timeout = null;
+    $6d3f4b507512327e$var$timeout = setTimeout(function() {
+        $6d3f4b507512327e$var$timeout = null;
         x.style.transform = "translate(0px, -100px)";
-        $162001cafa2b40fd$var$queue = $162001cafa2b40fd$var$queue.slice(1);
-        if ($162001cafa2b40fd$var$queue.length > 0) setTimeout(function() {
-            $162001cafa2b40fd$var$toast_q(text, time);
+        $6d3f4b507512327e$var$queue = $6d3f4b507512327e$var$queue.slice(1);
+        if ($6d3f4b507512327e$var$queue.length > 0) setTimeout(function() {
+            $6d3f4b507512327e$var$toast_q(text, time);
         }, 1000);
     }, time);
 };
-var $162001cafa2b40fd$var$lock;
-var $162001cafa2b40fd$export$19d2b7c667666dbd = function screenlock(stat) {
+var $6d3f4b507512327e$var$lock;
+var $6d3f4b507512327e$export$19d2b7c667666dbd = function screenlock(stat) {
     if (typeof window.navigator.requestWakeLock === "undefined") return false;
     if (stat == "lock") {
-        $162001cafa2b40fd$var$lock = window.navigator.requestWakeLock("screen");
-        $162001cafa2b40fd$var$lock.onsuccess = function() {
+        $6d3f4b507512327e$var$lock = window.navigator.requestWakeLock("screen");
+        $6d3f4b507512327e$var$lock.onsuccess = function() {
             console.log("yesah");
         };
-        $162001cafa2b40fd$var$lock.onerror = function() {
+        $6d3f4b507512327e$var$lock.onerror = function() {
             console.log("An error occurred: " + this.error.name);
         };
     }
     if (stat == "unlock") {
-        if ($162001cafa2b40fd$var$lock.topic == "screen") $162001cafa2b40fd$var$lock.unlock();
+        if ($6d3f4b507512327e$var$lock.topic == "screen") $6d3f4b507512327e$var$lock.unlock();
     }
 };
-var $162001cafa2b40fd$export$c3e8f8508bab224b = function(_) {
+var $6d3f4b507512327e$export$c3e8f8508bab224b = function(_) {
     var ll = function ll() {
         var handleIntersection = function handleIntersection(entries) {
             entries.map(function(entry) {
@@ -2749,7 +2765,7 @@ var $162001cafa2b40fd$export$c3e8f8508bab224b = function(_) {
         ll: ll
     };
 }();
-function $162001cafa2b40fd$export$a55dc7d9a051abe5(bytes, decimalPoint) {
+function $6d3f4b507512327e$export$a55dc7d9a051abe5(bytes, decimalPoint) {
     if (bytes || bytes > 0 || bytes != undefined || bytes != NaN || bytes != null) {
         var k = 1000, dm = decimalPoint || 2, sizes = [
             "Bytes",
@@ -2765,7 +2781,7 @@ function $162001cafa2b40fd$export$a55dc7d9a051abe5(bytes, decimalPoint) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
     }
 }
-function $162001cafa2b40fd$export$dccb98b97a3cb8be(storage, path, notification) {
+function $6d3f4b507512327e$export$dccb98b97a3cb8be(storage, path, notification) {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -2773,7 +2789,7 @@ function $162001cafa2b40fd$export$dccb98b97a3cb8be(storage, path, notification) 
     } catch (e) {
         console.log(e);
     }
-    var requestDel = sdcard.delete(path);
+    var requestDel = sdcard["delete"](path);
     requestDel.onsuccess = function() {
         if (notification == "notification") helper.toaster('File "' + name + '" successfully deleted frome the sdcard storage area');
     };
@@ -2786,7 +2802,7 @@ function $162001cafa2b40fd$export$dccb98b97a3cb8be(storage, path, notification) 
 
 
 
-var $01385e9633cc7ced$export$1428f42a7de81803 = function getTime(cache_buffer) {
+var $6c138793da69922c$export$1428f42a7de81803 = function getTime(cache_buffer) {
     var timestamp = Math.floor(new Date().getTime() / 60000);
     cache_buffer = Number(cache_buffer);
     var lastupdate = Number(localStorage.getItem("last_update"));
@@ -2798,20 +2814,20 @@ var $01385e9633cc7ced$export$1428f42a7de81803 = function getTime(cache_buffer) {
     } else //load cache
     return false;
 };
-var $01385e9633cc7ced$export$d5dd531629745216 = function loadCache() {
+var $6c138793da69922c$export$d5dd531629745216 = function loadCache() {
     if (localStorage.getItem("data") == "" || localStorage.getItem("data") == undefined) return false;
     else return JSON.parse(localStorage.getItem("data"));
 };
-var $01385e9633cc7ced$export$7a1d85371c4f69 = function saveCache(data) {
+var $6c138793da69922c$export$7a1d85371c4f69 = function saveCache(data) {
     localStorage.setItem("data", JSON.stringify(data));
 };
 
 
 
-var $39e0152360893de3$exports = {};
+var $ba501d359f0081e2$exports = {};
 (function webpackUniversalModuleDefinition(root, factory) {
-    $39e0152360893de3$exports = factory();
-})(typeof self !== "undefined" ? self : $39e0152360893de3$exports, function() {
+    $ba501d359f0081e2$exports = factory();
+})(typeof self !== "undefined" ? self : $ba501d359f0081e2$exports, function() {
     return /******/ function(modules) {
         /******/ // The module cache
         /******/ var installedModules = {};
@@ -2915,10 +2931,10 @@ var $39e0152360893de3$exports = {};
                         if (x >= this.size) x = (x ^ this.primitive) & this.size - 1; // tslint:disable-line:no-bitwise
                     }
                     for(var i = 0; i < this.size - 1; i++)this.logTable[this.expTable[i]] = i;
-                    this.zero = new GenericGFPoly_1.default(this, Uint8ClampedArray.from([
+                    this.zero = new GenericGFPoly_1["default"](this, Uint8ClampedArray.from([
                         0
                     ]));
-                    this.one = new GenericGFPoly_1.default(this, Uint8ClampedArray.from([
+                    this.one = new GenericGFPoly_1["default"](this, Uint8ClampedArray.from([
                         1
                     ]));
                 };
@@ -2935,7 +2951,7 @@ var $39e0152360893de3$exports = {};
                     if (coefficient === 0) return this.zero;
                     var coefficients = new Uint8ClampedArray(degree + 1);
                     coefficients[0] = coefficient;
-                    return new GenericGFPoly_1.default(this, coefficients);
+                    return new GenericGFPoly_1["default"](this, coefficients);
                 };
                 GenericGF.prototype.log = function(a) {
                     if (a === 0) throw new Error("Can't take log(0)");
@@ -2946,7 +2962,7 @@ var $39e0152360893de3$exports = {};
                 };
                 return GenericGF;
             }();
-            exports.default = GenericGF;
+            exports["default"] = GenericGF;
         /***/ },
         /* 2 */ /***/ function(module1, exports, __webpack_require__) {
             "use strict";
@@ -3042,7 +3058,7 @@ var $39e0152360893de3$exports = {};
                 };
                 return GenericGFPoly;
             }();
-            exports.default = GenericGFPoly;
+            exports["default"] = GenericGFPoly;
         /***/ },
         /* 3 */ /***/ function(module1, exports, __webpack_require__) {
             "use strict";
@@ -3095,8 +3111,8 @@ var $39e0152360893de3$exports = {};
             var defaultOptions = {
                 inversionAttempts: "attemptBoth"
             };
-            jsQR.default = jsQR;
-            exports.default = jsQR;
+            jsQR["default"] = jsQR;
+            exports["default"] = jsQR;
         /***/ },
         /* 4 */ /***/ function(module1, exports, __webpack_require__) {
             "use strict";
@@ -3206,8 +3222,8 @@ var $39e0152360893de3$exports = {};
                 }
                 return bitCount;
             };
-            var pushBit = function pushBit(bit, byte) {
-                return byte << 1 | bit;
+            var pushBit = function pushBit(bit, _byte) {
+                return _byte << 1 | bit;
             };
             var buildFunctionPatternMask = function buildFunctionPatternMask(version) {
                 var dimension = 17 + 4 * version.versionNumber;
@@ -11095,8 +11111,8 @@ var $39e0152360893de3$exports = {};
             var decode = function decode(bytes, twoS) {
                 var outputBytes = new Uint8ClampedArray(bytes.length);
                 outputBytes.set(bytes);
-                var field = new GenericGF_1.default(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
-                var poly = new GenericGFPoly_1.default(field, outputBytes);
+                var field = new GenericGF_1["default"](0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
+                var poly = new GenericGFPoly_1["default"](field, outputBytes);
                 var syndromeCoefficients = new Uint8ClampedArray(twoS);
                 var error = false;
                 for(var s = 0; s < twoS; s++){
@@ -11105,7 +11121,7 @@ var $39e0152360893de3$exports = {};
                     if (evaluation !== 0) error = true;
                 }
                 if (!error) return outputBytes;
-                var syndrome = new GenericGFPoly_1.default(field, syndromeCoefficients);
+                var syndrome = new GenericGFPoly_1["default"](field, syndromeCoefficients);
                 var sigmaOmega = runEuclideanAlgorithm(field, field.buildMonomial(twoS, 1), syndrome, twoS);
                 if (sigmaOmega === null) return null;
                 var errorLocations = findErrorLocations(field, sigmaOmega[0]);
@@ -14182,17 +14198,17 @@ var $39e0152360893de3$exports = {};
 });
 
 
-var $2b0cc46421a6d3fe$var$video = document.querySelector("video#video");
-var $2b0cc46421a6d3fe$var$intv;
-var $2b0cc46421a6d3fe$var$mediaStream;
-var $2b0cc46421a6d3fe$export$55e6c60a43cc74e2 = function stop_scan(callback) {
-    $2b0cc46421a6d3fe$var$mediaStream.getTracks().map(function(val) {
+var $da5c51e5866985e6$var$video = document.querySelector("video#video");
+var $da5c51e5866985e6$var$intv;
+var $da5c51e5866985e6$var$mediaStream;
+var $da5c51e5866985e6$export$55e6c60a43cc74e2 = function stop_scan(callback) {
+    $da5c51e5866985e6$var$mediaStream.getTracks().map(function(val) {
         val.stop();
     });
     document.getElementById("qr-screen").style.display = "none";
     callback();
 };
-var $2b0cc46421a6d3fe$export$be96fe42679d1b7e = function start_scan(callback) {
+var $da5c51e5866985e6$export$be96fe42679d1b7e = function start_scan(callback) {
     document.getElementById("qr-screen").style.display = "block";
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     if (navigator.getUserMedia) navigator.getUserMedia({
@@ -14202,25 +14218,25 @@ var $2b0cc46421a6d3fe$export$be96fe42679d1b7e = function start_scan(callback) {
             height: 200
         }
     }, function(stream) {
-        $2b0cc46421a6d3fe$var$video.srcObject = stream;
+        $da5c51e5866985e6$var$video.srcObject = stream;
         console.log(stream);
-        $2b0cc46421a6d3fe$var$mediaStream = stream;
-        $2b0cc46421a6d3fe$var$video.onloadedmetadata = function(e) {
-            $2b0cc46421a6d3fe$var$video.play();
+        $da5c51e5866985e6$var$mediaStream = stream;
+        $da5c51e5866985e6$var$video.onloadedmetadata = function(e) {
+            $da5c51e5866985e6$var$video.play();
             var barcodeCanvas = document.createElement("canvas");
-            $2b0cc46421a6d3fe$var$intv = setInterval(function() {
-                barcodeCanvas.width = $2b0cc46421a6d3fe$var$video.videoWidth;
-                barcodeCanvas.height = $2b0cc46421a6d3fe$var$video.videoHeight;
+            $da5c51e5866985e6$var$intv = setInterval(function() {
+                barcodeCanvas.width = $da5c51e5866985e6$var$video.videoWidth;
+                barcodeCanvas.height = $da5c51e5866985e6$var$video.videoHeight;
                 var barcodeContext = barcodeCanvas.getContext("2d");
-                var imageWidth = Math.max(1, Math.floor($2b0cc46421a6d3fe$var$video.videoWidth)), imageHeight = Math.max(1, Math.floor($2b0cc46421a6d3fe$var$video.videoHeight));
-                barcodeContext.drawImage($2b0cc46421a6d3fe$var$video, 0, 0, imageWidth, imageHeight);
+                var imageWidth = Math.max(1, Math.floor($da5c51e5866985e6$var$video.videoWidth)), imageHeight = Math.max(1, Math.floor($da5c51e5866985e6$var$video.videoHeight));
+                barcodeContext.drawImage($da5c51e5866985e6$var$video, 0, 0, imageWidth, imageHeight);
                 var imageData = barcodeContext.getImageData(0, 0, imageWidth, imageHeight);
                 var idd = imageData.data;
-                var code = (0, (/*@__PURE__*/$parcel$interopDefault($39e0152360893de3$exports)))(idd, imageWidth, imageHeight);
+                var code = (0, (/*@__PURE__*/$parcel$interopDefault($ba501d359f0081e2$exports)))(idd, imageWidth, imageHeight);
                 if (code) {
-                    clearInterval($2b0cc46421a6d3fe$var$intv);
+                    clearInterval($da5c51e5866985e6$var$intv);
                     callback(code.data);
-                    $2b0cc46421a6d3fe$export$55e6c60a43cc74e2();
+                    $da5c51e5866985e6$export$55e6c60a43cc74e2();
                 }
             }, 1000);
         };
@@ -14234,7 +14250,7 @@ var $2b0cc46421a6d3fe$export$be96fe42679d1b7e = function start_scan(callback) {
 
 
 "use strict";
-var $011f805697d8f593$export$60d2a73d9c319f71 = {
+var $e9640ea827150915$export$60d2a73d9c319f71 = {
     sleep_time: localStorage.getItem("sleep_time") != null ? localStorage.getItem("sleep_time") : 20,
     interval: localStorage.getItem("interval") != null ? localStorage.getItem("interval") : "never",
     source_local: localStorage.getItem("source_local") != null ? localStorage.getItem("source_local") : "",
@@ -14243,21 +14259,21 @@ var $011f805697d8f593$export$60d2a73d9c319f71 = {
     wwww_file: false,
     ads: false
 };
-var $011f805697d8f593$export$49927c207fac7a54 = function load_settings() {
-    document.getElementById("time").value = $011f805697d8f593$export$60d2a73d9c319f71.interval;
+var $e9640ea827150915$export$49927c207fac7a54 = function load_settings() {
+    document.getElementById("time").value = $e9640ea827150915$export$60d2a73d9c319f71.interval;
     if (localStorage.getItem("source") != null) document.getElementById("source").value = localStorage.getItem("source");
     else document.getElementById("source").value = "";
     if (localStorage.getItem("source_local") != null) document.getElementById("source-local").value = localStorage.getItem("source_local");
     if (localStorage.getItem("sleep_time") !== null) document.getElementById("sleep-mode").value = localStorage.getItem("sleep_time");
 };
-var $011f805697d8f593$export$f5d05897b0194561 = function save_settings() {
+var $e9640ea827150915$export$f5d05897b0194561 = function save_settings() {
     if (document.getElementById("source-local").value == "" && document.getElementById("source").value == "") {
-        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("please fill in the location of the source file", 3000);
+        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("please fill in the location of the source file", 3000);
         return false;
     }
     if (document.getElementById("source").value != "") {
-        if (!(0, $162001cafa2b40fd$export$a22775fa5e2eebd9)(document.getElementById("source").value)) {
-            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("url not valid", 2000);
+        if (!(0, $6d3f4b507512327e$export$a22775fa5e2eebd9)(document.getElementById("source").value)) {
+            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("url not valid", 2000);
             return false;
         }
     }
@@ -14265,10 +14281,10 @@ var $011f805697d8f593$export$f5d05897b0194561 = function save_settings() {
     localStorage.setItem("source", document.getElementById("source").value);
     localStorage.setItem("source_local", document.getElementById("source-local").value);
     localStorage.setItem("sleep_time", document.getElementById("sleep-mode").value);
-    (0, $162001cafa2b40fd$export$6593825dc0f3a767)("saved successfully", 2000);
+    (0, $6d3f4b507512327e$export$6593825dc0f3a767)("saved successfully", 2000);
     return true;
 };
-var $011f805697d8f593$export$556c64630c31efa4 = function load_settings_from_file() {
+var $e9640ea827150915$export$556c64630c31efa4 = function load_settings_from_file() {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -14277,12 +14293,12 @@ var $011f805697d8f593$export$556c64630c31efa4 = function load_settings_from_file
         console.log(e);
     }
     var file = sdcard.get("feedolin_settings.json");
-    (0, $162001cafa2b40fd$export$6593825dc0f3a767)("search setting file", 2000);
+    (0, $6d3f4b507512327e$export$6593825dc0f3a767)("search setting file", 2000);
     file.onerror = function() {
-        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("error", 2000);
+        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("error", 2000);
     };
     file.onerror = function() {
-        (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("error", 2000);
+        (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("error", 2000);
     };
     file.onsuccess = function() {
         var reader = new FileReader();
@@ -14295,14 +14311,14 @@ var $011f805697d8f593$export$556c64630c31efa4 = function load_settings_from_file
             document.getElementById("source").value = settings.source;
             document.getElementById("time").value = settings.interval;
             document.getElementById("sleep-mode").value = settings.sleep_time;
-            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("the settings were loaded from the file, if you want to use them permanently don't forget to save.", 6000);
+            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("the settings were loaded from the file, if you want to use them permanently don't forget to save.", 6000);
             reader.onerror = function() {
-                (0, $162001cafa2b40fd$export$a224d1f4f6f98541)(reader.error);
+                (0, $6d3f4b507512327e$export$a224d1f4f6f98541)(reader.error);
             };
         };
     };
 };
-var $011f805697d8f593$export$875389d4757e8c73 = function export_settings() {
+var $e9640ea827150915$export$875389d4757e8c73 = function export_settings() {
     var sdcard;
     if ("b2g" in navigator) sdcard = navigator.b2g.getDeviceStorage("sdcard");
     try {
@@ -14310,11 +14326,11 @@ var $011f805697d8f593$export$875389d4757e8c73 = function export_settings() {
     } catch (e) {
         console.log(e);
     }
-    var request_del = sdcard.delete("feedolin_settings.json");
+    var request_del = sdcard["delete"]("feedolin_settings.json");
     request_del.onsuccess = function() {};
     request_del.onerror = function() {};
     setTimeout(function() {
-        var data = JSON.stringify($011f805697d8f593$export$60d2a73d9c319f71);
+        var data = JSON.stringify($e9640ea827150915$export$60d2a73d9c319f71);
         var file = new Blob([
             "[" + data + "]"
         ], {
@@ -14323,10 +14339,10 @@ var $011f805697d8f593$export$875389d4757e8c73 = function export_settings() {
         var request = sdcard.addNamed(file, "feedolin_settings.json");
         request.onsuccess = function() {
             var name = this.result;
-            (0, $162001cafa2b40fd$export$6593825dc0f3a767)("settings exported", 5000);
+            (0, $6d3f4b507512327e$export$6593825dc0f3a767)("settings exported", 5000);
         };
         request.onerror = function() {
-            (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("Unable to write the file", 2000);
+            (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("Unable to write the file", 2000);
         };
     }, 2000);
 };
@@ -14340,10 +14356,10 @@ var $011f805697d8f593$export$875389d4757e8c73 = function export_settings() {
 
 
 "use strict";
-var $e758799baacea373$exports = {};
+var $165c91a1b129545b$exports = {};
 !function(t, e) {
-    $e758799baacea373$exports = e();
-}($e758799baacea373$exports, function() {
+    $165c91a1b129545b$exports = e();
+}($165c91a1b129545b$exports, function() {
     "use strict";
     var t = 1e3, e = 6e4, n = 36e5, r = "millisecond", i = "second", s = "minute", u = "hour", a = "day", o = "week", f = "month", h = "quarter", c = "year", d = "date", l = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = {
         name: "en",
@@ -14636,10 +14652,10 @@ var $e758799baacea373$exports = {};
 });
 
 
-var $2e0823a60502405d$exports = {};
+var $761543a06fc70059$exports = {};
 !function(t, s) {
-    $2e0823a60502405d$exports = s();
-}($2e0823a60502405d$exports, function() {
+    $761543a06fc70059$exports = s();
+}($761543a06fc70059$exports, function() {
     "use strict";
     var t, s, n = 1e3, i = 6e4, e = 36e5, r = 864e5, o = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, u = 31536e6, h = 2592e6, a = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/, d = {
         years: u,
@@ -14798,14 +14814,14 @@ var $2e0823a60502405d$exports = {};
 });
 
 
-$e758799baacea373$exports.extend($2e0823a60502405d$exports);
-var $987aec5199ae6065$var$player = new Audio();
-$987aec5199ae6065$var$player.mozAudioChannelType = "content";
-$987aec5199ae6065$var$player.type = "audio/mpeg";
-$987aec5199ae6065$var$player.mozaudiochannel = "content";
-$987aec5199ae6065$var$player.preload = "auto";
-var $987aec5199ae6065$var$getduration;
-var $987aec5199ae6065$var$dduration = "";
+$165c91a1b129545b$exports.extend($761543a06fc70059$exports);
+var $fa0566b078e52ad5$var$player = new Audio();
+$fa0566b078e52ad5$var$player.mozAudioChannelType = "content";
+$fa0566b078e52ad5$var$player.type = "audio/mpeg";
+$fa0566b078e52ad5$var$player.mozaudiochannel = "content";
+$fa0566b078e52ad5$var$player.preload = "auto";
+var $fa0566b078e52ad5$var$getduration;
+var $fa0566b078e52ad5$var$dduration = "";
 if (navigator.mozAudioChannelManager) navigator.mozAudioChannelManager.volumeControlChannel = "content";
 if ("b2g" in navigator) try {
     navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
@@ -14815,42 +14831,42 @@ if ("b2g" in navigator) try {
 } catch (e) {
     console.log(e);
 }
-var $987aec5199ae6065$var$stream_id = "";
-var $987aec5199ae6065$var$audio_memory;
+var $fa0566b078e52ad5$var$stream_id = "";
+var $fa0566b078e52ad5$var$audio_memory;
 if (localStorage.getItem("audio_memory") != null) {
-    var $987aec5199ae6065$var$d = JSON.parse(localStorage.getItem("audio_memory"));
-    $987aec5199ae6065$var$audio_memory = $987aec5199ae6065$var$d;
-} else $987aec5199ae6065$var$audio_memory = {};
-var $987aec5199ae6065$export$3c97237bc3c17cae = function play_podcast(url) {
-    if (url != $987aec5199ae6065$var$player.src) {
-        $987aec5199ae6065$var$player.src = url;
-        $987aec5199ae6065$var$player.play();
-        (0, $5535d7a9ff238efe$exports.status).audio_status = "play";
+    var $fa0566b078e52ad5$var$d = JSON.parse(localStorage.getItem("audio_memory"));
+    $fa0566b078e52ad5$var$audio_memory = $fa0566b078e52ad5$var$d;
+} else $fa0566b078e52ad5$var$audio_memory = {};
+var $fa0566b078e52ad5$export$3c97237bc3c17cae = function play_podcast(url) {
+    if (url != $fa0566b078e52ad5$var$player.src) {
+        $fa0566b078e52ad5$var$player.src = url;
+        $fa0566b078e52ad5$var$player.play();
+        (0, $3e4edb8379ebf8a3$exports.status).audio_status = "play";
         return true;
     }
-    if (!$987aec5199ae6065$var$player.paused) {
-        $987aec5199ae6065$var$player.pause();
-        (0, $5535d7a9ff238efe$exports.status).audio_status = "pause";
+    if (!$fa0566b078e52ad5$var$player.paused) {
+        $fa0566b078e52ad5$var$player.pause();
+        (0, $3e4edb8379ebf8a3$exports.status).audio_status = "pause";
         return false;
     }
-    if ($987aec5199ae6065$var$player.paused) {
-        (0, $5535d7a9ff238efe$exports.status).audio_status = "play";
-        $987aec5199ae6065$var$player.play();
+    if ($fa0566b078e52ad5$var$player.paused) {
+        (0, $3e4edb8379ebf8a3$exports.status).audio_status = "play";
+        $fa0566b078e52ad5$var$player.play();
     }
 };
-var $987aec5199ae6065$export$cf7ee0e0d20a7077 = function stop_player() {
-    $987aec5199ae6065$var$player.src = "";
-    clearInterval($987aec5199ae6065$var$getduration);
+var $fa0566b078e52ad5$export$cf7ee0e0d20a7077 = function stop_player() {
+    $fa0566b078e52ad5$var$player.src = "";
+    clearInterval($fa0566b078e52ad5$var$getduration);
 };
-var $987aec5199ae6065$export$c8243f3943339030 = function seeking(param) {
+var $fa0566b078e52ad5$export$c8243f3943339030 = function seeking(param) {
     var step = 10;
-    if (param == "backward") $987aec5199ae6065$var$player.currentTime = $987aec5199ae6065$var$player.currentTime - step++;
-    if (param == "forward") $987aec5199ae6065$var$player.currentTime = $987aec5199ae6065$var$player.currentTime + step++;
+    if (param == "backward") $fa0566b078e52ad5$var$player.currentTime = $fa0566b078e52ad5$var$player.currentTime - step++;
+    if (param == "forward") $fa0566b078e52ad5$var$player.currentTime = $fa0566b078e52ad5$var$player.currentTime + step++;
 };
 ////////////////////////
 ////VOLUME CONTROL//////
 ///////////////////////
-function $987aec5199ae6065$var$startVolumeManager() {
+function $fa0566b078e52ad5$var$startVolumeManager() {
     var session = new lib_session.Session();
     var sessionstate = {};
     navigator.volumeManager = null;
@@ -14858,25 +14874,25 @@ function $987aec5199ae6065$var$startVolumeManager() {
         // console.log(AudioVolumeManager onsessionconnected);
         lib_audiovolume.AudioVolumeManager.get(session).then(function(AudioVolumeManagerService) {
             navigator.volumeManager = AudioVolumeManagerService;
-        }).catch(function(e) {
+        })["catch"](function(e) {
             // console.log(Error calling AudioVolumeManager service${JSON.stringify(e)});
             navigator.volumeManager = null;
         });
     };
     sessionstate.onsessiondisconnected = function() {
-        $987aec5199ae6065$var$startVolumeManager();
+        $fa0566b078e52ad5$var$startVolumeManager();
     };
     session.open("websocket", "localhost", "secrettoken", sessionstate, true);
 }
-if ("b2g" in navigator) setTimeout($987aec5199ae6065$var$startVolumeManager, 5000);
-var $987aec5199ae6065$export$5f8df7563bfeaf14 = function volume_control() {
+if ("b2g" in navigator) setTimeout($fa0566b078e52ad5$var$startVolumeManager, 5000);
+var $fa0566b078e52ad5$export$5f8df7563bfeaf14 = function volume_control() {
     //KaiOS 3.x
     if ("b2g" in navigator) try {
         navigator.volumeManager.requestVolumeShow();
-        var f = (0, $5535d7a9ff238efe$exports.status).window_status;
-        (0, $5535d7a9ff238efe$exports.status).window_status = "volume";
+        var f = (0, $3e4edb8379ebf8a3$exports.status).window_status;
+        (0, $3e4edb8379ebf8a3$exports.status).window_status = "volume";
         setTimeout(function() {
-            (0, $5535d7a9ff238efe$exports.status).window_status = f;
+            (0, $3e4edb8379ebf8a3$exports.status).window_status = f;
         }, 3000);
     } catch (e) {}
     //KaiOS 2.x
@@ -14886,144 +14902,144 @@ var $987aec5199ae6065$export$5f8df7563bfeaf14 = function volume_control() {
         alert("jj");
     }
 };
-$987aec5199ae6065$var$player.onloadedmetadata = function() {
-    $987aec5199ae6065$var$stream_id = document.activeElement.getAttribute("data-id");
-    if ($987aec5199ae6065$var$audio_memory.hasOwnProperty($987aec5199ae6065$var$stream_id)) {
-        $987aec5199ae6065$var$player.pause();
+$fa0566b078e52ad5$var$player.onloadedmetadata = function() {
+    $fa0566b078e52ad5$var$stream_id = document.activeElement.getAttribute("data-id");
+    if ($fa0566b078e52ad5$var$audio_memory.hasOwnProperty($fa0566b078e52ad5$var$stream_id)) {
+        $fa0566b078e52ad5$var$player.pause();
         var w = confirm("would you like to continue the podcast ?");
         if (w) {
-            $987aec5199ae6065$var$player.play();
-            $987aec5199ae6065$var$player.currentTime = $987aec5199ae6065$var$audio_memory[$987aec5199ae6065$var$stream_id];
+            $fa0566b078e52ad5$var$player.play();
+            $fa0566b078e52ad5$var$player.currentTime = $fa0566b078e52ad5$var$audio_memory[$fa0566b078e52ad5$var$stream_id];
         }
         if (!w) {
-            $987aec5199ae6065$var$player.play();
-            delete $987aec5199ae6065$var$audio_memory[$987aec5199ae6065$var$stream_id];
+            $fa0566b078e52ad5$var$player.play();
+            delete $fa0566b078e52ad5$var$audio_memory[$fa0566b078e52ad5$var$stream_id];
         }
     }
 };
-var $987aec5199ae6065$var$remember = function remember() {
+var $fa0566b078e52ad5$var$remember = function remember() {
     //rember position
-    if ($987aec5199ae6065$var$player.currentTime > 10) {
-        $987aec5199ae6065$var$audio_memory[$987aec5199ae6065$var$stream_id] = $987aec5199ae6065$var$player.currentTime;
-        var tt = JSON.stringify($987aec5199ae6065$var$audio_memory);
+    if ($fa0566b078e52ad5$var$player.currentTime > 10) {
+        $fa0566b078e52ad5$var$audio_memory[$fa0566b078e52ad5$var$stream_id] = $fa0566b078e52ad5$var$player.currentTime;
+        var tt = JSON.stringify($fa0566b078e52ad5$var$audio_memory);
         localStorage.setItem("audio_memory", tt);
     }
 };
-$987aec5199ae6065$var$player.addEventListener("play", function(event) {
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $987aec5199ae6065$var$dduration, "");
+$fa0566b078e52ad5$var$player.addEventListener("play", function(event) {
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $fa0566b078e52ad5$var$dduration, "");
 });
-$987aec5199ae6065$var$player.addEventListener("pause", function(event) {
-    $987aec5199ae6065$var$remember();
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $987aec5199ae6065$var$dduration, "");
-    clearInterval($987aec5199ae6065$var$getduration);
+$fa0566b078e52ad5$var$player.addEventListener("pause", function(event) {
+    $fa0566b078e52ad5$var$remember();
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $fa0566b078e52ad5$var$dduration, "");
+    clearInterval($fa0566b078e52ad5$var$getduration);
 });
-$987aec5199ae6065$var$player.addEventListener("playing", function(event) {
-    if ($987aec5199ae6065$var$player.networkState === 2) console.log("loading media");
-    if ($987aec5199ae6065$var$player.networkState === 3) clearInterval($987aec5199ae6065$var$getduration);
+$fa0566b078e52ad5$var$player.addEventListener("playing", function(event) {
+    if ($fa0566b078e52ad5$var$player.networkState === 2) console.log("loading media");
+    if ($fa0566b078e52ad5$var$player.networkState === 3) clearInterval($fa0566b078e52ad5$var$getduration);
     var articles = document.querySelectorAll("article");
     for(var i = 0; i < articles.length; i++)articles[i].classList.remove("audio-playing");
     document.activeElement.classList.add("audio-playing");
     document.getElementById("progress-bar").style.display = "block";
-    (0, $5535d7a9ff238efe$exports.status).active_audio_element_id = document.activeElement.getAttribute("data-id");
-    (0, $5535d7a9ff238efe$exports.status).active_element_id = document.activeElement.getAttribute("data-id");
+    (0, $3e4edb8379ebf8a3$exports.status).active_audio_element_id = document.activeElement.getAttribute("data-id");
+    (0, $3e4edb8379ebf8a3$exports.status).active_element_id = document.activeElement.getAttribute("data-id");
     document.getElementById("audio-title").innerText = document.activeElement.getAttribute("data-title");
     //add recently played tracks in list
-    if ((0, $5535d7a9ff238efe$exports.recently_played).indexOf((0, $5535d7a9ff238efe$exports.status).active_element_id) == -1) {
-        if ((0, $5535d7a9ff238efe$exports.recently_played).length > 4) (0, $5535d7a9ff238efe$exports.recently_played).shift();
-        (0, $5535d7a9ff238efe$exports.recently_played).push((0, $5535d7a9ff238efe$exports.status).active_element_id);
-        localStorage.setItem("recently_played", JSON.stringify((0, $5535d7a9ff238efe$exports.recently_played)));
+    if ((0, $3e4edb8379ebf8a3$exports.recently_played).indexOf((0, $3e4edb8379ebf8a3$exports.status).active_element_id) == -1) {
+        if ((0, $3e4edb8379ebf8a3$exports.recently_played).length > 4) (0, $3e4edb8379ebf8a3$exports.recently_played).shift();
+        (0, $3e4edb8379ebf8a3$exports.recently_played).push((0, $3e4edb8379ebf8a3$exports.status).active_element_id);
+        localStorage.setItem("recently_played", JSON.stringify((0, $3e4edb8379ebf8a3$exports.recently_played)));
     }
-    $987aec5199ae6065$var$getduration = setInterval(function() {
-        if (!$987aec5199ae6065$var$player.paused) {
-            var time = $987aec5199ae6065$var$player.duration - $987aec5199ae6065$var$player.currentTime;
-            var f = typeof time === "undefined" ? "undefined" : (0, $ffd930d6675a10cb$export$2e2bcd8739ae039)(time);
+    $fa0566b078e52ad5$var$getduration = setInterval(function() {
+        if (!$fa0566b078e52ad5$var$player.paused) {
+            var time = $fa0566b078e52ad5$var$player.duration - $fa0566b078e52ad5$var$player.currentTime;
+            var f = typeof time === "undefined" ? "undefined" : (0, $4cf69b662a37e1e4$export$2e2bcd8739ae039)(time);
             if (f != "number") return false;
             time = Math.floor(time);
-            var l = $e758799baacea373$exports.duration(time, "seconds").format("hh");
+            var l = $165c91a1b129545b$exports.duration(time, "seconds").format("hh");
             var ff = l == "undefined" ? "mm:ss" : "hh:mm:ss";
-            var d = $e758799baacea373$exports.duration(time, "seconds").format(ff);
-            var percent = $987aec5199ae6065$var$player.currentTime / $987aec5199ae6065$var$player.duration * 100;
+            var d = $165c91a1b129545b$exports.duration(time, "seconds").format(ff);
+            var percent = $fa0566b078e52ad5$var$player.currentTime / $fa0566b078e52ad5$var$player.duration * 100;
             document.querySelector("div#progress-bar div").style.width = percent + "%";
-            (0, $5535d7a9ff238efe$exports.status).audio_duration = (0, $5535d7a9ff238efe$exports.toTime)(time);
-            if ((0, $5535d7a9ff238efe$exports.status).window_status == "audio-player" && f == "number") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", d, "");
-            $987aec5199ae6065$var$remember();
-        } else clearInterval($987aec5199ae6065$var$getduration);
+            (0, $3e4edb8379ebf8a3$exports.status).audio_duration = (0, $3e4edb8379ebf8a3$exports.toTime)(time);
+            if ((0, $3e4edb8379ebf8a3$exports.status).window_status == "audio-player" && f == "number") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", d, "");
+            $fa0566b078e52ad5$var$remember();
+        } else clearInterval($fa0566b078e52ad5$var$getduration);
     }, 1000);
 });
-$987aec5199ae6065$var$player.onended = function() {
-    if ($987aec5199ae6065$var$audio_memory.hasOwnProperty($987aec5199ae6065$var$stream_id)) delete $987aec5199ae6065$var$audio_memory.stream_id;
+$fa0566b078e52ad5$var$player.onended = function() {
+    if ($fa0566b078e52ad5$var$audio_memory.hasOwnProperty($fa0566b078e52ad5$var$stream_id)) delete $fa0566b078e52ad5$var$audio_memory.stream_id;
     var listened_elem;
     if (localStorage.getItem("listened_elem")) listened_elem = JSON.parse(localStorage["listened_elem"]);
-    listened_elem.push((0, $5535d7a9ff238efe$exports.status).active_audio_element_id);
+    listened_elem.push((0, $3e4edb8379ebf8a3$exports.status).active_audio_element_id);
     localStorage.setItem("listened_elem", JSON.stringify(listened_elem));
-    clearInterval($987aec5199ae6065$var$getduration);
-    (0, $5535d7a9ff238efe$exports.status).audio_duration = 0;
+    clearInterval($fa0566b078e52ad5$var$getduration);
+    (0, $3e4edb8379ebf8a3$exports.status).audio_duration = 0;
     document.getElementById("progress-bar").style.display = "none";
 };
-$987aec5199ae6065$var$player.addEventListener("error", function() {
-    clearInterval($987aec5199ae6065$var$getduration);
+$fa0566b078e52ad5$var$player.addEventListener("error", function() {
+    clearInterval($fa0566b078e52ad5$var$getduration);
 });
 
 
-var $30297a21b065704c$var$randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-var $30297a21b065704c$export$2e2bcd8739ae039 = {
-    randomUUID: $30297a21b065704c$var$randomUUID
+var $e7c2b5109ce8b55f$var$randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+var $e7c2b5109ce8b55f$export$2e2bcd8739ae039 = {
+    randomUUID: $e7c2b5109ce8b55f$var$randomUUID
 };
 
 
 // Unique ID creation requires a high quality random # generator. In the browser we therefore
 // require the crypto API and do not support built-in fallback to lower quality random number
 // generators (like Math.random()).
-var $02bcf4a65a53d807$var$getRandomValues;
-var $02bcf4a65a53d807$var$rnds8 = new Uint8Array(16);
-function $02bcf4a65a53d807$export$2e2bcd8739ae039() {
+var $1ad827f4e717086f$var$getRandomValues;
+var $1ad827f4e717086f$var$rnds8 = new Uint8Array(16);
+function $1ad827f4e717086f$export$2e2bcd8739ae039() {
     // lazy load so that environments that need to polyfill have a chance to do so
-    if (!$02bcf4a65a53d807$var$getRandomValues) {
+    if (!$1ad827f4e717086f$var$getRandomValues) {
         // getRandomValues needs to be invoked in a context where "this" is a Crypto implementation.
-        $02bcf4a65a53d807$var$getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
-        if (!$02bcf4a65a53d807$var$getRandomValues) throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+        $1ad827f4e717086f$var$getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+        if (!$1ad827f4e717086f$var$getRandomValues) throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
     }
-    return $02bcf4a65a53d807$var$getRandomValues($02bcf4a65a53d807$var$rnds8);
+    return $1ad827f4e717086f$var$getRandomValues($1ad827f4e717086f$var$rnds8);
 }
 
 
-var $ddc332bde169d621$export$2e2bcd8739ae039 = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+var $f7bc72ea7060480b$export$2e2bcd8739ae039 = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 
 
-function $c7d41d1d88149c19$var$validate(uuid) {
-    return typeof uuid === "string" && (0, $ddc332bde169d621$export$2e2bcd8739ae039).test(uuid);
+function $db45a83d45d0fc80$var$validate(uuid) {
+    return typeof uuid === "string" && (0, $f7bc72ea7060480b$export$2e2bcd8739ae039).test(uuid);
 }
-var $c7d41d1d88149c19$export$2e2bcd8739ae039 = $c7d41d1d88149c19$var$validate;
+var $db45a83d45d0fc80$export$2e2bcd8739ae039 = $db45a83d45d0fc80$var$validate;
 
 
 /**
  * Convert array of 16 byte values to UUID string format of the form:
  * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */ var $10d7c25fa75eabdb$var$byteToHex = [];
-for(var $10d7c25fa75eabdb$var$i = 0; $10d7c25fa75eabdb$var$i < 256; ++$10d7c25fa75eabdb$var$i)$10d7c25fa75eabdb$var$byteToHex.push(($10d7c25fa75eabdb$var$i + 0x100).toString(16).slice(1));
-function $10d7c25fa75eabdb$export$8fb373d660548968(arr) {
+ */ var $4b2cf53490eb0cf7$var$byteToHex = [];
+for(var $4b2cf53490eb0cf7$var$i = 0; $4b2cf53490eb0cf7$var$i < 256; ++$4b2cf53490eb0cf7$var$i)$4b2cf53490eb0cf7$var$byteToHex.push(($4b2cf53490eb0cf7$var$i + 0x100).toString(16).slice(1));
+function $4b2cf53490eb0cf7$export$8fb373d660548968(arr) {
     var offset = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
     // Note: Be careful editing this code!  It's been tuned for performance
     // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
-    return ($10d7c25fa75eabdb$var$byteToHex[arr[offset + 0]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 1]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 2]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 3]] + "-" + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 4]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 5]] + "-" + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 6]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 7]] + "-" + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 8]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 9]] + "-" + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 10]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 11]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 12]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 13]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 14]] + $10d7c25fa75eabdb$var$byteToHex[arr[offset + 15]]).toLowerCase();
+    return ($4b2cf53490eb0cf7$var$byteToHex[arr[offset + 0]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 1]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 2]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 3]] + "-" + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 4]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 5]] + "-" + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 6]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 7]] + "-" + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 8]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 9]] + "-" + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 10]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 11]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 12]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 13]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 14]] + $4b2cf53490eb0cf7$var$byteToHex[arr[offset + 15]]).toLowerCase();
 }
-function $10d7c25fa75eabdb$var$stringify(arr) {
+function $4b2cf53490eb0cf7$var$stringify(arr) {
     var offset = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
-    var uuid = $10d7c25fa75eabdb$export$8fb373d660548968(arr, offset); // Consistency check for valid UUID.  If this throws, it's likely due to one
+    var uuid = $4b2cf53490eb0cf7$export$8fb373d660548968(arr, offset); // Consistency check for valid UUID.  If this throws, it's likely due to one
     // of the following:
     // - One or more input array values don't map to a hex octet (leading to
     // "undefined" in the uuid)
     // - Invalid input values for the RFC `version` or `variant` fields
-    if (!(0, $c7d41d1d88149c19$export$2e2bcd8739ae039)(uuid)) throw TypeError("Stringified UUID is invalid");
+    if (!(0, $db45a83d45d0fc80$export$2e2bcd8739ae039)(uuid)) throw TypeError("Stringified UUID is invalid");
     return uuid;
 }
-var $10d7c25fa75eabdb$export$2e2bcd8739ae039 = $10d7c25fa75eabdb$var$stringify;
+var $4b2cf53490eb0cf7$export$2e2bcd8739ae039 = $4b2cf53490eb0cf7$var$stringify;
 
 
-function $6995a202bee889c8$var$v4(options, buf, offset) {
-    if ((0, $30297a21b065704c$export$2e2bcd8739ae039).randomUUID && !buf && !options) return (0, $30297a21b065704c$export$2e2bcd8739ae039).randomUUID();
+function $194554b49bf11e1e$var$v4(options, buf, offset) {
+    if ((0, $e7c2b5109ce8b55f$export$2e2bcd8739ae039).randomUUID && !buf && !options) return (0, $e7c2b5109ce8b55f$export$2e2bcd8739ae039).randomUUID();
     options = options || {};
-    var rnds = options.random || (options.rng || (0, $02bcf4a65a53d807$export$2e2bcd8739ae039))(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+    var rnds = options.random || (options.rng || (0, $1ad827f4e717086f$export$2e2bcd8739ae039))(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
     rnds[6] = rnds[6] & 0x0f | 0x40;
     rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
     if (buf) {
@@ -15031,50 +15047,50 @@ function $6995a202bee889c8$var$v4(options, buf, offset) {
         for(var i = 0; i < 16; ++i)buf[offset + i] = rnds[i];
         return buf;
     }
-    return (0, $10d7c25fa75eabdb$export$8fb373d660548968)(rnds);
+    return (0, $4b2cf53490eb0cf7$export$8fb373d660548968)(rnds);
 }
-var $6995a202bee889c8$export$2e2bcd8739ae039 = $6995a202bee889c8$var$v4;
+var $194554b49bf11e1e$export$2e2bcd8739ae039 = $194554b49bf11e1e$var$v4;
 
 
 "use strict";
-var $5535d7a9ff238efe$var$_this = undefined;
+var $3e4edb8379ebf8a3$var$_this = undefined;
 
 
-$e758799baacea373$exports.extend($2e0823a60502405d$exports);
-var $5535d7a9ff238efe$var$debug = false;
-var $5535d7a9ff238efe$var$article_array;
+$165c91a1b129545b$exports.extend($761543a06fc70059$exports);
+var $3e4edb8379ebf8a3$var$debug = false;
+var $3e4edb8379ebf8a3$var$article_array;
 //data layer
-var $5535d7a9ff238efe$var$content_arr = [];
+var $3e4edb8379ebf8a3$var$content_arr = [];
 //store all used article ids
-var $5535d7a9ff238efe$var$all_cid = [];
-var $5535d7a9ff238efe$var$feed_download_list_count = 0;
-var $5535d7a9ff238efe$var$panels = [
+var $3e4edb8379ebf8a3$var$all_cid = [];
+var $3e4edb8379ebf8a3$var$feed_download_list_count = 0;
+var $3e4edb8379ebf8a3$var$panels = [
     "channels",
     "recently-played"
 ];
-var $5535d7a9ff238efe$var$current_panel = 0;
-var $5535d7a9ff238efe$var$parser = new DOMParser();
-var $5535d7a9ff238efe$var$video_player = "";
-var $5535d7a9ff238efe$var$youtube_player;
-var $5535d7a9ff238efe$var$video_time;
-var $5535d7a9ff238efe$var$youtube_time;
-var $5535d7a9ff238efe$var$video_status = "";
-var $5535d7a9ff238efe$var$youtube_status = "";
-var $5535d7a9ff238efe$var$video = document.getElementById("videoplayer");
-var $5535d7a9ff238efe$var$source_url_cleaner = [
+var $3e4edb8379ebf8a3$var$current_panel = 0;
+var $3e4edb8379ebf8a3$var$parser = new DOMParser();
+var $3e4edb8379ebf8a3$var$video_player = "";
+var $3e4edb8379ebf8a3$var$youtube_player;
+var $3e4edb8379ebf8a3$var$video_time;
+var $3e4edb8379ebf8a3$var$youtube_time;
+var $3e4edb8379ebf8a3$var$video_status = "";
+var $3e4edb8379ebf8a3$var$youtube_status = "";
+var $3e4edb8379ebf8a3$var$video = document.getElementById("videoplayer");
+var $3e4edb8379ebf8a3$var$source_url_cleaner = [
     "$$",
     "mm"
 ];
-var $5535d7a9ff238efe$export$8cd9ad5416e75e48 = localStorage.getItem("read_elem") != null ? JSON.parse(localStorage.getItem("read_elem")) : [];
-var $5535d7a9ff238efe$export$57ef1bcec6355f64 = localStorage.getItem("recently_played") != null ? JSON.parse(localStorage.getItem("recently_played")) : [];
-var $5535d7a9ff238efe$export$1063e5a38a205ce2 = localStorage.getItem("listened_elem") != null ? JSON.parse(localStorage.getItem("listened_elem")) : [];
-var $5535d7a9ff238efe$var$tab_index = 0;
+var $3e4edb8379ebf8a3$export$8cd9ad5416e75e48 = localStorage.getItem("read_elem") != null ? JSON.parse(localStorage.getItem("read_elem")) : [];
+var $3e4edb8379ebf8a3$export$57ef1bcec6355f64 = localStorage.getItem("recently_played") != null ? JSON.parse(localStorage.getItem("recently_played")) : [];
+var $3e4edb8379ebf8a3$export$1063e5a38a205ce2 = localStorage.getItem("listened_elem") != null ? JSON.parse(localStorage.getItem("listened_elem")) : [];
+var $3e4edb8379ebf8a3$var$tab_index = 0;
 if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
-var $5535d7a9ff238efe$var$sync_time = Number(localStorage.getItem("interval"));
-var $5535d7a9ff238efe$export$e013ba7cfce73b7a = navigator.language || navigator.userLanguage;
-if (!(0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a]) $5535d7a9ff238efe$export$e013ba7cfce73b7a = "en-EN";
-var $5535d7a9ff238efe$export$6a795054a646acb4 = "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml";
-var $5535d7a9ff238efe$export$471f7ae5c4103ae1 = {
+var $3e4edb8379ebf8a3$var$sync_time = Number(localStorage.getItem("interval"));
+var $3e4edb8379ebf8a3$export$e013ba7cfce73b7a = navigator.language || navigator.userLanguage;
+if (!(0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a]) $3e4edb8379ebf8a3$export$e013ba7cfce73b7a = "en-EN";
+var $3e4edb8379ebf8a3$export$6a795054a646acb4 = "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml";
+var $3e4edb8379ebf8a3$export$471f7ae5c4103ae1 = {
     active_element_id: "",
     window_status: "intro",
     active_audio_element_id: "",
@@ -15086,17 +15102,11 @@ var $5535d7a9ff238efe$export$471f7ae5c4103ae1 = {
     sort: "number",
     current_panel: "channels"
 };
-var $5535d7a9ff238efe$var$audio_memory;
-if (localStorage.getItem("audio_memory") != null) $5535d7a9ff238efe$var$audio_memory = JSON.parse(localStorage.getItem("audio_memory"));
-else $5535d7a9ff238efe$var$audio_memory = {};
+var $3e4edb8379ebf8a3$var$audio_memory;
+if (localStorage.getItem("audio_memory") != null) $3e4edb8379ebf8a3$var$audio_memory = JSON.parse(localStorage.getItem("audio_memory"));
+else $3e4edb8379ebf8a3$var$audio_memory = {};
 //ads || ads free
-var $5535d7a9ff238efe$var$load_ads = function load_ads1() {
-    var manifest = //KaiOs store true||false
-    function manifest(a) {
-        self = a.origin;
-        document.getElementById("version").innerText = "Version: " + a.manifest.version;
-        if (a.installOrigin == "app://kaios-plus.kaiostech.com") $5535d7a9ff238efe$var$load_ads();
-    };
+var $3e4edb8379ebf8a3$var$load_ads = function load_ads() {
     var js = document.createElement("script");
     js.type = "text/javascript";
     js.src = "assets/js/kaiads.v5.min.js";
@@ -15116,7 +15126,7 @@ var $5535d7a9ff238efe$var$load_ads = function load_ads1() {
             onready: function(ad) {
                 // user clicked the ad
                 ad.on("click", function() {
-                    $5535d7a9ff238efe$var$open_options();
+                    $3e4edb8379ebf8a3$var$open_options();
                 });
                 // user closed the ad (currently only with fullscreen)
                 ad.on("close", function() {
@@ -15137,19 +15147,25 @@ var $5535d7a9ff238efe$var$load_ads = function load_ads1() {
         });
     };
     document.head.appendChild(js);
-    //KaioOs ads
-    var getManifest = function getManifest(callback) {
-        if (!navigator.mozApps) return false;
-        var self = navigator.mozApps.getSelf();
-        self.onsuccess = function() {
-            callback(self.result);
-        };
-        self.onerror = function() {};
-    };
-    var self;
-    if (navigator.mozApps) getManifest(manifest);
 };
-if ("b2g" in navigator) $5535d7a9ff238efe$var$load_ads();
+//KaioOs ads
+var $3e4edb8379ebf8a3$var$getManifest = function getManifest(callback) {
+    if (!navigator.mozApps) return false;
+    var self = navigator.mozApps.getSelf();
+    self.onsuccess = function() {
+        callback(self.result);
+    };
+    self.onerror = function() {};
+};
+var $3e4edb8379ebf8a3$var$self;
+//KaiOs store true||false
+function $3e4edb8379ebf8a3$var$manifest(a) {
+    $3e4edb8379ebf8a3$var$self = a.origin;
+    document.getElementById("version").innerText = "Version: " + a.manifest.version;
+    if (a.installOrigin == "app://kaios-plus.kaiostech.com") $3e4edb8379ebf8a3$var$load_ads();
+}
+if (navigator.mozApps) $3e4edb8379ebf8a3$var$getManifest($3e4edb8379ebf8a3$var$manifest);
+if ("b2g" in navigator) $3e4edb8379ebf8a3$var$load_ads();
 /////////////////////////////
 ////////////////////////////
 //GET URL LIST/////////////
@@ -15159,7 +15175,7 @@ if ("b2g" in navigator) $5535d7a9ff238efe$var$load_ads();
 ///////////
 ///load source opml file from local source
 //////////
-var $5535d7a9ff238efe$var$load_local_file_opml = function load_local_file_opml() {
+var $3e4edb8379ebf8a3$var$load_local_file_opml = function load_local_file_opml() {
     var a = localStorage.getItem("source_local");
     if (localStorage.getItem("source_local") == "" || localStorage.getItem("source_local") == null) return false;
     var sdcard;
@@ -15171,7 +15187,7 @@ var $5535d7a9ff238efe$var$load_local_file_opml = function load_local_file_opml()
     }
     var request = sdcard.get(a);
     request.onerror = function() {
-        document.getElementById("intro-message").innerHTML = (0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a].app_error_0;
+        document.getElementById("intro-message").innerHTML = (0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a].app_error_0;
     };
     request.onsuccess = function() {
         var file = this.result;
@@ -15181,8 +15197,8 @@ var $5535d7a9ff238efe$var$load_local_file_opml = function load_local_file_opml()
         };
         reader.onloadend = function(event) {
             var data = event.target.result;
-            document.getElementById("intro-message").innerText = (0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a].app_load_file;
-            $5535d7a9ff238efe$var$load_feeds(data);
+            document.getElementById("intro-message").innerText = (0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a].app_load_file;
+            $3e4edb8379ebf8a3$var$load_feeds(data);
         };
         reader.readAsText(file);
     };
@@ -15190,7 +15206,7 @@ var $5535d7a9ff238efe$var$load_local_file_opml = function load_local_file_opml()
 ///////////
 ///load source opml file from online source
 //////////
-var $5535d7a9ff238efe$var$load_source_opml = function load_source_opml() {
+var $3e4edb8379ebf8a3$var$load_source_opml = function load_source_opml() {
     var source_url = localStorage.getItem("source");
     var xhttp = new XMLHttpRequest({
         mozSystem: true
@@ -15200,95 +15216,95 @@ var $5535d7a9ff238efe$var$load_source_opml = function load_source_opml() {
     xhttp.timeout = 25000;
     xhttp.onload = function() {
         if (xhttp.readyState === xhttp.DONE && xhttp.status === 200) {
-            document.getElementById("intro-message").innerText = (0, $22ed86740f9276dd$export$150b732325d14d04)[$5535d7a9ff238efe$export$e013ba7cfce73b7a].app_load_file;
+            document.getElementById("intro-message").innerText = (0, $f18e354a63dd7a2d$export$150b732325d14d04)[$3e4edb8379ebf8a3$export$e013ba7cfce73b7a].app_load_file;
             var data = xhttp.response;
-            $5535d7a9ff238efe$var$load_feeds(data);
+            $3e4edb8379ebf8a3$var$load_feeds(data);
         }
     };
     xhttp.onerror = function() {
         document.getElementById("intro-message").innerHTML = "\uD83D\uDE34<br>the source file cannot be loaded";
         document.getElementById("intro").style.display = "none";
         setTimeout(function() {
-            $5535d7a9ff238efe$var$content_arr = cache.loadCache();
-            if ($5535d7a9ff238efe$var$content_arr) {
-                $5535d7a9ff238efe$var$build();
+            $3e4edb8379ebf8a3$var$content_arr = cache.loadCache();
+            if ($3e4edb8379ebf8a3$var$content_arr) {
+                $3e4edb8379ebf8a3$var$build();
                 document.getElementById("intro-message").innerText = "cached data loaded";
             } else setTimeout(function() {
-                $5535d7a9ff238efe$var$show_settings();
+                $3e4edb8379ebf8a3$var$show_settings();
             }, 3000);
         }, 4000);
     };
     xhttp.send(null);
 };
 setTimeout(function() {
-    if (localStorage["source_local"] == null && localStorage["source"] == null) localStorage.setItem("source", $5535d7a9ff238efe$export$6a795054a646acb4);
+    if (localStorage["source_local"] == null && localStorage["source"] == null) localStorage.setItem("source", $3e4edb8379ebf8a3$export$6a795054a646acb4);
     //get update time; cache || download
     var a = localStorage.getItem("interval");
     document.getElementById("intro-message").innerText = "checking feed list";
     //download
-    if ((0, $01385e9633cc7ced$export$1428f42a7de81803)(a) && navigator.onLine) {
+    if ((0, $6c138793da69922c$export$1428f42a7de81803)(a) && navigator.onLine) {
         var check = false;
         //load online opml
         if (localStorage["source"] && localStorage["source"] != "" && localStorage["source"] != undefined) {
-            $5535d7a9ff238efe$var$load_source_opml();
+            $3e4edb8379ebf8a3$var$load_source_opml();
             check = true;
         }
         //load local opml
         if (localStorage["source_local"] && localStorage["source_local"] != "" && localStorage["source_local"] != undefined) {
-            $5535d7a9ff238efe$var$load_local_file_opml();
+            $3e4edb8379ebf8a3$var$load_local_file_opml();
             check = true;
         }
         if (!check) {
-            localStorage.setItem("source", $5535d7a9ff238efe$export$6a795054a646acb4);
-            $5535d7a9ff238efe$var$load_source_opml();
+            localStorage.setItem("source", $3e4edb8379ebf8a3$export$6a795054a646acb4);
+            $3e4edb8379ebf8a3$var$load_source_opml();
         }
     //load cache
     } else {
         document.getElementById("intro-message").innerText = "your device is offline, loading cached data";
-        $5535d7a9ff238efe$var$content_arr = (0, $01385e9633cc7ced$export$d5dd531629745216)();
-        if ($5535d7a9ff238efe$var$content_arr) {
+        $3e4edb8379ebf8a3$var$content_arr = (0, $6c138793da69922c$export$d5dd531629745216)();
+        if ($3e4edb8379ebf8a3$var$content_arr) {
             document.getElementById("intro-message").innerText = "load cached data";
             setTimeout(function() {
-                $5535d7a9ff238efe$var$build();
+                $3e4edb8379ebf8a3$var$build();
             }, 1000);
         } else {
             document.getElementById("intro-message").innerText = "no internet connection and no cached data available";
             setTimeout(function() {
-                $5535d7a9ff238efe$var$build();
+                $3e4edb8379ebf8a3$var$build();
             }, 4000);
         }
     }
 }, 1000);
 //sync test
-var $5535d7a9ff238efe$var$sync = function() {
+var $3e4edb8379ebf8a3$var$sync = function() {
     //download
-    if (localStorage.getItem("feed_download_list") == null) localStorage.setItem("feed_download_list", $5535d7a9ff238efe$var$feed_download_list);
+    if (localStorage.getItem("feed_download_list") == null) localStorage.setItem("feed_download_list", $3e4edb8379ebf8a3$var$feed_download_list);
     else try {
-        $5535d7a9ff238efe$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+        $3e4edb8379ebf8a3$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
     } catch (e) {}
     if (navigator.onLine) {
-        $5535d7a9ff238efe$var$content_arr.length = 0;
-        $5535d7a9ff238efe$var$article_array = "";
-        $5535d7a9ff238efe$var$feed_download_list_count = 0;
-        $5535d7a9ff238efe$var$feed_download_list.length = 0;
+        $3e4edb8379ebf8a3$var$content_arr.length = 0;
+        $3e4edb8379ebf8a3$var$article_array = "";
+        $3e4edb8379ebf8a3$var$feed_download_list_count = 0;
+        $3e4edb8379ebf8a3$var$feed_download_list.length = 0;
         try {
-            $5535d7a9ff238efe$var$load_local_file_opml();
+            $3e4edb8379ebf8a3$var$load_local_file_opml();
         } catch (e) {}
         try {
-            $5535d7a9ff238efe$var$load_source_opml();
+            $3e4edb8379ebf8a3$var$load_source_opml();
         } catch (e) {}
     }
 };
 /////////////////
 //start loading feeds
-var $5535d7a9ff238efe$var$feed_download_list = [];
-if (localStorage.getItem("feed_download_list") == null) localStorage.setItem("feed_download_list", $5535d7a9ff238efe$var$feed_download_list);
-else $5535d7a9ff238efe$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
-var $5535d7a9ff238efe$var$load_feeds = function load_feeds(data) {
+var $3e4edb8379ebf8a3$var$feed_download_list = [];
+if (localStorage.getItem("feed_download_list") == null) localStorage.setItem("feed_download_list", $3e4edb8379ebf8a3$var$feed_download_list);
+else $3e4edb8379ebf8a3$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+var $3e4edb8379ebf8a3$var$load_feeds = function load_feeds(data) {
     try {
-        $5535d7a9ff238efe$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
+        $3e4edb8379ebf8a3$var$feed_download_list = JSON.parse(localStorage.getItem("feed_download_list"));
     } catch (e) {} //load feed list to compare and store again
-    var xmlDoc = $5535d7a9ff238efe$var$parser.parseFromString(data, "text/xml");
+    var xmlDoc = $3e4edb8379ebf8a3$var$parser.parseFromString(data, "text/xml");
     var content = xmlDoc.getElementsByTagName("body")[0];
     var index = 0;
     var m = content.querySelectorAll("outline");
@@ -15298,14 +15314,14 @@ var $5535d7a9ff238efe$var$load_feeds = function load_feeds(data) {
             //feed_download_list
             //only push in list when not exist
             var result = false;
-            for(var k = 0; k < $5535d7a9ff238efe$var$feed_download_list.length; k++)if ($5535d7a9ff238efe$var$feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
-                $5535d7a9ff238efe$var$source_url_cleaner.push(nested[z].getAttribute("xmlUrl"));
+            for(var k = 0; k < $3e4edb8379ebf8a3$var$feed_download_list.length; k++)if ($3e4edb8379ebf8a3$var$feed_download_list[k].url == nested[z].getAttribute("xmlUrl")) {
+                $3e4edb8379ebf8a3$var$source_url_cleaner.push(nested[z].getAttribute("xmlUrl"));
                 result = true;
-                $5535d7a9ff238efe$var$feed_download_list.length;
+                $3e4edb8379ebf8a3$var$feed_download_list.length;
                 break;
             }
             //put in list
-            if (!result) $5535d7a9ff238efe$var$feed_download_list.push({
+            if (!result) $3e4edb8379ebf8a3$var$feed_download_list.push({
                 error: "",
                 title: nested[z].getAttribute("title"),
                 url: nested[z].getAttribute("xmlUrl"),
@@ -15319,17 +15335,17 @@ var $5535d7a9ff238efe$var$load_feeds = function load_feeds(data) {
     //start downloading feeds
     setTimeout(function() {
         document.querySelector(".loading-spinner").style.display = "block";
-        if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "intro") document.querySelector(".loading-spinner").style.top = "80%";
-        $5535d7a9ff238efe$var$rss_fetcher($5535d7a9ff238efe$var$feed_download_list[0].url, $5535d7a9ff238efe$var$feed_download_list[0].amount, $5535d7a9ff238efe$var$feed_download_list[0].title, $5535d7a9ff238efe$var$feed_download_list[0].channel, $5535d7a9ff238efe$var$feed_download_list[0].type);
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "intro") document.querySelector(".loading-spinner").style.top = "80%";
+        $3e4edb8379ebf8a3$var$rss_fetcher($3e4edb8379ebf8a3$var$feed_download_list[0].url, $3e4edb8379ebf8a3$var$feed_download_list[0].amount, $3e4edb8379ebf8a3$var$feed_download_list[0].title, $3e4edb8379ebf8a3$var$feed_download_list[0].channel, $3e4edb8379ebf8a3$var$feed_download_list[0].type);
     }, 1000);
     //clean source feed
-    for(var p = 0; p < $5535d7a9ff238efe$var$feed_download_list.length; p++)if ($5535d7a9ff238efe$var$source_url_cleaner.includes($5535d7a9ff238efe$var$feed_download_list[p].url) == false) $5535d7a9ff238efe$var$feed_download_list.splice(p, 1);
-    localStorage.setItem("feed_download_list", JSON.stringify($5535d7a9ff238efe$var$feed_download_list));
+    for(var p = 0; p < $3e4edb8379ebf8a3$var$feed_download_list.length; p++)if ($3e4edb8379ebf8a3$var$source_url_cleaner.includes($3e4edb8379ebf8a3$var$feed_download_list[p].url) == false) $3e4edb8379ebf8a3$var$feed_download_list.splice(p, 1);
+    localStorage.setItem("feed_download_list", JSON.stringify($3e4edb8379ebf8a3$var$feed_download_list));
 };
 //////////////////////////////
 //download content////
 //////////////////////////////
-var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_limit, param_channel, param_category, param_type) {
+var $3e4edb8379ebf8a3$var$rss_fetcher = function rss_fetcher1(param_url, param_limit, param_channel, param_category, param_type) {
     if (param_type == "mastodon") try {
         fetch(param_url, {
             method: "GET"
@@ -15353,7 +15369,6 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                     if (i.media_attachments[0].type == "audio") {
                         video_url = i.media_attachments[0].url;
-                        item_image = i.media_attachments[0].preview_url;
                         item_media = "audio";
                     }
                 }
@@ -15361,10 +15376,10 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                 var item_date = new Date(i.created_at);
                 item_date_unix = item_date.valueOf();
                 item_date = item_date.toDateString();
-                $5535d7a9ff238efe$var$content_arr.push({
+                $3e4edb8379ebf8a3$var$content_arr.push({
                     index: 0,
-                    title: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(i.account.display_name),
-                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(i.content),
+                    title: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(i.account.display_name),
+                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(i.content),
                     link: i.uri,
                     date: item_date,
                     dateunix: item_date_unix,
@@ -15387,8 +15402,8 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     url: item_download
                 });
             });
-            console.log($5535d7a9ff238efe$var$content_arr);
-        }).catch(function(error) {
+            console.log($3e4edb8379ebf8a3$var$content_arr);
+        })["catch"](function(error) {
             console.log("json parser error: " + error);
         });
     } catch (e) {
@@ -15404,20 +15419,20 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
     xhttp.send();
     var loadEnd = function loadEnd(e) {
         //after download build html objects
-        if ($5535d7a9ff238efe$var$feed_download_list_count == $5535d7a9ff238efe$var$feed_download_list.length - 1) {
-            $5535d7a9ff238efe$var$build();
-            (0, $01385e9633cc7ced$export$7a1d85371c4f69)($5535d7a9ff238efe$var$content_arr);
+        if ($3e4edb8379ebf8a3$var$feed_download_list_count == $3e4edb8379ebf8a3$var$feed_download_list.length - 1) {
+            $3e4edb8379ebf8a3$var$build();
+            (0, $6c138793da69922c$export$7a1d85371c4f69)($3e4edb8379ebf8a3$var$content_arr);
             localStorage.setItem("updated", new Date());
             document.querySelector(".loading-spinner").style.top = "50%";
             document.querySelector(".loading-spinner").style.display = "none";
             localStorage.setItem("last-update", new Date());
         }
-        if ($5535d7a9ff238efe$var$feed_download_list_count < $5535d7a9ff238efe$var$feed_download_list.length - 1) {
+        if ($3e4edb8379ebf8a3$var$feed_download_list_count < $3e4edb8379ebf8a3$var$feed_download_list.length - 1) {
             document.getElementById("intro-message").innerText = "loading data";
             //error log
-            if (xhttp.status != 200) $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$feed_download_list_count].error = "error";
-            $5535d7a9ff238efe$var$feed_download_list_count++;
-            $5535d7a9ff238efe$var$rss_fetcher($5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$feed_download_list_count].url, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$feed_download_list_count].amount, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$feed_download_list_count].title, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$feed_download_list_count].channel, $5535d7a9ff238efe$var$feed_download_list[$5535d7a9ff238efe$var$feed_download_list_count].type);
+            if (xhttp.status != 200) $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$feed_download_list_count].error = "error";
+            $3e4edb8379ebf8a3$var$feed_download_list_count++;
+            $3e4edb8379ebf8a3$var$rss_fetcher($3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$feed_download_list_count].url, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$feed_download_list_count].amount, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$feed_download_list_count].title, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$feed_download_list_count].channel, $3e4edb8379ebf8a3$var$feed_download_list[$3e4edb8379ebf8a3$var$feed_download_list_count].type);
         }
     };
     xhttp.addEventListener("loadend", loadEnd);
@@ -15444,8 +15459,8 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
             var item_video_url = "";
             var el = "";
             //xml items
-            var p = Number($5535d7a9ff238efe$var$feed_download_list.length - 1);
-            var precent = 100 / p * $5535d7a9ff238efe$var$feed_download_list_count;
+            var p = Number($3e4edb8379ebf8a3$var$feed_download_list.length - 1);
+            var precent = 100 / p * $3e4edb8379ebf8a3$var$feed_download_list_count;
             /*
       document.querySelector(
         "div#intro div#loading-progress div div"
@@ -15461,7 +15476,7 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
             } catch (e) {}
             if (el.length > 0) for(var i = 0; i < param_limit; i++){
                 item_title = el[i].querySelector("title").innerHTML;
-                item_cid = (0, $162001cafa2b40fd$export$d41d9ab3de2def3d)(item_title);
+                item_cid = (0, $6d3f4b507512327e$export$d41d9ab3de2def3d)(item_title);
                 var elem = el[i].querySelector("summary");
                 if (elem) {
                     item_summary = el[i].querySelector("summary").textContent;
@@ -15490,7 +15505,7 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                     if (el[i].querySelector("enclosure").getAttribute("length") > 0) {
                         var en_length = el[i].querySelector("enclosure").getAttribute("length");
-                        if (en_length) item_filesize = (0, $162001cafa2b40fd$export$a55dc7d9a051abe5)(en_length, 2);
+                        if (en_length) item_filesize = (0, $6d3f4b507512327e$export$a55dc7d9a051abe5)(en_length, 2);
                     }
                 }
                 if (item_media == "audio") {
@@ -15519,11 +15534,11 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                 }
                 startlistened = "";
-                if ($5535d7a9ff238efe$var$audio_memory.hasOwnProperty(item_cid)) start_listened = "start_listened";
-                $5535d7a9ff238efe$var$content_arr.push({
+                if ($3e4edb8379ebf8a3$var$audio_memory.hasOwnProperty(item_cid)) start_listened = "start_listened";
+                $3e4edb8379ebf8a3$var$content_arr.push({
                     index: 0,
-                    title: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_title),
-                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_summary),
+                    title: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_title),
+                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_summary),
                     link: item_link,
                     date: item_date,
                     dateunix: item_date_unix1,
@@ -15531,7 +15546,7 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     category: param_category,
                     type: item_type,
                     image: item_image,
-                    duration: $5535d7a9ff238efe$export$d33f79e3ffc3dc83(item_duration),
+                    duration: $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(item_duration),
                     media: item_media,
                     filesize: item_filesize,
                     cid: item_cid,
@@ -15575,7 +15590,7 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                 item_title = el[i1].querySelector("title").innerHTML;
                 item_title = item_title.replace("<![CDATA[", "");
                 item_title = item_title.replace("]]>", "");
-                item_cid = (0, $162001cafa2b40fd$export$d41d9ab3de2def3d)(item_title);
+                item_cid = (0, $6d3f4b507512327e$export$d41d9ab3de2def3d)(item_title);
                 if (el[i1].querySelector("description")) {
                     item_summary = el[i1].querySelector("description").textContent;
                     item_summary = item_summary.replace(/(<!\[CDATA\[)/g, "");
@@ -15609,18 +15624,18 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     }
                     if (el[i1].querySelector("enclosure").getAttribute("length") > 0) {
                         var en_length1 = el[i1].querySelector("enclosure").getAttribute("length");
-                        if (en_length1) item_filesize = (0, $162001cafa2b40fd$export$a55dc7d9a051abe5)(en_length1, 2);
+                        if (en_length1) item_filesize = (0, $6d3f4b507512327e$export$a55dc7d9a051abe5)(en_length1, 2);
                     }
                 }
                 if (item_media == "audio") {
                     if (el[i1].getElementsByTagNameNS("*", "duration").length > 0) item_duration = el[i1].getElementsByTagNameNS("*", "duration")[0].textContent;
                 }
                 startlistened = "";
-                if ($5535d7a9ff238efe$var$audio_memory.hasOwnProperty(item_cid)) startlistened = "start_listened";
-                $5535d7a9ff238efe$var$content_arr.push({
+                if ($3e4edb8379ebf8a3$var$audio_memory.hasOwnProperty(item_cid)) startlistened = "start_listened";
+                $3e4edb8379ebf8a3$var$content_arr.push({
                     index: 0,
-                    title: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_title),
-                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($2449999283207805$exports))).sanitize(item_summary),
+                    title: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_title),
+                    summary: (0, (/*@__PURE__*/$parcel$interopDefault($f817e9c18ea96dab$exports))).sanitize(item_summary),
                     link: item_link,
                     date: item_date,
                     dateunix: item_date_unix1,
@@ -15628,7 +15643,7 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
                     category: param_category,
                     type: item_type,
                     image: item_image,
-                    duration: $5535d7a9ff238efe$export$d33f79e3ffc3dc83(item_duration),
+                    duration: $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(item_duration),
                     media: item_media,
                     filesize: item_filesize,
                     cid: item_cid,
@@ -15643,44 +15658,44 @@ var $5535d7a9ff238efe$var$rss_fetcher = function rss_fetcher1(param_url, param_l
             }
         }
         ////Redirection
-        if (xhttp.status === 301) $5535d7a9ff238efe$var$rss_fetcher(xhttp.getResponseHeader("Location"), param_limit, param_channel, param_channel);
+        if (xhttp.status === 301) $3e4edb8379ebf8a3$var$rss_fetcher(xhttp.getResponseHeader("Location"), param_limit, param_channel, param_channel);
     };
 };
 //sort content by date
 //build
 //write html
-var $5535d7a9ff238efe$var$read_articles = function read_articles() {
+var $3e4edb8379ebf8a3$var$read_articles = function read_articles() {
     //if element in read list
     //mark article as read
-    if ($5535d7a9ff238efe$var$content_arr.length == 0 || undefined) return false;
-    $5535d7a9ff238efe$var$content_arr.forEach(function(index) {
-        $5535d7a9ff238efe$var$all_cid.push(index.cid);
+    if ($3e4edb8379ebf8a3$var$content_arr.length == 0 || undefined) return false;
+    $3e4edb8379ebf8a3$var$content_arr.forEach(function(index) {
+        $3e4edb8379ebf8a3$var$all_cid.push(index.cid);
         index.read = "not-read";
-        if ($5535d7a9ff238efe$export$8cd9ad5416e75e48.length > 0) $5535d7a9ff238efe$export$8cd9ad5416e75e48.forEach(function(p) {
+        if ($3e4edb8379ebf8a3$export$8cd9ad5416e75e48.length > 0) $3e4edb8379ebf8a3$export$8cd9ad5416e75e48.forEach(function(p) {
             if (p == index.cid) index.read = "read";
         });
     });
 };
 //end to listen
 //to show icon
-var $5535d7a9ff238efe$var$listened_articles = function listened_articles() {
-    if ($5535d7a9ff238efe$var$content_arr.length == 0) return false;
-    $5535d7a9ff238efe$var$content_arr.forEach(function(index) {
+var $3e4edb8379ebf8a3$var$listened_articles = function listened_articles() {
+    if ($3e4edb8379ebf8a3$var$content_arr.length == 0) return false;
+    $3e4edb8379ebf8a3$var$content_arr.forEach(function(index) {
         index.listened = "not-listened";
-        if ($5535d7a9ff238efe$export$1063e5a38a205ce2.length > 0) {
-            for(t = 0; t < $5535d7a9ff238efe$export$1063e5a38a205ce2.length; t++)if ($5535d7a9ff238efe$export$1063e5a38a205ce2[t] == index.cid) index.listened = "listened";
+        if ($3e4edb8379ebf8a3$export$1063e5a38a205ce2.length > 0) {
+            for(t = 0; t < $3e4edb8379ebf8a3$export$1063e5a38a205ce2.length; t++)if ($3e4edb8379ebf8a3$export$1063e5a38a205ce2[t] == index.cid) index.listened = "listened";
         }
     });
 };
 //started to listen
 //add to list recently played
-var $5535d7a9ff238efe$var$listened_podcast_articles = function listened_podcast_articles() {
-    if ($5535d7a9ff238efe$var$content_arr.length == 0) return false;
-    $5535d7a9ff238efe$var$content_arr.forEach(function(index) {
+var $3e4edb8379ebf8a3$var$listened_podcast_articles = function listened_podcast_articles() {
+    if ($3e4edb8379ebf8a3$var$content_arr.length == 0) return false;
+    $3e4edb8379ebf8a3$var$content_arr.forEach(function(index) {
         index.recently_played = "";
         index.recently_order = "";
-        if ($5535d7a9ff238efe$export$57ef1bcec6355f64.length > 0) {
-            for(var t1 = 0; t1 < $5535d7a9ff238efe$export$57ef1bcec6355f64.length; t1++)if ($5535d7a9ff238efe$export$57ef1bcec6355f64[t1] == index.cid) {
+        if ($3e4edb8379ebf8a3$export$57ef1bcec6355f64.length > 0) {
+            for(var t1 = 0; t1 < $3e4edb8379ebf8a3$export$57ef1bcec6355f64.length; t1++)if ($3e4edb8379ebf8a3$export$57ef1bcec6355f64[t1] == index.cid) {
                 index.recently_played = "recently-played";
                 index.recently_order = t1;
             }
@@ -15688,73 +15703,72 @@ var $5535d7a9ff238efe$var$listened_podcast_articles = function listened_podcast_
     });
 };
 //clear local storage
-var $5535d7a9ff238efe$var$clean_localstorage = function clean_localstorage() {
-    for(var i = 0; i < $5535d7a9ff238efe$export$8cd9ad5416e75e48.length; i++)if ($5535d7a9ff238efe$var$all_cid.indexOf($5535d7a9ff238efe$export$8cd9ad5416e75e48[i]) == -1) $5535d7a9ff238efe$export$8cd9ad5416e75e48.slice(i, 1);
-    localStorage.setItem("read_elem", JSON.stringify($5535d7a9ff238efe$export$8cd9ad5416e75e48));
+var $3e4edb8379ebf8a3$var$clean_localstorage = function clean_localstorage() {
+    for(var i = 0; i < $3e4edb8379ebf8a3$export$8cd9ad5416e75e48.length; i++)if ($3e4edb8379ebf8a3$var$all_cid.indexOf($3e4edb8379ebf8a3$export$8cd9ad5416e75e48[i]) == -1) $3e4edb8379ebf8a3$export$8cd9ad5416e75e48.slice(i, 1);
+    localStorage.setItem("read_elem", JSON.stringify($3e4edb8379ebf8a3$export$8cd9ad5416e75e48));
     //recently played
-    for(var i1 = 0; i1 < $5535d7a9ff238efe$export$57ef1bcec6355f64.length; i1++)if ($5535d7a9ff238efe$var$all_cid.indexOf($5535d7a9ff238efe$export$57ef1bcec6355f64[i1]) == -1) $5535d7a9ff238efe$export$57ef1bcec6355f64.slice(i1, 1);
-    localStorage.setItem("recently_played", JSON.stringify($5535d7a9ff238efe$export$57ef1bcec6355f64));
+    for(var i1 = 0; i1 < $3e4edb8379ebf8a3$export$57ef1bcec6355f64.length; i1++)if ($3e4edb8379ebf8a3$var$all_cid.indexOf($3e4edb8379ebf8a3$export$57ef1bcec6355f64[i1]) == -1) $3e4edb8379ebf8a3$export$57ef1bcec6355f64.slice(i1, 1);
+    localStorage.setItem("recently_played", JSON.stringify($3e4edb8379ebf8a3$export$57ef1bcec6355f64));
 };
 //render html
-function $5535d7a9ff238efe$var$renderHello(arr) {
+function $3e4edb8379ebf8a3$var$renderHello(arr) {
     var template = document.getElementById("template").innerHTML;
-    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($13462400ebaaddfa$exports))).render(template, {
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
         data: arr
     });
     document.querySelector("#news-feed-list").innerHTML = rendered;
 }
 //render download-list
-function $5535d7a9ff238efe$var$render_feed_download_list(arr) {
+function $3e4edb8379ebf8a3$var$render_feed_download_list(arr) {
     var template = document.getElementById("feed-download-list-template").innerHTML;
-    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($13462400ebaaddfa$exports))).render(template, {
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
         data: arr
     });
     document.querySelector("#feed-download-list div").innerHTML = rendered;
 }
-//render selectbox
-function $5535d7a9ff238efe$var$renderSB(arr) {
+var $3e4edb8379ebf8a3$export$cbf8585b42c529c0 = function renderSB(arr) {
     var template = document.getElementById("sb").innerHTML;
-    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($13462400ebaaddfa$exports))).render(template, {
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
         data: arr
     });
     document.getElementById("source-local").innerHTML = rendered;
-}
+};
 //filter view
-var $5535d7a9ff238efe$var$heroArray = [];
-var $5535d7a9ff238efe$var$filter_data = function filter_data(cat) {
-    $5535d7a9ff238efe$var$heroArray.length = 0;
+var $3e4edb8379ebf8a3$var$heroArray = [];
+var $3e4edb8379ebf8a3$var$filter_data = function filter_data(cat) {
+    $3e4edb8379ebf8a3$var$heroArray.length = 0;
     var index = 0;
-    for(var i = 0; i < $5535d7a9ff238efe$var$content_arr.length; i++)if ($5535d7a9ff238efe$var$content_arr[i].category == cat) {
+    for(var i = 0; i < $3e4edb8379ebf8a3$var$content_arr.length; i++)if ($3e4edb8379ebf8a3$var$content_arr[i].category == cat) {
         index++;
-        $5535d7a9ff238efe$var$content_arr[i].index = index;
-        $5535d7a9ff238efe$var$heroArray.push($5535d7a9ff238efe$var$content_arr[i]);
+        $3e4edb8379ebf8a3$var$content_arr[i].index = index;
+        $3e4edb8379ebf8a3$var$heroArray.push($3e4edb8379ebf8a3$var$content_arr[i]);
     }
 };
-var $5535d7a9ff238efe$var$tabs = function tabs() {
-    for(var i = 0; i < $5535d7a9ff238efe$var$content_arr.length; i++)//set panel category
-    if ($5535d7a9ff238efe$var$panels.includes($5535d7a9ff238efe$var$content_arr[i].category) === false && $5535d7a9ff238efe$var$content_arr.length != 0) $5535d7a9ff238efe$var$panels.push($5535d7a9ff238efe$var$content_arr[i].category);
-    console.log($5535d7a9ff238efe$var$panels);
+var $3e4edb8379ebf8a3$var$tabs = function tabs() {
+    for(var i = 0; i < $3e4edb8379ebf8a3$var$content_arr.length; i++)//set panel category
+    if ($3e4edb8379ebf8a3$var$panels.includes($3e4edb8379ebf8a3$var$content_arr[i].category) === false && $3e4edb8379ebf8a3$var$content_arr.length != 0) $3e4edb8379ebf8a3$var$panels.push($3e4edb8379ebf8a3$var$content_arr[i].category);
+    console.log($3e4edb8379ebf8a3$var$panels);
 };
 //build html
-var $5535d7a9ff238efe$var$build = function build() {
+var $3e4edb8379ebf8a3$var$build = function build() {
     // if (content_arr.lenght > 0) sort_array(content_arr, "channel", "string");
     document.getElementById("intro").style.display = "none";
-    $5535d7a9ff238efe$var$read_articles();
-    $5535d7a9ff238efe$var$listened_articles();
-    $5535d7a9ff238efe$var$clean_localstorage();
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
-    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", $5535d7a9ff238efe$var$panels[0], "");
-    $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$content_arr);
-    $5535d7a9ff238efe$var$render_feed_download_list($5535d7a9ff238efe$var$feed_download_list);
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "article-list";
-    $5535d7a9ff238efe$var$set_tabindex();
-    $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article");
-    $5535d7a9ff238efe$var$article_array[0].focus();
+    $3e4edb8379ebf8a3$var$read_articles();
+    $3e4edb8379ebf8a3$var$listened_articles();
+    $3e4edb8379ebf8a3$var$clean_localstorage();
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
+    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", $3e4edb8379ebf8a3$var$panels[0], "");
+    $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$content_arr);
+    $3e4edb8379ebf8a3$var$render_feed_download_list($3e4edb8379ebf8a3$var$feed_download_list);
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "article-list";
+    $3e4edb8379ebf8a3$var$set_tabindex();
+    $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article");
+    $3e4edb8379ebf8a3$var$article_array[0].focus();
     // screenlock("unlock");
-    $5535d7a9ff238efe$var$tabs();
+    $3e4edb8379ebf8a3$var$tabs();
 };
 //set tabindex
-var $5535d7a9ff238efe$var$set_tabindex = function set_tabindex() {
+var $3e4edb8379ebf8a3$var$set_tabindex = function set_tabindex() {
     var divs = document.querySelectorAll("article");
     var t1 = -1;
     for(var i = 0; i < divs.length; i++){
@@ -15762,80 +15776,80 @@ var $5535d7a9ff238efe$var$set_tabindex = function set_tabindex() {
         t1++;
         divs[i].tabIndex = t1;
     }
-    $5535d7a9ff238efe$var$tab_index = 0;
+    $3e4edb8379ebf8a3$var$tab_index = 0;
     setTimeout(function() {
-        $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article .item");
-        if ($5535d7a9ff238efe$var$article_array > 0) $5535d7a9ff238efe$var$article_array[0].focus();
+        $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article .item");
+        if ($3e4edb8379ebf8a3$var$article_array > 0) $3e4edb8379ebf8a3$var$article_array[0].focus();
     }, 1500);
 };
 //mark as read
-var $5535d7a9ff238efe$var$mark_as_read = function mark_as_read(un_read) {
+var $3e4edb8379ebf8a3$var$mark_as_read = function mark_as_read(un_read) {
     if (un_read == true) {
         document.activeElement.setAttribute("data-read", "read");
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-        $5535d7a9ff238efe$export$8cd9ad5416e75e48.push($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id);
-        localStorage.setItem("read_elem", JSON.stringify($5535d7a9ff238efe$export$8cd9ad5416e75e48));
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+        $3e4edb8379ebf8a3$export$8cd9ad5416e75e48.push($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id);
+        localStorage.setItem("read_elem", JSON.stringify($3e4edb8379ebf8a3$export$8cd9ad5416e75e48));
         document.activeElement.style.color = "silver";
         return true;
     }
     if (un_read == false) {
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-        var kk = document.querySelector("[data-id ='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-id");
-        document.querySelector("[data-id ='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").setAttribute("data-read", "not-read");
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+        var kk = document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-id");
+        document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").setAttribute("data-read", "not-read");
         var test = [];
-        for(var i = 0; i < $5535d7a9ff238efe$export$8cd9ad5416e75e48.length; i++)if ($5535d7a9ff238efe$export$8cd9ad5416e75e48[i] != kk) test.push($5535d7a9ff238efe$export$8cd9ad5416e75e48[i]);
+        for(var i = 0; i < $3e4edb8379ebf8a3$export$8cd9ad5416e75e48.length; i++)if ($3e4edb8379ebf8a3$export$8cd9ad5416e75e48[i] != kk) test.push($3e4edb8379ebf8a3$export$8cd9ad5416e75e48[i]);
         localStorage.setItem("read_elem", JSON.stringify(test));
-        $5535d7a9ff238efe$export$8cd9ad5416e75e48 = test;
+        $3e4edb8379ebf8a3$export$8cd9ad5416e75e48 = test;
         document.activeElement.style.color = "black";
-        (0, $162001cafa2b40fd$export$6593825dc0f3a767)("article marked as not read", 2000);
+        (0, $6d3f4b507512327e$export$6593825dc0f3a767)("article marked as not read", 2000);
     }
 };
-var $5535d7a9ff238efe$var$sort_tab = function sort_tab(type) {
-    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel == "channels" || $5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel == "recently-played") {
-        (0, $162001cafa2b40fd$export$6593825dc0f3a767)("this tab can't be sorted", 2000);
+var $3e4edb8379ebf8a3$var$sort_tab = function sort_tab(type) {
+    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel == "channels" || $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel == "recently-played") {
+        (0, $6d3f4b507512327e$export$6593825dc0f3a767)("this tab can't be sorted", 2000);
         return false;
     }
-    $5535d7a9ff238efe$var$filter_data($5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel);
+    $3e4edb8379ebf8a3$var$filter_data($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel);
     //sort
     if (type == "string") {
-        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "title", "string");
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.tabsort = "string";
+        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "title", "string");
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.tabsort = "string";
     }
     if (type == "date") {
-        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "dateunix", "number");
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.tabsort = "date";
+        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "dateunix", "number");
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.tabsort = "date";
     }
     //build html
-    $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$heroArray);
-    $5535d7a9ff238efe$var$set_tabindex();
+    $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$heroArray);
+    $3e4edb8379ebf8a3$var$set_tabindex();
     document.querySelectorAll("div#news-feed-list article")[0].focus();
-    (0, $162001cafa2b40fd$export$6593825dc0f3a767)("sorted", 2000);
+    (0, $6d3f4b507512327e$export$6593825dc0f3a767)("sorted", 2000);
 };
 ////////////////////////
 //NAVIGATION
 /////////////////////////
-var $5535d7a9ff238efe$var$division_count = 0;
-function $5535d7a9ff238efe$var$nav_panels(left_right) {
-    if (left_right == "left") $5535d7a9ff238efe$var$current_panel--;
-    if (left_right == "right") $5535d7a9ff238efe$var$current_panel++;
-    $5535d7a9ff238efe$var$current_panel = $5535d7a9ff238efe$var$current_panel % $5535d7a9ff238efe$var$panels.length;
-    if ($5535d7a9ff238efe$var$current_panel < 0) $5535d7a9ff238efe$var$current_panel += $5535d7a9ff238efe$var$panels.length;
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.current_panel = $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel];
-    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
-    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode) (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("sleep", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
-    $5535d7a9ff238efe$var$read_articles();
-    $5535d7a9ff238efe$var$tabs();
+var $3e4edb8379ebf8a3$var$division_count = 0;
+function $3e4edb8379ebf8a3$var$nav_panels(left_right) {
+    if (left_right == "left") $3e4edb8379ebf8a3$var$current_panel--;
+    if (left_right == "right") $3e4edb8379ebf8a3$var$current_panel++;
+    $3e4edb8379ebf8a3$var$current_panel = $3e4edb8379ebf8a3$var$current_panel % $3e4edb8379ebf8a3$var$panels.length;
+    if ($3e4edb8379ebf8a3$var$current_panel < 0) $3e4edb8379ebf8a3$var$current_panel += $3e4edb8379ebf8a3$var$panels.length;
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.current_panel = $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel];
+    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
+    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode) (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("sleep", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
+    $3e4edb8379ebf8a3$var$read_articles();
+    //tabs();
     //filter data
     //default
     //view
-    $5535d7a9ff238efe$var$filter_data($5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel]);
+    $3e4edb8379ebf8a3$var$filter_data($3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel]);
     //sort
-    (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "dateunix", "number");
+    (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "dateunix", "number");
     //build html
-    $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$heroArray);
+    $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$heroArray);
     setTimeout(function() {
         if (document.querySelectorAll("article").length < 1) return false;
-        $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article")[0].focus();
+        $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article")[0].focus();
         //smooth scrolling
         var rect = document.activeElement.getBoundingClientRect();
         var elY = rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
@@ -15846,49 +15860,49 @@ function $5535d7a9ff238efe$var$nav_panels(left_right) {
         });
     }, 1000);
     //recently played
-    if ($5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel] == "recently-played") {
+    if ($3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel] == "recently-played") {
         //to do
-        $5535d7a9ff238efe$var$heroArray.length = 0;
-        $5535d7a9ff238efe$var$listened_podcast_articles();
-        for(var i = 0; i < $5535d7a9ff238efe$var$content_arr.length; i++)if ($5535d7a9ff238efe$var$content_arr[i].recently_played == "recently-played") $5535d7a9ff238efe$var$heroArray.push($5535d7a9ff238efe$var$content_arr[i]);
-        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$heroArray, "recently_order", "number");
-        $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$heroArray);
+        $3e4edb8379ebf8a3$var$heroArray.length = 0;
+        $3e4edb8379ebf8a3$var$listened_podcast_articles();
+        for(var i = 0; i < $3e4edb8379ebf8a3$var$content_arr.length; i++)if ($3e4edb8379ebf8a3$var$content_arr[i].recently_played == "recently-played") $3e4edb8379ebf8a3$var$heroArray.push($3e4edb8379ebf8a3$var$content_arr[i]);
+        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$heroArray, "recently_order", "number");
+        $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$heroArray);
         document.querySelectorAll("div.division").forEach(function(index, key) {
             document.querySelectorAll("div.division")[key].style.display = "none";
         });
     }
     //channels
-    if ($5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel] == "channels") {
-        (0, $162001cafa2b40fd$export$b04ad9f70842c3f1)($5535d7a9ff238efe$var$content_arr, "channel", "string");
-        $5535d7a9ff238efe$var$renderHello($5535d7a9ff238efe$var$content_arr);
+    if ($3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel] == "channels") {
+        (0, $6d3f4b507512327e$export$b04ad9f70842c3f1)($3e4edb8379ebf8a3$var$content_arr, "channel", "string");
+        $3e4edb8379ebf8a3$var$renderHello($3e4edb8379ebf8a3$var$content_arr);
     }
-    $5535d7a9ff238efe$var$set_tabindex();
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.panel = $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel];
+    $3e4edb8379ebf8a3$var$set_tabindex();
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.panel = $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel];
 }
 ////////////
 //TABINDEX NAVIGATION
 ///////////
-function $5535d7a9ff238efe$var$nav(move) {
+function $3e4edb8379ebf8a3$var$nav(move) {
     // Setup siblings array and get the first sibling
     var siblings = [];
     //nested input field
     if (document.activeElement.parentNode.classList.contains("input-parent")) document.activeElement.parentNode.focus();
-    if (document.activeElement.classList.contains("input-parent")) (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+    if (document.activeElement.classList.contains("input-parent")) (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
     var b = document.activeElement.parentNode;
     var items = b.querySelectorAll(".item");
     for(var i = 0; i < items.length; i++)siblings.push(items[i]);
     if (move == "+1") {
-        $5535d7a9ff238efe$var$tab_index++;
-        if ($5535d7a9ff238efe$var$tab_index >= siblings.length) {
-            $5535d7a9ff238efe$var$tab_index = siblings.length - 1;
+        $3e4edb8379ebf8a3$var$tab_index++;
+        if ($3e4edb8379ebf8a3$var$tab_index >= siblings.length) {
+            $3e4edb8379ebf8a3$var$tab_index = siblings.length - 1;
             return true;
         }
-        siblings[$5535d7a9ff238efe$var$tab_index].focus();
+        siblings[$3e4edb8379ebf8a3$var$tab_index].focus();
     }
-    if (move == "-1" && $5535d7a9ff238efe$var$tab_index > 0) {
-        $5535d7a9ff238efe$var$tab_index--;
-        if (document.activeElement.parentElement.id == "KaiOsAds-Wrapper") $5535d7a9ff238efe$var$open_options();
-        siblings[$5535d7a9ff238efe$var$tab_index].focus();
+    if (move == "-1" && $3e4edb8379ebf8a3$var$tab_index > 0) {
+        $3e4edb8379ebf8a3$var$tab_index--;
+        if (document.activeElement.parentElement.id == "KaiOsAds-Wrapper") $3e4edb8379ebf8a3$var$open_options();
+        siblings[$3e4edb8379ebf8a3$var$tab_index].focus();
     }
     //smooth scrolling
     var rect = document.activeElement.getBoundingClientRect();
@@ -15900,7 +15914,7 @@ function $5535d7a9ff238efe$var$nav(move) {
     });
 }
 //navigation between channels into channels view
-var $5535d7a9ff238efe$var$channel_navigation = function channel_navigation(direction) {
+var $3e4edb8379ebf8a3$var$channel_navigation = function channel_navigation(direction) {
     var el = document.activeElement;
     if (direction == "down") {
         // Get the next sibling element
@@ -15943,20 +15957,21 @@ var $5535d7a9ff238efe$var$channel_navigation = function channel_navigation(direc
         }
     }
 };
-var $5535d7a9ff238efe$var$sleep_mode = function sleep_mode() {
-    var st = (0, $011f805697d8f593$export$60d2a73d9c319f71).sleep_time;
+var $3e4edb8379ebf8a3$var$sleep_mode = function sleep_mode() {
+    var st = (0, $e9640ea827150915$export$60d2a73d9c319f71).sleep_time;
     st = st * 60000;
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode = true;
-    (0, $162001cafa2b40fd$export$a224d1f4f6f98541)("sleepmode activ", 3000);
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode = true;
+    (0, $6d3f4b507512327e$export$a224d1f4f6f98541)("sleepmode activ", 3000);
     setTimeout(function() {
-        (0, $987aec5199ae6065$export$3c97237bc3c17cae)();
-        $5535d7a9ff238efe$var$show_article_list();
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode = false;
+        (0, $fa0566b078e52ad5$export$3c97237bc3c17cae)();
+        $3e4edb8379ebf8a3$var$show_article_list();
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode = false;
     }, st);
 };
-var $5535d7a9ff238efe$var$show_article = function show_article() {
-    $5535d7a9ff238efe$var$mark_as_read(true);
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "single-article";
+var $3e4edb8379ebf8a3$var$show_article = function show_article() {
+    $3e4edb8379ebf8a3$var$mark_as_read(true);
+    $3e4edb8379ebf8a3$var$detectURLs();
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "single-article";
     document.getElementById("news-feed-list").scrollTo(0, 0);
     document.getElementById("progress-bar").style.display = "none";
     document.querySelector("div#youtube-player").style.display = "none";
@@ -15974,15 +15989,27 @@ var $5535d7a9ff238efe$var$show_article = function show_article() {
     document.activeElement.style.display = "block";
     document.activeElement.classList.add("view");
     document.getElementById("top-bar").style.display = "none";
-    if (document.activeElement.getAttribute("data-media") == "audio") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-    if (document.activeElement.getAttribute("data-media") == "video") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-    if (document.activeElement.getAttribute("data-media") == "rss") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/E24F.svg'>", "", "");
-    if (document.activeElement.getAttribute("data-media") == "youtube") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+    if (document.activeElement.getAttribute("data-media") == "audio") {
+        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy) (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "<img src='assets/icons/E269.svg'>");
+    }
+    if (document.activeElement.getAttribute("data-media") == "video") {
+        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy) (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "<img src='assets/icons/E269.svg'>");
+    }
+    if (document.activeElement.getAttribute("data-media") == "rss") {
+        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/E24F.svg'>", "", "");
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy) (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/E24F.svg'>", "", "<img src='assets/icons/E269.svg'>");
+    }
+    if (document.activeElement.getAttribute("data-media") == "youtube") {
+        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy) (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "<img src='assets/icons/E269.svg'>");
+    }
     document.querySelector("div#news-feed").style.background = "white";
     document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
     document.querySelector("div#news-feed div#news-feed-list").style.overflow = "scroll";
 };
-var $5535d7a9ff238efe$export$d33f79e3ffc3dc83 = function toTime(seconds) {
+var $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83 = function toTime(seconds) {
     var n = "";
     if (seconds == "") n = "";
     else try {
@@ -15994,63 +16021,63 @@ var $5535d7a9ff238efe$export$d33f79e3ffc3dc83 = function toTime(seconds) {
     }
     return n;
 };
-var $5535d7a9ff238efe$var$youtube_seeking = function youtube_seeking(param) {
+var $3e4edb8379ebf8a3$var$youtube_seeking = function youtube_seeking(param) {
     var step = 10;
     var new_time;
     if (param == "backward") {
-        new_time = $5535d7a9ff238efe$var$youtube_player.getCurrentTime() - step++;
-        $5535d7a9ff238efe$var$youtube_player.seekTo(new_time, true);
+        new_time = $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime() - step++;
+        $3e4edb8379ebf8a3$var$youtube_player.seekTo(new_time, true);
     }
     if (param == "forward") {
-        new_time = $5535d7a9ff238efe$var$youtube_player.getCurrentTime() + step++;
-        $5535d7a9ff238efe$var$youtube_player.seekTo(new_time, true);
+        new_time = $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime() + step++;
+        $3e4edb8379ebf8a3$var$youtube_player.seekTo(new_time, true);
     }
 };
-var $5535d7a9ff238efe$var$video_seeking = function video_seeking(param) {
+var $3e4edb8379ebf8a3$var$video_seeking = function video_seeking(param) {
     var step = 10;
-    if (param == "backward") $5535d7a9ff238efe$var$video.currentTime = $5535d7a9ff238efe$var$video.currentTime - step++;
-    if (param == "forward") $5535d7a9ff238efe$var$video.currentTime = $5535d7a9ff238efe$var$video.currentTime + step++;
+    if (param == "backward") $3e4edb8379ebf8a3$var$video.currentTime = $3e4edb8379ebf8a3$var$video.currentTime - step++;
+    if (param == "forward") $3e4edb8379ebf8a3$var$video.currentTime = $3e4edb8379ebf8a3$var$video.currentTime + step++;
 };
 //open source or youtube
-function $5535d7a9ff238efe$var$open_url() {
+function $3e4edb8379ebf8a3$var$open_url() {
     //rss
     if (document.activeElement.getAttribute("data-media") == "rss") {
         var link_target = document.activeElement.getAttribute("data-link");
         var title = document.activeElement.querySelector("h1.title").textContent;
         title = title.replace(/\s/g, "-");
-        (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
-        $5535d7a9ff238efe$var$show_article_list();
+        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+        $3e4edb8379ebf8a3$var$show_article_list();
         window.open(link_target);
         return true;
     }
     //video
     if (document.activeElement.getAttribute("data-media") == "video") {
-        $5535d7a9ff238efe$var$video_player = document.getElementById("videoplayer");
-        $5535d7a9ff238efe$var$video.src = document.activeElement.getAttribute("data-video-url");
-        $5535d7a9ff238efe$var$open_video_player();
+        $3e4edb8379ebf8a3$var$video_player = document.getElementById("videoplayer");
+        $3e4edb8379ebf8a3$var$video.src = document.activeElement.getAttribute("data-video-url");
+        $3e4edb8379ebf8a3$var$open_video_player();
         document.getElementById("progress-bar").style.display = "block";
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "video";
-        if (document.activeElement.getAttribute("data-media") == "audio") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-        $5535d7a9ff238efe$var$video_player.onloadedmetadata = function() {
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "video";
+        if (document.activeElement.getAttribute("data-media") == "audio") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+        $3e4edb8379ebf8a3$var$video_player.onloadedmetadata = function() {
             document.querySelector(".loading-spinner").style.display = "block";
         };
-        $5535d7a9ff238efe$var$video_player.onplaying = function() {
-            (0, $987aec5199ae6065$export$cf7ee0e0d20a7077)(); //stop audio player
+        $3e4edb8379ebf8a3$var$video_player.onplaying = function() {
+            (0, $fa0566b078e52ad5$export$cf7ee0e0d20a7077)(); //stop audio player
             //  screenlock("lock");
             document.querySelector(".loading-spinner").style.display = "none";
-            $5535d7a9ff238efe$var$video_status = "playing";
-            $5535d7a9ff238efe$var$video_time = setInterval(function() {
-                t = $5535d7a9ff238efe$var$video.duration - $5535d7a9ff238efe$var$video.currentTime;
-                var percent = $5535d7a9ff238efe$var$video.currentTime / $5535d7a9ff238efe$var$video.duration * 100;
+            $3e4edb8379ebf8a3$var$video_status = "playing";
+            $3e4edb8379ebf8a3$var$video_time = setInterval(function() {
+                t = $3e4edb8379ebf8a3$var$video.duration - $3e4edb8379ebf8a3$var$video.currentTime;
+                var percent = $3e4edb8379ebf8a3$var$video.currentTime / $3e4edb8379ebf8a3$var$video.duration * 100;
                 document.getElementById("progress-bar").style.display = "block";
                 document.querySelector("div#progress-bar div").style.width = percent + "%";
-                if ($5535d7a9ff238efe$var$video_status == "playing") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t), "");
-                if ($5535d7a9ff238efe$var$video_status == "paused") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t), "");
+                if ($3e4edb8379ebf8a3$var$video_status == "playing") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(t), "");
+                if ($3e4edb8379ebf8a3$var$video_status == "paused") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(t), "");
             }, 1000);
         };
-        $5535d7a9ff238efe$var$video_player.onpause = function() {
-            $5535d7a9ff238efe$var$video_status = "paused";
-            (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t), "");
+        $3e4edb8379ebf8a3$var$video_player.onpause = function() {
+            $3e4edb8379ebf8a3$var$video_status = "paused";
+            (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(t), "");
         //  screenlock("unlock");
         };
         return;
@@ -16059,14 +16086,14 @@ function $5535d7a9ff238efe$var$open_url() {
     if (document.activeElement.getAttribute("data-media") == "youtube") {
         var onPlayerStateChange = function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
-                $5535d7a9ff238efe$var$youtube_status = "playing";
-                (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t1), "");
+                $3e4edb8379ebf8a3$var$youtube_status = "playing";
+                (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(t1), "");
                 tt();
             // screenlock("lock");
             }
             if (event.data == YT.PlayerState.PAUSED) {
-                $5535d7a9ff238efe$var$youtube_status = "paused";
-                clearInterval($5535d7a9ff238efe$var$youtube_time);
+                $3e4edb8379ebf8a3$var$youtube_status = "paused";
+                clearInterval($3e4edb8379ebf8a3$var$youtube_time);
             // screenlock("unlock");
             }
         };
@@ -16074,12 +16101,12 @@ function $5535d7a9ff238efe$var$open_url() {
             event.target.playVideo();
             document.querySelector(".loading-spinner").style.display = "none";
         };
-        (0, $987aec5199ae6065$export$cf7ee0e0d20a7077)();
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "youtube";
-        (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+        (0, $fa0566b078e52ad5$export$cf7ee0e0d20a7077)();
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "youtube";
+        (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
         document.querySelector(".loading-spinner").style.display = "block";
         document.getElementById("youtube-player").style.display = "block";
-        $5535d7a9ff238efe$var$youtube_player = new YT.Player("iframe-wrapper", {
+        $3e4edb8379ebf8a3$var$youtube_player = new YT.Player("iframe-wrapper", {
             videoId: document.activeElement.getAttribute("data-youtube-id"),
             events: {
                 onReady: onPlayerReady,
@@ -16087,14 +16114,14 @@ function $5535d7a9ff238efe$var$open_url() {
             }
         });
         var tt = function tt() {
-            $5535d7a9ff238efe$var$youtube_time = setInterval(function() {
-                if ($5535d7a9ff238efe$var$youtube_player.getDuration() && $5535d7a9ff238efe$var$youtube_player.getCurrentTime()) {
-                    var t1 = $5535d7a9ff238efe$var$youtube_player.getDuration() - $5535d7a9ff238efe$var$youtube_player.getCurrentTime();
-                    var percent = $5535d7a9ff238efe$var$youtube_player.getCurrentTime() / $5535d7a9ff238efe$var$youtube_player.getDuration() * 100;
+            $3e4edb8379ebf8a3$var$youtube_time = setInterval(function() {
+                if ($3e4edb8379ebf8a3$var$youtube_player.getDuration() && $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime()) {
+                    var t1 = $3e4edb8379ebf8a3$var$youtube_player.getDuration() - $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime();
+                    var percent = $3e4edb8379ebf8a3$var$youtube_player.getCurrentTime() / $3e4edb8379ebf8a3$var$youtube_player.getDuration() * 100;
                     document.getElementById("progress-bar").style.display = "block";
                     document.querySelector("div#progress-bar div").style.width = percent + "%";
-                    if ($5535d7a9ff238efe$var$youtube_status == "playing") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t1), "");
-                    if ($5535d7a9ff238efe$var$youtube_status == "paused") (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $5535d7a9ff238efe$export$d33f79e3ffc3dc83(t1), "");
+                    if ($3e4edb8379ebf8a3$var$youtube_status == "playing") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(t1), "");
+                    if ($3e4edb8379ebf8a3$var$youtube_status == "paused") (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", $3e4edb8379ebf8a3$export$d33f79e3ffc3dc83(t1), "");
                 }
             }, 1000);
         };
@@ -16105,7 +16132,7 @@ function $5535d7a9ff238efe$var$open_url() {
 /////////////////
 //show article list
 //////////////////
-var $5535d7a9ff238efe$var$show_article_list = function show_article_list() {
+var $3e4edb8379ebf8a3$var$show_article_list = function show_article_list() {
     document.querySelector("div#video-player").style.display = "none";
     document.getElementById("audio-player").style.display = "none";
     document.querySelector("div#youtube-player").style.display = "none";
@@ -16114,20 +16141,20 @@ var $5535d7a9ff238efe$var$show_article_list = function show_article_list() {
     document.querySelector("div#options").style.display = "none";
     document.querySelector("div#news-feed div#news-feed-list").style.overflow = "hidden";
     document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
-    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
-    if ($5535d7a9ff238efe$var$youtube_player) {
-        $5535d7a9ff238efe$var$youtube_player.stopVideo();
-        $5535d7a9ff238efe$var$youtube_player.destroy();
-        $5535d7a9ff238efe$var$youtube_player = "";
-        clearInterval($5535d7a9ff238efe$var$youtube_time);
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/option.svg'>", "", "<img src='assets/icons/list.svg'>");
+    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
+    if ($3e4edb8379ebf8a3$var$youtube_player) {
+        $3e4edb8379ebf8a3$var$youtube_player.stopVideo();
+        $3e4edb8379ebf8a3$var$youtube_player.destroy();
+        $3e4edb8379ebf8a3$var$youtube_player = "";
+        clearInterval($3e4edb8379ebf8a3$var$youtube_time);
     }
-    $5535d7a9ff238efe$var$video.src = "";
-    $5535d7a9ff238efe$var$article_array[$5535d7a9ff238efe$var$tab_index];
+    $3e4edb8379ebf8a3$var$video.src = "";
+    $3e4edb8379ebf8a3$var$article_array[$3e4edb8379ebf8a3$var$tab_index];
     document.querySelector("div#youtube-player iframe").setAttribute("src", "");
-    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.sleepmode) (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("sleep", $5535d7a9ff238efe$var$panels[$5535d7a9ff238efe$var$current_panel], "");
+    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.sleepmode) (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("sleep", $3e4edb8379ebf8a3$var$panels[$3e4edb8379ebf8a3$var$current_panel], "");
     //show hide channels division
-    if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.panel == "channels") document.querySelectorAll("div.division").forEach(function(index, key) {
+    if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.panel == "channels") document.querySelectorAll("div.division").forEach(function(index, key) {
         document.querySelectorAll("div.division")[key].style.display = "block";
         document.querySelectorAll("div.division")[key].style.background = "black";
     });
@@ -16143,8 +16170,8 @@ var $5535d7a9ff238efe$var$show_article_list = function show_article_list() {
     }
     elem = document.querySelectorAll("div.summary");
     for(var i1 = 0; i1 < elem.length; i1++)elem[i1].style.display = "none";
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "article-list";
-    document.querySelector("[data-id='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").focus();
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "article-list";
+    document.querySelector("[data-id='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").focus();
     document.activeElement.classList.remove("view");
     var rect = document.activeElement.getBoundingClientRect();
     var elY = rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
@@ -16153,14 +16180,14 @@ var $5535d7a9ff238efe$var$show_article_list = function show_article_list() {
         top: elY - window.innerHeight / 2,
         behavior: "smooth"
     });
-    $5535d7a9ff238efe$var$tab_index = document.activeElement.getAttribute("tabIndex");
-    $5535d7a9ff238efe$var$video.src = "";
-    clearInterval($5535d7a9ff238efe$var$video_time);
+    $3e4edb8379ebf8a3$var$tab_index = document.activeElement.getAttribute("tabIndex");
+    $3e4edb8379ebf8a3$var$video.src = "";
+    clearInterval($3e4edb8379ebf8a3$var$video_time);
 };
-var $5535d7a9ff238efe$var$show_feed_download_list = function show_feed_download_list() {
-    $5535d7a9ff238efe$var$tab_index = 0;
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "<img src='assets/icons/pencil.svg'>", "");
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "download-list";
+var $3e4edb8379ebf8a3$var$show_feed_download_list = function show_feed_download_list() {
+    $3e4edb8379ebf8a3$var$tab_index = 0;
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "<img src='assets/icons/pencil.svg'>", "");
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "download-list";
     document.getElementById("feed-download-list").style.display = "block";
     document.getElementById("options").style.display = "none";
     document.querySelector("div#feed-download-list div:first-child").focus();
@@ -16172,17 +16199,17 @@ var $5535d7a9ff238efe$var$show_feed_download_list = function show_feed_download_
     });
     document.querySelectorAll("#feed-download-list input").forEach(function(e) {
         e.addEventListener("change", function() {
-            $5535d7a9ff238efe$var$feed_download_list.forEach(function(f) {
+            $3e4edb8379ebf8a3$var$feed_download_list.forEach(function(f) {
                 if (f.url == e.getAttribute("data-url")) {
                     f.amount = e.value;
                     //save list
-                    localStorage.setItem("feed_download_list", JSON.stringify($5535d7a9ff238efe$var$feed_download_list));
+                    localStorage.setItem("feed_download_list", JSON.stringify($3e4edb8379ebf8a3$var$feed_download_list));
                 }
             });
         });
     });
 };
-var $5535d7a9ff238efe$var$focus_after_selection = function focus_after_selection() {
+var $3e4edb8379ebf8a3$var$focus_after_selection = function focus_after_selection() {
     if (document.querySelectorAll(".select-box") == null) return false;
     document.querySelectorAll(".select-box").forEach(function(e) {
         e.addEventListener("blur", function(k) {
@@ -16193,90 +16220,123 @@ var $5535d7a9ff238efe$var$focus_after_selection = function focus_after_selection
     });
 };
 //settings view
-var $5535d7a9ff238efe$var$show_settings = function show_settings() {
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
-    (0, $011f805697d8f593$export$49927c207fac7a54)();
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+var $3e4edb8379ebf8a3$var$show_settings = function show_settings() {
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+    (0, $e9640ea827150915$export$49927c207fac7a54)();
     document.querySelectorAll("div#settings .item").forEach(function(e, index) {
         if (e.style.display != "none") e.setAttribute("tabindex", index);
     });
-    $5535d7a9ff238efe$var$tab_index = 0;
+    $3e4edb8379ebf8a3$var$tab_index = 0;
     document.getElementById("top-bar").style.display = "none";
     document.getElementById("settings").style.display = "block";
     document.getElementById("settings").children[0].focus();
     document.getElementById("last-update").innerText = "last update: " + localStorage.getItem("last-update");
-    (0, $162001cafa2b40fd$export$99c802f9c0aea792)("opml", $5535d7a9ff238efe$var$list_files_callback);
-    $5535d7a9ff238efe$var$focus_after_selection();
+    $3e4edb8379ebf8a3$var$focus_after_selection();
 };
 //options view
-var $5535d7a9ff238efe$var$open_options = function open_options() {
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
-    $5535d7a9ff238efe$var$tab_index = 0;
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "options";
+var $3e4edb8379ebf8a3$var$open_options = function open_options() {
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+    $3e4edb8379ebf8a3$var$tab_index = 0;
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "options";
     document.getElementById("options").style.display = "block";
     document.querySelectorAll("div#options div")[0].focus();
 };
-var $5535d7a9ff238efe$var$start_options = function start_options() {
-    if (document.activeElement.getAttribute("data-function") == "unread") $5535d7a9ff238efe$var$mark_as_read(false);
-    if (document.activeElement.getAttribute("data-function") == "sleepmode") $5535d7a9ff238efe$var$sleep_mode();
-    if (document.activeElement.getAttribute("data-function") == "reload") $5535d7a9ff238efe$var$sync();
-    if (document.activeElement.getAttribute("data-function") == "download-list") $5535d7a9ff238efe$var$show_feed_download_list();
-    if (document.activeElement.getAttribute("data-function") == "sort-by-name") $5535d7a9ff238efe$var$sort_tab("string");
-    if (document.activeElement.getAttribute("data-function") == "sort-by-date") $5535d7a9ff238efe$var$sort_tab("number");
+var $3e4edb8379ebf8a3$var$start_options = function start_options() {
+    if (document.activeElement.getAttribute("data-function") == "unread") $3e4edb8379ebf8a3$var$mark_as_read(false);
+    if (document.activeElement.getAttribute("data-function") == "sleepmode") $3e4edb8379ebf8a3$var$sleep_mode();
+    if (document.activeElement.getAttribute("data-function") == "reload") $3e4edb8379ebf8a3$var$sync();
+    if (document.activeElement.getAttribute("data-function") == "download-list") $3e4edb8379ebf8a3$var$show_feed_download_list();
+    if (document.activeElement.getAttribute("data-function") == "sort-by-name") $3e4edb8379ebf8a3$var$sort_tab("string");
+    if (document.activeElement.getAttribute("data-function") == "sort-by-date") $3e4edb8379ebf8a3$var$sort_tab("number");
     if (document.activeElement.getAttribute("data-function") == "share") {
-        var k = document.querySelector("[data-id='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-link");
-        (0, $162001cafa2b40fd$export$ed80d9de1d9df928)(k);
+        var k = document.querySelector("[data-id='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-link");
+        (0, $6d3f4b507512327e$export$ed80d9de1d9df928)(k);
     }
     if (document.activeElement.getAttribute("data-function") == "audio-player") {
-        if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id != "") $5535d7a9ff238efe$var$open_player(true);
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id != "") $3e4edb8379ebf8a3$var$open_player(true);
     }
-    if (document.activeElement.getAttribute("data-function") == "volume") (0, $987aec5199ae6065$export$5f8df7563bfeaf14)();
+    if (document.activeElement.getAttribute("data-function") == "volume") (0, $fa0566b078e52ad5$export$5f8df7563bfeaf14)();
+    if (document.activeElement.getAttribute("data-function") == "open-url") window.open(document.activeElement.getAttribute("data-url"));
+};
+//linkfy menu
+var $3e4edb8379ebf8a3$var$links = [];
+function $3e4edb8379ebf8a3$var$detectURLs() {
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy = false;
+    $3e4edb8379ebf8a3$var$links.length = 0;
+    var message = document.activeElement.querySelector(".summary").textContent;
+    var l = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+    var f = message.match(l);
+    if (f != null) {
+        f.forEach(function(e, i) {
+            $3e4edb8379ebf8a3$var$links.push({
+                url: e,
+                index: i
+            });
+        });
+        if ($3e4edb8379ebf8a3$var$links.length > 0) $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy = true;
+        else $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy = false;
+    }
+    console.log($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy);
+}
+var $3e4edb8379ebf8a3$var$open_linkfy = function() {
+    $3e4edb8379ebf8a3$var$tab_index = 0;
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "link-list";
+    var template = document.getElementById("link-list-template").innerHTML;
+    var rendered = (0, (/*@__PURE__*/$parcel$interopDefault($7eadabea78850cc1$exports))).render(template, {
+        data: $3e4edb8379ebf8a3$var$links
+    });
+    document.querySelector("#link-list").innerHTML = rendered;
+    document.querySelector("#link-list").style.display = "block";
+    setTimeout(function() {
+        document.querySelectorAll("#link-list button")[0].focus();
+    }, 1000);
 };
 //video-player view
-function $5535d7a9ff238efe$var$reset_animation() {
+function $3e4edb8379ebf8a3$var$reset_animation() {
     var el = document.getElementById("audio-title");
     el.style.animation = "none";
     el.offsetHeight; /* trigger reflow */ 
     el.style.animation = null;
 }
-var $5535d7a9ff238efe$var$open_video_player = function open_video_player() {
+var $3e4edb8379ebf8a3$var$open_video_player = function open_video_player() {
     document.getElementById("video-player").style.display = "block";
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "video";
-    $5535d7a9ff238efe$var$video.src = document.activeElement.getAttribute("data-video-url");
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "video";
+    $3e4edb8379ebf8a3$var$video.src = document.activeElement.getAttribute("data-video-url");
 };
-var $5535d7a9ff238efe$var$open_player = function open_player(reopen) {
+var $3e4edb8379ebf8a3$var$open_player = function open_player(reopen) {
     //clear background image and title
-    (0, $162001cafa2b40fd$export$7ce2ea7c45ae9a07)("", "", "");
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
-    $5535d7a9ff238efe$var$reset_animation();
+    (0, $6d3f4b507512327e$export$7ce2ea7c45ae9a07)("", "", "");
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/23EF.svg'>", "", "");
+    $3e4edb8379ebf8a3$var$reset_animation();
     document.getElementById("image").style.backgroundImage = "url('/assets/image/fallback.png')";
     document.getElementById("audio-title").innerText = "";
     document.getElementById("audio-player").style.display = "block";
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "audio-player";
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "audio-player";
     document.getElementById("options").style.display = "none";
     if (!reopen) {
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
-        $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id = $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id;
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id = document.activeElement.getAttribute("data-id");
+        $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id = $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id;
     }
-    var w = $5535d7a9ff238efe$var$content_arr.filter(function(i) {
-        if (i.cid == $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id) return i;
+    var w = $3e4edb8379ebf8a3$var$content_arr.filter(function(i) {
+        if (i.cid == $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id) return i;
     });
     setTimeout(function() {
         document.getElementById("audio-title").innerText = w[0].title;
         if (w[0].image != "") document.getElementById("image").style.backgroundImage = "url(" + w[0].image + ")";
     }, 500);
 };
-var $c924198e7352128f$exports = {};
+var $cbc8b9a064949cde$exports = {};
 
 
-$c924198e7352128f$exports = (parcelRequire("xqsiy")).getBundleURL("liILU") + (parcelRequire("kDffi")).resolve("d4BpT");
+$cbc8b9a064949cde$exports = (parcelRequire("a5ik5")).getBundleURL("gQacM") + (parcelRequire("8d3OX")).resolve("d4BpT");
 
 
 //sync
 if ("b2g" in Navigator) try {
-    navigator.serviceWorker.register($c924198e7352128f$exports, {
+    navigator.serviceWorker.register($cbc8b9a064949cde$exports, {
         scope: "/"
     }).then(function(registration) {
         registration.systemMessageManager.subscribe("alarm").then(function(rv) {
@@ -16289,7 +16349,7 @@ if ("b2g" in Navigator) try {
 } catch (e) {
     console.log(e);
 }
-var $5535d7a9ff238efe$var$add_alarm = function add_alarm(date, message_text, id1) {
+var $3e4edb8379ebf8a3$var$add_alarm = function add_alarm(date, message_text, id1) {
     // KaiOs  2.xx
     if ("mozAlarms" in navigator) {
         // This is arbitrary data pass to the alarm
@@ -16324,7 +16384,7 @@ var $5535d7a9ff238efe$var$add_alarm = function add_alarm(date, message_text, id1
         alert(e);
     }
 };
-var $5535d7a9ff238efe$var$remove_alarm = function remove_alarm() {
+var $3e4edb8379ebf8a3$var$remove_alarm = function remove_alarm() {
     // KaiOs  2.xx
     try {
         var request = navigator.mozAlarms.getAll();
@@ -16375,34 +16435,34 @@ var $5535d7a9ff238efe$var$remove_alarm = function remove_alarm() {
 try {
     if ("mozAlarms" in navigator) {
         //set alarm
-        var $5535d7a9ff238efe$var$m = function m() {
+        var $3e4edb8379ebf8a3$var$m = function m() {
             if (localStorage.getItem("interval") == "never") return false;
             var d = new Date();
             d.setMinutes(d.getMinutes() + Number(localStorage.getItem("interval")));
-            $5535d7a9ff238efe$var$add_alarm(d, d, (0, $6995a202bee889c8$export$2e2bcd8739ae039)());
-            $5535d7a9ff238efe$var$sync();
+            $3e4edb8379ebf8a3$var$add_alarm(d, d, (0, $194554b49bf11e1e$export$2e2bcd8739ae039)());
+            $3e4edb8379ebf8a3$var$sync();
         };
         //reset alarm
         navigator.mozSetMessageHandler("alarm", function(message) {
-            $5535d7a9ff238efe$var$remove_alarm();
-            if (navigator.onLine) $5535d7a9ff238efe$var$m();
+            $3e4edb8379ebf8a3$var$remove_alarm();
+            if (navigator.onLine) $3e4edb8379ebf8a3$var$m();
         });
         //start sync loop
         if (navigator.mozHasPendingMessage("alarm") == false && localStorage.getItem("interval") != "never" && localStorage.getItem("interval") != null) {
-            var $5535d7a9ff238efe$var$d = new Date();
-            var $5535d7a9ff238efe$var$f = Number(localStorage.getItem("interval"));
-            $5535d7a9ff238efe$var$d.setMinutes($5535d7a9ff238efe$var$d.getMinutes() + $5535d7a9ff238efe$var$f);
-            var $5535d7a9ff238efe$var$request = navigator.mozAlarms.getAll();
-            var $5535d7a9ff238efe$var$action = true;
-            $5535d7a9ff238efe$var$request.onsuccess = function() {
+            var $3e4edb8379ebf8a3$var$d = new Date();
+            var $3e4edb8379ebf8a3$var$f = Number(localStorage.getItem("interval"));
+            $3e4edb8379ebf8a3$var$d.setMinutes($3e4edb8379ebf8a3$var$d.getMinutes() + $3e4edb8379ebf8a3$var$f);
+            var $3e4edb8379ebf8a3$var$request = navigator.mozAlarms.getAll();
+            var $3e4edb8379ebf8a3$var$action = true;
+            $3e4edb8379ebf8a3$var$request.onsuccess = function() {
                 this.result.forEach(function(alarm) {
                     //alert("alarm: " + alarm.date);
-                    if ($e758799baacea373$exports(alarm.date).isAfter($e758799baacea373$exports()) == true && $5535d7a9ff238efe$var$action == true) $5535d7a9ff238efe$var$action = false;
+                    if ($165c91a1b129545b$exports(alarm.date).isAfter($165c91a1b129545b$exports()) == true && $3e4edb8379ebf8a3$var$action == true) $3e4edb8379ebf8a3$var$action = false;
                 });
                 //no alarm in the future set alarm
-                if ($5535d7a9ff238efe$var$action == true) // alert("none alarm" + d);
+                if ($3e4edb8379ebf8a3$var$action == true) // alert("none alarm" + d);
                 // remove_alarm();
-                $5535d7a9ff238efe$var$add_alarm($5535d7a9ff238efe$var$d, $5535d7a9ff238efe$var$d, (0, $6995a202bee889c8$export$2e2bcd8739ae039)());
+                $3e4edb8379ebf8a3$var$add_alarm($3e4edb8379ebf8a3$var$d, $3e4edb8379ebf8a3$var$d, (0, $194554b49bf11e1e$export$2e2bcd8739ae039)());
             };
         }
     }
@@ -16410,55 +16470,57 @@ try {
     console.log(e);
 }
 //qr scan listener
-var $5535d7a9ff238efe$var$qr_listener = document.querySelector("input#source");
-var $5535d7a9ff238efe$var$qrscan = false;
-$5535d7a9ff238efe$var$qr_listener.addEventListener("focus", function(event) {
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("<img src='assets/icons/E1D8.svg'>", "", "");
-    $5535d7a9ff238efe$var$qrscan = true;
+var $3e4edb8379ebf8a3$var$qr_listener = document.querySelector("input#source");
+var $3e4edb8379ebf8a3$var$qrscan = false;
+$3e4edb8379ebf8a3$var$qr_listener.addEventListener("focus", function(event) {
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("<img src='assets/icons/E1D8.svg'>", "", "");
+    $3e4edb8379ebf8a3$var$qrscan = true;
 });
-$5535d7a9ff238efe$var$qr_listener.addEventListener("blur", function(event) {
-    (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
-    $5535d7a9ff238efe$var$qrscan = false;
+$3e4edb8379ebf8a3$var$qr_listener.addEventListener("blur", function(event) {
+    (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
+    $3e4edb8379ebf8a3$var$qrscan = false;
 });
 document.querySelector("#source-local").addEventListener("change", function(event) {
-    localStorage.setItem("source_local", $5535d7a9ff238efe$var$_this.value);
+    localStorage.setItem("source_local", $3e4edb8379ebf8a3$var$_this.value);
 });
-var $5535d7a9ff238efe$var$select_box = [];
-var $5535d7a9ff238efe$var$list_files_callback = function list_files_callback(filename) {
-    filename;
-    $5535d7a9ff238efe$var$select_box.push({
+var $3e4edb8379ebf8a3$var$select_box = [];
+var $3e4edb8379ebf8a3$var$list_files_callback = function list_files_callback(filename) {
+    $3e4edb8379ebf8a3$var$select_box.push({
         filename: filename
     });
-    $5535d7a9ff238efe$var$renderSB($5535d7a9ff238efe$var$select_box);
+    $3e4edb8379ebf8a3$export$cbf8585b42c529c0($3e4edb8379ebf8a3$var$select_box);
 };
-var $5535d7a9ff238efe$var$callback_scan = function callback_scan(url) {
+setTimeout(function() {
+    (0, $6d3f4b507512327e$export$99c802f9c0aea792)("opml", $3e4edb8379ebf8a3$var$list_files_callback);
+}, 1500);
+var $3e4edb8379ebf8a3$var$callback_scan = function callback_scan(url) {
     document.activeElement.value = url;
-    $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
+    $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
 };
-var $5535d7a9ff238efe$var$stop_scan_callback = function stop_scan_callback() {
+var $3e4edb8379ebf8a3$var$stop_scan_callback = function stop_scan_callback() {
     document.getElementById("qr-screen").style.display = "none";
 };
 //////////////////////////////
 ////KEYPAD HANDLER////////////
 //////////////////////////////
-var $5535d7a9ff238efe$var$longpress = false;
-var $5535d7a9ff238efe$var$longpress_timespan = 1000;
-var $5535d7a9ff238efe$var$timeout;
-function $5535d7a9ff238efe$var$repeat_action(param) {
+var $3e4edb8379ebf8a3$var$longpress = false;
+var $3e4edb8379ebf8a3$var$longpress_timespan = 1000;
+var $3e4edb8379ebf8a3$var$timeout;
+function $3e4edb8379ebf8a3$var$repeat_action(param) {
     switch(param.key){
         case "0":
-            var k = document.querySelector("[data-id='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-link");
-            (0, $162001cafa2b40fd$export$ed80d9de1d9df928)(k);
+            var k = document.querySelector("[data-id='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").getAttribute("data-link");
+            (0, $6d3f4b507512327e$export$ed80d9de1d9df928)(k);
             break;
         case "ArrowLeft":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $987aec5199ae6065$export$c8243f3943339030)("backward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $fa0566b078e52ad5$export$c8243f3943339030)("backward");
                 break;
             }
             break;
         case "ArrowRight":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $987aec5199ae6065$export$c8243f3943339030)("forward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $fa0566b078e52ad5$export$c8243f3943339030)("forward");
                 break;
             }
             break;
@@ -16467,46 +16529,43 @@ function $5535d7a9ff238efe$var$repeat_action(param) {
 //////////////
 ////LONGPRESS
 /////////////
-function $5535d7a9ff238efe$var$longpress_action(param) {
+function $3e4edb8379ebf8a3$var$longpress_action(param) {
     switch(param.key){
         case "Backspace":
             window.close();
             break;
         case "0":
-            $5535d7a9ff238efe$var$sync();
+            $3e4edb8379ebf8a3$var$sync();
             break;
     }
 }
 ///////////////
 ////SHORTPRESS
 //////////////
-function $5535d7a9ff238efe$var$shortpress_action(param) {
+function $3e4edb8379ebf8a3$var$shortpress_action(param) {
     switch(param.key){
         case "0":
-            (0, $162001cafa2b40fd$export$ed80d9de1d9df928)(document.activeElement.getAttribute("data-url"));
+            (0, $6d3f4b507512327e$export$ed80d9de1d9df928)(document.activeElement.getAttribute("data-url"));
             break;
         case "2":
-            $5535d7a9ff238efe$var$channel_navigation("up");
+            $3e4edb8379ebf8a3$var$channel_navigation("up");
             break;
         case "5":
-            $5535d7a9ff238efe$var$channel_navigation("down");
+            $3e4edb8379ebf8a3$var$channel_navigation("down");
             break;
         case "1":
-            $5535d7a9ff238efe$var$mark_as_read(false);
+            $3e4edb8379ebf8a3$var$mark_as_read(false);
             break;
         case "3":
-            $5535d7a9ff238efe$var$sleep_mode();
+            $3e4edb8379ebf8a3$var$sleep_mode();
             break;
         case "4":
-            var d = new Date();
-            d.setMinutes(d.getMinutes() + 5);
-            $5535d7a9ff238efe$var$add_alarm(d, d, (0, $6995a202bee889c8$export$2e2bcd8739ae039)());
             break;
         case "8":
             alert(localStorage.getItem("updated"));
             break;
         case "7":
-            $5535d7a9ff238efe$export$471f7ae5c4103ae1.tabsort == "string" ? $5535d7a9ff238efe$var$sort_tab("date") : $5535d7a9ff238efe$var$sort_tab("string");
+            $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.tabsort == "string" ? $3e4edb8379ebf8a3$var$sort_tab("date") : $3e4edb8379ebf8a3$var$sort_tab("string");
             break;
         case "Enter":
             if (document.activeElement.classList.contains("input-parent")) {
@@ -16515,150 +16574,150 @@ function $5535d7a9ff238efe$var$shortpress_action(param) {
                 return true;
             }
             if (document.activeElement.classList.contains("set-download-amount")) {
-                $5535d7a9ff238efe$var$show_feed_download_list();
+                $3e4edb8379ebf8a3$var$show_feed_download_list();
                 return true;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$show_article();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$show_article();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
-                $5535d7a9ff238efe$var$start_options();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options" || $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "link-list") {
+                $3e4edb8379ebf8a3$var$start_options();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("loadsettings")) (0, $011f805697d8f593$export$556c64630c31efa4)();
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("export")) (0, $011f805697d8f593$export$875389d4757e8c73)();
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("save")) (0, $011f805697d8f593$export$f5d05897b0194561)();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("loadsettings")) (0, $e9640ea827150915$export$556c64630c31efa4)();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("export")) (0, $e9640ea827150915$export$875389d4757e8c73)();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && document.activeElement.classList.contains("save")) (0, $e9640ea827150915$export$f5d05897b0194561)();
             break;
         case "ArrowLeft":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$nav_panels("left");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$nav_panels("left");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $987aec5199ae6065$export$c8243f3943339030)("backward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $fa0566b078e52ad5$export$c8243f3943339030)("backward");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
-                $5535d7a9ff238efe$var$youtube_seeking("backward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
+                $3e4edb8379ebf8a3$var$youtube_seeking("backward");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("backward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("backward");
             break;
         case "ArrowRight":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$nav_panels("right");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$nav_panels("right");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $987aec5199ae6065$export$c8243f3943339030)("forward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $fa0566b078e52ad5$export$c8243f3943339030)("forward");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
-                $5535d7a9ff238efe$var$youtube_seeking("forward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
+                $3e4edb8379ebf8a3$var$youtube_seeking("forward");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("forward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("forward");
             break;
         case "ArrowDown":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
-                $5535d7a9ff238efe$var$nav("+1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
+                $3e4edb8379ebf8a3$var$nav("+1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$nav("+1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$nav("+1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
-                $5535d7a9ff238efe$var$nav("+1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
+                $3e4edb8379ebf8a3$var$nav("+1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "download-list") {
-                $5535d7a9ff238efe$var$nav("+1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "download-list") {
+                $3e4edb8379ebf8a3$var$nav("+1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "select-box") {
-                $5535d7a9ff238efe$var$nav("+1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "select-box") {
+                $3e4edb8379ebf8a3$var$nav("+1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "volume") {
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "volume") {
                 navigator.volumeManager.requestVolumeDown();
                 break;
             }
             break;
         case "ArrowUp":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "select-box") {
-                $5535d7a9ff238efe$var$nav("-1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "select-box") {
+                $3e4edb8379ebf8a3$var$nav("-1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
-                $5535d7a9ff238efe$var$nav("-1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
+                $3e4edb8379ebf8a3$var$nav("-1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
-                $5535d7a9ff238efe$var$nav("-1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
+                $3e4edb8379ebf8a3$var$nav("-1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$nav("-1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$nav("-1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "download-list") {
-                $5535d7a9ff238efe$var$nav("-1");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "download-list") {
+                $3e4edb8379ebf8a3$var$nav("-1");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "volume") {
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "volume") {
                 navigator.volumeManager.requestVolumeUp();
                 break;
             }
             break;
         case "*":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.active_audio_element_id != "") $5535d7a9ff238efe$var$open_player(true);
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_audio_element_id != "") $3e4edb8379ebf8a3$var$open_player(true);
             break;
         case "#":
-            (0, $987aec5199ae6065$export$5f8df7563bfeaf14)();
+            (0, $fa0566b078e52ad5$export$5f8df7563bfeaf14)();
             break;
         case "SoftLeft":
         case "Control":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$show_settings();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$show_settings();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings" && $5535d7a9ff238efe$var$qrscan == true) {
-                (0, $2b0cc46421a6d3fe$export$be96fe42679d1b7e)($5535d7a9ff238efe$var$callback_scan);
-                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "scan";
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings" && $3e4edb8379ebf8a3$var$qrscan == true) {
+                (0, $da5c51e5866985e6$export$be96fe42679d1b7e)($3e4edb8379ebf8a3$var$callback_scan);
+                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "scan";
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article" && document.activeElement.getAttribute("data-media") == "audio") {
-                $5535d7a9ff238efe$var$open_player(false);
-                (0, $987aec5199ae6065$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article" && document.activeElement.getAttribute("data-media") == "audio") {
+                $3e4edb8379ebf8a3$var$open_player(false);
+                (0, $fa0566b078e52ad5$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article") {
-                $5535d7a9ff238efe$var$open_url();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article") {
+                $3e4edb8379ebf8a3$var$open_url();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                (0, $987aec5199ae6065$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                (0, $fa0566b078e52ad5$export$3c97237bc3c17cae)(document.activeElement.getAttribute("data-link"));
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") {
-                if ($5535d7a9ff238efe$var$video_status == "paused" || $5535d7a9ff238efe$var$video_status == "") {
-                    $5535d7a9ff238efe$var$video.play();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") {
+                if ($3e4edb8379ebf8a3$var$video_status == "paused" || $3e4edb8379ebf8a3$var$video_status == "") {
+                    $3e4edb8379ebf8a3$var$video.play();
                     return false;
                 }
-                if ($5535d7a9ff238efe$var$video_status == "playing") {
-                    $5535d7a9ff238efe$var$video.pause();
+                if ($3e4edb8379ebf8a3$var$video_status == "playing") {
+                    $3e4edb8379ebf8a3$var$video.pause();
                     return false;
                 }
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
-                if ($5535d7a9ff238efe$var$youtube_status == "paused" || $5535d7a9ff238efe$var$youtube_status == "") {
-                    $5535d7a9ff238efe$var$youtube_player.playVideo();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
+                if ($3e4edb8379ebf8a3$var$youtube_status == "paused" || $3e4edb8379ebf8a3$var$youtube_status == "") {
+                    $3e4edb8379ebf8a3$var$youtube_player.playVideo();
                     return false;
                 }
-                if ($5535d7a9ff238efe$var$youtube_status == "playing") {
-                    $5535d7a9ff238efe$var$youtube_player.pauseVideo();
+                if ($3e4edb8379ebf8a3$var$youtube_status == "playing") {
+                    $3e4edb8379ebf8a3$var$youtube_player.pauseVideo();
                     return false;
                 }
                 break;
@@ -16666,76 +16725,82 @@ function $5535d7a9ff238efe$var$shortpress_action(param) {
             break;
         case "SoftRight":
         case "Alt":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article") {
-                $5535d7a9ff238efe$var$open_options();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article") {
+                if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.linkfy == true) $3e4edb8379ebf8a3$var$open_linkfy();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "scan") {
-                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
-                (0, $2b0cc46421a6d3fe$export$55e6c60a43cc74e2)($5535d7a9ff238efe$var$stop_scan_callback);
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "scan") {
+                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
+                (0, $da5c51e5866985e6$export$55e6c60a43cc74e2)($3e4edb8379ebf8a3$var$stop_scan_callback);
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
-                $5535d7a9ff238efe$var$show_article_list();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
+                $3e4edb8379ebf8a3$var$show_article_list();
                 setTimeout(function() {
-                    $5535d7a9ff238efe$var$article_array = document.querySelectorAll("article");
-                    $5535d7a9ff238efe$var$article_array[0].focus();
+                    $3e4edb8379ebf8a3$var$article_array = document.querySelectorAll("article");
+                    $3e4edb8379ebf8a3$var$article_array[0].focus();
                 }, 1000);
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                $5535d7a9ff238efe$var$open_options();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                $3e4edb8379ebf8a3$var$open_options();
                 break;
             }
             break;
         case "EndCall":
             break;
         case "Backspace":
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "intro") {
-                (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "intro") {
+                (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "scan") {
-                $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status = "settings";
-                (0, $2b0cc46421a6d3fe$export$55e6c60a43cc74e2)($5535d7a9ff238efe$var$stop_scan_callback);
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "link-list") {
+                document.querySelector("div#link-list").style.display = "none";
+                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "single-article";
+                document.querySelector("div#link-list").focus();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") {
-                (0, $162001cafa2b40fd$export$247be4ede8e3a24a)("", "", "");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "scan") {
+                $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status = "settings";
+                (0, $da5c51e5866985e6$export$55e6c60a43cc74e2)($3e4edb8379ebf8a3$var$stop_scan_callback);
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "single-article") {
-                $5535d7a9ff238efe$var$show_article_list();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") {
+                (0, $6d3f4b507512327e$export$247be4ede8e3a24a)("", "", "");
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "audio-player") {
-                $5535d7a9ff238efe$var$show_article_list();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "single-article") {
+                $3e4edb8379ebf8a3$var$show_article_list();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") {
-                $5535d7a9ff238efe$var$show_article_list();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "audio-player") {
+                $3e4edb8379ebf8a3$var$show_article_list();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") {
-                clearInterval($5535d7a9ff238efe$var$youtube_time);
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") {
+                $3e4edb8379ebf8a3$var$show_article_list();
+                break;
+            }
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") {
+                clearInterval($3e4edb8379ebf8a3$var$youtube_time);
                 setTimeout(function() {
-                    $5535d7a9ff238efe$var$show_article_list();
+                    $3e4edb8379ebf8a3$var$show_article_list();
                 }, 1000);
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "options") {
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "options") {
                 document.getElementById("options").style.display = "none";
-                $5535d7a9ff238efe$var$show_article_list();
-                document.querySelector("[data-id ='" + $5535d7a9ff238efe$export$471f7ae5c4103ae1.active_element_id + "']").focus();
+                $3e4edb8379ebf8a3$var$show_article_list();
+                document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").focus();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "settings") {
-                $5535d7a9ff238efe$var$show_article_list();
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "settings") {
+                $3e4edb8379ebf8a3$var$show_article_list();
                 break;
             }
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "download-list") {
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "download-list") {
                 document.getElementById("feed-download-list").style.display = "none";
-                $5535d7a9ff238efe$var$open_options();
+                document.querySelector("[data-id ='" + $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.active_element_id + "']").focus();
                 break;
             }
             break;
@@ -16744,46 +16809,46 @@ function $5535d7a9ff238efe$var$shortpress_action(param) {
 /////////////////////////////////
 ////shortpress / longpress logic
 ////////////////////////////////
-function $5535d7a9ff238efe$var$handleKeyDown(evt) {
-    if (evt.key === "Backspace" && $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status != "article-list") evt.preventDefault();
+function $3e4edb8379ebf8a3$var$handleKeyDown(evt) {
+    if (evt.key === "Backspace" && $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status != "article-list") evt.preventDefault();
     if (evt.key === "EndCall") evt.preventDefault();
     if (!evt.repeat) {
-        $5535d7a9ff238efe$var$longpress = false;
-        $5535d7a9ff238efe$var$timeout = setTimeout(function() {
-            $5535d7a9ff238efe$var$longpress = true;
-            $5535d7a9ff238efe$var$longpress_action(evt);
-        }, $5535d7a9ff238efe$var$longpress_timespan);
+        $3e4edb8379ebf8a3$var$longpress = false;
+        $3e4edb8379ebf8a3$var$timeout = setTimeout(function() {
+            $3e4edb8379ebf8a3$var$longpress = true;
+            $3e4edb8379ebf8a3$var$longpress_action(evt);
+        }, $3e4edb8379ebf8a3$var$longpress_timespan);
     }
     if (evt.repeat) {
         if (evt.key == "Backspace") evt.preventDefault(); // Disable close app by holding backspace
-        if (evt.key == "Backspace" && $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") window.close();
+        if (evt.key == "Backspace" && $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") window.close();
         if (evt.key == "ArrowLeft") {
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") $5535d7a9ff238efe$var$youtube_seeking("backward");
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("backward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") $3e4edb8379ebf8a3$var$youtube_seeking("backward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("backward");
         }
         if (evt.key == "ArrowRight") {
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "youtube") $5535d7a9ff238efe$var$youtube_seeking("forward");
-            if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "video") $5535d7a9ff238efe$var$video_seeking("forward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "youtube") $3e4edb8379ebf8a3$var$youtube_seeking("forward");
+            if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "video") $3e4edb8379ebf8a3$var$video_seeking("forward");
         }
-        $5535d7a9ff238efe$var$longpress = false;
-        $5535d7a9ff238efe$var$repeat_action(evt);
+        $3e4edb8379ebf8a3$var$longpress = false;
+        $3e4edb8379ebf8a3$var$repeat_action(evt);
     }
 }
-function $5535d7a9ff238efe$var$handleKeyUp(evt) {
+function $3e4edb8379ebf8a3$var$handleKeyUp(evt) {
     //evt.preventDefault();
     if (evt.key == "Backspace") {
-        if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.audio_status != "play" && $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status == "article-list") window.close();
-        if ($5535d7a9ff238efe$export$471f7ae5c4103ae1.audio_status == "play") evt.preventDefault();
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.audio_status != "play" && $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status == "article-list") window.close();
+        if ($3e4edb8379ebf8a3$export$471f7ae5c4103ae1.audio_status == "play") evt.preventDefault();
     }
-    if (evt.key == "Backspace" && $5535d7a9ff238efe$export$471f7ae5c4103ae1.window_status != "article-list" && document.activeElement.tagName == "INPUT") evt.preventDefault();
-    clearTimeout($5535d7a9ff238efe$var$timeout);
-    if (!$5535d7a9ff238efe$var$longpress) $5535d7a9ff238efe$var$shortpress_action(evt);
+    if (evt.key == "Backspace" && $3e4edb8379ebf8a3$export$471f7ae5c4103ae1.window_status != "article-list" && document.activeElement.tagName == "INPUT") evt.preventDefault();
+    clearTimeout($3e4edb8379ebf8a3$var$timeout);
+    if (!$3e4edb8379ebf8a3$var$longpress) $3e4edb8379ebf8a3$var$shortpress_action(evt);
 }
-document.addEventListener("keydown", $5535d7a9ff238efe$var$handleKeyDown);
-document.addEventListener("keyup", $5535d7a9ff238efe$var$handleKeyUp);
-if ($5535d7a9ff238efe$var$debug) window.onerror = function(msg, url, linenumber) {
+document.addEventListener("keydown", $3e4edb8379ebf8a3$var$handleKeyDown);
+document.addEventListener("keyup", $3e4edb8379ebf8a3$var$handleKeyUp);
+if ($3e4edb8379ebf8a3$var$debug) window.onerror = function(msg, url, linenumber) {
     alert("Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber);
     return true;
 };
 
-})();
+
