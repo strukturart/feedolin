@@ -128,9 +128,7 @@ export let volume_control = function () {
   //KaiOS 2.x
   try {
     navigator.volumeManager.requestShow();
-  } catch (e) {
-    alert("jj");
-  }
+  } catch (e) {}
 };
 
 player.onloadedmetadata = function () {

@@ -2,22 +2,18 @@ div#qr-screen {
   top: 0px;
   left: 0;
   position: fixed;
-  
-  min-height: 100vh!important;
-  min-width: 100vw!important;
+
+  min-height: 100vh !important;
+  min-width: 100vw !important;
 
   z-index: 2000000000000;
   display: none;
 }
 
 #video {
-
-
-  height: 100vh!important;
- width: 100vw!important;
- 
+  height: 100vh !important;
+  width: 100vw !important;
 }
-
 
 #corner-nw,
 #corner-no,
@@ -27,8 +23,7 @@ div#qr-screen {
   height: 30px;
   position: fixed;
   width: 30px;
-    z-index: 2000000000000;
-
+  z-index: 2000000000000;
 }
 
 #corner-nw {
@@ -37,7 +32,6 @@ div#qr-screen {
   border-top-left-radius: 20px;
   left: 20px;
   top: 20px;
-
 }
 
 #corner-no {
@@ -46,7 +40,6 @@ div#qr-screen {
   border-top-right-radius: 20px;
   right: 20px;
   top: 20px;
-
 }
 
 #corner-so {

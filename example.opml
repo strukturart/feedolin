@@ -35,6 +35,10 @@
             <outline type="rss" text="bbc news" title="bbc news" xmlUrl="https://podcasts.files.bbci.co.uk/b006qjxt.rss" htmlUrl=""/>
         </outline>
 
+          <outline text="Mastodon" title="Mastodon">
+            <outline type="mastodon" text="t-online" title="t-online" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
+        </outline>
+
 
         <outline text="Coding" title="Coding">
             <outline type="rss" text="bHackers Blog" title="bHackers Blog" xmlUrl="https://blog.bananahackers.net/read/feed/" htmlUrl=""/>
