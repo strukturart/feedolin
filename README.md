@@ -81,9 +81,16 @@ If you use the app often, please donate an amount to me.
     </td>
     <td valign="top" class="border-0">
         <div>
+            <div>Bitcoincash</div>
+            <img src="/images/bitcoincash_rcv.png" width="120px">
+        </div>
+    </td>
+    <td valign="top" class="border-0">
+        <div>
             <div>Bitcoin</div>
             <img src="/images/bitcoin_rcv.png" width="120px">
         </div>
     </td>
+
   </tr>
  </table>

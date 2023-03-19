@@ -151,6 +151,7 @@ let load_ads = function () {
   };
   document.head.appendChild(js);
 };
+false;
 
 //KAiOS 2.x || 3.x
 if (navigator.mozApps) {
@@ -284,7 +285,6 @@ setTimeout(() => {
   //get update time; cache || download
   let a = localStorage.getItem("interval");
   a == "never" ? (a = 0) : (a = a);
-  alert(a);
 
   document.getElementById("intro-message").innerText = "checking feed list";
   //download
@@ -503,7 +503,7 @@ let rss_fetcher = function (
 
             //date
             let item_date = new Date(i.created_at);
-            item_date_unix = item_date.valueOf();
+            let item_date_unix = item_date.valueOf();
             item_date = item_date.toDateString();
 
             content_arr.push({
@@ -530,7 +530,7 @@ let rss_fetcher = function (
               youtube_thumbnail: "",
               video_url: video_url,
               url: item_download,
-              mastodon: true,
+              mastodon: item_image,
             });
           });
           console.log(content_arr);
@@ -596,7 +596,6 @@ let rss_fetcher = function (
     document.getElementById("intro-message").innerText = "loading data";
     if (xhttp.readyState === xhttp.DONE && xhttp.status == 200) {
       let data = xhttp.response;
-
       let rss_title = "";
       let item_image = "";
       let item_summary = "";
@@ -823,7 +822,7 @@ let rss_fetcher = function (
         item_image = data.getElementsByTagName("url")[0].textContent;
       } catch (e) {}
 
-      if (el.length > 0) {
+      if (el.length > 0 && typeof el != undefined) {
         for (let i = 0; i < param_limit; i++) {
           item_title = el[i].querySelector("title").innerHTML;
           item_title = item_title.replace("<![CDATA[", "");
