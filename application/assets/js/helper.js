@@ -33,7 +33,7 @@ export let notify = function (
   var options = {
     body: param_text,
     silent: param_silent,
-    requireInteraction: requireInteraction
+    requireInteraction: requireInteraction,
   };
 
   // Let's check if the browser supports notifications
@@ -125,8 +125,8 @@ export let share = function (url) {
     name: "share",
     data: {
       type: "url",
-      url: url
-    }
+      url: url,
+    },
   });
 
   activity.onsuccess = function () {};
@@ -192,7 +192,7 @@ export function write_file(data, filename) {
     console.log(e);
   }
   var file = new Blob([data], {
-    type: "text/plain"
+    type: "text/plain",
   });
   var request = sdcard[1].addNamed(file, filename);
 
@@ -262,7 +262,7 @@ export function add_source(url, limit, categorie, channel) {
         categorie: categorie,
         url: url,
         limit: limit,
-        channel: channel
+        channel: channel,
       });
 
       let extData = JSON.stringify(data);
@@ -273,7 +273,7 @@ export function add_source(url, limit, categorie, channel) {
         //toaster('File successfully removed.', 2000);
 
         let file = new Blob([extData], {
-          type: "application/json"
+          type: "application/json",
         });
         let requestAdd = sdcard.addNamed(file, "rss-reader.json");
 
@@ -432,36 +432,26 @@ export let screenlock = function (stat) {
   }
 };
 
-export const lazyload = ((_) => {
-  let ll = function () {
-    const images = document.querySelectorAll(".lazyload");
-
-    function handleIntersection(entries) {
-      entries.map((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.src = entry.target.dataset.src;
-          entry.target.classList.add("loaded");
-          observer.unobserve(entry.target);
-        }
-      });
+export const imageSizeReduce = () => {
+  document.querySelectorAll("article img").forEach((e) => {
+    let k = e.src;
+    if (k.indexOf("#-moz-samplesize=1") == -1) {
+      console.log("do not");
+      e.src = e.src + "#-moz-samplesize=1";
     }
+  });
+};
 
-    const observer = new IntersectionObserver(handleIntersection);
-
-    for (let i = 0; i < images.length; i++) {
-      observer.observe(images[i]);
+export const llazyload = () => {
+  document.querySelectorAll("article img").forEach((e) => {
+    e.classList.add("lozad");
+    if (e.hasAttribute("data-src")) {
+    } else {
+      e.setAttribute("data-src", e.src);
+      e.src = "/assets/image/failback.png";
     }
-  };
-
-  let existCondition = setInterval(function () {
-    if (document.getElementsByClassName("lazyload").length) {
-      clearInterval(existCondition);
-      ll();
-    }
-  }, 500);
-
-  return { ll };
-})();
+  });
+};
 
 //filesize
 export function formatFileSize(bytes, decimalPoint) {

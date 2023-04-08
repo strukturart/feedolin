@@ -21,7 +21,7 @@
   ],
 
   "b2g_features": {
-    "version": "1.5.0",
+    "version": "1.5.1",
     "id": "feedolin",
     "subtitle": "RSS Reader",
     "core": true,

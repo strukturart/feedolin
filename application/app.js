@@ -5,7 +5,12 @@ import Mustache from "mustache";
 import DOMPurify from "dompurify";
 //import linkifyHtml from "linkify-html";
 
-import { side_toaster, sort_array } from "./assets/js/helper.js";
+import {
+  side_toaster,
+  sort_array,
+  imageSizeReduce,
+  llazyload,
+} from "./assets/js/helper.js";
 import { toaster } from "./assets/js/helper.js";
 import { share } from "./assets/js/helper.js";
 
@@ -14,6 +19,7 @@ import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
+
 import {
   setting,
   load_settings,
@@ -30,9 +36,14 @@ import {
 
 import { v4 as uuidv4 } from "uuid";
 
+import lozad from "lozad";
+
 const dayjs = require("dayjs");
 var duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);
+
+const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+observer.observe();
 
 const debug = false;
 let article_array;
@@ -1411,6 +1422,7 @@ let sleep_mode = function () {
 };
 
 let show_article = function () {
+  imageSizeReduce();
   mark_as_read(true);
   detectURLs();
   status.window_status = "single-article";
@@ -1665,6 +1677,12 @@ function open_url() {
 //show article list
 //////////////////
 let show_article_list = function () {
+  llazyload();
+
+  imageSizeReduce();
+  //https://github.com/ApoorvSaxena/lozad.js
+  observer.observe();
+
   document.querySelector("div#video-player").style.display = "none";
   document.getElementById("audio-player").style.display = "none";
 

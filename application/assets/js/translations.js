@@ -17,6 +17,6 @@ export const translations = {
     app_clear: "clear",
 
     app_error_0:
-      "😴<br>No source file founded,<br> please create a opml file or set a url in the settings."
-  }
+      "😴<br>No source file founded,<br> please create a opml file or set a url in the settings.",
+  },
 };
