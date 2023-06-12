@@ -2,6 +2,7 @@
   "source": "application/index.html",
   "browserslist": "Firefox <= 48",
   "scripts": {
+    "oa": "parcel application/oauth.js --no-source-maps --no-optimize /dist",
     "start": "parcel --no-source-maps ./application/index.html",
     "build": "rm -rf dist/* && parcel build --no-source-maps --no-optimize application/index.html && cp application/manifest.webapp dist && mkdir dist/assets && cp -r application/assets/icons dist/assets/"
   },
@@ -24,7 +25,8 @@
     "uid": "^2.0.0",
     "url-search-params-polyfill": "^8.1.1",
     "uuid": "^9.0.0",
-    "youtube-player": "^5.5.2"
+    "youtube-player": "^5.5.2",
+    "@parcel/service-worker": "^2.8.0"
   },
   "staticFiles": {
     "staticPath": [

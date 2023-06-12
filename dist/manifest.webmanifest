@@ -21,7 +21,7 @@
   ],
 
   "b2g_features": {
-    "version": "1.5.1",
+    "version": "1.5.5",
     "id": "feedolin",
     "subtitle": "RSS Reader",
     "core": true,
@@ -43,12 +43,25 @@
       "activity"
     ],
 
+    "activities": {
+      "oauth": {}
+    },
+
+    "serviceworker": {
+      "script_url": "sw.js"
+    },
+
+
+
     "permissions": {
       "desktop-notification": {
         "description": "Needed to fire system notifications"
       },
       "alarms": {
         "description": "Required to schedule alarms"
+      },
+      "feature-detection": {
+        "description": "query which keys are available"
       },
       "mobiledata": {},
       "wifidata": {},

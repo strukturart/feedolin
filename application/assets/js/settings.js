@@ -21,9 +21,14 @@ export let setting = {
       ? localStorage.getItem("source")
       : "",
 
+  mastodon_server:
+    localStorage.getItem("mastodon") != null
+      ? localStorage.getItem("mastodon")
+      : "",
+
   local_file: false,
   wwww_file: false,
-  ads: false
+  ads: false,
 };
 
 export let load_settings = function () {
@@ -44,6 +49,11 @@ export let load_settings = function () {
     document.getElementById("sleep-mode").value =
       localStorage.getItem("sleep_time");
   }
+
+  if (localStorage.getItem("mastodon_server") !== null) {
+    document.getElementById("mastodon-server").value =
+      localStorage.getItem("mastodon_server");
+  }
 };
 
 export let save_settings = function () {
@@ -61,6 +71,11 @@ export let save_settings = function () {
       return false;
     }
   }
+
+  localStorage.setItem(
+    "mastodon_server",
+    document.getElementById("mastodon-server").value
+  );
 
   localStorage.setItem("interval", document.getElementById("time").value);
   localStorage.setItem("source", document.getElementById("source").value);
@@ -111,6 +126,8 @@ export let load_settings_from_file = function () {
       document.getElementById("source-local").value = settings.source_local;
       document.getElementById("source").value = settings.source;
       document.getElementById("time").value = settings.interval;
+      document.getElementById("mastodon-server").value =
+        settings.mastodon_server;
 
       document.getElementById("sleep-mode").value = settings.sleep_time;
 
@@ -143,7 +160,7 @@ export let export_settings = function () {
   setTimeout(function () {
     let data = JSON.stringify(setting);
     var file = new Blob(["[" + data + "]"], {
-      type: "application/json"
+      type: "application/json",
     });
 
     var request = sdcard.addNamed(file, "feedolin_settings.json");

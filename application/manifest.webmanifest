@@ -21,7 +21,7 @@
   ],
 
   "b2g_features": {
-    "version": "1.5.1",
+    "version": "1.5.5",
     "id": "feedolin",
     "subtitle": "RSS Reader",
     "core": true,
@@ -42,6 +42,14 @@
       "alarm",
       "activity"
     ],
+
+    "activities": {
+      "oauth": {}
+    },
+
+    "serviceworker": {
+      "script_url": "sw.js"
+    },
 
 
 

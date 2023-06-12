@@ -11,7 +11,7 @@ mkdir ./build
 
 
 
-npm run  build --no-source-maps --no-optimize --public-url ./ application/index.html 
+npm run  build --no-source-maps  --public-url ./ application/index.html 
 
 cp -r ./application/assets/icons ./dist/assets/icons
 cp -r ./application/assets/image ./dist/assets/image
@@ -23,6 +23,11 @@ cp  ./application/assets/js/kaiads.v5.min.js ./dist/assets/js/
 
 cp ./application/manifest.webapp ./dist/
 cp ./application/manifest.webmanifest ./dist/
+cp ./application/oauth.html ./dist/
+
+
+# Create OAuth script
+./make_oauth_script.sh
 
 
 
@@ -34,7 +39,6 @@ mv manifest.webmanifest ../
 rm ../build/feedolin.zip
 zip -r ../build/feedolin.zip ./*
 mv  ../manifest.webmanifest ./
-
 
 
 
