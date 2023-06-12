@@ -43,12 +43,17 @@
       "activity"
     ],
 
+
+
     "permissions": {
       "desktop-notification": {
         "description": "Needed to fire system notifications"
       },
       "alarms": {
         "description": "Required to schedule alarms"
+      },
+      "feature-detection": {
+        "description": "query which keys are available"
       },
       "mobiledata": {},
       "wifidata": {},

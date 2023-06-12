@@ -48,6 +48,9 @@
     "mobiledata": {},
     "wifidata": {},
     "calllog": {},
+    "feature-detection": {
+      "description": "query which keys are available"
+    },
 
     "device-storage:sdcard": {
       "description": "Read/Write from/to sd-card",

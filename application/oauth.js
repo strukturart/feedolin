@@ -1,9 +1,7 @@
 "use strict";
 
-import localforage from "localforage";
 import { uid } from "uid";
 import { google_cred } from "./application/cred.js";
-localforage.setDriver(localforage.INDEXEDDB);
 
 let authorizationCode = "";
 
@@ -15,12 +13,11 @@ let get_token = function () {
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
   var urlencoded = new URLSearchParams();
-  //urlencoded.append("code", b[0]);
   urlencoded.append("code", authorizationCode);
   urlencoded.append("grant_type", "authorization_code");
   urlencoded.append(
     "redirect_uri",
-    "https://greg.strukturart.com/redirect.html"
+    "https://feedolin.strukturart.com/redirect.html"
   );
   urlencoded.append("client_id", google_cred.clientId);
   urlencoded.append("client_secret", google_cred.clientSecret);

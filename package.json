@@ -6,7 +6,7 @@
     "build": "rm -rf dist/* && parcel build --no-source-maps --no-optimize application/index.html && cp application/manifest.webapp dist && mkdir dist/assets && cp -r application/assets/icons dist/assets/"
   },
   "devDependencies": {
-    "cssnano": "^5.0.17",
+    "cssnano": "^6.0.0",
     "parcel": "latest",
     "parcel-plugin-static-files-copy": "^2.6.0",
     "postcss": "^8.4.6"
