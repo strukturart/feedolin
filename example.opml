@@ -43,6 +43,9 @@
         <outline text="Coding" title="Coding">
             <outline type="rss" text="bHackers Blog" title="bHackers Blog" xmlUrl="https://blog.bananahackers.net/read/feed/" htmlUrl=""/>
             <outline type="rss" text="kaios.dev" title="kaios.dev" xmlUrl="https://kaios.dev/index.xml" htmlUrl=""/>
+            <outline type="rss" text="chickenkiller" title="chickenkiller" xmlUrl="https://far.chickenkiller.com/index.xml" htmlUrl=""/>
+
+            
         </outline>
 
         <outline text="News" title="News">

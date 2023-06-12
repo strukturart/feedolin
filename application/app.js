@@ -3,7 +3,6 @@ import { translations } from "./assets/js/translations.js";
 
 import Mustache from "mustache";
 import DOMPurify from "dompurify";
-//import linkifyHtml from "linkify-html";
 
 import {
   side_toaster,
@@ -11,8 +10,7 @@ import {
   imageSizeReduce,
   llazyload,
 } from "./assets/js/helper.js";
-import { toaster } from "./assets/js/helper.js";
-import { share } from "./assets/js/helper.js";
+import { toaster, share } from "./assets/js/helper.js";
 
 import { screenlock, hashCode, formatFileSize } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
