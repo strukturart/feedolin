@@ -8,12 +8,12 @@
 
 Feedolin is an RSS / Atom reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml.
 
-## RSS/Atom reader and Podcastplayer for KaiOs
+## RSS/Atom/Mastodon reader and Podcastplayer for KaiOs
 
 - read you favorit rss/atom feeds
 - stream your podcasts
 - show youtube/soundcloud channels
-- read mastodon publice timeline
+- read mastodon publice & home timeline
 - listen spotify->rss podcasts
 - read reddit.com ->rss
 - open rss feedlink
@@ -41,6 +41,10 @@ https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
 You can download the latest version from the Releases page.
 The app is not auto-updating. To update it, you have to follow the same steps you took when installing it.
 
+## Mastodon
+
+Originally I only wanted to write an rss reader for KaiOS, now I have decided to connect the fediverse as well. a mastodon login enables you to display the mastodon home timeline. in mastodon you have the option of subscribing to other sources/instances of fediverse, which will then also find their way to your feature phone.
+
 ## How to use
 
 - Enter to show full news
@@ -56,10 +60,6 @@ RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
 - https://danielmiessler.com/blog/rss-feed-youtube-channel/
 - http://tips.slaw.ca/2019/technology/rss-feed-for-a-youtube-channel-or-playlist/
 - https://rss.app/rss-feed/create-instagram-rss-feed
-
-## to do
-
-- https://activitypub.rocks/
 
 ## Credits
 
