@@ -9,7 +9,7 @@ import {
   imageSizeReduce,
   llazyload,
 } from "./assets/js/helper.js";
-import { toaster, share } from "./assets/js/helper.js";
+import { toaster, share, isValidUrl } from "./assets/js/helper.js";
 import { screenlock, hashCode, formatFileSize } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
@@ -359,7 +359,6 @@ const sync = () => {
     article_array = "";
     feed_download_list_count = 0;
     feed_download_list.length = 0;
-    if (localStorage.getItem("oauth_back") == "true") mastodon_load_feed();
     try {
       load_local_file_opml();
     } catch (e) {}
@@ -984,8 +983,6 @@ let mastodon_account_info = () => {
       return response.json();
     })
     .then((data) => {
-      console.log(JSON.stringify(data));
-
       mastodon_load_feed();
       panels.push("mastodon home");
       document.querySelector("#mastodon-label").innerText =
@@ -1000,8 +997,6 @@ let mastodon_account_info = () => {
         .setAttribute("data-function", "mastodon-disconnect");
     });
 };
-
-mastodon_account_info();
 
 let mastodon_load_feed = () => {
   let a = JSON.parse(localStorage.getItem("oauth_auth"));
@@ -1028,6 +1023,8 @@ let mastodon_load_feed = () => {
         let param_channel = "mastodon home";
         let param_category = "mastodon home";
 
+        console.log(i);
+
         if (i.media_attachments.length > 0) {
           if (i.media_attachments[0].type == "image")
             item_image = i.media_attachments[0].preview_url;
@@ -1044,6 +1041,14 @@ let mastodon_load_feed = () => {
           }
         }
 
+        let content = i.content;
+        if (content == "") {
+          try {
+            content = i.reblog.content;
+            content = i.reblog.content;
+          } catch (e) {}
+        }
+
         //date
         let item_date = new Date(i.created_at);
         let item_date_unix = item_date.valueOf();
@@ -1052,7 +1057,7 @@ let mastodon_load_feed = () => {
         content_arr.push({
           index: 0,
           title: DOMPurify.sanitize(i.account.display_name),
-          summary: DOMPurify.sanitize(i.content),
+          summary: DOMPurify.sanitize(content),
           link: i.uri,
           date: item_date,
           dateunix: item_date_unix,
@@ -1083,6 +1088,8 @@ let mastodon_load_feed = () => {
       console.error("Error:", error);
     });
 };
+
+mastodon_account_info();
 
 //sort content by date
 //build
@@ -1942,6 +1949,7 @@ let focus_after_selection = function () {
 };
 
 //settings view
+load_settings();
 
 let show_settings = function () {
   status.active_element_id = document.activeElement.getAttribute("data-id");
@@ -2131,7 +2139,9 @@ if ("b2g" in Navigator) {
       .then((registration) => {
         registration.systemMessageManager.subscribe("alarm").then(
           (rv) => {
-            alert('Successfully subscribe system messages of name "alarm".');
+            console.log(
+              'Successfully subscribe system messages of name "alarm".'
+            );
           },
           (error) => {
             console.log("Fail to subscribe system message, error: " + error);
@@ -2481,7 +2491,7 @@ function shortpress_action(param) {
       ) {
         let mastodon_server_url =
           document.getElementById("mastodon-server").value;
-        if (mastodon_server_url != "") {
+        if (mastodon_server_url != "" && isValidUrl(mastodon_server_url)) {
           let url =
             mastodon_server_url +
             "/oauth/authorize?client_id=" +
@@ -2502,9 +2512,13 @@ function shortpress_action(param) {
         document.getElementById("mastodon-server").value = "";
         localStorage.removeItem("mastodon_server");
         localStorage.removeItem("oauth_auth");
-        localStorage.removeItem("oauth_back");
         document.querySelector("input#mastodon-server").readOnly = false;
+        document.querySelector("[data-function='mastodon-disconnect']").value =
+          "connect";
+        document.querySelector("#mastodon-label").innerText = "-";
         side_toaster("account removed", 3000);
+        document.activeElement.setAttribute("data-function") ==
+          "mastodon-connect";
       }
 
       break;
@@ -2937,5 +2951,9 @@ channel.addEventListener("message", (event) => {
     setTimeout(() => {
       window.open(l);
     }, 5000);
+  }
+
+  if (event.data.oauthsuccess) {
+    mastodon_account_info();
   }
 });

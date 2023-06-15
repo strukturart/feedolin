@@ -2,7 +2,8 @@
 
 import { cred } from "./cred.js";
 import "url-search-params-polyfill";
-import { side_toaster } from "./assets/js/helper.js";
+
+const channel = new BroadcastChannel("sw-messages");
 
 let get_token = function () {
   var qr = {};
@@ -40,6 +41,8 @@ let get_token = function () {
 
 get_token().then((result) => {
   localStorage.setItem("oauth_auth", JSON.stringify(result));
-  localStorage.setItem("oauth_back", "true");
+  channel.postMessage({
+    oauthsuccess: true,
+  });
   window.close();
 });

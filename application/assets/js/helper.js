@@ -496,3 +496,12 @@ export function deleteFile(storage, path, notification) {
     helper.toaster("Unable to delete the file: " + this.error);
   };
 }
+
+export function isValidUrl(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
