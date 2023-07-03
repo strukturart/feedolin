@@ -2411,9 +2411,32 @@ function shortpress_action(param) {
       break;
     case "2":
       channel_navigation("up");
+      if (status.window_status == "single-article") {
+        if (!document.activeElement.previousElementSibling) return false;
+
+        show_article_list();
+        document.querySelector("div#news-feed").style.filter = "blur(5px)";
+
+        setTimeout(() => {
+          document.activeElement.previousElementSibling.focus();
+          document.querySelector("div#news-feed").style.filter = "blur(0px)";
+
+          show_article();
+        }, 10);
+      }
       break;
     case "5":
       channel_navigation("down");
+      if (status.window_status == "single-article") {
+        if (!document.activeElement.nextElementSibling) return false;
+        show_article_list();
+        document.querySelector("div#news-feed").style.filter = "blur(5px)";
+        setTimeout(() => {
+          document.activeElement.nextElementSibling.focus();
+          show_article();
+          document.querySelector("div#news-feed").style.filter = "blur(0px)";
+        }, 10);
+      }
       break;
 
     case "1":
