@@ -83,6 +83,8 @@ export let listened_elem =
     : [];
 let tab_index = 0;
 
+const mastodon_server_url = localStorage.getItem("mastodon_server") ?? "";
+
 if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
 
 const sync_time = Number(localStorage.getItem("interval"));
@@ -297,24 +299,19 @@ setTimeout(() => {
   //download
   if (getTime(a) && navigator.onLine) {
     let check = false;
-    //load online opml
-    if (
-      localStorage["source"] &&
-      localStorage["source"] != "" &&
-      localStorage["source"] != undefined
-    ) {
+
+    // Load online OPML
+    if (localStorage["source"]) {
       load_source_opml();
       check = true;
     }
-    //load local opml
-    if (
-      localStorage["source_local"] &&
-      localStorage["source_local"] != "" &&
-      localStorage["source_local"] != undefined
-    ) {
+
+    // Load local OPML
+    if (localStorage["source_local"]) {
       load_local_file_opml();
       check = true;
     }
+
     if (!check) {
       localStorage.setItem("source", default_opml);
       load_source_opml();
@@ -355,10 +352,11 @@ const sync = () => {
   }
 
   if (navigator.onLine) {
-    content_arr.length = 0;
-    article_array = "";
-    feed_download_list_count = 0;
-    feed_download_list.length = 0;
+    article_array ?? article_array.splice(0, article_array.length);
+    content_arr ?? content_arr.splice(0, content_arr.length);
+    feed_download_list ??
+      feed_download_list.splice(0, feed_download_list.length);
+
     try {
       load_local_file_opml();
     } catch (e) {}
@@ -543,7 +541,6 @@ let rss_fetcher = function (
               mastodon: item_image,
             });
           });
-          console.log(content_arr);
           if (feed_download_list_count == feed_download_list.length - 1) {
             //ready_to_build();
           }
@@ -627,14 +624,6 @@ let rss_fetcher = function (
       let el = "";
 
       //xml items
-
-      let p = Number(feed_download_list.length - 1);
-      let precent = (100 / p) * feed_download_list_count;
-      /*
-      document.querySelector(
-        "div#intro div#loading-progress div div"
-      ).style.width = precent + "%";
-      */
       document.querySelector(".loading-spinner").style.display = "block";
 
       //Channel
@@ -970,7 +959,9 @@ let mastodon_account_info = () => {
   let a = JSON.parse(localStorage.getItem("oauth_auth"));
   let accessToken = a.access_token;
 
-  fetch("https://swiss.social/api/v1/accounts/verify_credentials", {
+  let url = localStorage.getItem("mastodon_server");
+
+  fetch(url + "/api/v1/accounts/verify_credentials", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -983,14 +974,16 @@ let mastodon_account_info = () => {
       return response.json();
     })
     .then((data) => {
-      mastodon_load_feed();
+      mastodon_load_feed(mastodon_timeline_urls.home);
+      mastodon_load_feed(mastodon_timeline_urls.local);
       panels.push("mastodon home");
+      panels.push("mastodon local");
+
       document.querySelector("#mastodon-label").innerText =
         "logged in as " + data.username;
 
       document.querySelector("input#mastodon-server").readOnly = true;
-      document.querySelector("[data-function='mastodon-connect']").innerText =
-        "disconnect";
+      // document.querySelector("[data-function='mastodon-connect']").innerText = "disconnect";
 
       document
         .querySelector("[data-function='mastodon-connect']")
@@ -998,11 +991,16 @@ let mastodon_account_info = () => {
     });
 };
 
-let mastodon_load_feed = () => {
+let mastodon_timeline_urls = {
+  home: mastodon_server_url + "/api/v1/timelines/home",
+  local: mastodon_server_url + "/api/v1/timelines/public?local=true",
+};
+
+let mastodon_load_feed = (url) => {
   let a = JSON.parse(localStorage.getItem("oauth_auth"));
   let accessToken = a.access_token;
 
-  fetch("https://swiss.social/api/v1/timelines/home", {
+  fetch(url, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -1011,7 +1009,6 @@ let mastodon_load_feed = () => {
     .then((response) => response.json())
     .then((data) => {
       // Process the response data
-
       data.forEach(function (i) {
         let item_image = "";
         let video_url = "";
@@ -1020,10 +1017,16 @@ let mastodon_load_feed = () => {
         let item_filesize = "";
         let item_download = "";
         let startlistened = "";
-        let param_channel = "mastodon home";
-        let param_category = "mastodon home";
-
-        console.log(i);
+        let param_channel = "";
+        let param_category = "";
+        if (url == mastodon_timeline_urls.home) {
+          param_channel = "mastodon home";
+          param_category = "mastodon home";
+        }
+        if (url == mastodon_timeline_urls.local) {
+          param_channel = "mastodon local";
+          param_category = "mastodon local";
+        }
 
         if (i.media_attachments.length > 0) {
           if (i.media_attachments[0].type == "image")
@@ -1044,7 +1047,6 @@ let mastodon_load_feed = () => {
         let content = i.content;
         if (content == "") {
           try {
-            content = i.reblog.content;
             content = i.reblog.content;
           } catch (e) {}
         }
@@ -1081,7 +1083,6 @@ let mastodon_load_feed = () => {
           mastodon: item_image,
         });
       });
-      console.log(content_arr);
     })
     .catch((error) => {
       // Handle any errors
@@ -1202,22 +1203,24 @@ let heroArray = [];
 let filter_data = function (cat) {
   heroArray.length = 0;
   let index = 0;
-  for (let i = 0; i < content_arr.length; i++) {
-    if (content_arr[i].category == cat) {
-      index++;
-      content_arr[i].index = index;
-      heroArray.push(content_arr[i]);
-    }
-  }
-};
 
-let tabs = function () {
+  let ids = [];
+
+  content_arr.forEach((item, i) => {
+    if (item.category === cat) {
+      console.log(ids.indexOf(item.cid));
+      if (ids.indexOf(item.cid) === -1) {
+        ids.push(item.cid);
+        item.index = ++index;
+        heroArray.push(item);
+      }
+    }
+  });
+};
+// set panel category
+let tabs = () => {
   for (let i = 0; i < content_arr.length; i++) {
-    //set panel category
-    if (
-      panels.includes(content_arr[i].category) === false &&
-      content_arr.length != 0
-    ) {
+    if (!panels.includes(content_arr[i].category) && content_arr.length !== 0) {
       panels.push(content_arr[i].category);
     }
   }
@@ -1250,7 +1253,6 @@ let build = function () {
   article_array = document.querySelectorAll("article");
   article_array[0].focus();
 
-  // screenlock("unlock");
   tabs();
 };
 
@@ -1538,7 +1540,7 @@ let sleep_mode = function () {
   st = st * 60 * 1000;
 
   status.sleepmode = true;
-  toaster("sleepmode activ", 3000);
+  side_toaster("sleepmode activ", 3000);
   setTimeout(() => {
     play_podcast();
     show_article_list();
@@ -1585,7 +1587,7 @@ let show_article = function () {
     if (status.linkfy)
       bottom_bar(
         "<img src='assets/icons/23EF.svg'>",
-        "",
+        "<img src='assets/icons/2-5.svg'>",
         "<img src='assets/icons/E269.svg'>"
       );
   }
@@ -1595,17 +1597,21 @@ let show_article = function () {
     if (status.linkfy)
       bottom_bar(
         "<img src='assets/icons/23EF.svg'>",
-        "",
+        "<img src='assets/icons/2-5.svg'>",
         "<img src='assets/icons/E269.svg'>"
       );
   }
 
   if (document.activeElement.getAttribute("data-media") == "rss") {
-    bottom_bar("<img src='assets/icons/E24F.svg'>", "", "");
+    bottom_bar(
+      "<img src='assets/icons/E24F.svg'>",
+      "<img src='assets/icons/2-5.svg'>",
+      ""
+    );
     if (status.linkfy)
       bottom_bar(
         "<img src='assets/icons/E24F.svg'>",
-        "",
+        "<img src='assets/icons/2-5.svg'>",
         "<img src='assets/icons/E269.svg'>"
       );
   }
@@ -1615,7 +1621,7 @@ let show_article = function () {
     if (status.linkfy)
       bottom_bar(
         "<img src='assets/icons/23EF.svg'>",
-        "",
+        "<img src='assets/icons/2-5.svg'>",
         "<img src='assets/icons/E269.svg'>"
       );
   }
@@ -2415,14 +2421,14 @@ function shortpress_action(param) {
         if (!document.activeElement.previousElementSibling) return false;
 
         show_article_list();
-        document.querySelector("div#news-feed").style.filter = "blur(5px)";
+        document.querySelector("body").style.filter = "blur(40px)";
 
         setTimeout(() => {
           document.activeElement.previousElementSibling.focus();
-          document.querySelector("div#news-feed").style.filter = "blur(0px)";
+          document.querySelector("body").style.filter = "blur(0px)";
 
           show_article();
-        }, 10);
+        }, 300);
       }
       break;
     case "5":
@@ -2430,12 +2436,12 @@ function shortpress_action(param) {
       if (status.window_status == "single-article") {
         if (!document.activeElement.nextElementSibling) return false;
         show_article_list();
-        document.querySelector("div#news-feed").style.filter = "blur(5px)";
+        document.querySelector("body").style.filter = "blur(40px)";
         setTimeout(() => {
           document.activeElement.nextElementSibling.focus();
           show_article();
-          document.querySelector("div#news-feed").style.filter = "blur(0px)";
-        }, 10);
+          document.querySelector("body").style.filter = "blur(0px)";
+        }, 300);
       }
       break;
 
@@ -2451,8 +2457,6 @@ function shortpress_action(param) {
       break;
 
     case "8":
-      alert(localStorage.getItem("updated"));
-
       break;
 
     case "7":
@@ -2512,11 +2516,10 @@ function shortpress_action(param) {
         document.activeElement.getAttribute("data-function") ==
         "mastodon-connect"
       ) {
-        let mastodon_server_url =
-          document.getElementById("mastodon-server").value;
-        if (mastodon_server_url != "" && isValidUrl(mastodon_server_url)) {
+        let m = document.getElementById("mastodon-server").value;
+        if (m != "" && isValidUrl(m)) {
           let url =
-            mastodon_server_url +
+            m +
             "/oauth/authorize?client_id=" +
             cred.clientId +
             "&scope=read&redirect_uri=" +
@@ -2767,12 +2770,7 @@ function shortpress_action(param) {
       break;
 
     case "9":
-      mastodon_account_info();
-
-      break;
-
-    case "6":
-      mastodon_load_feed();
+      sync();
       break;
 
     case "Backspace":

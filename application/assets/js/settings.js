@@ -16,6 +16,11 @@ export let setting = {
       ? localStorage.getItem("source_local")
       : "",
 
+  mastodon_server:
+    localStorage.getItem("mastodon_server") != null
+      ? localStorage.getItem("mastodon_server")
+      : "",
+
   source:
     localStorage.getItem("source") != null
       ? localStorage.getItem("source")
