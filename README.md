@@ -9,6 +9,7 @@
 Feedolin is an RSS / Atom reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml.
 
 **NEW**  
+
 Now it is also possible to load mastodon content, in the settings of the app you will find a login button with which you can log in with your mastodon account.
 
 ## RSS/Atom/Mastodon reader and Podcastplayer for KaiOS
