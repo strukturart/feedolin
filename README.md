@@ -6,7 +6,7 @@
 [![badge-bhackers](https://img.shields.io/badge/bHackers-bHackerStore-orange)](https://store.bananahackers.net/#feedolin)
 ![badge-downloads](https://img.shields.io/github/downloads/strukturart/feedolin/total)
 
-Feedolin is an RSS / Atom reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml.
+Feedolin is an RSS / Atom reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a KaiOS device. the list of subscribed websites / podcasts is managed locally or online in an opml.
 
 **NEW**  
 
