@@ -36,7 +36,7 @@
         </outline>
 
           <outline text="Mastodon" title="Mastodon">
-            <outline type="mastodon" text="t-online" title="t-online" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
+            <outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
         </outline>
 
 

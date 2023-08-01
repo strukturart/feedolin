@@ -300,12 +300,16 @@
         <script id="template" type="x-tmpl-mustache">
 
           {{#data}}
-              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}"  data-channel="{{channel}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
-                  <div class="flex grid-col-10">
+              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-mastodon-replies="{{replies_count}}" data-mastodon-reblog="{{reblogs_count}}" data-mastodon-favourites="{{favourites_count}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}"  data-channel="{{channel}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+                  <div class="flex grid-col-10 icon-bar">
                       <div class="podcast-icon"><img src="assets/icons/podcast.png"></div>
                       <div class="youtube-icon"><img src="assets/icons/youtube.png"></div>
                       <div class="listened-icon"><img src="assets/icons/diamond.svg"></div>
                       <div class="startlistened-icon"><img src="assets/icons/ghost.svg"></div>
+                      <div class="replies-icon"><img src="assets/icons/replies.svg"></div>
+                      <div class="favorit-icon"><img src="assets/icons/2605.svg"></div>
+                      <div class="reblog-icon"><img src="assets/icons/reblog.svg"></div>
+
                   </div>
                   <div class="channel">{{channel}}<span></span></div>
                   <time>{{date}}</time>

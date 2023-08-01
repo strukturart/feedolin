@@ -487,8 +487,8 @@ let rss_fetcher = function (
           data.forEach(function (i) {
             let item_image = "";
             let video_url = "";
-            let item_type = "rss";
-            let item_media = "rss";
+            let item_type = "mastodon";
+            let item_media = "mastodon";
             let item_filesize = "";
             let item_download = "";
             let startlistened = "";
@@ -539,11 +539,12 @@ let rss_fetcher = function (
               video_url: video_url,
               url: item_download,
               mastodon: item_image,
+              replies_count: i.replies_count ?? 0,
+              reblogs_count: i.reblogs_count ?? 0,
+              favourites_count: i.favourites_count ?? 0,
             });
           });
-          if (feed_download_list_count == feed_download_list.length - 1) {
-            //ready_to_build();
-          }
+
           if (feed_download_list_count < feed_download_list.length - 1) {
             feed_download_list_count++;
             rss_fetcher(
@@ -785,6 +786,9 @@ let rss_fetcher = function (
             youtube_thumbnail: yt_thumbnail,
             video_url: item_video_url,
             url: item_download,
+            replies_count: "0",
+            reblogs_count: "0",
+            favourites_count: "0",
           });
         }
       }
@@ -935,6 +939,9 @@ let rss_fetcher = function (
             start_listened: startlistened,
             youtube_thumbnail: yt_thumbnail,
             video_url: item_video_url,
+            replies_count: 0,
+            reblogs_count: 0,
+            favourites_count: 0,
           });
         }
       }
@@ -1012,8 +1019,8 @@ let mastodon_load_feed = (url) => {
       data.forEach(function (i) {
         let item_image = "";
         let video_url = "";
-        let item_type = "rss";
-        let item_media = "rss";
+        let item_type = "mastodon";
+        let item_media = "mastodon";
         let item_filesize = "";
         let item_download = "";
         let startlistened = "";
@@ -1081,6 +1088,9 @@ let mastodon_load_feed = (url) => {
           video_url: video_url,
           url: item_download,
           mastodon: item_image,
+          replies_count: i.replies_count ? i.replies_count : "0",
+          reblogs_count: i.reblogs_count ? i.reblogs_count : "0",
+          favourites_count: i.favourites_count ? i.favourites_count : "0",
         });
       });
     })
@@ -1417,6 +1427,7 @@ function nav_panels(left_right) {
   set_tabindex();
 
   status.panel = panels[current_panel];
+  document.querySelector("div#news-feed div#news-feed-list").style.top = "40px";
 }
 ////////////
 //TABINDEX NAVIGATION
@@ -1461,6 +1472,11 @@ function nav(move) {
 
     siblings[tab_index].focus();
   }
+
+  document.querySelector("div#news-feed div#news-feed-list").style.top = "2px";
+  if (tab_index == 0)
+    document.querySelector("div#news-feed div#news-feed-list").style.top =
+      "40px";
 
   //smooth scrolling
   const rect = document.activeElement.getBoundingClientRect();
@@ -1545,6 +1561,7 @@ let sleep_mode = function () {
     play_podcast();
     show_article_list();
     status.sleepmode = false;
+    top_bar("", panels[current_panel], "");
   }, st);
 };
 
@@ -1602,7 +1619,10 @@ let show_article = function () {
       );
   }
 
-  if (document.activeElement.getAttribute("data-media") == "rss") {
+  if (
+    document.activeElement.getAttribute("data-media") == "rss" ||
+    document.activeElement.getAttribute("data-media") == "mastodon"
+  ) {
     bottom_bar(
       "<img src='assets/icons/E24F.svg'>",
       "<img src='assets/icons/2-5.svg'>",
@@ -1627,7 +1647,7 @@ let show_article = function () {
   }
 
   document.querySelector("div#news-feed").style.background = "white";
-  document.querySelector("div#news-feed div#news-feed-list").style.top = "0px";
+  document.querySelector("div#news-feed div#news-feed-list").style.top = "2px";
   document.querySelector("div#news-feed div#news-feed-list").style.overflow =
     "scroll";
 };
@@ -1677,7 +1697,10 @@ let video_seeking = function (param) {
 //open source or youtube
 function open_url() {
   //rss
-  if (document.activeElement.getAttribute("data-media") == "rss") {
+  if (
+    document.activeElement.getAttribute("data-media") == "rss" ||
+    document.activeElement.getAttribute("data-media") == "mastodon"
+  ) {
     let link_target = document.activeElement.getAttribute("data-link");
     let title = document.activeElement.querySelector("h1.title").textContent;
     title = title.replace(/\s/g, "-");
@@ -1825,7 +1848,7 @@ let show_article_list = function () {
   document.querySelector("div#news-feed div#news-feed-list").style.overflow =
     "hidden";
 
-  document.querySelector("div#news-feed div#news-feed-list").style.top = "27px";
+  document.querySelector("div#news-feed div#news-feed-list").style.top = "40px";
   bottom_bar(
     "<img src='assets/icons/option.svg'>",
     "",

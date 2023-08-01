@@ -389,7 +389,7 @@ div#news-feed div#news-feed-list {
   padding: 0px 0 50px 0;
   overflow: hidden;
   position: absolute;
-  top: 27px;
+  top: 40px;
 }
 
 div#news-feed div#news-feed-list article {
@@ -558,12 +558,42 @@ div#news-feed div#news-feed-list article div.startlistened-icon {
   opacity: 0;
 }
 
+div#news-feed div#news-feed-list article div.reblog-icon {
+  position: fixed;
+  opacity: 0;
+}
+
+div#news-feed div#news-feed-list article div.replies-icon {
+  position: fixed;
+  opacity: 0;
+}
+
+div#news-feed div#news-feed-list article div.favorit-icon {
+  position: fixed;
+  opacity: 0;
+}
+
 div#news-feed div#news-feed-list article div.listened-icon img {
   height: 15px;
   margin: 2px 0 0 10px;
 }
 
 div#news-feed div#news-feed-list article div.startlistened-icon img {
+  height: 15px;
+  margin: 2px 0 0 10px;
+}
+
+div#news-feed div#news-feed-list article div.reblog-icon img {
+  height: 15px;
+  margin: 2px 0 0 10px;
+}
+
+div#news-feed div#news-feed-list article div.replies-icon img {
+  height: 15px;
+  margin: 2px 0 0 10px;
+}
+
+div#news-feed div#news-feed-list article div.favorit-icon img {
   height: 15px;
   margin: 2px 0 0 10px;
 }
@@ -580,6 +610,30 @@ div#news-feed
   div#news-feed-list
   article[data-startlistened="start_listened"]
   div.startlistened-icon {
+  position: relative;
+  opacity: 1;
+}
+
+div#news-feed
+  div#news-feed-list
+  article:not([data-mastodon-favourites="0"])
+  div.favorit-icon {
+  position: relative;
+  opacity: 1;
+}
+
+div#news-feed
+  div#news-feed-list
+  article:not([data-mastodon-reblog="0"])
+  div.reblog-icon {
+  position: relative;
+  opacity: 1;
+}
+
+div#news-feed
+  div#news-feed-list
+  article:not([data-mastodon-replies="0"])
+  div.replies-icon {
   position: relative;
   opacity: 1;
 }
@@ -757,11 +811,11 @@ div#bottom-bar div#button-right {
 
 div#top-bar {
   position: fixed;
-  top: 0px;
+  top: 3px;
   left: 0px;
   height: 18px;
   z-index: 4;
-  background: black;
+  background: none;
   min-width: 100vw;
   display: none;
 }
@@ -777,34 +831,46 @@ div#top-bar div#inner {
 }
 
 div#top-bar div {
-  background: black;
+  background: none;
   color: white;
   padding: 2px;
+  border-radius: 10%;
+  color: black;
 }
 
-div#top-bar div#button-center {
-  background: black;
+div#top-bar .button-center {
+  background: var(--color-four) !important;
   color: white;
-  padding: 2px;
-  width: 30%;
+  padding: 4px 6px 4px 6px;
+  max-width: 55%;
   text-align: center;
+  border-radius: 20px;
 }
 
-div#top-bar div#button-left {
-  background: black;
+div#top-bar div.button-left {
+  background: var(--color-four) !important;
+  border-radius: 20px;
+
   color: white;
-  padding: 2px;
+  padding: 4px;
   width: 20px;
-  text-align: left;
-  width: 30%;
+  text-align: center;
+  width: 20%;
 }
 
-div#top-bar div#button-right {
-  background: black;
+div#top-bar div.button-right {
+  background: var(--color-four) !important;
+  border-radius: 20px;
+
   color: white;
-  padding: 2px;
-  width: 30%;
-  text-align: right;
+  padding: 4px;
+  width: 20px;
+  text-align: center;
+  width: 20%;
+}
+
+div#top-bar div:empty {
+  background: none !important;
 }
 
 /*INTRO*/
