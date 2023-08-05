@@ -282,6 +282,10 @@ div#side-toast img {
 /*///////////////////////////
 ///FEED////////////////*/
 
+section.comments {
+  padding: 40px 0 0 0;
+}
+
 div#KaiOsAd {
   height: 90px;
 }

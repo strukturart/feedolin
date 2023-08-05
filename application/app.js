@@ -15,6 +15,7 @@ import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
+import { load_context } from "./assets/js/mastodon.js";
 import "url-search-params-polyfill";
 
 import {
@@ -116,6 +117,19 @@ if (localStorage.getItem("audio_memory") != null) {
   audio_memory = JSON.parse(localStorage.getItem("audio_memory"));
 } else {
   audio_memory = {};
+}
+
+async function loadDataAndHandle() {
+  try {
+    content_arr = await loadCache();
+
+    if (content_arr.length > 0) {
+      build();
+      document.getElementById("intro-message").innerText = "cached data loaded";
+    }
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
 }
 
 //ads || ads free
@@ -270,18 +284,7 @@ let load_source_opml = function () {
       "😴<br>the source file cannot be loaded";
     document.getElementById("intro").style.display = "none";
 
-    setTimeout(() => {
-      content_arr = cache.loadCache();
-      if (content_arr) {
-        build();
-        document.getElementById("intro-message").innerText =
-          "cached data loaded";
-      } else {
-        setTimeout(() => {
-          show_settings();
-        }, 3000);
-      }
-    }, 4000);
+    loadDataAndHandle();
   };
 
   xhttp.send(null);
@@ -319,22 +322,7 @@ setTimeout(() => {
 
     //load cache
   } else {
-    document.getElementById("intro-message").innerText =
-      "your device is offline, loading cached data";
-
-    content_arr = loadCache();
-    if (content_arr) {
-      document.getElementById("intro-message").innerText = "load cached data";
-      setTimeout(function () {
-        build();
-      }, 1000);
-    } else {
-      document.getElementById("intro-message").innerText =
-        "no internet connection and no cached data available";
-      setTimeout(function () {
-        build();
-      }, 4000);
-    }
+    loadDataAndHandle();
   }
 }, 1000);
 
@@ -524,6 +512,7 @@ let rss_fetcher = function (
               channel: param_channel,
               category: param_category,
               type: item_type,
+
               image: item_image,
               duration: "",
               media: item_media,
@@ -543,6 +532,25 @@ let rss_fetcher = function (
               reblogs_count: i.reblogs_count ?? 0,
               favourites_count: i.favourites_count ?? 0,
             });
+
+            if (i.replies_count > 0) {
+              load_context(
+                localStorage.getItem("mastodon_server"),
+                i.id,
+                "public"
+              )
+                .then((r) => {
+                  content_arr.forEach((e) => {
+                    if (e.cid === i.id) {
+                      e.replies = r;
+                      console.log(e);
+                    }
+                  });
+                })
+                .catch((error) => {
+                  alert("Error loading context:", error);
+                });
+            }
           });
 
           if (feed_download_list_count < feed_download_list.length - 1) {
@@ -1016,87 +1024,104 @@ let mastodon_load_feed = (url) => {
     .then((response) => response.json())
     .then((data) => {
       // Process the response data
-      data.forEach(function (i) {
-        let item_image = "";
-        let video_url = "";
-        let item_type = "mastodon";
-        let item_media = "mastodon";
-        let item_filesize = "";
-        let item_download = "";
-        let startlistened = "";
-        let param_channel = "";
-        let param_category = "";
-        if (url == mastodon_timeline_urls.home) {
-          param_channel = "mastodon home";
-          param_category = "mastodon home";
-        }
-        if (url == mastodon_timeline_urls.local) {
-          param_channel = "mastodon local";
-          param_category = "mastodon local";
-        }
-
-        if (i.media_attachments.length > 0) {
-          if (i.media_attachments[0].type == "image")
-            item_image = i.media_attachments[0].preview_url;
-
-          if (i.media_attachments[0].type == "video") {
-            video_url = i.media_attachments[0].url;
-            item_image = i.media_attachments[0].preview_url;
-            item_media = "video";
+      data
+        .forEach(function (i) {
+          let item_image = "";
+          let video_url = "";
+          let item_type = "mastodon";
+          let item_media = "mastodon";
+          let item_filesize = "";
+          let item_download = "";
+          let startlistened = "";
+          let param_channel = "";
+          let param_category = "";
+          if (url == mastodon_timeline_urls.home) {
+            param_channel = "mastodon home";
+            param_category = "mastodon home";
+          }
+          if (url == mastodon_timeline_urls.local) {
+            param_channel = "mastodon local";
+            param_category = "mastodon local";
           }
 
-          if (i.media_attachments[0].type == "audio") {
-            video_url = i.media_attachments[0].url;
-            item_media = "audio";
+          if (i.media_attachments.length > 0) {
+            if (i.media_attachments[0].type == "image")
+              item_image = i.media_attachments[0].preview_url;
+
+            if (i.media_attachments[0].type == "video") {
+              video_url = i.media_attachments[0].url;
+              item_image = i.media_attachments[0].preview_url;
+              item_media = "video";
+            }
+
+            if (i.media_attachments[0].type == "audio") {
+              video_url = i.media_attachments[0].url;
+              item_media = "audio";
+            }
           }
-        }
 
-        let content = i.content;
-        if (content == "") {
-          try {
-            content = i.reblog.content;
-          } catch (e) {}
-        }
+          let content = i.content;
+          if (content == "") {
+            try {
+              content = i.reblog.content;
+            } catch (e) {}
+          }
 
-        //date
-        let item_date = new Date(i.created_at);
-        let item_date_unix = item_date.valueOf();
-        item_date = item_date.toDateString();
+          //date
+          let item_date = new Date(i.created_at);
+          let item_date_unix = item_date.valueOf();
+          item_date = item_date.toDateString();
 
-        content_arr.push({
-          index: 0,
-          title: DOMPurify.sanitize(i.account.display_name),
-          summary: DOMPurify.sanitize(content),
-          link: i.uri,
-          date: item_date,
-          dateunix: item_date_unix,
-          channel: param_channel ?? "",
-          category: param_category ?? "",
-          type: item_type,
-          image: item_image,
-          duration: "",
-          media: item_media,
-          filesize: item_filesize,
-          cid: i.id,
-          listened: "not-listened",
-          recently_played: null,
-          recently_order: null,
-          read: "not-read",
-          start_listened: startlistened,
-          youtube_id: "",
-          youtube_thumbnail: "",
-          video_url: video_url,
-          url: item_download,
-          mastodon: item_image,
-          replies_count: i.replies_count ? i.replies_count : "0",
-          reblogs_count: i.reblogs_count ? i.reblogs_count : "0",
-          favourites_count: i.favourites_count ? i.favourites_count : "0",
+          content_arr.push({
+            index: 0,
+            title: DOMPurify.sanitize(i.account.display_name),
+            summary: DOMPurify.sanitize(content),
+            link: i.uri,
+            date: item_date,
+            dateunix: item_date_unix,
+            channel: param_channel ?? "",
+            category: param_category ?? "",
+            type: item_type,
+            image: item_image,
+            duration: "",
+            media: item_media,
+            filesize: item_filesize,
+            cid: i.id,
+            listened: "not-listened",
+            recently_played: null,
+            recently_order: null,
+            read: "not-read",
+            start_listened: startlistened,
+            youtube_id: "",
+            youtube_thumbnail: "",
+            video_url: video_url,
+            url: item_download,
+            mastodon: item_image,
+            replies_count: i.replies_count ? i.replies_count : "0",
+            reblogs_count: i.reblogs_count ? i.reblogs_count : "0",
+            favourites_count: i.favourites_count ? i.favourites_count : "0",
+            replies: "",
+          });
+
+          if (i.replies_count > 0) {
+            load_context(localStorage.getItem("mastodon_server"), i.id)
+              .then((r) => {
+                content_arr.forEach((e) => {
+                  if (e.cid === i.id) {
+                    e.replies = r;
+                    console.log(e);
+                  }
+                });
+              })
+              .catch((error) => {
+                alert("Error loading context:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          // Handle any errors
+          console.error("Error:", error);
         });
-      });
-    })
-    .catch((error) => {
-      // Handle any errors
-      console.error("Error:", error);
     });
 };
 
@@ -1218,7 +1243,6 @@ let filter_data = function (cat) {
 
   content_arr.forEach((item, i) => {
     if (item.category === cat) {
-      console.log(ids.indexOf(item.cid));
       if (ids.indexOf(item.cid) === -1) {
         ids.push(item.cid);
         item.index = ++index;
@@ -1238,7 +1262,6 @@ let tabs = () => {
 
 //build html
 let build = function () {
-  // if (content_arr.lenght > 0) sort_array(content_arr, "channel", "string");
   document.getElementById("intro").style.display = "none";
 
   read_articles();
@@ -2793,7 +2816,9 @@ function shortpress_action(param) {
       break;
 
     case "9":
-      sync();
+      //sync();
+      renderHello(content_arr);
+
       break;
 
     case "Backspace":

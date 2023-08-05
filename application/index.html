@@ -325,7 +325,28 @@
 
                   {{#mastodon}}
                   <img src="{{image}}">
+                 
+
+
+
                   {{/mastodon}}
+
+                  {{#replies}}
+                  <br>
+                  <br>
+                  <strong>Comments</strong>
+                  
+                  {{#descendants}}
+                 
+                  <section class="comments">
+                  {{#account}}<strong>{{display_name}}</strong>{{/account}}
+                  {{{content}}}
+                  </section>
+
+                  {{/descendants}}
+
+                  {{/replies}}
+                 
 
 
                   </div>
