@@ -5,7 +5,7 @@
   "launch_path": "/index.html",
   "type": "privileged",
   "fullscreen": "true",
-
+  "categories": ["News","Social"],
   "icons": {
     "56": "/assets/icons/icon-56-56.png",
     "112": "/assets/icons/icon-112-112.png"

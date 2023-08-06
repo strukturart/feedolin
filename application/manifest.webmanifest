@@ -5,7 +5,7 @@
   "lang": "en-US",
   "start_url": "/index.html",
   "short_name": "Feedolin",
-  "categories": ["utilities"],
+  "categories": ["News","Social"],
 
   "icons": [
     {

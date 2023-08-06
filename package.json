@@ -9,8 +9,8 @@
   "devDependencies": {
     "cssnano": "^6.0.0",
     "events": "^3.3.0",
-    "parcel": "latest",
-    "parcel-plugin-static-files-copy": "^2.6.0",
+    "parcel": "2.8.3",
+    "parcel-plugin-static-files-copy": "^1.2.4",
     "postcss": "^8.4.6"
   },
   "dependencies": {
@@ -29,17 +29,5 @@
     "url-search-params-polyfill": "^8.1.1",
     "uuid": "^9.0.0",
     "youtube-player": "^5.5.2"
-  },
-  "staticFiles": {
-    "staticPath": [
-      {
-        "staticPath": "./application/assets/",
-        "staticOutDir": "assets/"
-      },
-      {
-        "staticPath": "./application/manifest.webapp",
-        "staticOutDir": "./"
-      }
-    ]
   }
 }

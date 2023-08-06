@@ -16,7 +16,7 @@ import {
   pushLocalNotification,
   isAnyAudioPlaying,
 } from "./assets/js/helper.js";
-import { screenlock, hashCode, formatFileSize } from "./assets/js/helper.js";
+import { hashCode, formatFileSize } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
@@ -1089,7 +1089,7 @@ const loadMastodon = () => {
   if (localStorage.getItem("oauth_auth") == null) return false;
 
   mastodon_account_info()
-    .then(() => {
+    .then((data) => {
       mastodon_load_feed(mastodon_timeline_urls.home);
       mastodon_load_feed(mastodon_timeline_urls.local);
       panels.push("mastodon home");
@@ -1103,6 +1103,9 @@ const loadMastodon = () => {
       document
         .querySelector("[data-function='mastodon-connect']")
         .setAttribute("data-function", "mastodon-disconnect");
+
+      document.querySelector("button.mastodon-connect-button").innerText =
+        "disconnect";
     })
     .catch((e) => {
       console.log(e);
