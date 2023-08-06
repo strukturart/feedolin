@@ -21,9 +21,9 @@
   ],
 
   "b2g_features": {
-    "version": "1.7.0",
+    "version": "1.7.4",
     "id": "feedolin",
-    "subtitle": "RSS Reader",
+    "subtitle": "RSS Reader and Mastodon Client",
     "core": true,
     "type": "privileged",
     "display": "fullscreen",

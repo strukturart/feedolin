@@ -8,6 +8,7 @@ import {
   sort_array,
   imageSizeReduce,
   llazyload,
+  screenlock,
 } from "./assets/js/helper.js";
 import {
   toaster,
@@ -70,7 +71,7 @@ let youtube_status = "";
 let video = document.getElementById("videoplayer");
 let source_url_cleaner = ["$$", "mm"];
 try {
-  //screenlock("lock");
+  // screenlock("lock");
 } catch (e) {}
 
 //get read articles
@@ -90,11 +91,10 @@ export let listened_elem =
     : [];
 let tab_index = 0;
 
-const mastodon_server_url = localStorage.getItem("mastodon_server") ?? "";
+export const mastodon_server_url =
+  localStorage.getItem("mastodon_server") ?? "";
 
 if (navigator.minimizeMemoryUsage) navigator.minimizeMemoryUsage();
-
-const sync_time = Number(localStorage.getItem("interval"));
 
 //translation
 export let userLang = navigator.language || navigator.userLanguage;
@@ -180,7 +180,6 @@ let load_ads = function () {
   };
   document.head.appendChild(js);
 };
-false;
 
 //KAiOS 2.x || 3.x
 if (navigator.mozApps) {
@@ -297,9 +296,9 @@ let load_source_opml = function () {
 };
 
 setTimeout(() => {
-  if (localStorage["source_local"] == null && localStorage["source"] == null) {
+  if (!localStorage["source"] && !localStorage["source_local"])
     localStorage.setItem("source", default_opml);
-  }
+
   //get update time; cache || download
   let a = localStorage.getItem("interval");
   a == "never" ? (a = 0) : (a = a);
@@ -307,24 +306,17 @@ setTimeout(() => {
   document.getElementById("intro-message").innerText = "checking feed list";
   //download
   if (getTime(a) && navigator.onLine) {
-    let check = false;
-
-    // Load online OPML
-    if (localStorage["source"]) {
-      load_source_opml();
-      check = true;
-    }
-
-    // Load local OPML
-    if (localStorage["source_local"]) {
+    try {
       load_local_file_opml();
-      check = true;
-    }
+    } catch (e) {}
 
-    if (!check) {
-      localStorage.setItem("source", default_opml);
+    try {
       load_source_opml();
-    }
+    } catch (e) {}
+
+    try {
+      loadMastodon();
+    } catch (e) {}
 
     //load cache
   } else {
@@ -362,6 +354,7 @@ const sync = () => {
     try {
       loadMastodon();
     } catch (e) {}
+    //pushLocalNotification("sync", "yeah");
   }
 };
 /////////////////
@@ -540,7 +533,6 @@ let rss_fetcher = function (
                   content_arr.forEach((e) => {
                     if (e.cid === i.id) {
                       e.replies = r;
-                      console.log(e);
                     }
                   });
                 })
@@ -1069,12 +1061,11 @@ let mastodon_load_feed = (url) => {
                 content_arr.forEach((e) => {
                   if (e.cid === i.id) {
                     e.replies = r;
-                    console.log(e);
                   }
                 });
               })
               .catch((error) => {
-                alert("Error loading context:", error);
+                console.log("Error loading context:", error);
               });
           }
         })
@@ -1281,6 +1272,7 @@ let build = function () {
   article_array[0].focus();
 
   tabs();
+  // screenlock("unlock");
 };
 
 //set tabindex
@@ -2325,25 +2317,23 @@ try {
       d.setMinutes(d.getMinutes() + Number(localStorage.getItem("interval")));
       add_alarm(d, d, uuidv4());
 
-      sync();
+      if (navigator.onLine && document.hidden) sync();
     };
 
     //reset alarm
     navigator.mozSetMessageHandler("alarm", function (message) {
       remove_alarm();
-      const isVisible = document.hidden ? false : true;
-      const audioPlaying = isAnyAudioPlaying() ? false : tue;
-
-      if (navigator.onLine && isVisible == false && audioPlaying == false) m();
+      m();
     });
 
     //start sync loop
 
     if (
       navigator.mozHasPendingMessage("alarm") == false &&
-      localStorage.getItem("interval") != "never" &&
-      localStorage.getItem("interval") != null
+      localStorage.getItem("interval") != "never"
     ) {
+      console.log(localStorage.getItem("interval"));
+
       let d = new Date();
       let f = Number(localStorage.getItem("interval"));
       d.setMinutes(d.getMinutes() + f);
@@ -2363,6 +2353,7 @@ try {
           add_alarm(d, d, uuidv4());
         }
       };
+    } else {
     }
   }
 } catch (e) {
@@ -2818,6 +2809,7 @@ function shortpress_action(param) {
       break;
 
     case "9":
+      sync();
       break;
 
     case "Backspace":
