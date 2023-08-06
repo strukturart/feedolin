@@ -1,5 +1,4 @@
 "use strict";
-import { userLang } from "../../app.js";
 import { status } from "../../app.js";
 import { recently_played } from "../../app.js";
 
@@ -7,7 +6,6 @@ import { toTime } from "../../app.js";
 
 //status, listened_elem, recently_played,
 import { toaster, bottom_bar } from "./helper.js";
-import { translations } from "../../assets/js/translations.js";
 const dayjs = require("dayjs");
 var duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);

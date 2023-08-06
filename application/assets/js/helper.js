@@ -436,7 +436,6 @@ export const imageSizeReduce = () => {
   document.querySelectorAll("article img").forEach((e) => {
     let k = e.src;
     if (k.indexOf("#-moz-samplesize=1") == -1) {
-      console.log("do not");
       e.src = e.src + "#-moz-samplesize=1";
     }
   });
@@ -504,4 +503,43 @@ export function isValidUrl(string) {
   } catch (err) {
     return false;
   }
+}
+
+export let pushLocalNotification = function (title, body) {
+  window.Notification.requestPermission().then((result) => {
+    var notification = new window.Notification(title, {
+      body: body,
+      //requireInteraction: true,
+    });
+
+    notification.onerror = function (err) {
+      console.log(err);
+    };
+    notification.onclick = function (event) {
+      if (window.navigator.mozApps) {
+        var request = window.navigator.mozApps.getSelf();
+        request.onsuccess = function () {
+          if (request.result) {
+            notification.close();
+            request.result.launch();
+          }
+        };
+      } else {
+        window.open(document.location.origin, "_blank");
+      }
+    };
+    notification.onshow = function () {
+      // notification.close();
+    };
+  });
+};
+
+export function isAnyAudioPlaying() {
+  const audioElements = document.getElementsByTagName("audio");
+  for (let i = 0; i < audioElements.length; i++) {
+    if (!audioElements[i].paused) {
+      return true;
+    }
+  }
+  return false;
 }

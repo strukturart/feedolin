@@ -9,13 +9,19 @@ import {
   imageSizeReduce,
   llazyload,
 } from "./assets/js/helper.js";
-import { toaster, share, isValidUrl } from "./assets/js/helper.js";
+import {
+  toaster,
+  share,
+  isValidUrl,
+  pushLocalNotification,
+  isAnyAudioPlaying,
+} from "./assets/js/helper.js";
 import { screenlock, hashCode, formatFileSize } from "./assets/js/helper.js";
 import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
-import { load_context } from "./assets/js/mastodon.js";
+import { load_context, mastodon_account_info } from "./assets/js/mastodon.js";
 import "url-search-params-polyfill";
 
 import {
@@ -354,7 +360,7 @@ const sync = () => {
     } catch (e) {}
 
     try {
-      mastodon_account_info();
+      loadMastodon();
     } catch (e) {}
   }
 };
@@ -446,15 +452,6 @@ let load_feeds = function (data) {
 //////////////////////////////
 //download content////
 //////////////////////////////
-
-const ready_to_build = function () {
-  build();
-  saveCache(content_arr);
-  localStorage.setItem("updated", new Date());
-  document.querySelector(".loading-spinner").style.top = "50%";
-  document.querySelector(".loading-spinner").style.display = "none";
-  localStorage.setItem("last-update", new Date());
-};
 
 let rss_fetcher = function (
   param_url,
@@ -548,7 +545,7 @@ let rss_fetcher = function (
                   });
                 })
                 .catch((error) => {
-                  alert("Error loading context:", error);
+                  console.log("Error loading context:", error);
                 });
             }
           });
@@ -969,43 +966,6 @@ let rss_fetcher = function (
 
 //mastodon
 
-let mastodon_account_info = () => {
-  if (localStorage.getItem("oauth_auth") == null) return false;
-  let a = JSON.parse(localStorage.getItem("oauth_auth"));
-  let accessToken = a.access_token;
-
-  let url = localStorage.getItem("mastodon_server");
-
-  fetch(url + "/api/v1/accounts/verify_credentials", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        console.log("Network response was not OK");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      mastodon_load_feed(mastodon_timeline_urls.home);
-      mastodon_load_feed(mastodon_timeline_urls.local);
-      panels.push("mastodon home");
-      panels.push("mastodon local");
-
-      document.querySelector("#mastodon-label").innerText =
-        "logged in as " + data.username;
-
-      document.querySelector("input#mastodon-server").readOnly = true;
-      // document.querySelector("[data-function='mastodon-connect']").innerText = "disconnect";
-
-      document
-        .querySelector("[data-function='mastodon-connect']")
-        .setAttribute("data-function", "mastodon-disconnect");
-    });
-};
-
 let mastodon_timeline_urls = {
   home: mastodon_server_url + "/api/v1/timelines/home",
   local: mastodon_server_url + "/api/v1/timelines/public?local=true",
@@ -1125,7 +1085,31 @@ let mastodon_load_feed = (url) => {
     });
 };
 
-mastodon_account_info();
+const loadMastodon = () => {
+  if (localStorage.getItem("oauth_auth") == null) return false;
+
+  mastodon_account_info()
+    .then(() => {
+      mastodon_load_feed(mastodon_timeline_urls.home);
+      mastodon_load_feed(mastodon_timeline_urls.local);
+      panels.push("mastodon home");
+      panels.push("mastodon local");
+
+      document.querySelector("#mastodon-label").innerText =
+        "logged in as " + data.username;
+
+      document.querySelector("input#mastodon-server").readOnly = true;
+
+      document
+        .querySelector("[data-function='mastodon-connect']")
+        .setAttribute("data-function", "mastodon-disconnect");
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+
+loadMastodon();
 
 //sort content by date
 //build
@@ -1169,7 +1153,9 @@ let listened_articles = function () {
 //started to listen
 //add to list recently played
 let listened_podcast_articles = function () {
-  if (content_arr.length == 0) return false;
+  if (content_arr.length == 0) {
+    return false;
+  }
 
   content_arr.forEach(function (index) {
     index.recently_played = "";
@@ -1180,6 +1166,11 @@ let listened_podcast_articles = function () {
           index.recently_played = "recently-played";
           index.recently_order = t;
         }
+      }
+    } else {
+      const index = panels.indexOf("recently-played");
+      if (index !== -1) {
+        panels.splice(index, 1);
       }
     }
   });
@@ -1309,6 +1300,15 @@ let set_tabindex = function () {
   }, 1500);
 };
 
+const ready_to_build = function () {
+  build();
+  saveCache(content_arr);
+  localStorage.setItem("updated", new Date());
+  document.querySelector(".loading-spinner").style.top = "50%";
+  document.querySelector(".loading-spinner").style.display = "none";
+  localStorage.setItem("last-update", new Date());
+};
+
 //mark as read
 
 let mark_as_read = function (un_read) {
@@ -1433,8 +1433,6 @@ function nav_panels(left_right) {
         heroArray.push(content_arr[i]);
       }
     }
-
-    sort_array(heroArray, "recently_order", "number");
     renderHello(heroArray);
 
     document.querySelectorAll("div.division").forEach(function (index, key) {
@@ -1885,7 +1883,6 @@ let show_article_list = function () {
     youtube_player = "";
     clearInterval(youtube_time);
   }
-  video.src = "";
   article_array[tab_index];
 
   document.querySelector("div#youtube-player iframe").setAttribute("src", "");
@@ -2244,7 +2241,7 @@ let add_alarm = function (date, message_text, id) {
         (err) => console.log("add err: " + err)
       );
     } catch (e) {
-      alert(e);
+      console.log(e);
     }
   }
 };
@@ -2324,13 +2321,17 @@ try {
       var d = new Date();
       d.setMinutes(d.getMinutes() + Number(localStorage.getItem("interval")));
       add_alarm(d, d, uuidv4());
+
       sync();
     };
 
     //reset alarm
     navigator.mozSetMessageHandler("alarm", function (message) {
       remove_alarm();
-      if (navigator.onLine) m();
+      const isVisible = document.hidden ? false : true;
+      const audioPlaying = isAnyAudioPlaying() ? false : tue;
+
+      if (navigator.onLine && isVisible == false && audioPlaying == false) m();
     });
 
     //start sync loop
@@ -2356,8 +2357,6 @@ try {
         });
         //no alarm in the future set alarm
         if (action == true) {
-          // alert("none alarm" + d);
-          // remove_alarm();
           add_alarm(d, d, uuidv4());
         }
       };
@@ -2816,9 +2815,6 @@ function shortpress_action(param) {
       break;
 
     case "9":
-      //sync();
-      renderHello(content_arr);
-
       break;
 
     case "Backspace":
@@ -3023,6 +3019,6 @@ channel.addEventListener("message", (event) => {
   }
 
   if (event.data.oauthsuccess) {
-    mastodon_account_info();
+    loadMastodon();
   }
 });
