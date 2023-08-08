@@ -121,20 +121,6 @@ input {
   color: white;
 }
 
-div#message {
-  position: fixed;
-  z-index: 100000000;
-  top: -10000px;
-  background: rgba(0, 0, 0, 0.9);
-  min-width: 100vw;
-}
-
-div#message div#message-inner {
-  background-color: yellow;
-  color: black;
-  padding: 5px;
-}
-
 table {
   max-width: 100vw;
   min-width: 100vw;
@@ -193,35 +179,7 @@ div#intro div#version {
   color: white;
   z-index: 2000;
   font-size: 0.7rem;
-  display: none;
-}
-
-div#intro div#intro-message {
-  position: absolute;
-  top: 190px;
-  text-align: center;
-  color: white;
-  z-index: 2000;
-  font-size: 0.8rem;
-}
-
-div#intro div#loading-progress {
-  position: absolute;
-  top: 220px;
-
-  height: 10px;
-  width: 200px;
-}
-
-div#intro div#loading-progress div {
-  height: 10px;
-  width: 200px;
-}
-
-div#intro div#loading-progress div div {
-  width: 0%;
-  height: 10px;
-  background-color: rgb(180, 128, 128);
+  bottom: 10px;
 }
 
 /*///////////////////////////

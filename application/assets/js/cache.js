@@ -58,7 +58,6 @@ export let saveCache = async function (data) {
   try {
     await localforage.setItem("data", data);
     const savedData = await localforage.getItem("data");
-    console.log("saved:", savedData);
   } catch (error) {
     console.error("Error saving cache:", error);
   }

@@ -342,6 +342,8 @@ export let list_files = function (filetype, callback) {
       if (!this.result) {
         console.log("finished");
       }
+      if (cursor.result == undefined) return false;
+
       if (cursor.result.name !== null) {
         var file = cursor.result;
         let n = file.name.split(".");

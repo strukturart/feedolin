@@ -40,7 +40,6 @@ import {
 } from "./assets/js/audio.js";
 
 import { v4 as uuidv4 } from "uuid";
-
 import lozad from "lozad";
 
 const dayjs = require("dayjs");
@@ -50,15 +49,13 @@ dayjs.extend(duration);
 const observer = lozad(); // lazy loads elements with default selector as '.lozad'
 observer.observe();
 const debug = false;
-let article_array;
+let article_array = [];
 //data layer
 let content_arr = [];
 //store all used article ids
 var all_cid = [];
 let feed_download_list_count = 0;
-
 let panels = ["channels", "recently-played"];
-
 let current_panel = 0;
 const parser = new DOMParser();
 
@@ -196,13 +193,16 @@ if (navigator.mozApps) {
   };
 
   function manifest(a) {
+    document.getElementById("version").innerText = "V " + a.manifest.version;
     if (a.installOrigin == "app://kaios-plus.kaiostech.com") {
       load_ads();
     }
   }
   getManifest(manifest);
 }
-if ("b2g" in navigator) load_ads();
+if ("b2g" in navigator) {
+  load_ads();
+}
 
 /////////////////////////////
 ////////////////////////////
@@ -418,7 +418,7 @@ let load_feeds = function (data) {
   setTimeout(function () {
     document.querySelector(".loading-spinner").style.display = "block";
     if (status.window_status == "intro")
-      document.querySelector(".loading-spinner").style.top = "80%";
+      document.querySelector(".loading-spinner").style.top = "70%";
 
     rss_fetcher(
       feed_download_list[0].url,
@@ -1077,7 +1077,11 @@ let mastodon_load_feed = (url) => {
 };
 
 const loadMastodon = () => {
-  if (localStorage.getItem("oauth_auth") == null) return false;
+  if (
+    localStorage.getItem("oauth_auth") == null ||
+    localStorage.getItem("oauth_auth") == ""
+  )
+    return false;
 
   mastodon_account_info()
     .then((data) => {
@@ -1102,8 +1106,6 @@ const loadMastodon = () => {
       console.log(e);
     });
 };
-
-loadMastodon();
 
 //sort content by date
 //build
@@ -1273,6 +1275,13 @@ let build = function () {
 
   tabs();
   // screenlock("unlock");
+  //llazyload();
+
+  llazyload();
+
+  // imageSizeReduce();
+  //https://github.com/ApoorvSaxena/lozad.js
+  observer.observe();
 };
 
 //set tabindex
@@ -1582,7 +1591,7 @@ let sleep_mode = function () {
 };
 
 let show_article = function () {
-  imageSizeReduce();
+  //imageSizeReduce();
   mark_as_read(true);
   detectURLs();
   status.window_status = "single-article";
@@ -1847,15 +1856,8 @@ function open_url() {
 //show article list
 //////////////////
 let show_article_list = function () {
-  llazyload();
-
-  imageSizeReduce();
-  //https://github.com/ApoorvSaxena/lozad.js
-  observer.observe();
-
   document.querySelector("div#video-player").style.display = "none";
   document.getElementById("audio-player").style.display = "none";
-
   document.querySelector("div#youtube-player").style.display = "none";
   document.getElementById("progress-bar").style.display = "none";
   document.querySelector("div#settings").style.display = "none";
@@ -2138,11 +2140,12 @@ let open_player = function (reopen) {
 
   reset_animation();
   try {
-    document.getElementById("image").style.backgroundImage ==
+    console.log(document.activeElement.getAttribute("data-image"));
+    document.getElementById("image").style.backgroundImage =
       document.activeElement.getAttribute("data-image");
   } catch (e) {
     document.getElementById("image").style.backgroundImage =
-      "url('/assets/image/fallback.png')";
+      "url('assets/image/fallback.png')";
   }
 
   document.getElementById("audio-title").innerText = "";
@@ -2167,6 +2170,9 @@ let open_player = function (reopen) {
     if (w[0].image != "") {
       document.getElementById("image").style.backgroundImage =
         "url(" + w[0].image + ")";
+    } else {
+      document.getElementById("image").style.backgroundImage =
+        "url(assets/image/fallback.png)";
     }
   }, 500);
 };
