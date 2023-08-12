@@ -22,7 +22,11 @@ import { loadCache, saveCache, getTime } from "./assets/js/cache.js";
 import { bottom_bar, top_bar, list_files, notify } from "./assets/js/helper.js";
 import { start_scan } from "./assets/js/scan.js";
 import { stop_scan } from "./assets/js/scan.js";
-import { load_context, mastodon_account_info } from "./assets/js/mastodon.js";
+import {
+  load_context,
+  mastodon_account_info,
+  reblog,
+} from "./assets/js/mastodon.js";
 import "url-search-params-polyfill";
 
 import {
@@ -1478,6 +1482,8 @@ function nav(move) {
     siblings.push(items[i]);
   }
 
+  console.log(siblings);
+
   if (move == "+1") {
     tab_index++;
 
@@ -1591,18 +1597,24 @@ let sleep_mode = function () {
 };
 
 let show_article = function () {
-  //imageSizeReduce();
-  mark_as_read(true);
-  detectURLs();
+  try {
+    mark_as_read(true);
+    detectURLs();
+    status.active_audio_element_id =
+      document.activeElement.getAttribute("data-id");
+    alert(status.active_audio_element_id);
+  } catch (e) {}
+
   status.window_status = "single-article";
+
   document.getElementById("news-feed-list").scrollTo(0, 0);
   document.getElementById("progress-bar").style.display = "none";
-
   document.querySelector("div#youtube-player").style.display = "none";
   document.querySelector("div#video-player").style.display = "none";
   document.querySelector("div#audio-player").style.display = "none";
   document.getElementById("settings").style.display = "none";
   document.getElementById("options").style.display = "none";
+  document.getElementById("article-option").style.display = "none";
 
   let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
@@ -1649,7 +1661,7 @@ let show_article = function () {
     document.activeElement.getAttribute("data-media") == "mastodon"
   ) {
     bottom_bar(
-      "<img src='assets/icons/E24F.svg'>",
+      "<img src='assets/icons/list.svg'>",
       "<img src='assets/icons/2-5.svg'>",
       ""
     );
@@ -2022,6 +2034,16 @@ let show_settings = function () {
   focus_after_selection();
 };
 
+//article option view
+const show_article_option = () => {
+  status.window_status = "article_option";
+  tab_index = 0;
+
+  document.getElementById("article-option").style.display = "block";
+  document.querySelectorAll("#article-option div")[0].focus();
+  bottom_bar("", "", "");
+};
+
 //options view
 
 let open_options = function () {
@@ -2055,6 +2077,19 @@ let start_options = function () {
 
   if (document.activeElement.getAttribute("data-function") == "sort-by-date") {
     sort_tab("number");
+  }
+
+  if (document.activeElement.getAttribute("data-function") == "reblog") {
+    reblog(
+      localStorage.getItem("mastodon_server"),
+      status.active_audio_element_id
+    )
+      .then((data) => {
+        side_toaster("yeah", 20000);
+      })
+      .catch((error) => {
+        side_toaster("error", 20000);
+      });
   }
 
   if (document.activeElement.getAttribute("data-function") == "share") {
@@ -2530,7 +2565,8 @@ function shortpress_action(param) {
 
       if (
         status.window_status == "options" ||
-        status.window_status == "link-list"
+        status.window_status == "link-list" ||
+        status.window_status == "article_option"
       ) {
         start_options();
         break;
@@ -2666,6 +2702,11 @@ function shortpress_action(param) {
         nav("+1");
         break;
       }
+
+      if (status.window_status == "article_option") {
+        nav("+1");
+        break;
+      }
       if (status.window_status == "volume") {
         navigator.volumeManager.requestVolumeDown();
 
@@ -2676,6 +2717,11 @@ function shortpress_action(param) {
 
     case "ArrowUp":
       if (status.window_status == "link-list") {
+        nav("-1");
+        break;
+      }
+
+      if (status.window_status == "article_option") {
         nav("-1");
         break;
       }
@@ -2742,9 +2788,17 @@ function shortpress_action(param) {
         play_podcast(document.activeElement.getAttribute("data-link"));
         break;
       }
-
+      /*
       if (status.window_status == "single-article") {
         open_url();
+        break;
+      }
+      */
+      if (
+        document.activeElement.getAttribute("data-media") == "rss" ||
+        document.activeElement.getAttribute("data-media") == "mastodon"
+      ) {
+        show_article_option();
         break;
       }
 
@@ -2847,6 +2901,10 @@ function shortpress_action(param) {
 
       if (status.window_status == "single-article") {
         show_article_list();
+
+        document
+          .querySelector("[data-id ='" + status.active_element_id + "']")
+          .focus();
         break;
       }
 
@@ -2869,6 +2927,25 @@ function shortpress_action(param) {
         break;
       }
 
+      if (status.window_status == "article_option") {
+        status.window_status = "single-article";
+        document.getElementById("article-option").style.display = "none";
+
+        bottom_bar(
+          "<img src='assets/icons/list.svg'>",
+          "<img src='assets/icons/2-5.svg'>",
+          ""
+        );
+        if (status.linkfy)
+          bottom_bar(
+            "<img src='assets/icons/E24F.svg'>",
+            "<img src='assets/icons/2-5.svg'>",
+            "<img src='assets/icons/E269.svg'>"
+          );
+
+        break;
+      }
+
       if (status.window_status == "options") {
         document.getElementById("options").style.display = "none";
         show_article_list();
@@ -2880,7 +2957,6 @@ function shortpress_action(param) {
 
       if (status.window_status == "settings") {
         show_article_list();
-
         break;
       }
 

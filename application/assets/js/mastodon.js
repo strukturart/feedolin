@@ -25,6 +25,35 @@ export let load_context = (url, id, mode) => {
     });
 };
 
+export let reblog = (url, id) => {
+  let a = JSON.parse(localStorage.getItem("oauth_auth"));
+  let accessToken = a.access_token;
+
+  let w = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  return new Promise((resolve, reject) => {
+    fetch(url + "/api/v1/statuses/" + id + "/reblog", {
+      headers: w,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("Network response was not OK");
+          reject(new Error("Network response was not OK"));
+        }
+        return response.json();
+      })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 export let mastodon_account_info = () => {
   let a = JSON.parse(localStorage.getItem("oauth_auth"));
   let accessToken = a.access_token;
