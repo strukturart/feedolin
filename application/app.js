@@ -26,6 +26,7 @@ import {
   load_context,
   mastodon_account_info,
   reblog,
+  favourite,
 } from "./assets/js/mastodon.js";
 import "url-search-params-polyfill";
 
@@ -44,14 +45,11 @@ import {
 } from "./assets/js/audio.js";
 
 import { v4 as uuidv4 } from "uuid";
-import lozad from "lozad";
 
 const dayjs = require("dayjs");
 var duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);
 
-const observer = lozad(); // lazy loads elements with default selector as '.lozad'
-observer.observe();
 const debug = false;
 let article_array = [];
 //data layer
@@ -307,7 +305,7 @@ setTimeout(() => {
   let a = localStorage.getItem("interval");
   a == "never" ? (a = 0) : (a = a);
 
-  document.getElementById("intro-message").innerText = "checking feed list";
+  // document.getElementById("intro-message").innerText = "checking feed list";
   //download
   if (getTime(a) && navigator.onLine) {
     try {
@@ -469,7 +467,7 @@ let rss_fetcher = function (
           data.forEach(function (i) {
             let item_image = "";
             let video_url = "";
-            let item_type = "mastodon";
+            let item_type = "mastodon_public";
             let item_media = "mastodon";
             let item_filesize = "";
             let item_download = "";
@@ -506,7 +504,6 @@ let rss_fetcher = function (
               channel: param_channel,
               category: param_category,
               type: item_type,
-
               image: item_image,
               duration: "",
               media: item_media,
@@ -611,6 +608,8 @@ let rss_fetcher = function (
       let item_link = "";
       let item_title = "";
       let item_type = "";
+      let item_media_type = "";
+
       let item_date_unix = "";
 
       let item_media = "rss";
@@ -648,6 +647,7 @@ let rss_fetcher = function (
         for (let i = 0; i < param_limit; i++) {
           item_title = el[i].querySelector("title").innerHTML;
 
+          item_type = "rss";
           item_cid = hashCode(item_title);
 
           var elem = el[i].querySelector("summary");
@@ -684,21 +684,23 @@ let rss_fetcher = function (
                 .querySelector("enclosure")
                 .getAttribute("url");
             if (el[i].querySelector("enclosure").getAttribute("type"))
-              item_type = el[i].querySelector("enclosure").getAttribute("type");
+              item_media_type = el[i]
+                .querySelector("enclosure")
+                .getAttribute("type");
 
             if (
-              item_type == "audio/mpeg" ||
-              item_type == "audio/aac" ||
-              item_type == "audio/x-mpeg" ||
-              item_type == "audio/mp3" ||
-              item_type == "audio/x-m4a"
+              item_media_type == "audio/mpeg" ||
+              item_media_type == "audio/aac" ||
+              item_media_type == "audio/x-mpeg" ||
+              item_media_type == "audio/mp3" ||
+              item_media_type == "audio/x-m4a"
             ) {
               item_media = "audio";
             }
 
             if (
-              item_type == "video/mp4" ||
-              item_type == "application/x-mpegurl"
+              item_media_type == "video/mp4" ||
+              item_media_type == "application/x-mpegurl"
             ) {
               item_media = "video";
               item_video_url = el[i]
@@ -805,7 +807,7 @@ let rss_fetcher = function (
       item_title = "";
       item_type = "";
       item_date_unix = "";
-
+      item_media_type = "";
       item_media = "rss";
       item_duration = "";
       item_filesize = "";
@@ -878,21 +880,23 @@ let rss_fetcher = function (
               typeof el[i].querySelector("enclosure").getAttribute("type") !=
                 undefined
             )
-              item_type = el[i].querySelector("enclosure").getAttribute("type");
+              item_media_type = el[i]
+                .querySelector("enclosure")
+                .getAttribute("type");
 
             if (
-              item_type == "audio/mpeg" ||
-              item_type == "audio/aac" ||
-              item_type == "audio/x-mpeg" ||
-              item_type == "audio/mp3" ||
-              item_type == "audio/x-m4a"
+              item_media_type == "audio/mpeg" ||
+              item_media_type == "audio/aac" ||
+              item_media_type == "audio/x-mpeg" ||
+              item_media_type == "audio/mp3" ||
+              item_media_type == "audio/x-m4a"
             ) {
               item_media = "audio";
             }
 
             if (
-              item_type == "video/mp4" ||
-              item_type == "application/x-mpegurl"
+              item_media_type == "video/mp4" ||
+              item_media_type == "application/x-mpegurl"
             ) {
               item_media = "video";
               item_video_url = el[i]
@@ -1084,13 +1088,31 @@ const loadMastodon = () => {
   if (
     localStorage.getItem("oauth_auth") == null ||
     localStorage.getItem("oauth_auth") == ""
-  )
+  ) {
     return false;
+  }
 
   mastodon_account_info()
     .then((data) => {
       mastodon_load_feed(mastodon_timeline_urls.home);
       mastodon_load_feed(mastodon_timeline_urls.local);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+
+//check if user logged in mastodon
+const mastodon_check = () => {
+  if (
+    localStorage.getItem("oauth_auth") == null ||
+    localStorage.getItem("oauth_auth") == ""
+  ) {
+    return false;
+  }
+
+  mastodon_account_info()
+    .then((data) => {
       panels.push("mastodon home");
       panels.push("mastodon local");
 
@@ -1105,11 +1127,16 @@ const loadMastodon = () => {
 
       document.querySelector("button.mastodon-connect-button").innerText =
         "disconnect";
+
+      document.querySelectorAll(".mastodon-item").forEach((e) => {
+        e.style.display = "flex";
+      });
     })
     .catch((e) => {
       console.log(e);
     });
 };
+mastodon_check();
 
 //sort content by date
 //build
@@ -1278,14 +1305,7 @@ let build = function () {
   article_array[0].focus();
 
   tabs();
-  // screenlock("unlock");
-  //llazyload();
-
   llazyload();
-
-  // imageSizeReduce();
-  //https://github.com/ApoorvSaxena/lozad.js
-  observer.observe();
 };
 
 //set tabindex
@@ -1462,7 +1482,7 @@ function nav_panels(left_right) {
 //TABINDEX NAVIGATION
 ///////////
 
-function nav(move) {
+let nav = function (move) {
   // Setup siblings array and get the first sibling
   let siblings = [];
 
@@ -1481,8 +1501,6 @@ function nav(move) {
   for (let i = 0; i < items.length; i++) {
     siblings.push(items[i]);
   }
-
-  console.log(siblings);
 
   if (move == "+1") {
     tab_index++;
@@ -1519,7 +1537,7 @@ function nav(move) {
     top: elY - window.innerHeight / 2,
     behavior: "smooth",
   });
-}
+};
 
 //navigation between channels into channels view
 let channel_navigation = function (direction) {
@@ -1602,19 +1620,11 @@ let show_article = function () {
     detectURLs();
     status.active_audio_element_id =
       document.activeElement.getAttribute("data-id");
-    alert(status.active_audio_element_id);
   } catch (e) {}
 
-  status.window_status = "single-article";
+  console.log(document.activeElement.getAttribute("data-type"));
 
-  document.getElementById("news-feed-list").scrollTo(0, 0);
-  document.getElementById("progress-bar").style.display = "none";
-  document.querySelector("div#youtube-player").style.display = "none";
-  document.querySelector("div#video-player").style.display = "none";
-  document.querySelector("div#audio-player").style.display = "none";
-  document.getElementById("settings").style.display = "none";
-  document.getElementById("options").style.display = "none";
-  document.getElementById("article-option").style.display = "none";
+  status.window_status = "single-article";
 
   let elem = document.querySelectorAll("article");
   for (let i = 0; i < elem.length; i++) {
@@ -1625,16 +1635,6 @@ let show_article = function () {
   for (let i = 0; i < elem.length; i++) {
     elem[i].style.display = "block";
   }
-
-  document.activeElement.style.background = "white";
-
-  document.activeElement.style.fontStyle = "normal";
-  document.activeElement.style.color = "black";
-
-  document.activeElement.style.display = "block";
-  document.activeElement.classList.add("view");
-
-  document.getElementById("top-bar").style.display = "none";
 
   if (document.activeElement.getAttribute("data-media") == "audio") {
     bottom_bar("<img src='assets/icons/23EF.svg'>", "", "");
@@ -1655,10 +1655,10 @@ let show_article = function () {
         "<img src='assets/icons/E269.svg'>"
       );
   }
-
   if (
-    document.activeElement.getAttribute("data-media") == "rss" ||
-    document.activeElement.getAttribute("data-media") == "mastodon"
+    document.activeElement.getAttribute("data-type") == "rss" ||
+    document.activeElement.getAttribute("data-type") == "mastodon" ||
+    document.activeElement.getAttribute("data-type") == "mastodon_public"
   ) {
     bottom_bar(
       "<img src='assets/icons/list.svg'>",
@@ -1667,7 +1667,7 @@ let show_article = function () {
     );
     if (status.linkfy)
       bottom_bar(
-        "<img src='assets/icons/E24F.svg'>",
+        "<img src='assets/icons/list.svg'>",
         "<img src='assets/icons/2-5.svg'>",
         "<img src='assets/icons/E269.svg'>"
       );
@@ -1683,10 +1683,24 @@ let show_article = function () {
       );
   }
 
+  document.getElementById("news-feed-list").scrollTo(0, 0);
+  document.getElementById("progress-bar").style.display = "none";
+  document.querySelector("div#youtube-player").style.display = "none";
+  document.querySelector("div#video-player").style.display = "none";
+  document.querySelector("div#audio-player").style.display = "none";
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("options").style.display = "none";
+  document.getElementById("article-option").style.display = "none";
+  document.activeElement.style.background = "white";
+  document.activeElement.style.fontStyle = "normal";
+  document.activeElement.style.color = "black";
+  document.activeElement.style.display = "block";
+  document.activeElement.classList.add("view");
   document.querySelector("div#news-feed").style.background = "white";
   document.querySelector("div#news-feed div#news-feed-list").style.top = "2px";
   document.querySelector("div#news-feed div#news-feed-list").style.overflow =
     "scroll";
+  document.getElementById("top-bar").style.display = "none";
 };
 
 export let toTime = function (seconds) {
@@ -1731,21 +1745,17 @@ let video_seeking = function (param) {
     video.currentTime = video.currentTime + step++;
   }
 };
+let open_link = () => {
+  let w = content_arr.filter(function (i) {
+    if (i.cid == status.active_element_id) {
+      return i;
+    }
+  });
+
+  window.open(w[0].link);
+};
 //open source or youtube
-function open_url() {
-  //rss
-  if (
-    document.activeElement.getAttribute("data-media") == "rss" ||
-    document.activeElement.getAttribute("data-media") == "mastodon"
-  ) {
-    let link_target = document.activeElement.getAttribute("data-link");
-    let title = document.activeElement.querySelector("h1.title").textContent;
-    title = title.replace(/\s/g, "-");
-    bottom_bar("", "", "");
-    show_article_list();
-    window.open(link_target);
-    return true;
-  }
+let open_url = () => {
   //video
   if (document.activeElement.getAttribute("data-media") == "video") {
     video_player = document.getElementById("videoplayer");
@@ -1862,7 +1872,7 @@ function open_url() {
 
     return;
   }
-}
+};
 
 /////////////////
 //show article list
@@ -2042,6 +2052,21 @@ const show_article_option = () => {
   document.getElementById("article-option").style.display = "block";
   document.querySelectorAll("#article-option div")[0].focus();
   bottom_bar("", "", "");
+  let w = content_arr.filter(function (i) {
+    if (i.cid == status.active_element_id) {
+      return i;
+    }
+  });
+
+  if (w[0].type == "mastodon") {
+    document.querySelectorAll(".mastodon-item").forEach((e) => {
+      e.style.display = "flex";
+    });
+  } else {
+    document.querySelectorAll(".mastodon-item").forEach((e) => {
+      e.style.display = "flex";
+    });
+  }
 };
 
 //options view
@@ -2080,16 +2105,29 @@ let start_options = function () {
   }
 
   if (document.activeElement.getAttribute("data-function") == "reblog") {
-    reblog(
-      localStorage.getItem("mastodon_server"),
-      status.active_audio_element_id
-    )
+    reblog(localStorage.getItem("mastodon_server"), status.active_element_id)
       .then((data) => {
-        side_toaster("yeah", 20000);
+        side_toaster("status shared", 2000);
       })
       .catch((error) => {
-        side_toaster("error", 20000);
+        side_toaster(error, 2000);
       });
+  }
+
+  if (document.activeElement.getAttribute("data-function") == "favourite") {
+    favourite(localStorage.getItem("mastodon_server"), status.active_element_id)
+      .then((data) => {
+        side_toaster("status favourites", 2000);
+      })
+      .catch((error) => {
+        side_toaster(error, 2000);
+      });
+  }
+
+  if (
+    document.activeElement.getAttribute("data-function") == "open_in_browser"
+  ) {
+    open_link();
   }
 
   if (document.activeElement.getAttribute("data-function") == "share") {
@@ -2384,7 +2422,6 @@ try {
 
       request.onsuccess = function () {
         this.result.forEach(function (alarm) {
-          //alert("alarm: " + alarm.date);
           if (dayjs(alarm.date).isAfter(dayjs()) == true && action == true) {
             action = false;
           }
@@ -2603,7 +2640,7 @@ function shortpress_action(param) {
             m +
             "/oauth/authorize?client_id=" +
             cred.clientId +
-            "&scope=read&redirect_uri=" +
+            "&scope=read+write&redirect_uri=" +
             cred.redirect +
             "&response_type=code";
           window.open(url);
@@ -2616,16 +2653,17 @@ function shortpress_action(param) {
         document.activeElement.getAttribute("data-function") ==
         "mastodon-disconnect"
       ) {
-        document.getElementById("mastodon-server").value = "";
         localStorage.removeItem("mastodon_server");
         localStorage.removeItem("oauth_auth");
         document.querySelector("input#mastodon-server").readOnly = false;
-        document.querySelector("[data-function='mastodon-disconnect']").value =
-          "connect";
+
         document.querySelector("#mastodon-label").innerText = "-";
+        document.querySelector(".mastodon-connect-button").innerText =
+          "connect";
+        document
+          .querySelector(".mastodon-connect-button")
+          .setAttribute("data-function", "mastodon-connect");
         side_toaster("account removed", 3000);
-        document.activeElement.setAttribute("data-function") ==
-          "mastodon-connect";
       }
 
       break;
@@ -2788,15 +2826,25 @@ function shortpress_action(param) {
         play_podcast(document.activeElement.getAttribute("data-link"));
         break;
       }
-      /*
-      if (status.window_status == "single-article") {
+
+      if (
+        status.window_status == "single-article" &&
+        document.activeElement.getAttribute("data-media") == "youtube"
+      ) {
         open_url();
         break;
       }
-      */
+
+      let w = content_arr.filter(function (i) {
+        if (i.cid == status.active_element_id) {
+          return i;
+        }
+      });
+
       if (
-        document.activeElement.getAttribute("data-media") == "rss" ||
-        document.activeElement.getAttribute("data-media") == "mastodon"
+        w[0].type == "mastodon" ||
+        w[0].type == "mastodon_public" ||
+        w[0].media == "rss"
       ) {
         show_article_option();
         break;
@@ -2938,10 +2986,14 @@ function shortpress_action(param) {
         );
         if (status.linkfy)
           bottom_bar(
-            "<img src='assets/icons/E24F.svg'>",
+            "<img src='assets/icons/list.svg'>",
             "<img src='assets/icons/2-5.svg'>",
             "<img src='assets/icons/E269.svg'>"
           );
+
+        document
+          .querySelector("[data-id ='" + status.active_element_id + "']")
+          .focus();
 
         break;
       }

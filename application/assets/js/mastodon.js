@@ -36,6 +36,37 @@ export let reblog = (url, id) => {
 
   return new Promise((resolve, reject) => {
     fetch(url + "/api/v1/statuses/" + id + "/reblog", {
+      method: "POST",
+      headers: w,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("Network response was not OK");
+          reject(new Error("Network response was not OK"));
+        }
+        return response.json();
+      })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export let favourite = (url, id) => {
+  let a = JSON.parse(localStorage.getItem("oauth_auth"));
+  let accessToken = a.access_token;
+
+  let w = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  return new Promise((resolve, reject) => {
+    fetch(url + "/api/v1/statuses/" + id + "/favourite", {
+      method: "POST",
       headers: w,
     })
       .then((response) => {

@@ -936,18 +936,8 @@ div#progress-bar div {
   background: var(--color-six);
 }
 
-article.view > div {
-  background: white;
-  color: black;
-  display: block;
-  font-style: "normal";
-}
-
-article.view {
-  background: red;
-  color: black;
-  display: block;
-  font-style: "normal";
+div.mastodon-item {
+  display: none;
 }
 
 /*
@@ -957,19 +947,6 @@ article.view {
 div#top {
   position: fixed;
   top: 0;
-}
-
-div#article-option {
-  display: none;
-  height: 100vh;
-  width: 100%;
-  padding: 10px;
-  overflow: hidden;
-  position: absolute;
-  top: 0px;
-  z-index: 3;
-  font-size: 1rem;
-  background: rgb(231, 231, 231);
 }
 
 div#settings {
@@ -1090,4 +1067,42 @@ div#options div:focus {
   color: blue !important;
   font-size: 1rem !important;
   background: none !important;
+}
+
+div#article-option {
+  display: none;
+  height: 100vh;
+  width: 100%;
+  padding: 10px 0 0 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+  font-size: 1rem;
+  background: rgb(231, 231, 231);
+}
+
+div#article-option div img {
+  max-width: 15px;
+  max-height: 15px;
+  margin: 5px 0px 0 10px;
+  position: relative;
+  display: flex;
+}
+
+div#article-option div span {
+  padding: 0 0px 0px 20px !important;
+  margin: 0px;
+  color: black !important;
+}
+
+div#article-option div {
+  margin: 0 0 0px 0;
+  display: flex;
+  font-style: normal;
+  height: 25px;
+}
+
+div#article-option div:focus {
+  color: white;
 }

@@ -157,10 +157,18 @@
       </div>
 
       <div id="article-option">
-        <div class="item width-100" tabindex="0" data-function="">share</div>
-        <div class="item width-100" tabindex="1" data-function="">open in browser</div>
-        <div class="item width-100 mastodon" tabindex="2" data-function="reblog">reblog</div>
-
+        <div class="item width-100 flex" tabindex="0" data-function="share">
+          <img src="assets/icons/E253.svg" /><span>share</span>
+        </div>
+        <div class="item width-100 flex" tabindex="1" data-function="open_in_browser">
+          <img src="assets/icons/E24F.svg" /><span>open in browser</span>
+        </div>
+        <div class="item width-100 mastodon-item flex" tabindex="2" data-function="reblog">
+          <img src="assets/icons/reblog.svg" /><span>reblog</span>
+        </div>
+        <div class="item width-100 mastodon-item flex" tabindex="3" data-function="favourite">
+          <img src="assets/icons/2605.svg" /><span>favourite</span>
+        </div>
       </div>
 
       <div id="settings">
@@ -288,7 +296,7 @@
         <script id="template" type="x-tmpl-mustache">
 
           {{#data}}
-              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-mastodon-replies="{{replies_count}}" data-mastodon-reblog="{{reblogs_count}}" data-mastodon-favourites="{{favourites_count}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}"  data-channel="{{channel}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
+              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-type="{{type}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-mastodon-replies="{{replies_count}}" data-mastodon-reblog="{{reblogs_count}}" data-mastodon-favourites="{{favourites_count}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}"  data-channel="{{channel}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
                   <div class="flex grid-col-10 icon-bar">
                       <div class="podcast-icon"><img src="assets/icons/podcast.png"></div>
                       <div class="youtube-icon"><img src="assets/icons/youtube.png"></div>

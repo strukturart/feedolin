@@ -1,4 +1,5 @@
 "use strict";
+import lozad from "lozad";
 
 if (window.NodeList && !NodeList.prototype.forEach) {
   NodeList.prototype.forEach = Array.prototype.forEach;
@@ -442,16 +443,21 @@ export const imageSizeReduce = () => {
     }
   });
 };
+//https://github.com/ApoorvSaxena/lozad.js
 
 export const llazyload = () => {
   document.querySelectorAll("article img").forEach((e) => {
     e.classList.add("lozad");
     if (e.hasAttribute("data-src")) {
+      console.log("no data src");
     } else {
       e.setAttribute("data-src", e.src);
-      e.src = "/assets/image/failback.png";
+      e.src = "assets/image/failback.png";
     }
   });
+
+  const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+  observer.observe();
 };
 
 //filesize
