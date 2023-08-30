@@ -6,7 +6,6 @@ import DOMPurify from "dompurify";
 import {
   side_toaster,
   sort_array,
-  imageSizeReduce,
   llazyload,
   screenlock,
 } from "./assets/js/helper.js";
@@ -46,8 +45,10 @@ import {
 
 import { v4 as uuidv4 } from "uuid";
 
-const dayjs = require("dayjs");
-var duration = require("dayjs/plugin/duration");
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+
+// Extend dayjs with the duration plugin
 dayjs.extend(duration);
 
 const debug = false;
@@ -57,7 +58,7 @@ let content_arr = [];
 //store all used article ids
 var all_cid = [];
 let feed_download_list_count = 0;
-let panels = ["channels", "recently-played"];
+let panels = ["channels"];
 let current_panel = 0;
 const parser = new DOMParser();
 
@@ -1450,6 +1451,10 @@ function nav_panels(left_right) {
     });
   }, 1000);
 
+  if (recently_played.length > 0) {
+    if (panels.indexOf("recently-played") == -1) panels.push("recently-played");
+  }
+
   //recently played
   if (panels[current_panel] == "recently-played") {
     //to do
@@ -1622,8 +1627,6 @@ let show_article = function () {
       document.activeElement.getAttribute("data-id");
   } catch (e) {}
 
-  console.log(document.activeElement.getAttribute("data-type"));
-
   status.window_status = "single-article";
 
   let elem = document.querySelectorAll("article");
@@ -1703,21 +1706,14 @@ let show_article = function () {
   document.getElementById("top-bar").style.display = "none";
 };
 
-export let toTime = function (seconds) {
-  let n = "";
-  if (seconds == "") {
-    n = "";
-  } else {
-    try {
-      var date = new Date();
-      date.setSeconds(seconds);
-      n = date.toISOString().substr(11, 8);
-    } catch (error) {
-      n = seconds;
-    }
-  }
+export let toTime = (seconds) => {
+  if (seconds === "") return "";
 
-  return n;
+  try {
+    return dayjs().startOf("day").add(seconds, "second").format("HH:mm:ss");
+  } catch (error) {
+    return seconds;
+  }
 };
 
 let youtube_seeking = function (param) {
@@ -1851,23 +1847,28 @@ let open_url = () => {
     let t;
 
     function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.PLAYING) {
-        youtube_status = "playing";
-        bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+      console.log("status: " + event.data);
+      if (event.data == 1) {
         tt();
-        // screenlock("lock");
+        bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+
+        youtube_status = "playing";
       }
 
-      if (event.data == YT.PlayerState.PAUSED) {
+      if (event.data == 2) {
         youtube_status = "paused";
         clearInterval(youtube_time);
-        // screenlock("unlock");
+
+        screenlock("unlock");
       }
     }
 
     function onPlayerReady(event) {
       event.target.playVideo();
       document.querySelector(".loading-spinner").style.display = "none";
+      bottom_bar("<img src='assets/icons/23EF.svg'>", toTime(t), "");
+
+      screenlock("lock");
     }
 
     return;
@@ -2064,7 +2065,7 @@ const show_article_option = () => {
     });
   } else {
     document.querySelectorAll(".mastodon-item").forEach((e) => {
-      e.style.display = "flex";
+      e.style.display = "none";
     });
   }
 };
@@ -2324,24 +2325,17 @@ let remove_alarm = function () {
   // KaiOs  2.xx
 
   try {
-    let request = navigator.mozAlarms.getAll();
+    var request = navigator.mozAlarms.getAll();
 
     request.onsuccess = function () {
+      // Remove all pending alarms
       this.result.forEach(function (alarm) {
-        let r = navigator.mozAlarms.remove(alarm.id);
-
-        r.onsuccess = function () {
-          console.log("removed");
-        };
-
-        r.onerror = function () {
-          console.log("An error occurred: " + this.error.name);
-        };
+        navigator.mozAlarms.remove(alarm.id);
       });
     };
 
     request.onerror = function () {
-      console.log("An error occurred:", this.error.name);
+      console.log("operation failed: " + this.error);
     };
   } catch (e) {}
 
@@ -2568,12 +2562,6 @@ function shortpress_action(param) {
 
     case "3":
       sleep_mode();
-      break;
-
-    case "4":
-      break;
-
-    case "8":
       break;
 
     case "7":
@@ -2829,6 +2817,14 @@ function shortpress_action(param) {
 
       if (
         status.window_status == "single-article" &&
+        document.activeElement.getAttribute("data-media") == "video"
+      ) {
+        open_url();
+        break;
+      }
+
+      if (
+        status.window_status == "single-article" &&
         document.activeElement.getAttribute("data-media") == "youtube"
       ) {
         open_url();
@@ -2914,10 +2910,6 @@ function shortpress_action(param) {
       break;
 
     case "EndCall":
-      break;
-
-    case "9":
-      sync();
       break;
 
     case "Backspace":
@@ -3027,6 +3019,7 @@ function shortpress_action(param) {
 ////////////////////////////////
 
 function handleKeyDown(evt) {
+  console.log(status.window_status);
   if (evt.key === "Backspace" && status.window_status != "article-list") {
     evt.preventDefault();
   }
