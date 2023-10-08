@@ -11,7 +11,7 @@
     "events": "^3.3.0",
     "parcel": "2.8.3",
     "parcel-plugin-static-files-copy": "^1.2.4",
-    "postcss": "^8.4.6"
+    "postcss": "^8.4.31"
   },
   "dependencies": {
     "@parcel/service-worker": "^2.8.0",
