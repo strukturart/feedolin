@@ -26,10 +26,16 @@ import Parser from "rss-parser";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
+import swiped from "swiped-events";
+
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
 
-const parser = new Parser();
+const parser = new Parser({
+  requestOptions: {
+    rejectUnauthorized: false,
+  },
+});
 
 //github.com/laurentpayot/minidenticons#usage
 export let status = {
@@ -41,6 +47,7 @@ export let status = {
   debug: false,
 };
 const proxy = "https://corsproxy.io/?";
+
 export let settings = {};
 let channels = [];
 let read_articles = [];
@@ -94,7 +101,7 @@ localforage
   .then(function (value) {
     // Do other things once the value has been saved.
     settings = value;
-    fetchOPML(proxy + encodeURIComponent(settings.opml_url));
+    fetchOPML(proxy + settings.opml_url);
   })
   .catch(function (err) {
     // This code runs if there were any errors
@@ -214,19 +221,8 @@ let clean = (i) => {
 const fetchOPML = (url) => {
   return fetch(url, {
     method: "GET",
-    headers: {
-      // the content type header value is usually auto-set
-      // depending on the request body
-      "Content-Type": "text/plain;charset=UTF-8",
-    },
-    body: undefined, // string, FormData, Blob, BufferSource, or URLSearchParams
-    referrer: "about:client", // or "" to send no Referer header,
-    // or an url from the current origin
-    referrerPolicy: "strict-origin-when-cross-origin", // no-referrer-when-downgrade, no-referrer, origin, same-origin...
-    mode: "cors", // same-origin, no-cors
-    credentials: "same-origin", // omit, include
-    cache: "no-cache", // no-store, reload, no-cache, force-cache, or only-if-cached
-    redirect: "follow", // manual, error
+    cache: "no-cache", // prevents caching if you want fresh data
+    redirect: "follow", // follow redirects automatically
   })
     .then((response) => {
       if (!response.ok) {
@@ -238,20 +234,21 @@ const fetchOPML = (url) => {
     })
     .then((data) => {
       // Store the OPML content in local storage
-      localStorage.setItem("opml_content", data);
+      //localStorage.setItem("opml_content", data);
       // Always call load_feeds to process the content
-      load_feeds(); // Process the content (newly fetched data)
+      load_feeds(data); // Process the content (newly fetched data)
     })
     .catch((error) => {
       console.error("Error fetching the OPML file:", error);
+      alert(error);
       // Always call load_feeds even if there's an error to ensure processing with available data
       load_feeds(); // This will handle cases where fetching fails but local data is still available
     });
 };
 
-const load_feeds = async () => {
+const load_feeds = async (data) => {
   // Retrieve the stored OPML content from local storage
-  const data = localStorage.getItem("opml_content");
+  //const data = localStorage.getItem("opml_content");
 
   if (data) {
     // Process the OPML data
@@ -297,8 +294,6 @@ const load_feeds = async () => {
 
     for (let e of feed_download_list) {
       if (e.type == "mastodon") {
-        if (channels.indexOf(e.channel) == -1) channels.push(e.channel);
-
         fetch(e.url, {
           method: "GET",
         })
@@ -308,6 +303,9 @@ const load_feeds = async () => {
           .then((data) => {
             data.forEach((k, i) => {
               if (i > 5) return;
+              if (channels.indexOf(e.channel) == -1 && e.channel != undefined)
+                channels.push(e.channel);
+
               let f = {};
               f.channel = e.channel;
               f.id = k.id;
@@ -340,36 +338,40 @@ const load_feeds = async () => {
                 }
               }
               articles.push(f);
-              articles.sort(
-                (a, b) => new Date(b.isoDate) - new Date(a.isoDate)
-              );
             });
+
+            articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
           })
           .catch(() => {});
       }
 
-      try {
-        // Await the asynchronous operation
-        const a = await parser.parseURL(e.url);
+      if (e.type !== "mastodon") {
+        try {
+          const a = await parser.parseURL(e.url);
 
-        if (a.items) {
-          if (channels.indexOf(e.channel) == -1) channels.push(e.channel);
+          if (a.items) {
+            if (channels.indexOf(e.channel) == -1 && e.channel != undefined)
+              channels.push(e.channel);
 
-          a.items.forEach((f, i) => {
-            if (i > 5) return;
+            a.items.forEach((f, i) => {
+              if (i > 5) return;
 
-            console.log(f);
-            f.channel = e.channel;
-            f.id = stringToHash(f.title + f.pubDate);
-            f.type = e.type;
-            f.url = f.link;
-            articles.push(f);
+              console.log(f);
+              f.channel = e.channel;
+              f.id = stringToHash(f.title + f.pubDate);
+              f.type = e.type;
+              f.url = f.link;
+              f.feed_title = e.title;
+              articles.push(f);
 
-            articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
-          });
+              articles.sort(
+                (a, b) => new Date(b.isoDate) - new Date(a.isoDate)
+              );
+            });
+          }
+        } catch (err) {
+          // console.error(err);
         }
-      } catch (err) {
-        // console.error(err);
       }
     }
   } else {
@@ -474,6 +476,7 @@ var start = {
         class: "",
         id: "start",
         oncreate: () => {
+          console.log(channels);
           bottom_bar(
             "<img src='assets/icons/list.svg'>",
             "<img src='assets/icons/select.svg'>",
@@ -485,6 +488,7 @@ var start = {
             top_bar("<img src='assets/icons/play.svg'>", "", "");
         },
       },
+      m("h2", { id: "channel-title" }, channel_filter),
       articles.map((h, i) => {
         var index = m.route.param("index") ? m.route.param("index") : 0;
 
@@ -543,7 +547,20 @@ var start = {
 
           [
             m("div", { class: "type-indicator" }),
+            m(
+              "h3",
+              {
+                class: "channel",
+                oncreate: () => {
+                  document.querySelector("h2#channel-title").innerText =
+                    channel_filter;
+                },
+              },
+              h.channel
+            ),
+
             m("time", dayjs(h.pubDate).format("DD MMM YYYY")),
+            m("h3", clean(h.feed_title)),
             m("h2", clean(h.title)),
           ]
         );
@@ -618,7 +635,7 @@ var article = {
             },
           },
           [
-            m("date", dayjs(h.pubDate).format("DD MMM YYYY")),
+            m("time", dayjs(h.pubDate).format("DD MMM YYYY")),
             m("h2", h.title),
             m("div", [m.trust(clean(h.content))]),
           ]
@@ -893,6 +910,8 @@ const AudioPlayerView = {
 
     top_bar("", "", "");
     bottom_bar("", "<img src='assets/image/play.svg'>", "");
+
+    if (status.notKaiOS) top_bar("", "", "<img src='assets/image/back.svg'>");
   },
 
   onremove: () => {
@@ -972,18 +991,6 @@ var settingsView = {
         class: "flex justify-content-center page",
         id: "settings_page",
         oncreate: () => {
-          localforage
-            .getItem("settings")
-            .then(function (value) {
-              // Do other things once the value has been saved.
-              settings = value;
-              side_toaster("settings saved", 2000);
-            })
-            .catch(function (err) {
-              // This code runs if there were any errors
-              console.log(err);
-            });
-
           bottom_bar("", "", "");
           top_bar("", "<img src='assets/image/select.svg'>", "");
 
@@ -1010,7 +1017,7 @@ var settingsView = {
             m("input", {
               id: "url-opml",
               placeholder: "",
-              value: settings.opml_url,
+              value: settings.opml_url || "",
               type: "url",
             }),
           ]
@@ -1019,7 +1026,7 @@ var settingsView = {
         m(
           "h2",
           { class: "flex justify-content-spacearound" },
-          "Mstodon Account"
+          "Mastodon Account"
         ),
 
         m(
@@ -1222,6 +1229,39 @@ document.addEventListener("DOMContentLoaded", function (e) {
     handleKeyUp(event);
   });
 
+  document.addEventListener("swiped", function (e) {
+    let r = m.route.get();
+
+    let dir = e.detail.dir;
+    if (dir == "right") {
+      if (r.startsWith("/start")) {
+        counter--;
+        if (counter < 1) counter = channels.length;
+
+        channel_filter = channels[counter];
+        m.redraw();
+        // Update the route with the new parameter, preserving the rest
+        const currentParams = m.route.param(); // Get the current parameters
+        currentParams.index = 0; // Modify the `index` parameter
+
+        m.route.set("/start", currentParams); // Update the route with the new parameters
+      }
+    }
+    if (dir == "left") {
+      if (r.startsWith("/start")) {
+        counter++;
+        if (counter > channels.length) counter = 0;
+
+        channel_filter = channels[counter];
+        m.redraw();
+        const currentParams = m.route.param(); // Get the current parameters
+        currentParams.index = 0; // Modify the `index` parameter
+
+        m.route.set("/start", currentParams); // Update the route with the new parameters
+      }
+    }
+  });
+
   // ////////////////////////////
   // //KEYPAD HANDLER////////////
   // ////////////////////////////
@@ -1263,12 +1303,10 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "ArrowRight":
         if (r.startsWith("/start")) {
           counter++;
-          if (counter > channels.length) counter = 0;
-          console.log(channels[counter]);
-
-          // Update or set the 'channel' parameter
+          if (counter > channels.length - 1) counter = 0;
 
           channel_filter = channels[counter];
+          console.log(channel_filter);
           m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
@@ -1280,12 +1318,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "ArrowLeft":
         if (r.startsWith("/start")) {
           counter--;
-          if (counter < 1) counter = channels.length;
-          console.log(channels[counter]);
-
-          // Update or set the 'channel' parameter
+          if (counter < 1) counter = channels.length - 1;
 
           channel_filter = channels[counter];
+          console.log(channel_filter);
+
           m.redraw();
           // Update the route with the new parameter, preserving the rest
           const currentParams = m.route.param(); // Get the current parameters

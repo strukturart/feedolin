@@ -57,7 +57,7 @@ body {
   position: relative;
   margin: 0px;
   padding: 0px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.4rem;
   max-height: 100%;
   max-width: 100%;
@@ -93,10 +93,15 @@ h1 {
 h2 {
   font-size: 1.1rem;
   width: 100%;
+  margin: 0 0 10px 0;
 }
 
 h3 {
   font-size: 1rem;
+}
+
+time {
+  font-size: 0.8rem;
 }
 
 label {
@@ -320,6 +325,10 @@ article {
 
 #article article:focus {
   background: white;
+}
+
+#article time {
+  margin: 0 0 10px 0;
 }
 
 @keyframes intro_img {
@@ -650,6 +659,24 @@ video {
 }
 
 @media screen and (min-width: 0px) and (max-width: 640px) {
+  html,
+  body {
+    font-family: "Roboto" !important;
+    font-weight: 400;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    font-size: 1rem;
+    line-height: 1.4rem;
+    max-height: 100%;
+    max-width: 100%;
+    height: 100%;
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+    background: white;
+  }
+
   body {
     font-size: 0.9rem;
   }

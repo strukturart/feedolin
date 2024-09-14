@@ -48,6 +48,7 @@
     "rss-parser": "^3.13.0",
     "rss-to-json": "^2.1.1",
     "sanitize-html": "^2.13.0",
+    "swiped-events": "^1.2.0",
     "url-search-params-polyfill": "^8.1.1",
     "uuid": "^9.0.0"
   }
