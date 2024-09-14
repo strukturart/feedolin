@@ -6,47 +6,51 @@ import {
   load_ads,
   top_bar,
   getManifest,
-  setTabindex,
-  downloadFile,
+  validate_url,
 } from "./assets/js/helper.js";
 import { stop_scan, start_scan } from "./assets/js/scan.js";
 import localforage from "localforage";
-import {
-  geolocation,
-  pushLocalNotification,
-  detectMobileOS,
-} from "./assets/js/helper.js";
+import { detectMobileOS } from "./assets/js/helper.js";
 import m from "mithril";
 import qrious from "qrious";
 import { v4 as uuidv4 } from "uuid";
 import * as sanitizeHtml from "sanitize-html";
-
-import Parser from "rss-parser";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import swiped from "swiped-events";
 
+import { extractFromXml } from "@extractus/feed-extractor";
+import { extract } from "@extractus/feed-extractor";
+import fxparser from "fast-xml-parser";
+
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
 
-const parser = new Parser({
-  requestOptions: {
-    rejectUnauthorized: false,
-  },
+const parser = new fxparser.XMLParser({
+  ignoreAttributes: false,
+  parseAttributeValue: true,
 });
 
 //github.com/laurentpayot/minidenticons#usage
 export let status = {
   visibility: true,
-  action: "",
   deviceOnline: true,
   notKaiOS: window.innerWidth > 300 ? true : false,
   os: detectMobileOS(),
   debug: false,
 };
+
+let current_article = "";
 const proxy = "https://corsproxy.io/?";
+
+let default_settings = {
+  "opml_url":
+    "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
+  "opml_local": "",
+  "proxy_url": "https://corsproxy.io/?",
+};
 
 export let settings = {};
 let channels = [];
@@ -65,8 +69,6 @@ localforage
         );
       });
     } else {
-      // Item exists, store it in the global variable
-
       read_articles = value;
       console.log("Array loaded from localForage:", read_articles);
     }
@@ -96,31 +98,9 @@ function add_read_article(id) {
     });
 }
 
-localforage
-  .getItem("settings")
-  .then(function (value) {
-    // Do other things once the value has been saved.
-    settings = value;
-    fetchOPML(proxy + settings.opml_url);
-  })
-  .catch(function (err) {
-    // This code runs if there were any errors
-    console.log(err);
-
-    settings = {
-      "opml_url":
-        "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
-      "opml_local":
-        "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
-    };
-
-    fetchOPML(proxy + encodeURIComponent(settings.opml_url));
-  });
-
 let xml_parser = new DOMParser();
 
 let feed_download_list = [];
-let current_article;
 
 if ("b2g" in navigator || "navigator.mozApps" in navigator)
   status.notKaiOS = false;
@@ -163,7 +143,7 @@ let app_launcher = () => {
   setTimeout(() => {
     try {
       const activity = new MozActivity({
-        name: "flop",
+        name: "feedolin",
         data: window.location.href,
       });
       activity.onsuccess = function () {
@@ -177,7 +157,7 @@ let app_launcher = () => {
     } catch (e) {}
     if ("b2g" in navigator) {
       try {
-        let activity = new WebActivity("flop", {
+        let activity = new WebActivity("feedolin", {
           name: "flop",
           type: "url",
           data: window.location.href,
@@ -205,6 +185,27 @@ function stringToHash(str) {
   }
   return hash.toString(36); // Convert to base-36 for a shorter result
 }
+//media check
+
+let check_media = (h) => {
+  const hasAudio =
+    h.enclosure &&
+    h.enclosure["@_type"] &&
+    h.enclosure["@_type"].includes("audio");
+
+  const hasVideo =
+    h.enclosure &&
+    h.enclosure["@_type"] &&
+    h.enclosure["@_type"].includes("video");
+
+  if (hasAudio) {
+    return "audio";
+  } else if (hasVideo) {
+    return "video";
+  } else {
+    return "text";
+  }
+};
 
 //clean input
 
@@ -233,151 +234,205 @@ const fetchOPML = (url) => {
       return response.text();
     })
     .then((data) => {
-      // Store the OPML content in local storage
-      //localStorage.setItem("opml_content", data);
-      // Always call load_feeds to process the content
       load_feeds(data); // Process the content (newly fetched data)
     })
     .catch((error) => {
       console.error("Error fetching the OPML file:", error);
-      alert(error);
+      m.route.set("/start/?index=0");
       // Always call load_feeds even if there's an error to ensure processing with available data
-      load_feeds(); // This will handle cases where fetching fails but local data is still available
     });
 };
 
 const load_feeds = async (data) => {
-  // Retrieve the stored OPML content from local storage
-  //const data = localStorage.getItem("opml_content");
-
   if (data) {
-    // Process the OPML data
-    const xmlDoc = xml_parser.parseFromString(data, "text/xml");
-    const content = xmlDoc.querySelector("body");
+    // Generate download list from OPML data
+    const downloadList = generateDownloadList(data); // Capture the returned list
+    if (downloadList.length > 0) {
+      // Assign to global variable if needed
+      feed_download_list = downloadList;
 
-    if (!content) {
-      console.error("No 'body' element found in the OPML data.");
-      return;
-    }
-
-    let index = 0;
-    const outlines = content.querySelectorAll("outline");
-
-    // Create a Set for faster URL lookups
-    const existingUrls = new Set(feed_download_list.map((feed) => feed.url));
-
-    outlines.forEach((outline) => {
-      const nestedOutlines = outline.querySelectorAll("outline");
-
-      nestedOutlines.forEach((nested) => {
-        const url = nested.getAttribute("xmlUrl");
-        if (!url) return; // Skip if no url attribute
-
-        // If URL is already in the feed_download_list, skip it
-        if (existingUrls.has(url)) {
-          source_url_cleaner.push(url); // Ensure source_url_cleaner is defined globally
-        } else {
-          // Add new feed to the list
-          feed_download_list.push({
-            error: "",
-            title: nested.getAttribute("title") || "Untitled",
-            url: url,
-            amount: 5,
-            index: index++,
-            channel: outline.getAttribute("text") || "Unknown",
-            type: nested.getAttribute("type") || "rss",
+      // Fetch content for the feeds
+      try {
+        await fetchContent(feed_download_list);
+        m.route.set("/start/?index=0");
+        //cache data
+        localforage
+          .setItem("articles", articles)
+          .then(() => {})
+          .catch((err) => {
+            console.error("Feeds cached", err);
           });
-          existingUrls.add(url); // Add new URL to Set
-        }
-      });
-    });
-
-    for (let e of feed_download_list) {
-      if (e.type == "mastodon") {
-        fetch(e.url, {
-          method: "GET",
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            data.forEach((k, i) => {
-              if (i > 5) return;
-              if (channels.indexOf(e.channel) == -1 && e.channel != undefined)
-                channels.push(e.channel);
-
-              let f = {};
-              f.channel = e.channel;
-              f.id = k.id;
-              f.type = "mastodon";
-              f.pubDate = k.created_at;
-              f.isoDate = k.created_at;
-              f.title = k.account.display_name;
-              f.content = k.content;
-              f.url = k.uri;
-
-              if (k.media_attachments.length > 0) {
-                if (k.media_attachments[0].type == "image") {
-                  media_url = k.media_attachments[0].preview_url;
-                  f.content +=
-                    "<br><img src='" +
-                    k.media_attachments[0].preview_url +
-                    "'>";
-                }
-
-                if (k.media_attachments[0].type == "video") {
-                  let media_url = k.media_attachments[0].url;
-                  let item_type = "video";
-                  f.enclosure = { type: item_type, url: media_url };
-                }
-
-                if (k.media_attachments[0].type == "audio") {
-                  let media_url = k.media_attachments[0].url;
-                  let item_type = "audio";
-                  f.enclosure = { type: item_type, url: media_url };
-                }
-              }
-              articles.push(f);
-            });
-
-            articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
-          })
-          .catch(() => {});
-      }
-
-      if (e.type !== "mastodon") {
-        try {
-          const a = await parser.parseURL(e.url);
-
-          if (a.items) {
-            if (channels.indexOf(e.channel) == -1 && e.channel != undefined)
-              channels.push(e.channel);
-
-            a.items.forEach((f, i) => {
-              if (i > 5) return;
-
-              console.log(f);
-              f.channel = e.channel;
-              f.id = stringToHash(f.title + f.pubDate);
-              f.type = e.type;
-              f.url = f.link;
-              f.feed_title = e.title;
-              articles.push(f);
-
-              articles.sort(
-                (a, b) => new Date(b.isoDate) - new Date(a.isoDate)
-              );
-            });
-          }
-        } catch (err) {
-          // console.error(err);
-        }
-      }
+      } catch (error) {}
+    } else {
+      console.warn("Generated download list is empty.");
     }
   } else {
-    console.error("No OPML content found in localStorage.");
+    console.error("No OPML content found.");
   }
 };
+
+const generateDownloadList = (data) => {
+  // Parse the OPML data
+  const xmlDoc = xml_parser.parseFromString(data, "text/xml");
+  const content = xmlDoc.querySelector("body");
+
+  if (!content) {
+    console.error("No 'body' element found in the OPML data.");
+    return [];
+  }
+
+  let index = 0;
+  const outlines = content.querySelectorAll("outline");
+  const downloadList = [];
+
+  outlines.forEach((outline) => {
+    const nestedOutlines = outline.querySelectorAll("outline");
+
+    nestedOutlines.forEach((nested) => {
+      const url = nested.getAttribute("xmlUrl");
+      if (!url) return; // Skip if no url attribute
+
+      // Add feed to the download list
+      downloadList.push({
+        error: "",
+        title: nested.getAttribute("title") || "Untitled",
+        url: url,
+        amount: 5,
+        index: index++,
+        channel: outline.getAttribute("text") || "Unknown",
+        type: nested.getAttribute("type") || "rss",
+      });
+    });
+  });
+
+  return downloadList; // Return the generated list
+};
+
+const fetchContent = async (feed_download_list) => {
+  for (let e of feed_download_list) {
+    if (e.type === "mastodon") {
+      try {
+        const response = await fetch(e.url);
+        const data = await response.json();
+
+        data.forEach((k, i) => {
+          if (i > 5) return;
+
+          let f = {
+            channel: e.channel,
+            id: k.id,
+            type: "mastodon",
+            pubDate: k.created_at,
+            isoDate: k.created_at,
+            title: k.account.display_name,
+            content: k.content,
+            url: k.uri,
+          };
+
+          if (k.media_attachments.length > 0) {
+            if (k.media_attachments[0].type === "image") {
+              f.content += `<br><img src='${k.media_attachments[0].preview_url}'>`;
+            } else if (k.media_attachments[0].type === "video") {
+              f.enclosure = {
+                "@_type": "video",
+                url: k.media_attachments[0].url,
+              };
+            } else if (k.media_attachments[0].type === "audio") {
+              f.enclosure = {
+                "@_type": "audio",
+                url: k.media_attachments[0].url,
+              };
+            }
+          }
+
+          articles.push(f);
+        });
+      } catch (error) {
+        e.error = error;
+      }
+    } else {
+      let xhr = new XMLHttpRequest();
+
+      xhr.open("GET", proxy + e.url, true);
+
+      if (!status.notKaiOS) xhr.setRequestHeader("MozSystem", true);
+
+      xhr.send();
+
+      xhr.onload = function () {
+        if (xhr.status != 200) {
+          e.error = xhr.status;
+          return;
+        }
+
+        let data = xhr.response;
+        if (!data) e.error = xhr.status;
+
+        let jObj = parser.parse(data);
+
+        jObj.rss.channel.item.map((f, i) => {
+          if (i < 15) {
+            try {
+              f.channel = e.channel;
+              f.id = stringToHash(f.title + f.pubDate);
+              f.type = check_media(f);
+              f.url = f.link;
+              f.feed_title = e.title;
+              f.isoDate = dayjs(f.pubDate).toISOString();
+
+              f.content = f.content || f.description;
+              if (f["itunes:image"])
+                f.cover = f["itunes:image"]["@_href"] || "";
+
+              articles.push(f);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        });
+      };
+
+      xhr.onprogress = function (event) {};
+
+      xhr.onerror = function () {};
+    }
+  }
+};
+
+localforage
+  .getItem("settings")
+  .then(function (value) {
+    // Do other things once the value has been saved.
+    settings = value;
+    if (navigator.onLine) {
+      fetchOPML(proxy + settings.opml_url);
+    } else {
+      localforage
+        .getItem("articles")
+        .then((value) => {
+          articles = value;
+          m.route.set("/start/");
+          side_toaster("Cached feeds", 15000);
+        })
+        .catch((err) => {});
+    }
+  })
+  .catch(function (err) {
+    // This code runs if there were any errors
+    side_toaster("The default settings was loaded", 3000);
+    settings = default_settings;
+    fetchOPML(proxy + settings.opml_url);
+
+    localforage
+      .setItem("settings", settings)
+      .then(function (value) {
+        // Do other things once the value has been saved.
+      })
+      .catch(function (err) {
+        // This code runs if there were any errors
+        console.log(err);
+      });
+  });
 
 //callback qr-code scan
 let scan_callback = function (n) {
@@ -386,7 +441,7 @@ let scan_callback = function (n) {
 
 var root = document.getElementById("app");
 
-var about = {
+var options = {
   view: function () {
     return m(
       "div",
@@ -416,7 +471,7 @@ var about = {
               dom.focus();
             },
             onclick: () => {
-              m.route.set("/about_page");
+              m.route.set("/about");
             },
           },
           "About"
@@ -428,7 +483,7 @@ var about = {
 
             class: "item",
             onclick: () => {
-              m.route.set("/settings_page");
+              m.route.set("/settingsView");
             },
           },
           "Settings"
@@ -459,84 +514,79 @@ var about = {
   },
 };
 
-var options = {
-  view: function () {
-    return m("div");
-  },
-};
-
 let counter = 0;
 let channel_filter = "";
 
 var start = {
+  oninit: function () {
+    const entries = window.performance.getEntriesByType("navigation");
+
+    articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
+    if (entries.length && entries[0].type === "reload") {
+      m.route.set("/start"); // Redirect to intro page
+    }
+
+    // Calculate index once and store it
+    this.index = m.route.param("index") || 0;
+
+    feed_download_list.forEach((e) => {
+      if (e.error == "") {
+        if (channels.indexOf(e.channel) === -1 && e.channel) {
+          channels.push(e.channel);
+        }
+      }
+    });
+  },
+
   view: function () {
     return m(
       "div",
       {
-        class: "",
         id: "start",
         oncreate: () => {
-          console.log(channels);
           bottom_bar(
             "<img src='assets/icons/list.svg'>",
             "<img src='assets/icons/select.svg'>",
             "<img src='assets/icons/option.svg'>"
           );
+
+          if (settings.opml_url == "")
+            side_toaster(
+              "The feed could not be loaded because no OPML was defined in the settings.",
+              6000
+            );
           if (status.notKaiOS) top_bar("", "", "");
 
           if (status.notKaiOS && status.player)
             top_bar("<img src='assets/icons/play.svg'>", "", "");
         },
       },
-      m("h2", { id: "channel-title" }, channel_filter),
+      m("h2", { class: "channel", oncreate: () => {} }, channel_filter),
+
       articles.map((h, i) => {
-        var index = m.route.param("index") ? m.route.param("index") : 0;
+        if (channel_filter !== "" && channel_filter !== h.channel) return;
+        const index = this.index;
 
-        if (
-          channel_filter != "" &&
-          channel_filter != undefined &&
-          channel_filter != h.channel
-        )
-          return false;
+        const readClass = read_articles.includes(h.id) ? "read" : "";
 
-        let type = "text";
-        if (
-          h.enclosure &&
-          h.enclosure.type &&
-          h.enclosure.type.startsWith("audio")
-        )
-          type = "audio";
-
-        if (
-          h.enclosure &&
-          h.enclosure.type &&
-          h.enclosure.type.startsWith("video")
-        )
-          type = "video";
-
-        // Limit to the first 6 articles
         return m(
           "article",
           {
-            class: "item " + type,
+            class: `item  ${readClass}`,
             "data-id": h.id,
             "data-type": h.type,
             oncreate: (vnode) => {
               if (i == index) vnode.dom.focus();
 
-              if (read_articles.indexOf(h.id) > -1) {
-                vnode.dom.classList.add("read");
-              }
-
-              document.querySelectorAll("article.item").forEach((f, k) => {
-                f.tabIndex = k;
+              document.querySelectorAll(".item").forEach((e, k) => {
+                e.setAttribute("tabindex", k);
               });
             },
             onclick: () => {
               m.route.set("/article/?index=" + i);
               add_read_article(h.id);
             },
-
             onkeydown: (e) => {
               if (e.key === "Enter") {
                 m.route.set("/article/?index=" + i);
@@ -544,24 +594,11 @@ var start = {
               }
             },
           },
-
           [
-            m("div", { class: "type-indicator" }),
-            m(
-              "h3",
-              {
-                class: "channel",
-                oncreate: () => {
-                  document.querySelector("h2#channel-title").innerText =
-                    channel_filter;
-                },
-              },
-              h.channel
-            ),
-
+            m("span", { class: "type-indicator" }, h.type),
             m("time", dayjs(h.pubDate).format("DD MMM YYYY")),
-            m("h3", clean(h.feed_title)),
-            m("h2", clean(h.title)),
+            m("h2", clean(h.feed_title)),
+            m("h3", clean(h.title)),
           ]
         );
       })
@@ -585,28 +622,19 @@ var article = {
         var index = m.route.param("index");
         if (index != i) return;
 
-        console.log(h);
         current_article = h;
         // Check if the article has an audio enclosure
-        const hasAudio =
-          h.enclosure &&
-          h.enclosure.type &&
-          h.enclosure.type.startsWith("audio");
-
-        const hasVideo =
-          h.enclosure &&
-          h.enclosure.type &&
-          h.enclosure.type.startsWith("video");
 
         return m(
           "article",
           {
             class: "item",
             tabindex: 0, // Make the article focusable
+
             oncreate: (vnode) => {
               vnode.dom.focus();
 
-              if (hasAudio) {
+              if (h.type == "audio") {
                 h.type = "audio";
                 bottom_bar(
                   "<img src='assets/icons/link.svg'>",
@@ -615,7 +643,7 @@ var article = {
                 );
               }
 
-              if (hasVideo) {
+              if (h.type == "video") {
                 h.type = "video";
                 bottom_bar(
                   "<img src='assets/icons/link.svg'>",
@@ -637,7 +665,7 @@ var article = {
           [
             m("time", dayjs(h.pubDate).format("DD MMM YYYY")),
             m("h2", h.title),
-            m("div", [m.trust(clean(h.content))]),
+            m("div", { class: "text" }, [m.trust(clean(h.content))]),
           ]
         );
       })
@@ -650,24 +678,29 @@ var index = {
     return m(
       "div",
       {
-        class: "",
+        class: "flex",
         id: "index",
         oncreate: () => {
           if (status.notKaiOS)
             top_bar("", "", "<img src='assets/image/back.svg'>");
+          bottom_bar("", "", "");
         },
       },
       feed_download_list.map((h, i) => {
         return m(
           "article",
           {
-            class: "item flex",
+            class: "item flex width-100",
             tabindex: i,
             oncreate: (vnode) => {
               if (i == 0) vnode.dom.focus();
             },
           },
-          [m("h2", h.channel), m("h2", h.title), m("div", h.amount)]
+          [
+            m("span", h.channel),
+            m("span", h.title),
+            h.error ? m("span", "error") : null,
+          ]
         );
       })
     );
@@ -689,11 +722,7 @@ var intro = {
         id: "intro",
         onremove: () => {
           localStorage.setItem("version", status.version);
-        },
-        oninit: function () {
-          setTimeout(function () {
-            m.route.set("/start/?index=0");
-          }, 5000);
+          document.querySelector(".loading-spinner").style.display = "none";
         },
       },
       [
@@ -701,6 +730,7 @@ var intro = {
           src: "./assets/icons/intro.svg",
 
           oncreate: () => {
+            document.querySelector(".loading-spinner").style.display = "block";
             let get_manifest_callback = (e) => {
               try {
                 status.version = e.manifest.version;
@@ -755,7 +785,6 @@ const VideoPlayerView = {
 
   oncreate: ({ attrs }) => {
     if (status.notKaiOS) top_bar("", "", "<img src='assets/image/back.svg'>");
-    status.player = true;
     // Mount the video element to the DOM when the component is created
     VideoPlayerView.videoElement = document.createElement("video");
     const videoContainer = document.getElementById("video-container");
@@ -834,24 +863,6 @@ const VideoPlayerView = {
     return m("div", { class: "video-player" }, [
       m("div", { id: "video-container", class: "video-container" }), // Video element will be mounted here
 
-      m("div", { class: "controls" }, [
-        m(
-          "button",
-          { onclick: VideoPlayerView.togglePlayPause },
-          VideoPlayerView.isPlaying ? "Pause" : "Play"
-        ),
-        m(
-          "button",
-          { onclick: () => VideoPlayerView.seek("left") },
-          "Seek Backward"
-        ),
-        m(
-          "button",
-          { onclick: () => VideoPlayerView.seek("right") },
-          "Seek Forward"
-        ),
-      ]),
-
       m("div", { class: "video-info" }, [
         ` ${formatTime(VideoPlayerView.currentTime)} / ${formatTime(
           VideoPlayerView.videoDuration
@@ -872,6 +883,18 @@ const VideoPlayerView = {
 // Define the audio element globally
 const globalAudioElement = document.createElement("audio");
 globalAudioElement.preload = "auto"; // Load audio automatically
+globalAudioElement.mozaudiochannel = "content";
+
+if ("b2g" in navigator) {
+  try {
+    navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
+    AudioChannelClient("content");
+    HTMLMediaElement.mozAudioChannelType = "content";
+    AudioContext.mozAudioChannelType = "content";
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 const AudioPlayerView = {
   audioDuration: 0, // Store audio duration
@@ -912,6 +935,12 @@ const AudioPlayerView = {
     bottom_bar("", "<img src='assets/image/play.svg'>", "");
 
     if (status.notKaiOS) top_bar("", "", "<img src='assets/image/back.svg'>");
+
+    document
+      .querySelector("div.button-center")
+      .addEventListener("click", function (event) {
+        AudioPlayerView.togglePlayPause();
+      });
   },
 
   onremove: () => {
@@ -966,6 +995,13 @@ const AudioPlayerView = {
         class: "audio-container",
       }),
 
+      m("div", {
+        class: "cover-container",
+        style: {
+          "background-color": "rgb(121, 71, 255)",
+          "background-image": `url(${current_article.cover})`,
+        },
+      }),
       m("div", { class: "audio-info" }, [
         `${formatTime(AudioPlayerView.currentTime)} / ${formatTime(
           AudioPlayerView.audioDuration
@@ -983,6 +1019,18 @@ const AudioPlayerView = {
   },
 };
 
+var about = {
+  view: function () {
+    return m("div", {});
+  },
+};
+
+var privacy_policy = {
+  view: function () {
+    return m("div", {});
+  },
+};
+
 var settingsView = {
   view: function () {
     return m(
@@ -991,8 +1039,7 @@ var settingsView = {
         class: "flex justify-content-center page",
         id: "settings_page",
         oncreate: () => {
-          bottom_bar("", "", "");
-          top_bar("", "<img src='assets/image/select.svg'>", "");
+          bottom_bar("", "<img src='assets/image/select.svg'>", "");
 
           if (status.notKaiOS)
             top_bar("", "", "<img src='assets/image/back.svg'>");
@@ -1002,7 +1049,7 @@ var settingsView = {
         m(
           "div",
           {
-            tabindex: 1,
+            tabindex: 0,
 
             class: "item input-parent  flex justify-content-spacearound",
           },
@@ -1024,6 +1071,30 @@ var settingsView = {
         ),
 
         m(
+          "div",
+          {
+            tabindex: 1,
+
+            class: "item input-parent  flex justify-content-spacearound",
+          },
+          [
+            m(
+              "label",
+              {
+                for: "url-proxy",
+              },
+              "PROXY"
+            ),
+            m("input", {
+              id: "url-proxy",
+              placeholder: "",
+              value: settings.proxy_url || "",
+              type: "url",
+            }),
+          ]
+        ),
+
+        m(
           "h2",
           { class: "flex justify-content-spacearound" },
           "Mastodon Account"
@@ -1032,7 +1103,7 @@ var settingsView = {
         m(
           "div",
           {
-            tabindex: 4,
+            tabindex: 2,
 
             class: "item input-parent  flex justify-content-spacearound",
           },
@@ -1055,12 +1126,15 @@ var settingsView = {
         m(
           "button",
           {
-            tabindex: 8,
+            tabindex: 3,
 
             class: "item",
             "data-function": "save-settings",
             onclick: function () {
+              if (!validate_url(document.getElementById("url-opml").value))
+                side_toaster("URL not valid");
               settings.opml_url = document.getElementById("url-opml").value;
+              settings.proxy_url = document.getElementById("url-proxy").value;
 
               localforage
                 .setItem("settings", settings)
@@ -1088,6 +1162,7 @@ m.route(root, "/intro", {
   "/options": options,
   "/scan": scan,
   "/about": about,
+  "/privacy_police": privacy_policy,
   "/article": article,
   "/index": index,
   "/AudioPlayerView": AudioPlayerView,
@@ -1236,7 +1311,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     if (dir == "right") {
       if (r.startsWith("/start")) {
         counter--;
-        if (counter < 1) counter = channels.length;
+        if (counter < 1) counter = channels.length - 1;
 
         channel_filter = channels[counter];
         m.redraw();
@@ -1250,7 +1325,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     if (dir == "left") {
       if (r.startsWith("/start")) {
         counter++;
-        if (counter > channels.length) counter = 0;
+        if (counter > channels.length - 1) counter = 0;
 
         channel_filter = channels[counter];
         m.redraw();
@@ -1306,29 +1381,35 @@ document.addEventListener("DOMContentLoaded", function (e) {
           if (counter > channels.length - 1) counter = 0;
 
           channel_filter = channels[counter];
-          console.log(channel_filter);
           m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
-
           m.route.set("/start", currentParams); // Update the route with the new parameters
+
+          setTimeout(() => {
+            document.querySelectorAll("article.item")[0].focus();
+            scrollToCenter();
+          }, 500);
         }
         break;
 
       case "ArrowLeft":
         if (r.startsWith("/start")) {
           counter--;
-          if (counter < 1) counter = channels.length - 1;
+          if (counter < 1) counter = channels.length;
 
           channel_filter = channels[counter];
-          console.log(channel_filter);
 
           m.redraw();
           // Update the route with the new parameter, preserving the rest
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
-
           m.route.set("/start", currentParams); // Update the route with the new parameters
+          setTimeout(() => {
+            document.querySelectorAll("article.item")[0].focus();
+
+            scrollToCenter();
+          }, 500);
         }
         break;
       case "ArrowUp":
@@ -1358,18 +1439,21 @@ document.addEventListener("DOMContentLoaded", function (e) {
         break;
 
       case "Enter":
+        if (document.activeElement.classList.contains("input-parent")) {
+          document.activeElement.children[0].focus();
+        }
         if (r.startsWith("/article")) {
           if (current_article.type == "audio")
             m.route.set(
               `/AudioPlayerView?url=${encodeURIComponent(
-                current_article.enclosure.url
+                current_article.enclosure["@_url"]
               )}`
             );
 
           if (current_article.type == "video")
             m.route.set(
-              `/videoPlayerView?url=${encodeURIComponent(
-                current_article.enclosure.url
+              `/VideoPlayerView?url=${encodeURIComponent(
+                current_article.enclosure["@_url"]
               )}`
             );
         }
@@ -1408,15 +1492,12 @@ document.addEventListener("DOMContentLoaded", function (e) {
   // //////////////////////////////
 
   function handleKeyDown(evt) {
-    let route = m.route.get();
+    if (evt.key == "Backspace" && document.activeElement.tagName != "INPUT")
+      evt.preventDefault();
 
     if (evt.key === "EndCall") {
       evt.preventDefault();
-      if (status.action == "") {
-        closeAllConnections();
-        peer.destroy();
-        window.close();
-      }
+      window.close();
     }
     if (!evt.repeat) {
       longpress = false;
@@ -1434,8 +1515,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
   }
 
   function handleKeyUp(evt) {
-    if (status.audio_recording === true) {
-    }
+    if (evt.key == "Backspace") evt.preventDefault();
 
     if (status.visibility === false) return false;
 

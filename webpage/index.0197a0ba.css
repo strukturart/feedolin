@@ -23,6 +23,7 @@
   border: 0;
   margin: 0;
   padding: 0;
+  font-family: Roboto !important;
 }
 
 ::-webkit-scrollbar {
@@ -49,7 +50,7 @@ html, body {
   max-height: 100%;
   margin: 0;
   padding: 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 400;
   line-height: 1.4rem;
   position: relative;
@@ -76,12 +77,11 @@ html, body {
 }
 
 h1 {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 h2 {
   width: 100%;
-  margin: 0 0 10px;
   font-size: 1.1rem;
 }
 
@@ -181,8 +181,8 @@ textarea {
 
 input {
   border: 2px solid silver;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
   width: 95%;
   height: 30px;
   margin: 0 0 0 10px;
@@ -216,11 +216,6 @@ div#intro {
   background: #000;
   min-width: 100vw;
   height: 100%;
-  animation-name: intro;
-  animation-duration: 1s;
-  animation-iteration-count: 1;
-  animation-delay: 8s;
-  animation-fill-mode: forwards;
   position: fixed;
   top: 0;
   left: 0;
@@ -230,11 +225,6 @@ div#intro img {
   width: 120px;
   height: auto;
   margin-left: -60px;
-  animation-name: intro_img;
-  animation-duration: 4s;
-  animation-iteration-count: 1;
-  animation-delay: 0s;
-  animation-fill-mode: forwards;
   position: absolute;
   top: 50px;
   left: 50%;
@@ -272,7 +262,7 @@ article {
 }
 
 #start article {
-  margin: 0 0 10px;
+  margin: 30px 0 10px;
   position: relative;
 }
 
@@ -280,28 +270,37 @@ article {
   opacity: .6;
 }
 
-#start article.text .type-indicator {
-  background: #00f;
-  width: 20px;
-  height: 10px;
+#start article .type-indicator {
+  border: 2px solid #000;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  width: auto;
+  padding: 3px;
+  font-size: .7rem;
+  line-height: .4rem;
   position: absolute;
+  right: 5px;
+}
+
+#start .channel {
+  z-index: 200;
+  background: #fff;
+  border: 2px solid #000;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  width: fit-content;
+  margin: auto;
+  padding: 8px;
+  font-size: 1rem;
+  line-height: .7rem;
+  position: fixed;
+  top: 10px;
+  left: 0;
   right: 0;
 }
 
-#start article.audio .type-indicator {
-  background: #82cc2d;
-  width: 20px;
-  height: 10px;
-  position: absolute;
-  right: 0;
-}
-
-#start article.video .type-indicator {
-  background: #db0dd1;
-  width: 20px;
-  height: 10px;
-  position: absolute;
-  right: 0;
+#start .channel:empty {
+  display: none;
 }
 
 #article article:focus {
@@ -312,60 +311,8 @@ article {
   margin: 0 0 10px;
 }
 
-@keyframes intro_img {
-  0% {
-    filter: hue-rotate(-.25turn);
-  }
-
-  20% {
-    filter: hue-rotate(-2.25turn);
-  }
-
-  40% {
-    filter: hue-rotate(-.65turn);
-  }
-
-  60% {
-    filter: hue-rotate(-.35turn);
-  }
-
-  100% {
-    filter: hue-rotate(-1.65turn);
-  }
-}
-
-@keyframes intro {
-  from {
-    opacity: 100;
-    display: block;
-  }
-
-  to {
-    opacity: 0;
-    display: none;
-  }
-}
-
-@keyframes up-and-down {
-  10% {
-    height: 30%;
-  }
-
-  30% {
-    height: 100%;
-  }
-
-  60% {
-    height: 50%;
-  }
-
-  80% {
-    height: 75%;
-  }
-
-  100% {
-    height: 60%;
-  }
+#article {
+  padding: 20px;
 }
 
 #KaiOSAd {
@@ -379,6 +326,10 @@ article {
 
 #KaiOSAds-Wrapper iframe {
   width: 240px;
+}
+
+.text {
+  word-break: break-all;
 }
 
 div#toast {
@@ -423,6 +374,30 @@ div.nickname {
   font-weight: bold;
 }
 
+.audio-player {
+  min-width: 100vw;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.audio-player .cover-container {
+  z-index: -1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-width: 100vw;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.audio-player .audio-info {
+  padding: 20px;
+}
+
 div#options {
   z-index: 4;
   height: 92vh;
@@ -439,15 +414,17 @@ div#bottom-bar {
   background: none;
   justify-content: center;
   align-items: center;
-  min-width: 100vw;
-  height: 18px;
+  width: 100vw;
+  height: 50px;
   display: flex;
   position: fixed;
-  bottom: 30px;
+  bottom: 20px;
   left: 0;
 }
 
-div#bottom-bar div#inner {
+div#bottom-bar div.inner {
+  padding: 10px;
+  display: flex;
   position: relative;
 }
 
@@ -456,6 +433,10 @@ div#bottom-bar div {
   background: none;
   padding: 2px;
   font-size: .8rem;
+}
+
+div#bottom-bar div.button-center img {
+  width: 40px;
 }
 
 div#bottom-bar div.button-left {
@@ -468,7 +449,7 @@ div#bottom-bar div.button-left {
 }
 
 div#bottom-bar div.button-left img, div#bottom-bar div.button-right img {
-  width: 30px;
+  width: 40px;
 }
 
 div#bottom-bar div.button-right {
@@ -490,10 +471,6 @@ div#bottom-bar div.button-center {
   display: flex;
 }
 
-div#bottom-bar div.button-center img {
-  width: 30px;
-}
-
 div#top-bar {
   z-index: 2000;
   z-index: 6;
@@ -504,11 +481,13 @@ div#top-bar {
   height: 18px;
   display: flex;
   position: fixed;
-  top: 0;
+  top: 10px;
   left: 0;
 }
 
-div#top-bar div#inner {
+div#top-bar div.inner {
+  padding: 10px;
+  display: flex;
   position: relative;
 }
 
@@ -528,8 +507,8 @@ div#top-bar div.button-left {
   display: flex;
 }
 
-div#top-bar div.button-left img, div#top-bar div.button-right img {
-  width: 30px;
+div#top-bar div.button-left img, div#top-bar div.button-right img, div#top-bar div.button-center img {
+  width: 40px;
 }
 
 div#top-bar div.button-right {
@@ -608,7 +587,51 @@ video, #video-container, .video-player {
   max-width: 100%;
 }
 
-@media screen and (width >= 0) and (width <= 640px) {
+@media screen and (width >= 400px) and (width <= 840px) {
+  html, body {
+    background: #fff;
+    width: 100%;
+    max-width: 100vw;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    font-family: Roboto !important;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+  }
+
+  h2 {
+    width: 100%;
+    margin: 0 0 10px;
+    font-size: 1.1rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  time {
+    font-size: .9rem;
+  }
+
+  #app {
+    width: 100vw;
+    min-width: 100vw;
+    height: 100%;
+    padding: 0;
+    position: relative;
+  }
+}
+
+@media screen and (width >= 0) and (width <= 380px) {
   html, body {
     background: #fff;
     width: 100%;
@@ -625,8 +648,18 @@ video, #video-container, .video-player {
     font-family: Roboto !important;
   }
 
-  body, h2, h3 {
+  h2, h3 {
     font-size: .9rem;
+  }
+
+  #wrapper {
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    max-height: 100vh;
+    padding: 20px 0 0;
+    display: flex;
+    overflow: scroll;
   }
 
   #app {
@@ -635,5 +668,48 @@ video, #video-container, .video-player {
     height: 100%;
     padding: 0;
     position: relative;
+  }
+
+  #article {
+    padding: 0;
+  }
+
+  #start article {
+    min-width: 100vw;
+    margin: 0 0 10px;
+    padding: 10px;
+  }
+
+  #start {
+    min-width: 100%;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  div#top-bar div.button-left img, div#top-bar div.button-right img, div#top-bar div.button-center img, div#bottom-bar div.button-left img, div#bottom-bar div.button-right img, div#bottom-bar div.button-center img {
+    width: 25px;
+  }
+
+  div#bottom-bar {
+    z-index: 2000;
+    z-index: 6;
+    background: none;
+    justify-content: center;
+    align-items: center;
+    min-width: 90vw;
+    height: 18px;
+    display: flex;
+    position: fixed;
+    bottom: 30px;
+    left: 5vw;
+  }
+
+  div#intro img {
+    width: 80px;
+    height: auto;
+    margin-left: -40px;
+    position: absolute;
+    top: 50px;
+    left: 50%;
   }
 }

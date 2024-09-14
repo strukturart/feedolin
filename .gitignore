@@ -15,4 +15,6 @@ application/assets/js/google_cred.js
 application/google_cred.js
 .env
 webpage-uploader.sh
+build.sh
+.gitignore
 

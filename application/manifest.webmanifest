@@ -8,6 +8,7 @@
   "categories": ["News", "Social"],
   "display": "standalone",
   "theme_color": "#ffffff",
+  "userAgentInfo": "feedolin written by strukturart@gmail.com",
 
   "icons": [
     {
@@ -23,7 +24,7 @@
   ],
 
   "b2g_features": {
-    "version": "1.7.99",
+    "version": "1.7.96",
     "id": "feedolin",
     "subtitle": "RSS Reader and Mastodon Client",
     "core": true,
