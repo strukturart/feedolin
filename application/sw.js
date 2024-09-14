@@ -1,41 +1,35 @@
+import localforage from "localforage";
+
 const channel = new BroadcastChannel("sw-messages");
-//channel.postMessage({ title: "Hello from SW" });
 
-self.addEventListener("install", (event) => {
-  //channel.postMessage("install");
-});
-
-self.addEventListener("activate", (event) => {
-  // bc.postMessage("activate");
-});
-
-self.addEventListener("fetch", function (event) {
-  // bc.postMessage("yeah fetch fetch");
-});
-
+//KaiOS 3 open app
 self.onsystemmessage = (evt) => {
-  try {
-    let m = evt.data.json();
-    self.registration.showNotification("Feedolin", {
-      body: m.data.note,
-    });
-  } catch (e) {}
+  const serviceHandler = () => {
+    if (evt.name === "activity") {
+      handler = evt.data.webActivityRequestHandler();
 
-  try {
-    const serviceHandler = () => {
-      if (evt.name === "activity") {
-        handler = evt.data.webActivityRequestHandler();
-        const { name: activityName, data: activityData } = handler.source;
-        if (activityName == "oauth") {
-          let code = activityData.code;
+      if (handler.source.name == "flop") {
+        localforage
+          .setItem("connect_to_id", handler.source.data)
+          .then((e) => {});
 
-          const url = "/oauth.html?code=" + code;
-          channel.postMessage({
-            oauth_success: url,
-          });
-        }
+        self.clients.openWindow("index.html");
       }
-    };
-    evt.waitUntil(serviceHandler());
-  } catch (e) {}
+    }
+  };
+  evt.waitUntil(serviceHandler());
 };
+
+//background sync
+
+let intervalId;
+
+channel.addEventListener("message", (event) => {
+  if (event.data === "startInterval") {
+    // Start the interval
+    intervalId = setInterval(() => {
+      // Send a message to the main script
+      channel.postMessage("intervalTriggered");
+    }, 10000); // Adjust the interval duration as needed
+  }
+});

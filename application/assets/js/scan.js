@@ -1,77 +1,85 @@
 import jsQR from "jsqr";
 
-let video = document.querySelector("video#video");
-let intv;
 let mediaStream;
+let video;
 
 export let stop_scan = function (callback) {
-  mediaStream.getTracks().map(function (val) {
-    val.stop();
-  });
-
   document.getElementById("qr-screen").style.display = "none";
 
-  callback();
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+    mediaStream = null;
+  }
+
+  if (callback) {
+    document.getElementById("qr-screen").style.display = "none";
+    callback();
+  }
 };
 
 export let start_scan = function (callback) {
   document.getElementById("qr-screen").style.display = "block";
 
-  navigator.getUserMedia =
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia;
-
-  if (navigator.getUserMedia) {
-    navigator.getUserMedia(
-      {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices
+      .getUserMedia({
         audio: false,
         video: {
-          width: 200,
-          height: 200,
+          facingMode: "environment",
         },
-      },
-      function (stream) {
-        video.srcObject = stream;
-        console.log(stream);
-        mediaStream = stream;
+      })
+      .then(function (stream) {
+        mediaStream = stream; // Assign the stream to mediaStream variable
 
-        video.onloadedmetadata = function (e) {
+        video = document.getElementsByTagName("video")[0];
+
+        video.muted = true;
+        video.playsInline = true; // Important for iOS
+        video.autoplay = true;
+
+        video.srcObject = stream;
+
+        video.onloadedmetadata = function () {
           video.play();
 
-          var barcodeCanvas = document.createElement("canvas");
-          intv = setInterval(() => {
+          const barcodeCanvas = document.createElement("canvas");
+          const barcodeContext = barcodeCanvas.getContext("2d");
+
+          const intv = setInterval(() => {
             barcodeCanvas.width = video.videoWidth;
             barcodeCanvas.height = video.videoHeight;
-            var barcodeContext = barcodeCanvas.getContext("2d");
-            var imageWidth = Math.max(1, Math.floor(video.videoWidth)),
-              imageHeight = Math.max(1, Math.floor(video.videoHeight));
-
-            barcodeContext.drawImage(video, 0, 0, imageWidth, imageHeight);
-
-            var imageData = barcodeContext.getImageData(
+            barcodeContext.drawImage(
+              video,
               0,
               0,
-              imageWidth,
-              imageHeight
+              video.videoWidth,
+              video.videoHeight
             );
-            var idd = imageData.data;
 
-            let code = jsQR(idd, imageWidth, imageHeight);
+            const imageData = barcodeContext.getImageData(
+              0,
+              0,
+              video.videoWidth,
+              video.videoHeight
+            );
+            const idd = imageData.data;
+
+            const code = jsQR(idd, video.videoWidth, video.videoHeight);
 
             if (code) {
               clearInterval(intv);
-              callback(code.data);
               stop_scan();
+              callback(code.data);
             }
           }, 1000);
         };
-      },
-      function (err) {
-        console.log("The following error occurred: " + err.name);
-      }
-    );
+      })
+      .catch(function (err) {
+        alert("The following error occurred: " + err.name);
+      });
   } else {
-    console.log("getUserMedia not supported");
+    alert("getUserMedia not supported");
   }
 };

@@ -5,25 +5,25 @@
   "lang": "en-US",
   "start_url": "/index.html",
   "short_name": "Feedolin",
-  "categories": ["utilities"],
+  "categories": ["News", "Social"],
 
   "icons": [
     {
-      "src": "/assets/icons/icon-56-56.png",
+      "src": "assets/icons/icon-56-56.png",
       "type": "image/png",
       "sizes": "56x56"
     },
     {
-      "src": "/assets/icons/icon-112-112.png",
+      "src": "assets/icons/icon-112-112.png",
       "type": "image/png",
       "sizes": "112x112"
     }
   ],
 
   "b2g_features": {
-    "version": "1.1.1",
+    "version": "1.7.99",
     "id": "feedolin",
-    "subtitle": "RSS Reader",
+    "subtitle": "RSS Reader and Mastodon Client",
     "core": true,
     "type": "privileged",
     "display": "fullscreen",
@@ -44,7 +44,7 @@
     ],
 
     "activities": {
-      "greg-oauth": {}
+      "oauth": {}
     },
 
     "serviceworker": {
@@ -58,9 +58,16 @@
       "alarms": {
         "description": "Required to schedule alarms"
       },
+      "feature-detection": {
+        "description": "query which keys are available"
+      },
       "mobiledata": {},
       "wifidata": {},
       "calllog": {},
+      "audio-channel-content": {
+        "description": ""
+      },
+      "volumemanager": { "description": "" },
       "device-storage:sdcard": {
         "description": "Read/Write from/to sd-card",
         "access": "readwrite"

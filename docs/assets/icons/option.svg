@@ -7,7 +7,7 @@
    viewBox="0 0 40 40"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="option.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -47,7 +47,7 @@
        id="g3961"
        transform="translate(-19.42887,-26.527578)">
       <circle
-         style="fill:#d9d9d9;fill-opacity:1;stroke-width:1;stroke:none;stroke-opacity:0.0854831;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.0854831"
          id="path848"
          cx="105"
          cy="148.5"
