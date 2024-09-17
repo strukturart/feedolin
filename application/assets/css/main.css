@@ -327,7 +327,7 @@ article {
 }
 
 #article {
-  padding: 20px;
+  padding: 20px 20px 20px 20px;
 }
 
 #KaiOSAd {
@@ -345,6 +345,7 @@ article {
 
 .text {
   word-break: break-all; /* Breaks the URL at any character */
+  padding: 0px 0px 50px 0px;
 }
 
 /*///////////////////////////
@@ -452,6 +453,8 @@ div#bottom-bar {
 div#bottom-bar div.inner {
   position: relative;
   display: flex;
+  justify-content: space-between;
+
   padding: 10px;
 }
 
@@ -508,13 +511,11 @@ div#bottom-bar div.button-center {
 div#top-bar {
   position: fixed;
   z-index: 2000;
-  top: 10px;
+  top: 0px;
   left: 0px;
-  height: 18px;
+  height: 30px;
   z-index: 6;
-  background: none;
   min-width: 100vw;
-
   display: flex;
   justify-content: center; /* Horizontally center all child elements */
   align-items: center; /* Vertically center all child elements */
@@ -524,6 +525,7 @@ div#top-bar div.inner {
   position: relative;
   display: flex;
   padding: 10px;
+  justify-content: space-between;
 }
 
 div#top-bar div {
@@ -531,15 +533,6 @@ div#top-bar div {
   color: white;
   padding: 2px;
   font-size: 0.8rem;
-}
-
-div#top-bar div.button-left {
-  background: none;
-  color: white;
-  padding: 2px;
-  width: 32%;
-  display: flex;
-  justify-content: flex-start;
 }
 
 div#top-bar div.button-left img {
@@ -552,6 +545,15 @@ div#top-bar div.button-right img {
 
 div#top-bar div.button-center img {
   width: 40px;
+}
+
+div#top-bar div.button-left {
+  background: none;
+  color: white;
+  padding: 2px;
+  width: 32%;
+  display: flex;
+  justify-content: flex-start;
 }
 
 div#top-bar div.button-right {
@@ -571,10 +573,6 @@ div#top-bar div.button-center {
   color: white;
   padding: 2px;
   width: 32%;
-}
-
-div#top-bar div.button-center img {
-  width: 30px;
 }
 
 .loading-spinner {
@@ -769,7 +767,7 @@ video {
     height: 18px;
     z-index: 6;
     background: none;
-    min-width: 90vw;
+    min-width: 100vw;
 
     display: flex;
     justify-content: center; /* Horizontally center all child elements */

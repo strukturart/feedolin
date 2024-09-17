@@ -21,9 +21,11 @@ import duration from "dayjs/plugin/duration";
 
 import swiped from "swiped-events";
 
-import { extractFromXml } from "@extractus/feed-extractor";
-import { extract } from "@extractus/feed-extractor";
 import fxparser from "fast-xml-parser";
+
+export const env = {
+  test: process.env.test,
+};
 
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
@@ -111,6 +113,7 @@ if (!status.notKaiOS) {
     "http://127.0.0.1/api/v1/shared/core.js",
     "http://127.0.0.1/api/v1/shared/session.js",
     "http://127.0.0.1/api/v1/apps/service.js",
+    "http://127.0.0.1/api/v1/audiovolumemanager/service.js",
   ];
 
   scripts.forEach((src) => {
@@ -451,11 +454,11 @@ var options = {
           top_bar("", "", "");
 
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/image/back.svg'>");
+            top_bar("", "", "<img src='assets/icons/back.svg'>");
 
           bottom_bar(
             "",
-            "<img class='not-desktop' src='assets/image/select.svg'>",
+            "<img class='not-desktop' src='assets/icons/select.svg'>",
             ""
           );
         },
@@ -614,7 +617,7 @@ var article = {
         id: "article",
         oncreate: () => {
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/image/back.svg'>");
+            top_bar("", "", "<img src='assets/icons/back.svg'>");
           bottom_bar("<img src='assets/icons/link.svg'>", "", "");
         },
       },
@@ -682,7 +685,7 @@ var index = {
         id: "index",
         oncreate: () => {
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/image/back.svg'>");
+            top_bar("", "", "<img src='assets/icons/back.svg'>");
           bottom_bar("", "", "");
         },
       },
@@ -784,7 +787,7 @@ const VideoPlayerView = {
   seekAmount: 5, // Seek by 5 seconds
 
   oncreate: ({ attrs }) => {
-    if (status.notKaiOS) top_bar("", "", "<img src='assets/image/back.svg'>");
+    if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
     // Mount the video element to the DOM when the component is created
     VideoPlayerView.videoElement = document.createElement("video");
     const videoContainer = document.getElementById("video-container");
@@ -932,9 +935,9 @@ const AudioPlayerView = {
     status.player = true;
 
     top_bar("", "", "");
-    bottom_bar("", "<img src='assets/image/play.svg'>", "");
+    bottom_bar("", "<img src='assets/icons/play.svg'>", "");
 
-    if (status.notKaiOS) top_bar("", "", "<img src='assets/image/back.svg'>");
+    if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
 
     document
       .querySelector("div.button-center")
@@ -1039,10 +1042,10 @@ var settingsView = {
         class: "flex justify-content-center page",
         id: "settings_page",
         oncreate: () => {
-          bottom_bar("", "<img src='assets/image/select.svg'>", "");
+          bottom_bar("", "<img src='assets/icons/select.svg'>", "");
 
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/image/back.svg'>");
+            top_bar("", "", "<img src='assets/icons/back.svg'>");
         },
       },
       [
@@ -1569,3 +1572,15 @@ try {
 } catch (e) {
   console.log(e);
 }
+
+const sw_channel = new BroadcastChannel("sw-messages");
+channel.addEventListener("message", (event) => {
+  //callback from  OAuth
+  //ugly method to open a new window, because a window from sw clients.open can no longer be closed
+  const l = event.data.oauth_success;
+  alert(l);
+
+  if (event.data.oauthsuccess) {
+    loadMastodon();
+  }
+});
