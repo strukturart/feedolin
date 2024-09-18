@@ -16,7 +16,7 @@ self.addEventListener("fetch", function (event) {
 self.onsystemmessage = (evt) => {
   try {
     let m = evt.data.json();
-    self.registration.showNotification("Feedolin", {
+    self.registration.showNotification("feedolin", {
       body: m.data.note,
     });
   } catch (e) {}
@@ -26,13 +26,13 @@ self.onsystemmessage = (evt) => {
       if (evt.name === "activity") {
         handler = evt.data.webActivityRequestHandler();
         const { name: activityName, data: activityData } = handler.source;
-        if (activityName == "oauth") {
-          let code = activityData.code;
+        if (activityName == "feedolin") {
+          let code = activityData;
 
-          const url = "/oauth.html?code=" + code;
           channel.postMessage({
-            oauth_success: url,
+            oauth_success: code,
           });
+          return "OK";
         }
       }
     };

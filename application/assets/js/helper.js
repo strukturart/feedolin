@@ -608,12 +608,12 @@ let screenlock = function (stat) {
 };
 
 //pick image
-export let pick_image = function (callback) {
+export let pick_file = function (callback) {
   try {
     let pick = new MozActivity({
       name: "pick",
       data: {
-        type: ["image/png", "image/jpg", "image/jpeg"],
+        type: ["application/xml"],
       },
     });
 
@@ -631,7 +631,7 @@ export let pick_image = function (callback) {
 
   if ("b2g" in navigator) {
     let pick = new WebActivity("pick", {
-      type: "image/*",
+      type: "application/xml",
     });
 
     pick.start().then(
@@ -646,7 +646,7 @@ export let pick_image = function (callback) {
   if (status.notKaiOS) {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-    fileInput.accept = "image/*";
+    fileInput.accept = ".opml,application/xml";
     fileInput.style.display = "none";
     document.body.appendChild(fileInput);
 

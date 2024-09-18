@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf dist/* && parcel build --no-source-maps --no-optimize application/index.html  && cp application/manifest.webapp dist && mkdir dist/assets && cp -r application/assets/icons dist/assets/ &&  mkdir -p dist/assets/js/ && cp application/assets/js/kaiads.v5.min.js dist/assets/js/",
     "run": "parcel",
-    "web": "rm -rf webpage/* && parcel build --dist-dir webpage --public-url ./ --no-source-maps --no-optimize application/index.html && cp application/manifest.webapp webpage && cp application/manifest.webmanifest webpage && cp application/connect.html webpage && cp application/oauth.js webpage && mkdir -p webpage/assets && cp -r application/assets/icons webpage/assets/ && mkdir -p webpage/assets/js/ && cp application/assets/js/kaiads.v5.min.js webpage/assets/js/ &&  cp -r application/assets/fonts webpage/assets/"
+    "web": "rm -rf webpage/* && parcel build --dist-dir webpage --public-url ./ --no-source-maps --no-optimize application/index.html && cp application/manifest.webapp webpage && cp application/manifest.webmanifest webpage && mkdir -p webpage/assets && cp -r application/assets/icons webpage/assets/ && mkdir -p webpage/assets/js/ && cp application/assets/js/kaiads.v5.min.js webpage/assets/js/ &&  cp -r application/assets/fonts webpage/assets/"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
@@ -37,9 +37,10 @@
     "url": "^0.11.4"
   },
   "dependencies": {
+    "@extractus/feed-extractor": "^7.1.3",
     "@parcel/service-worker": "^2.8.0",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.1",
     "fast-xml-parser": "^4.5.0",
     "jsqr": "^1.4.0",
     "linkifyjs": "^3.0.5",

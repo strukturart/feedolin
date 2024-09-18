@@ -276,7 +276,7 @@ article {
 #start {
   min-width: 100%;
   overflow: scroll;
-  padding: 20px;
+  padding: 20px 20px 60px 20px;
 }
 
 #start article {
@@ -301,21 +301,22 @@ article {
 
 #start .channel {
   width: fit-content;
+  display: block;
   position: fixed;
-  font-size: 1rem;
   border: 2px solid black;
   border-radius: 12px;
   padding: 8px;
   line-height: 0.7rem;
   z-index: 200;
   background: white;
-  margin: auto; /* This centers the element horizontally */
-  left: 0px;
-  right: 0px;
   top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
 }
-#start .channel:empty {
-  display: none;
+
+.channel:empty::before {
+  content: "All feeds";
 }
 
 #article article:focus {
@@ -346,6 +347,15 @@ article {
 .text {
   word-break: break-all; /* Breaks the URL at any character */
   padding: 0px 0px 50px 0px;
+}
+
+#optionsView {
+  margin: 40px 0 0 0;
+}
+
+#account_info {
+  padding: 20px;
+  margin: 0 0 20px 0;
 }
 
 /*///////////////////////////
@@ -629,7 +639,7 @@ video {
   max-width: 100%;
 }
 
-@media screen and (min-width: 400px) and (max-width: 840px) {
+@media screen and (min-width: 400px) and (max-width: 900px) {
   html,
   body {
     font-family: "Roboto" !important;
@@ -646,6 +656,23 @@ video {
     max-width: 100vw;
     overflow: hidden;
     background: white;
+  }
+
+  #wrapper {
+    min-height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: scroll;
+    padding: 20px 0 0 0;
+  }
+  #app {
+    position: relative;
+    height: 100%;
+    min-width: 100vw;
+    width: 100vw;
+    padding: 0;
   }
 
   h1 {
@@ -675,7 +702,7 @@ video {
   }
 }
 
-@media screen and (min-width: 0px) and (max-width: 380px) {
+@media screen and (min-width: 0px) and (max-width: 400px) {
   html,
   body {
     font-family: "Roboto" !important;
@@ -732,7 +759,7 @@ video {
   #start {
     min-width: 100%;
     overflow: hidden;
-    padding: 0px;
+    padding: 30px 0px;
   }
 
   div#top-bar div.button-left img {
@@ -781,5 +808,12 @@ video {
     top: 50px;
     left: 50%;
     margin-left: -40px;
+  }
+
+  #start .channel {
+    font-size: 0.9rem;
+
+    padding: 6px;
+    line-height: 0.5rem;
   }
 }

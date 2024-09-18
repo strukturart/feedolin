@@ -43,8 +43,8 @@
 
   "redirects": [
     {
-      "from": "https://feedolin.strukturart.com/redirect.html",
-      "to": "/oauth.html"
+      "from": "https://feedolin.strukturart.com/",
+      "to": "/index.html"
     }
   ],
   

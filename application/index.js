@@ -7,8 +7,11 @@ import {
   top_bar,
   getManifest,
   validate_url,
+  pick_file,
 } from "./assets/js/helper.js";
 import { stop_scan, start_scan } from "./assets/js/scan.js";
+import { mastodon_account_info } from "./assets/js/mastodon.js";
+
 import localforage from "localforage";
 import { detectMobileOS } from "./assets/js/helper.js";
 import m from "mithril";
@@ -22,10 +25,6 @@ import duration from "dayjs/plugin/duration";
 import swiped from "swiped-events";
 
 import fxparser from "fast-xml-parser";
-
-export const env = {
-  test: process.env.test,
-};
 
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
@@ -64,15 +63,9 @@ localforage
     if (value === null) {
       // Item does not exist, initialize it as an empty array
       read_articles = [];
-      return localforage.setItem("read_articles", read_articles).then(() => {
-        console.log(
-          "Array initialized and stored in localForage:",
-          read_articles
-        );
-      });
+      return localforage.setItem("read_articles", read_articles).then(() => {});
     } else {
       read_articles = value;
-      console.log("Array loaded from localForage:", read_articles);
     }
   })
   .catch((err) => {
@@ -136,18 +129,74 @@ if (status.debug) {
   };
 }
 
+let mastodon_connect = () => {
+  localforage.getItem("settings").then(function (value) {
+    settings = value;
+
+    var currentUrl = window.location.href;
+    const params = new URLSearchParams(currentUrl.split("?")[1]);
+    const code = params.get("code");
+    if (!code) return false;
+
+    let result = code.split("#")[0];
+    if (code) {
+      localforage.setItem("mastodon_code", result);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("code", result);
+      urlencoded.append("scope", "read");
+
+      urlencoded.append("grant_type", "authorization_code");
+      urlencoded.append("redirect_uri", process.env.redirect);
+      urlencoded.append("client_id", process.env.clientId);
+      urlencoded.append("client_secret", process.env.clientSecret);
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
+        .then((response) => response.json()) // Parse the JSON once
+        .then((data) => {
+          console.log(data); // Log the parsed data
+
+          settings.mastodon_token = data.access_token; // Access the token
+          localforage.setItem("settings", settings);
+          m.route.set("/start?index=0");
+
+          side_toaster("Successfully connected", 10000);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          side_toaster("Connection failed");
+        });
+    }
+  });
+};
+
 //open KaiOS app
 let app_launcher = () => {
   var currentUrl = window.location.href;
 
   // Check if the URL includes 'id='
-  if (!currentUrl.includes("id=")) return false;
+  if (!currentUrl.includes("code=")) return false;
+
+  const params = new URLSearchParams(currentUrl.split("?")[1]);
+  const code = params.get("code");
+  if (!code) return false;
+
+  let result = code.split("#")[0];
 
   setTimeout(() => {
     try {
       const activity = new MozActivity({
         name: "feedolin",
-        data: window.location.href,
+        data: result,
       });
       activity.onsuccess = function () {
         console.log("Activity successfuly handled");
@@ -161,12 +210,14 @@ let app_launcher = () => {
     if ("b2g" in navigator) {
       try {
         let activity = new WebActivity("feedolin", {
-          name: "flop",
-          type: "url",
-          data: window.location.href,
+          name: "feedolin",
+          type: "string",
+          data: result,
         });
         activity.start().then(
           (rv) => {
+            window.close();
+
             console.log("Results passed back from activity handler:");
             console.log(rv);
           },
@@ -178,6 +229,7 @@ let app_launcher = () => {
     }
   }, 4000);
 };
+app_launcher();
 
 function stringToHash(str) {
   let hash = 0;
@@ -242,21 +294,25 @@ const fetchOPML = (url) => {
     .catch((error) => {
       console.error("Error fetching the OPML file:", error);
       m.route.set("/start/?index=0");
-      // Always call load_feeds even if there's an error to ensure processing with available data
     });
 };
 
 const load_feeds = async (data) => {
   if (data) {
-    // Generate download list from OPML data
-    const downloadList = generateDownloadList(data); // Capture the returned list
-    if (downloadList.length > 0) {
-      // Assign to global variable if needed
-      feed_download_list = downloadList;
+    let downloadList;
+    const downloadListData = generateDownloadList(data); // Capture the returned list
+    if (downloadListData.error) {
+      side_toaster(downloadListData.error, 3000);
+      return false;
+    } else {
+      downloadList = downloadListData.downloadList;
+      console.log(downloadList);
+    }
 
+    if (downloadList.length > 0) {
       // Fetch content for the feeds
       try {
-        await fetchContent(feed_download_list);
+        await fetchContent(downloadList);
         m.route.set("/start/?index=0");
         //cache data
         localforage
@@ -277,11 +333,18 @@ const load_feeds = async (data) => {
 const generateDownloadList = (data) => {
   // Parse the OPML data
   const xmlDoc = xml_parser.parseFromString(data, "text/xml");
+
+  // Check if the OPML file is valid
+  if (!xmlDoc || xmlDoc.getElementsByTagName("parsererror").length > 0) {
+    console.error("Invalid OPML data.");
+    return { error: "Invalid OPML data", downloadList: [] };
+  }
+
   const content = xmlDoc.querySelector("body");
 
   if (!content) {
     console.error("No 'body' element found in the OPML data.");
-    return [];
+    return { error: "No 'body' element found", downloadList: [] };
   }
 
   let index = 0;
@@ -308,7 +371,7 @@ const generateDownloadList = (data) => {
     });
   });
 
-  return downloadList; // Return the generated list
+  return { error: "", downloadList }; // Return the generated list with no error
 };
 
 const fetchContent = async (feed_download_list) => {
@@ -358,8 +421,6 @@ const fetchContent = async (feed_download_list) => {
 
       xhr.open("GET", proxy + e.url, true);
 
-      if (!status.notKaiOS) xhr.setRequestHeader("MozSystem", true);
-
       xhr.send();
 
       xhr.onload = function () {
@@ -402,6 +463,54 @@ const fetchContent = async (feed_download_list) => {
   }
 };
 
+let load_mastodon = () => {
+  let accessToken = settings.mastodon_token;
+
+  let url = settings.mastodon_server_url + "/api/v1/timelines/home";
+
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((k, i) => {
+        if (i > 15) return;
+        let f = {
+          channel: "Mastodon",
+          id: k.id,
+          type: "mastodon",
+          pubDate: k.created_at,
+          isoDate: k.created_at,
+          title: k.account.display_name,
+          content: k.content,
+          url: k.uri,
+        };
+
+        if (k.media_attachments.length > 0) {
+          if (k.media_attachments[0].type === "image") {
+            f.content += `<br><img src='${k.media_attachments[0].preview_url}'>`;
+          } else if (k.media_attachments[0].type === "video") {
+            f.enclosure = {
+              "@_type": "video",
+              url: k.media_attachments[0].url,
+            };
+          } else if (k.media_attachments[0].type === "audio") {
+            f.enclosure = {
+              "@_type": "audio",
+              url: k.media_attachments[0].url,
+            };
+          }
+        }
+
+        articles.push(f);
+      });
+      channels.push("Mastodon");
+    });
+};
+
 localforage
   .getItem("settings")
   .then(function (value) {
@@ -409,6 +518,19 @@ localforage
     settings = value;
     if (navigator.onLine) {
       fetchOPML(proxy + settings.opml_url);
+      if (settings.opml_local) {
+        load_feeds(settings.opml_local);
+      }
+
+      if (settings.mastodon_token) {
+        mastodon_account_info(
+          settings.mastodon_server_url,
+          settings.mastodon_token
+        ).then((f) => {
+          status.mastodon_logged = f.display_name;
+          load_mastodon();
+        });
+      }
     } else {
       localforage
         .getItem("articles")
@@ -449,7 +571,8 @@ var options = {
     return m(
       "div",
       {
-        class: "page",
+        id: "optionsView",
+        class: "flex",
         oncreate: () => {
           top_bar("", "", "");
 
@@ -506,7 +629,7 @@ var options = {
         ),
         m("div", {
           id: "KaiOSads-Wrapper",
-          class: "width-100",
+          class: "",
 
           oncreate: () => {
             if (status.notKaiOS == false) load_ads();
@@ -517,7 +640,7 @@ var options = {
   },
 };
 
-let counter = 0;
+let counter = -1;
 let channel_filter = "";
 
 var start = {
@@ -532,14 +655,12 @@ var start = {
 
     // Calculate index once and store it
     this.index = m.route.param("index") || 0;
-
-    feed_download_list.forEach((e) => {
-      if (e.error == "") {
-        if (channels.indexOf(e.channel) === -1 && e.channel) {
-          channels.push(e.channel);
-        }
+    articles.forEach((e) => {
+      if (channels.indexOf(e.channel) === -1 && e.channel) {
+        channels.push(e.channel);
       }
     });
+    console.log(channels);
   },
 
   view: function () {
@@ -549,7 +670,7 @@ var start = {
         id: "start",
         oncreate: () => {
           bottom_bar(
-            "<img src='assets/icons/list.svg'>",
+            "",
             "<img src='assets/icons/select.svg'>",
             "<img src='assets/icons/option.svg'>"
           );
@@ -565,7 +686,7 @@ var start = {
             top_bar("<img src='assets/icons/play.svg'>", "", "");
         },
       },
-      m("h2", { class: "channel", oncreate: () => {} }, channel_filter),
+      m("span", { class: "channel", oncreate: () => {} }, channel_filter),
 
       articles.map((h, i) => {
         if (channel_filter !== "" && channel_filter !== h.channel) return;
@@ -626,7 +747,6 @@ var article = {
         if (index != i) return;
 
         current_article = h;
-        // Check if the article has an audio enclosure
 
         return m(
           "article",
@@ -723,6 +843,10 @@ var intro = {
       {
         class: "width-100 height-100",
         id: "intro",
+        oninit: () => {
+          //check if is a mastodon redirect
+          mastodon_connect();
+        },
         onremove: () => {
           localStorage.setItem("version", status.version);
           document.querySelector(".loading-spinner").style.display = "none";
@@ -1024,7 +1148,54 @@ const AudioPlayerView = {
 
 var about = {
   view: function () {
-    return m("div", {});
+    return m(
+      "div",
+      {},
+      m(
+        "p",
+        "Feedolin is an RSS/Atom reader and podcast player, available for both KaiOS and non-KaiOS users."
+      ),
+      m(
+        "p",
+        "It supports connecting a Mastodon account to display articles alongside your RSS/Atom feeds."
+      ),
+      m(
+        "p",
+        "The app allows you to listen to audio and watch videos directly if the feed provides the necessary URLs."
+      ),
+      m(
+        "p",
+        "The list of subscribed websites and podcasts is managed either locally or via an OPML file from an external source, such as a public link in the cloud."
+      ),
+      m("p", "For non-KaiOS users, local files must be uploaded to the app."),
+      m("h4", { style: "margin-top:20px; margin-bottom:10px;" }, "Navigation:"),
+      m("ul", [
+        m(
+          "li",
+          m.trust(
+            "Use the <strong>up</strong> and <strong>down</strong> arrow keys to navigate between articles.<br><br>"
+          )
+        ),
+        m(
+          "li",
+          m.trust(
+            "Use the <strong>left</strong> and <strong>right</strong> arrow keys to switch between categories.<br><br>"
+          )
+        ),
+        m(
+          "li",
+          m.trust(
+            "Press <strong>Enter</strong> to view the content of an article.<br><br>"
+          )
+        ),
+        m(
+          "li",
+          m.trust(
+            "Use <strong>Ctrl</strong> and <strong>Alt</strong> to access various options."
+          )
+        ),
+      ])
+    );
   },
 };
 
@@ -1039,7 +1210,7 @@ var settingsView = {
     return m(
       "div",
       {
-        class: "flex justify-content-center page",
+        class: "flex justify-content-center",
         id: "settings_page",
         oncreate: () => {
           bottom_bar("", "<img src='assets/icons/select.svg'>", "");
@@ -1072,6 +1243,37 @@ var settingsView = {
             }),
           ]
         ),
+        m(
+          "button",
+          {
+            onclick: () => {
+              let cb = (data) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                  const downloadListData = generateDownloadList(reader.result);
+                  if (downloadListData.error) {
+                    side_toaster("OPML file not valid", 4000);
+                  } else {
+                    settings.opml_local = reader.result;
+                    localforage.setItem("settings", settings).then(() => {
+                      side_toaster("OPML file added", 4000);
+                    });
+                  }
+                };
+
+                reader.onerror = () => {
+                  side_toaster("OPML file not valid", 4000);
+                };
+                reader.readAsText(data.blob);
+              };
+              pick_file(cb);
+            },
+          },
+          settings.opml_local
+            ? "Upload OPML and replace current"
+            : "Upload OPML"
+        ),
 
         m(
           "div",
@@ -1103,28 +1305,87 @@ var settingsView = {
           "Mastodon Account"
         ),
 
-        m(
-          "div",
-          {
-            tabindex: 2,
-
-            class: "item input-parent  flex justify-content-spacearound",
-          },
-          [
-            m(
-              "label",
+        status.mastodon_logged
+          ? m(
+              "div",
               {
-                for: "server_url",
+                id: "account_info",
               },
-              "URL"
+              `You have successfully logged in as ${status.mastodon_logged} and the data is being loaded from server ${settings.mastodon_server_url}.`
+            )
+          : null,
+
+        status.mastodon_logged
+          ? m(
+              "button",
+              {
+                tabindex: 3,
+
+                class: "item",
+                onclick: function () {
+                  settings.mastodon_server_url = "";
+                  settings.mastodon_token = "";
+                  localforage.setItem("settings", settings);
+                  status.mastodon_logged = "";
+                  m.route.set("/settingsView");
+                },
+              },
+              "Disconnect"
+            )
+          : null,
+
+        status.mastodon_logged
+          ? null
+          : m(
+              "div",
+              {
+                tabindex: 2,
+
+                class: "item input-parent flex justify-content-spacearound",
+              },
+              [
+                m(
+                  "label",
+                  {
+                    for: "mastodon-server-url",
+                  },
+                  "URL"
+                ),
+                m("input", {
+                  id: "mastodon-server-url",
+                  placeholder: "Server URL",
+                  value: settings.mastodon_server_url,
+                }),
+              ]
             ),
-            m("input", {
-              id: "server_url",
-              placeholder: "Server URL",
-              value: settings.server_url,
-            }),
-          ]
-        ),
+
+        status.mastodon_logged
+          ? null
+          : m(
+              "button",
+              {
+                tabindex: 3,
+
+                class: "item",
+                onclick: function () {
+                  localforage.setItem("settings", settings);
+
+                  settings.mastodon_server_url = document.getElementById(
+                    "mastodon-server-url"
+                  ).value;
+
+                  let url =
+                    settings.mastodon_server_url +
+                    "/oauth/authorize?client_id=" +
+                    process.env.clientId +
+                    "&scope=read&redirect_uri=" +
+                    process.env.redirect +
+                    "&response_type=code";
+                  window.open(url);
+                },
+              },
+              "Connect"
+            ),
 
         m(
           "button",
@@ -1138,6 +1399,9 @@ var settingsView = {
                 side_toaster("URL not valid");
               settings.opml_url = document.getElementById("url-opml").value;
               settings.proxy_url = document.getElementById("url-proxy").value;
+              settings.mastodon_server_url = document.getElementById(
+                "mastodon-server-url"
+              ).value;
 
               localforage
                 .setItem("settings", settings)
@@ -1165,7 +1429,7 @@ m.route(root, "/intro", {
   "/options": options,
   "/scan": scan,
   "/about": about,
-  "/privacy_police": privacy_policy,
+  "/privacy_policy": privacy_policy,
   "/article": article,
   "/index": index,
   "/AudioPlayerView": AudioPlayerView,
@@ -1381,6 +1645,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "ArrowRight":
         if (r.startsWith("/start")) {
           counter++;
+
           if (counter > channels.length - 1) counter = 0;
 
           channel_filter = channels[counter];
@@ -1399,7 +1664,8 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "ArrowLeft":
         if (r.startsWith("/start")) {
           counter--;
-          if (counter < 1) counter = channels.length;
+
+          if (counter < 0) counter = channels.length - 1;
 
           channel_filter = channels[counter];
 
@@ -1426,7 +1692,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "SoftRight":
       case "Alt":
         if (r.startsWith("/start")) {
-          m.route.set("/settingsView");
+          m.route.set("/options");
         }
         break;
 
@@ -1475,9 +1741,21 @@ document.addEventListener("DOMContentLoaded", function (e) {
           m.route.set("/start?index=0");
         }
 
+        if (r.startsWith("/about")) {
+          m.route.set("/options");
+        }
+
+        if (r.startsWith("/privacy_policy")) {
+          m.route.set("/options");
+        }
+
+        if (r.startsWith("/options")) {
+          m.route.set("/start?index=0");
+        }
+
         if (r.startsWith("/settingsView")) {
           if (document.activeElement.tagName == "INPUT") return false;
-          m.route.set("/start?index=0");
+          m.route.set("/options");
         }
 
         if (r.startsWith("/Video")) {
@@ -1553,9 +1831,6 @@ try {
     })
     .then((registration) => {
       if (registration.waiting) {
-        // There's a new service worker waiting to activate
-        // You can prompt the user to reload the page to apply the update
-        // For example: show a message to the user
       } else {
         // No waiting service worker, registration was successful
       }
@@ -1574,13 +1849,43 @@ try {
 }
 
 const sw_channel = new BroadcastChannel("sw-messages");
-channel.addEventListener("message", (event) => {
-  //callback from  OAuth
-  //ugly method to open a new window, because a window from sw clients.open can no longer be closed
-  const l = event.data.oauth_success;
-  alert(l);
+sw_channel.addEventListener("message", (event) => {
+  let result = event.data.oauth_success.data;
 
-  if (event.data.oauthsuccess) {
-    loadMastodon();
+  if (result) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("code", result);
+    urlencoded.append("scope", "read");
+
+    urlencoded.append("grant_type", "authorization_code");
+    urlencoded.append("redirect_uri", process.env.redirect);
+    urlencoded.append("client_id", process.env.clientId);
+    urlencoded.append("client_secret", process.env.clientSecret);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    };
+
+    fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
+      .then((response) => response.json()) // Parse the JSON once
+      .then((data) => {
+        console.log(data); // Log the parsed data
+
+        settings.mastodon_token = data.access_token; // Access the token
+        localforage.setItem("settings", settings);
+        m.route.set("/start?index=0");
+
+        side_toaster("Successfully connected", 10000);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        side_toaster("Connection failed");
+      });
   }
 });
