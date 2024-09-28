@@ -630,9 +630,7 @@ export let pick_file = function (callback) {
   }
 
   if ("b2g" in navigator) {
-    let pick = new WebActivity("pick", {
-      type: "application/xml",
-    });
+    let pick = new WebActivity("pick");
 
     pick.start().then(
       (rv) => {
@@ -643,6 +641,7 @@ export let pick_file = function (callback) {
       }
     );
   }
+
   if (status.notKaiOS) {
     const fileInput = document.createElement("input");
     fileInput.type = "file";

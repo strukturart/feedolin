@@ -70,8 +70,8 @@ body {
 #app {
   position: relative;
   height: 100%;
-  min-width: 50vw;
-  width: 50vw;
+  min-width: 40vw;
+  width: 40vw;
   overflow: scroll;
 }
 
@@ -100,6 +100,10 @@ h3 {
 
 time {
   font-size: 0.8rem;
+}
+
+p {
+  margin: 0 0 20px 0;
 }
 
 label {
@@ -358,6 +362,21 @@ article {
   margin: 0 0 20px 0;
 }
 
+.page {
+  margin: 30px 0 0 0;
+  padding: 10px 10px 40px 10px;
+}
+
+#button-save-settings {
+  margin: 30px 0 0 0;
+}
+
+#settings-page .seperation {
+  margin: 80px 0 0 0;
+  width: 100%;
+  height: 5px;
+}
+
 /*///////////////////////////
 ///TOAST////////////////*/
 
@@ -588,8 +607,8 @@ div#top-bar div.button-center {
 .loading-spinner {
   display: none;
   position: fixed;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   top: 50%;
   left: 50%;
   margin-left: -40px;
@@ -601,8 +620,8 @@ div#top-bar div.button-center {
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 64px;
-  height: 64px;
+  width: 100%;
+  height: 100%;
   margin: 8px;
   border: 8px solid rgb(126, 11, 11);
   border-radius: 50%;
@@ -738,6 +757,7 @@ video {
     overflow: scroll;
     padding: 20px 0 0 0;
   }
+
   #app {
     position: relative;
     height: 100%;
@@ -797,15 +817,15 @@ video {
     min-width: 100vw;
 
     display: flex;
-    justify-content: center; /* Horizontally center all child elements */
-    align-items: center; /* Vertically center all child elements */
+    justify-content: center;
+    align-items: center;
   }
 
   div#intro img {
     width: 80px;
     height: auto;
     position: absolute;
-    top: 50px;
+    top: 30px;
     left: 50%;
     margin-left: -40px;
   }
@@ -815,5 +835,11 @@ video {
 
     padding: 6px;
     line-height: 0.5rem;
+  }
+
+  #settings-page .seperation {
+    margin: 20px 0 0 0;
+    width: 100%;
+    height: 5px;
   }
 }
