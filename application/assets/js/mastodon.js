@@ -85,25 +85,16 @@ export let favourite = (url, id) => {
   });
 };
 
-export let mastodon_account_info = () => {
-  let a = JSON.parse(localStorage.getItem("oauth_auth"));
-  let accessToken = a.access_token;
-
-  let url = localStorage.getItem("mastodon_server");
-
-  return fetch(url + "/api/v1/accounts/verify_credentials", {
+export let mastodon_account_info = async (url, accessToken) => {
+  const response = await fetch(url + "/api/v1/accounts/verify_credentials", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        console.log("Network response was not OK");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      return data;
-    });
+  });
+  if (!response.ok) {
+    console.log("Network response was not OK");
+  }
+  const data_1 = await response.json();
+  return data_1;
 };

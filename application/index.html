@@ -1,369 +1,81 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>feedolin</title>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,user-scalable=no,initial-scale=1"
-    />
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+
+    <link rel="manifest" href="manifest.webmanifest" />
+
     <link rel="stylesheet" href="assets/css/main.css" />
     <link rel="stylesheet" href="assets/css/grid.css" />
     <link rel="stylesheet" href="assets/css/qr-reader.css" />
-  </head>
 
-  <body>
-    <div id="wrapper">
-      <div id="toast" class="width-100"></div>
-      <div id="side-toast"></div>
-      <div class="loading-spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+  
+
+</head>
+
+<meta
+name="viewport"
+content="width=device-width,user-scalable=no,initial-scale=1"
+/>
+
+<body>
+    <div id="toast"></div>
+    <div id="side-toast"></div>
+
+
+    <div id="wrapper" class="flex">
 
      
 
-      <div id="bottom-bar">
-        <div class="inner flex justify-content-spacebetween width-100">
-          <div id="button-left"></div>
-          <div id="button-center"></div>
-          <div id="button-right"></div>
-        </div>
-      </div>
+      
 
-      <div id="top-bar">
-        <div class="inner flex justify-content-spacebetween width-100">
-          <div class="button-left"></div>
-          <div class="button-center"></div>
-          <div class="button-right"></div>
-        </div>
-      </div>
+        <div class="loading-spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+       
+       
 
-      <div id="intro" class="width-100 height-100">
-        <img src="assets/icons/intro.png" />
-        <div class="width-100" id="version"></div>
-        <div class="width-100" id="intro-message"></div>
-      </div>
+            <div id="bottom-bar">
+                <div class="inner flex">
+                    <div class="button-left"></div>
+                    <div class="button-center"></div>
+                    <div class="button-right"></div>
+                </div>
+            </div>
 
-      <div id="audio-player" class="width-100 height-100">
-        <div id="audio-title"></div>
-        <div id="image" src="#" class="width-100 height-100"></div>
-        <div
-          id="background-pattern"
-          class="flex justify-content-start width-100 height-100"
-        ></div>
-      </div>
+            <div id="top-bar">
+                <div class="inner flex">
+                    <div class="button-left"></div>
+                    <div class="button-center"></div>
+                    <div class="button-right"></div>
+                </div>
+            </div>
+        
 
-      <div id="video-player" class="width-100 height-100">
-        <video id="videoplayer" width="100%" height="240" autoplay="true">
-          <source src="#" type="video/mp4" />
-        </video>
-      </div>
 
-      <div id="youtube-player" class="width-100 height-100">
-        <div id="iframe-wrapper">
-          <iframe
-            scrolling="no"
-            frameborder="”0″"
-            src="#"
-            mozbrowser
-            allowfullscreen
-          ></iframe>
-        </div>
-      </div>
-
-      <div
-        id="progress-bar"
-        class="width-100 flex debug justify-content-center"
-      >
-        <div></div>
-      </div>
-
-      <div id="qr-screen">
-        <video id="video"></video>
-
-        <div id="corner-nw"></div>
-        <div id="corner-no"></div>
-        <div id="corner-so"></div>
-        <div id="corner-sw"></div>
-      </div>
-
-      <div id="options">
-        <h2>Options</h2>
-        <div class="item flex width-100" data-function="unread" tabindex="0">
-          <span class="text">mark as unread</span><span class="middle"></span
-          ><span class="key">1</span>
+        <div id="qr-screen">
+            <video id="video"></video>
+            <div id="corner-nw"></div>
+            <div id="corner-no"></div>
+            <div id="corner-so"></div>
+            <div id="corner-sw"></div>
         </div>
 
-        <div class="item flex width-100" data-function="sleepmode" tabindex="1">
-          <span class="text">activate sleep mode</span
-          ><span class="middle"></span><span class="key">3</span>
-        </div>
-
-        <div
-          class="item flex width-100"
-          data-function="audio-player"
-          tabindex="2"
-        >
-          <span class="text">open audio player</span><span class="middle"></span
-          ><span class="key">*</span>
-        </div>
-
-        <div class="item flex width-100" data-function="volume" tabindex="3">
-          <span class="text">volume</span><span class="middle"></span
-          ><span class="key">#</span>
-        </div>
-
-        <div class="item flex width-100" data-function="share" tabindex="4">
-          <span class="text">share</span><span class="middle"></span
-          ><span class="key">0</span>
-        </div>
-
-        <div data-function="reload" class="item flex width-100" tabindex="5">
-          <span class="text">update content</span><span class="middle"></span
-          ><span class="key">0</span>
-        </div>
-
-        <div
-          data-function="download-list"
-          class="item flex width-100"
-          tabindex="6"
-        >
-          <span class="text">download manager</span><span class="middle"></span
-          ><span class="key"></span>
-        </div>
-
-        <div
-          data-function="sort-by-name"
-          class="item flex width-100"
-          tabindex="7"
-        >
-          <span class="text">sort tab by title</span><span class="middle"></span
-          ><span class="key">7</span>
-        </div>
-
-        <div
-          data-function="sort-by-date"
-          class="item flex width-100"
-          tabindex="8"
-        >
-          <span class="text">sort tab by date</span><span class="middle"></span>
-          <span class="key">7</span>
-        </div>
-
-        <div id="KaiOsAds-Wrapper"></div>
-      </div>
-
-      <div id="article-option">
-        <div class="item width-100 flex" tabindex="0" data-function="share">
-          <img src="assets/icons/E253.svg" /><span>share</span>
-        </div>
-        <div class="item width-100 flex" tabindex="1" data-function="open_in_browser">
-          <img src="assets/icons/E24F.svg" /><span>open in browser</span>
-        </div>
-        <div class="item width-100 mastodon-item flex" tabindex="2" data-function="reblog">
-          <img src="assets/icons/reblog.svg" /><span>reblog</span>
-        </div>
-        <div class="item width-100 mastodon-item flex" tabindex="3" data-function="favourite">
-          <img src="assets/icons/2605.svg" /><span>favourite</span>
-        </div>
-      </div>
-
-      <div id="settings">
-        <h2 class="item" tabindex="0">Icons & Shortcuts</h2>
-        <ul id="icons-shortcuts">
-          <li class="flex">* <span>Audioplayer</span></li>
-          <li class="flex"># <span>Volumecontrol</span></li>
-          <li class="flex">
-            <img src="assets/icons/podcast.png" /><span>Podcast</span>
-          </li>
-          <li class="flex">
-            <img src="assets/icons/youtube.png" /><span>Youtube</span>
-          </li>
-          <li class="flex">
-            <img src="assets/icons/diamond.svg" /><span>Podcast listened</span>
-          </li>
-          <li class="flex">
-            <img src="assets/icons/ghost.svg" /><span>Podcast in progress</span>
-          </li>
-          <li class="flex"># <span>Volumecontrol</span></li>
-          <li class="flex">0 Longpress<span>Reload Content</span></li>
-          <li class="flex">2/5<span>Jump to next channel</span></li>
-        </ul>
-        <h2>Settings</h2>
-        <div class="item input-parent">
-          <label for="time">automatic download of new content</label>
-          <select id="time" class="select-box">
-            <option value="never">on start</option>
-            <option value="20">20min</option>
-            <option value="40">40min</option>
-            <option value="60">1h</option>
-            <option value="120">2h</option>
-            <option value="360">6h</option>
-            <option value="1440">24h</option>
-          </select>
-        </div>
-
-        <div id="last-update"></div>
-
-        <h2>where should the list of the rss feed be loaded from?</h2>
-
-        <div class="item input-parent" tabindex="2">
-          <label for="source-local">
-            <strong>select local opml file</strong>
-          </label>
-          <select id="source-local" class="select-box"></select>
-        </div>
-
-        <div class="item input-parent" tabindex="2">
-          <label for="source"><strong>url</strong></label>
-          <input
-            placeholder="https://xyz.com/feeds.opml"
-            type="url"
-            id="source"
-          />
-        </div>
-
-        <h2>Mastodon</h2>
-        <div class="item input-parent" tabindex="2">
-          <label for="mastodon-server" id="mastodon-label"><strong>Mastodon Server</strong></label>
-          <input
-            placeholder="https://xyz.com"
-            type="url"
-            id="mastodon-server"
-          />
-        </div>
-        <button class="item mastodon-connect-button" data-function="mastodon-connect">Connect</button>
-
-        <div class="item input-parent">
-          <label for="sleep-mode"
-            ><strong
-              >Timer. <br />Here you can set after how many minutes the audio
-              playback should be stopped. You can activate it with key
-              3.</strong
-            ></label
-          >
-          <select id="sleep-mode" class="select-box">
-            <option value="0">0</option>
-            <option value="10">10min</option>
-            <option value="20">20min</option>
-            <option value="30">30min</option>
-            <option value="40">40min</option>
-            <option value="50">50min</option>
-            <option value="60">1h</option>
-            <option value="120">2h</option>
-          </select>
-        </div>
-        <button tabindex="6" class="item export">export settings</button>
-        <button tabindex="7" class="item loadsettings">load settings</button>
-        <button tabindex="9" class="item save">save settings</button>
-      </div>
-
-      <div id="feed-download-list" class="width-100">
-        <h2>Number of episodes</h2>
-
-        <div id="feed-download-list-box"></div>
-      </div>
-
-      <script id="feed-download-list-template" type="x-tmpl-mustache">
-
-        {{#data}}
-        <div class="item input-parent flex width-100 justify-content-spacebetween" tabindex={{index}}>
-          <label class="{{#error}}error{{/error}}">{{title}}</label><span class="middle"></span>
-        <input data-url={{url}} type="tel" min="1" max="100" value={{amount}}>
-        </div>
-        {{/data}}
-      </script>
-
-      <div id="link-list" class="width-100 height-100 text-center"></div>
-
-      <script id="link-list-template" type="x-tmpl-mustache">
-
-         {{#data}}
-        <button class="item" data-function="open-url" data-url={{url}} tabindex={{index}}>{{url}}</button>
-         {{/data}}
-      </script>
-      <!---------------->
-      <!--news-feed-->
-      <!---------------->
-
-      <div id="news-feed" class="width-100 height-100 page">
-        <div id="news-feed-list"></div>
-
-        <script id="template" type="x-tmpl-mustache">
-
-          {{#data}}
-              <article tabIndex={{index}} class="channels item" data-media="{{media}}" data-read="{{read}}" data-type="{{type}}" data-listened="{{listened}}" data-startlistened="{{start_listened}}" data-order="{{dateunix}}" data-youtube-id="{{youtube_id}}" data-video-url="{{video_url}}" data-recently="{{recently_order}}" data-mastodon-replies="{{replies_count}}" data-mastodon-reblog="{{reblogs_count}}" data-mastodon-favourites="{{favourites_count}}" data-category="{{category}} {{recently_played}} all" data-id="{{cid}}"  data-channel="{{channel}}" data-link="{{link}}" data-youtube-id="{{id}}" data-audio-type="{{type}}" data-title="{{title}}" data-image="{{image}}">
-                  <div class="flex grid-col-10 icon-bar">
-                      <div class="podcast-icon"><img src="assets/icons/podcast.png"></div>
-                      <div class="youtube-icon"><img src="assets/icons/youtube.png"></div>
-                      <div class="listened-icon"><img src="assets/icons/diamond.svg"></div>
-                      <div class="startlistened-icon"><img src="assets/icons/ghost.svg"></div>
-                      <div class="replies-icon"><img src="assets/icons/replies.svg"></div>
-                      <div class="favorit-icon"><img src="assets/icons/2605.svg"></div>
-                      <div class="reblog-icon"><img src="assets/icons/reblog.svg"></div>
-
-                  </div>
-                  <div class="channel">{{channel}}<span></span></div>
-                  <time>{{date}}</time>
-                  <div class="flex duration-filesize">
-                      <div class="duration flex">{{{duration}}}</div>
-                      <div class="filesize">{{filesize}}</div>
-                  </div>
-                  <h1 class="title">{{title}}</h1>
-                  <div class="summary">{{{summary}}}
-                  {{#youtube_thumbnail}}
-                  <img src="{{youtube_thumbnail}}">
-                  {{/youtube_thumbnail}}
-
-                  {{#mastodon}}
-                  <img src="{{image}}">
-                 
-
-
-
-                  {{/mastodon}}
-
-                  {{#replies}}
-                  <br>
-                  <br>
-                  <strong>Comments</strong>
-                  
-                  {{#descendants}}
-                 
-                  <section class="comments">
-                  {{#account}}<strong>{{display_name}}</strong>{{/account}}
-                  {{{content}}}
-                  </section>
-
-                  {{/descendants}}
-
-                  {{/replies}}
-                 
-
-
-                  </div>
-              </article>
-          {{/data}}
-        </script>
-
-        <script id="sb" type="x-tmpl-mustache">
-           <option value="">--</option>
-          {{#data}}
-          <option value="{{filename}}">{{filename}}</option>
-          {{/data}}
-        </script>
-      </div>
+        <div id="app" class="width-100 flex justify-content-spacearound"></div>
     </div>
 
-    <script type="module" src="app.js"></script>
-    <script src="assets/js/youtube.js"></script>
+    </div>
 
-    <script src="http://127.0.0.1/api/v1/shared/core.js"></script>
-    <script src="http://127.0.0.1/api/v1/shared/session.js"></script>
-    <script src="http://127.0.0.1/api/v1/apps/service.js"></script>
-    <script src="http://127.0.0.1/api/v1/audiovolumemanager/service.js"></script>
-  </body>
+</body>
+<script type="module" src="index.js"></script>
+
 </html>

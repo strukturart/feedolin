@@ -3,109 +3,105 @@
    id="emoji"
    viewBox="0 0 72 72"
    version="1.1"
-   sodipodi:docname="pencil.svg"
-   inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
+   sodipodi:docname="save.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2298">
-    <linearGradient
-       id="linearGradient4804"
-       inkscape:swatch="solid">
-      <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="0"
-         id="stop4802" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient4780"
-       inkscape:swatch="solid">
-      <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="0"
-         id="stop4778" />
-    </linearGradient>
-  </defs>
+     id="defs44" />
   <sodipodi:namedview
-     id="namedview2296"
+     id="namedview42"
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
      inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="10.458333"
-     inkscape:cx="36"
-     inkscape:cy="36"
+     inkscape:zoom="3.2777778"
+     inkscape:cx="36.152542"
+     inkscape:cy="36.152542"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="emoji" />
+     inkscape:current-layer="emoji"
+     inkscape:pageshadow="2" />
+  <g
+     id="hair" />
+  <g
+     id="skin" />
+  <g
+     id="skin-shadow" />
   <ellipse
-     style="fill:#fffffd;fill-opacity:1;stroke:none"
+     style="fill:#fffffd;fill-opacity:1;stroke-width:4.65"
      id="path848"
-     cx="36"
-     cy="36"
-     rx="34.541"
+     cx="37.807865"
+     cy="36.327728"
+     rx="34.540501"
      ry="34.540272" />
   <g
      id="line"
-     transform="matrix(0.88529021,0,0,0.88529021,3.8437684,5.1039595)">
-    <polygon
-       fill="none"
-       stroke="#000000"
-       stroke-linecap="round"
-       stroke-linejoin="round"
-       stroke-miterlimit="10"
-       stroke-width="2"
-       points="53.8207,27.301 43.9212,17.4015 17.9281,43.3946 14.3904,52.6032 18.6304,56.8203 27.8278,53.2939 "
-       id="polygon2284" />
-    <polyline
-       fill="none"
-       stroke="#000000"
-       stroke-linecap="round"
-       stroke-linejoin="round"
-       stroke-miterlimit="10"
-       stroke-width="2"
-       points="47.3354,13.9873 50.8388,10.4839 60.7383,20.3834 57.2645,23.8572"
-       id="polyline2286" />
+     transform="translate(1.8440082,-2.977655)">
     <line
-       x1="18.5562"
-       x2="28.4557"
-       y1="42.766499"
-       y2="52.665901"
+       x1="36.085098"
+       x2="36.085098"
+       y1="17.146601"
+       y2="36.016499"
        fill="none"
        stroke="#000000"
        stroke-linecap="round"
        stroke-linejoin="round"
        stroke-miterlimit="10"
        stroke-width="2"
-       id="line2288" />
-    <polyline
-       fill="none"
-       stroke="#000000"
-       stroke-linecap="round"
-       stroke-linejoin="round"
-       stroke-miterlimit="10"
-       stroke-width="2"
-       points="14.3979,52.5817 11.9073,59.3148 18.6558,56.809"
-       id="polyline2290" />
+       id="line2" />
     <line
-       x1="36.909901"
-       x2="46.422501"
-       y1="25.007299"
-       y2="34.519901"
+       x1="42.240002"
+       x2="36.099998"
+       y1="29.8951"
+       y2="36.035099"
        fill="none"
        stroke="#000000"
        stroke-linecap="round"
        stroke-linejoin="round"
        stroke-miterlimit="10"
        stroke-width="2"
-       id="line2292" />
+       id="line4" />
+    <line
+       x1="29.91"
+       x2="36.049999"
+       y1="29.8951"
+       y2="36.035099"
+       fill="none"
+       stroke="#000000"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       stroke-width="2"
+       id="line6" />
+    <path
+       fill="none"
+       stroke="#000000"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       stroke-width="2"
+       d="M 56.8961,54.9782 H 15.0768 c -1.65,0 -3,-1.35 -3,-3 V 44.402 c 0,-1.65 1.35,-3 3,-3 h 41.8194 c 1.65,0 3,1.35 3,3 v 7.5762 c -1e-4,1.65 -1.3501,3 -3.0001,3 z"
+       id="path8" />
+    <circle
+       cx="19.0173"
+       cy="48.288601"
+       r="2"
+       fill="none"
+       stroke="#000000"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       stroke-width="2"
+       id="circle10" />
   </g>
 </svg>

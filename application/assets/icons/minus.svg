@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   sodipodi:docname="option.svg"
+   sodipodi:docname="minus.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -19,8 +19,8 @@
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="true"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
      fit-margin-top="0"
@@ -28,7 +28,7 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="0.94039044"
-     inkscape:cx="-118.56777"
+     inkscape:cx="-117.50438"
      inkscape:cy="227.03336"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
@@ -47,29 +47,23 @@
        id="g3961"
        transform="translate(-19.42887,-26.527578)">
       <circle
-         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.0854831"
+         style="fill:#fffffd;fill-opacity:1;stroke-width:2.69256"
          id="path848"
          cx="105"
          cy="148.5"
          r="20" />
-      <circle
-         style="fill:#272900;fill-opacity:1;stroke-width:2.4345"
-         id="path4249"
-         cx="94.90535"
-         cy="148.5"
-         r="2.5" />
-      <circle
-         style="fill:#272900;fill-opacity:1;stroke-width:2.4345"
-         id="path4249-5"
-         cx="105.04539"
-         cy="148.5"
-         r="2.5" />
-      <circle
-         style="fill:#272900;fill-opacity:1;stroke-width:2.4345"
-         id="path4249-5-9"
-         cx="114.99725"
-         cy="148.5"
-         r="2.5" />
+      <text
+         xml:space="preserve"
+         style="font-size:34.7523px;line-height:29.6186px;font-family:Barlow;-inkscape-font-specification:'Barlow, Normal';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.18475px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="129.96468"
+         y="107.87889"
+         id="text1838"
+         transform="scale(0.75728753,1.3205024)"><tspan
+           sodipodi:role="line"
+           id="tspan1836"
+           style="fill:#000000;fill-opacity:1;stroke-width:1.18475px"
+           x="129.96468"
+           y="107.87889">_</tspan></text>
     </g>
   </g>
 </svg>

@@ -1,18 +1,22 @@
 div#qr-screen {
-  top: 0px;
+  top: 0;
   left: 0;
   position: fixed;
-
-  min-height: 100vh !important;
-  min-width: 100vw !important;
-
+  z-index: 200000;
+  display: block;
+  height: 100vh;
+  width: 100vw;
   z-index: 2000000000000;
   display: none;
 }
 
 #video {
-  height: 100vh !important;
-  width: 100vw !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 #corner-nw,
@@ -23,7 +27,6 @@ div#qr-screen {
   height: 30px;
   position: fixed;
   width: 30px;
-  z-index: 2000000000000;
 }
 
 #corner-nw {

@@ -5,23 +5,26 @@
   "lang": "en-US",
   "start_url": "/index.html",
   "short_name": "Feedolin",
-  "categories": ["News","Social"],
+  "categories": ["News", "Social"],
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "userAgentInfo": "feedolin written by strukturart@gmail.com",
 
   "icons": [
     {
-      "src": "/assets/icons/icon-56-56.png",
+      "src": "assets/icons/icon-56-56.png",
       "type": "image/png",
       "sizes": "56x56"
     },
     {
-      "src": "/assets/icons/icon-112-112.png",
+      "src": "assets/icons/icon-112-112.png",
       "type": "image/png",
       "sizes": "112x112"
     }
   ],
 
   "b2g_features": {
-    "version": "1.7.99",
+    "version": "1.8.23",
     "id": "feedolin",
     "subtitle": "RSS Reader and Mastodon Client",
     "core": true,
@@ -44,14 +47,13 @@
     ],
 
     "activities": {
-      "oauth": {}
+      "feedolin": {},
+      "pick": {}
     },
 
     "serviceworker": {
       "script_url": "sw.js"
     },
-
-
 
     "permissions": {
       "desktop-notification": {
