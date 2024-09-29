@@ -45,7 +45,7 @@ self.onsystemmessage = (evt) => {
   } catch (e) {}
 };
 
-const CACHE_NAME = "pwa-cache-v0.990";
+const CACHE_NAME = "pwa-cache-v0.1014";
 const urlsToCache = [
   "/assets/icons/link.svg",
   "/assets/icons/option.svg",
@@ -97,7 +97,6 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) {
-        console.log("in catch " + event.request);
       }
       // If the request is in the cache, return it. Otherwise, fetch from the network.
       return response || fetch(event.request);

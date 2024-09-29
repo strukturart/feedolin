@@ -2,21 +2,6 @@
 
 import { status, settings } from "../../index.js";
 
-export const month = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 export let setTabindex = () => {
   let visibleElements = document.querySelectorAll(
     '.item:not([style*="display: none"])'
@@ -453,6 +438,45 @@ export let sort_array = function (arr, item_key, type) {
       }
       return 0;
     });
+  }
+};
+
+////////////////////////
+////VOLUME CONTROL//////
+///////////////////////
+
+function startVolumeManager() {
+  const session = new lib_session.Session();
+  const sessionstate = {};
+  navigator.volumeManager = null;
+  sessionstate.onsessionconnected = function () {
+    // console.log(AudioVolumeManager onsessionconnected);
+    lib_audiovolume.AudioVolumeManager.get(session)
+      .then((AudioVolumeManagerService) => {
+        navigator.volumeManager = AudioVolumeManagerService;
+      })
+      .catch((e) => {
+        // console.log(Error calling AudioVolumeManager service${JSON.stringify(e)});
+        navigator.volumeManager = null;
+      });
+  };
+  sessionstate.onsessiondisconnected = function () {
+    startVolumeManager();
+  };
+  session.open("websocket", "localhost", "secrettoken", sessionstate, true);
+}
+if ("b2g" in navigator) setTimeout(startVolumeManager, 5000);
+
+export let volume_control = function () {
+  //KaiOS 3.x
+  if ("b2g" in navigator) {
+    try {
+      navigator.volumeManager.requestVolumeShow();
+      status.window_status = "volume";
+      setTimeout(() => {
+        status.window_status = "";
+      }, 2000);
+    } catch (e) {}
   }
 };
 

@@ -1,4 +1,4 @@
-![logo](/images/logo.svg)
+![logo](/application/assets/icons/icon-112-112.png)
 
 # Feedolin
 
@@ -8,7 +8,7 @@
 
 Feedolin is an RSS / Atom reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a KaiOS device. the list of subscribed websites / podcasts is managed locally or online in an opml.
 
-**NEW**  
+**NEW**
 
 Now it is also possible to load mastodon content, in the settings of the app you will find a login button with which you can log in with your mastodon account.
 
@@ -16,10 +16,7 @@ Now it is also possible to load mastodon content, in the settings of the app you
 
 - read you favorit rss/atom feeds
 - stream your podcasts
-- show youtube/soundcloud channels
 - read mastodon publice & home timeline
-- listen spotify->rss podcasts
-- read reddit.com ->rss
 - open rss feedlink
 - offline use (caching)
 
@@ -54,8 +51,8 @@ Originally I only wanted to write an rss reader for KaiOS, now I have decided to
 - Enter to show full news
 - Backspace to go back
 - #-key volume
+- \*-key open audioplayer
 - streaming audio seeking: cursor left/right
-- Volume
 
 ## Tips
 
@@ -71,30 +68,4 @@ RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
 
 ## Donation
 
-If you use the app often, please donate an amount to me.
-<br>
-
-<table class="border-0"> 
-  <tr class="border-0" >
-    <td valign="top" class="border-0">
-        <div>
-            <a href="https://paypal.me/strukturart?locale.x=de_DE" target="_blank">
-                <img src="/images/paypal.png" width="120px">
-            </a>
-        </div>
-    </td>
-    <td valign="top" class="border-0">
-        <div>
-            <div>Bitcoincash</div>
-            <img src="/images/bitcoincash_rcv.png" width="120px">
-        </div>
-    </td>
-    <td valign="top" class="border-0">
-        <div>
-            <div>Bitcoin</div>
-            <img src="/images/bitcoin_rcv.png" width="120px">
-        </div>
-    </td>
-
-  </tr>
- </table>
+<a href="https://liberapay.com/perry_______/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
