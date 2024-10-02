@@ -20,7 +20,7 @@ Now it is also possible to load mastodon content, in the settings of the app you
 - open rss feedlink
 - offline use (caching)
 
-![feedolin_mockup](/images/feedolin_mockup.png)
+![feedolin_mockup](/image/mockup.png)
 
 ## Installation
 

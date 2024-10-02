@@ -137,45 +137,43 @@ let mastodon_connect = () => {
     var currentUrl = window.location.href;
     const params = new URLSearchParams(currentUrl.split("?")[1]);
     const code = params.get("code");
-    if (!code) return false;
-
-    let result = code.split("#")[0];
     if (code) {
-      localforage.setItem("mastodon_code", result);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+      let result = code.split("#")[0];
+      if (code) {
+        localforage.setItem("mastodon_code", result);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result);
-      urlencoded.append("scope", "read");
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("code", result);
+        urlencoded.append("scope", "read");
 
-      urlencoded.append("grant_type", "authorization_code");
-      urlencoded.append("redirect_uri", process.env.redirect);
-      urlencoded.append("client_id", process.env.clientId);
-      urlencoded.append("client_secret", process.env.clientSecret);
+        urlencoded.append("grant_type", "authorization_code");
+        urlencoded.append("redirect_uri", process.env.redirect);
+        urlencoded.append("client_id", process.env.clientId);
+        urlencoded.append("client_secret", process.env.clientSecret);
 
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: "follow",
-      };
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: "follow",
+        };
 
-      fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
-        .then((response) => response.json()) // Parse the JSON once
-        .then((data) => {
-          console.log(data); // Log the parsed data
+        fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
+          .then((response) => response.json()) // Parse the JSON once
+          .then((data) => {
+            settings.mastodon_token = data.access_token; // Access the token
+            localforage.setItem("settings", settings);
+            m.route.set("/start?index=0");
 
-          settings.mastodon_token = data.access_token; // Access the token
-          localforage.setItem("settings", settings);
-          m.route.set("/start?index=0");
-
-          side_toaster("Successfully connected", 10000);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          side_toaster("Connection failed");
-        });
+            side_toaster("Successfully connected", 10000);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            side_toaster("Connection failed");
+          });
+      }
     }
   });
 };
@@ -276,7 +274,7 @@ let check_media = (h) => {
 //clean input
 let clean = (i) => {
   return sanitizeHtml(i, {
-    allowedTags: ["b", "i", "em", "strong", "a", "img", "src"],
+    allowedTags: ["b", "i", "em", "strong", "a", "img", "src", "p"],
     allowedAttributes: {
       "a": ["href"],
       "img": ["src"],
@@ -413,7 +411,7 @@ const fetchContent = async (feed_download_list) => {
               type: "mastodon",
               pubDate: k.created_at,
               isoDate: k.created_at,
-              title: k.account.display_name,
+              title: k.account.display_name || k.account.username,
               content: k.content,
               url: k.uri,
             };
@@ -469,7 +467,7 @@ const fetchContent = async (feed_download_list) => {
           //ATOM
           if (jObj.feed)
             jObj.feed.entry.forEach((f, i) => {
-              if (i < 15) {
+              if (i < 10) {
                 try {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.published);
@@ -477,6 +475,8 @@ const fetchContent = async (feed_download_list) => {
                   f.url = f.link["@_href"];
                   f.feed_title = e.title;
                   f.typeOfFeed = "ATOM";
+
+                  if (f["yt:videoId"]) f.youtubeid = f["yt:videoId"];
 
                   if (dayjs(f.published).isValid()) {
                     f.isoDate = dayjs(f.published).toISOString();
@@ -507,7 +507,7 @@ const fetchContent = async (feed_download_list) => {
           //RSS
           if (jObj.rss)
             jObj.rss.channel.item.forEach((f, i) => {
-              if (i < 15) {
+              if (i < 10) {
                 try {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.pubDate);
@@ -762,12 +762,12 @@ var options = {
 
 let counter = -1;
 let channel_filter = "";
-if (channels.length > 0) channel_filter = channels[0];
+
 let page_index = 0;
+let first = false;
 
 var start = {
   oninit: function () {
-    articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
     const entries = window.performance.getEntriesByType("navigation");
     if (entries.length && entries[0].type === "reload") {
       m.route.set("/start");
@@ -775,6 +775,15 @@ var start = {
   },
 
   view: function () {
+    if (channels.length > 0 && !first) {
+      channel_filter = channels[0];
+      first = true;
+    }
+
+    const filteredArticles = articles.filter(
+      (h) => channel_filter === "" || channel_filter === h.channel
+    );
+
     return m(
       "div",
       {
@@ -804,11 +813,7 @@ var start = {
       },
       m("span", { class: "channel", oncreate: () => {} }, channel_filter),
 
-      articles.map((h, i) => {
-        if (channel_filter !== "" && channel_filter !== h.channel) {
-          return;
-        }
-
+      filteredArticles.map((h, i) => {
         const readClass = read_articles.includes(h.id) ? "read" : "";
 
         return m(
@@ -818,22 +823,34 @@ var start = {
             "data-id": h.id,
             "data-type": h.type,
             oncreate: (vnode) => {
-              if (i == page_index) {
-                vnode.dom.focus();
-                scrollToCenter();
+              // Set tabindex after all articles are rendered
+              if (page_index == 0 && i == 0) {
+                setTimeout(() => {
+                  vnode.dom.focus();
+                }, 2000);
+              } else {
+                if (h.id == page_index) {
+                  setTimeout(() => {
+                    vnode.dom.focus();
+                    scrollToCenter();
+                  }, 1100);
+                }
               }
 
-              document.querySelectorAll(".item").forEach((e, k) => {
-                e.setAttribute("tabindex", k);
-              });
+              if (i == filteredArticles.length - 1)
+                setTimeout(() => {
+                  document.querySelectorAll(".item").forEach((e, k) => {
+                    e.setAttribute("tabindex", k);
+                  });
+                }, 1000);
             },
             onclick: () => {
-              m.route.set("/article/?index=" + i);
+              m.route.set("/article/?index=" + h.id);
               add_read_article(h.id);
             },
             onkeydown: (e) => {
               if (e.key === "Enter") {
-                m.route.set("/article/?index=" + i);
+                m.route.set("/article/?index=" + h.id);
                 add_read_article(h.id);
               }
             },
@@ -864,7 +881,7 @@ var article = {
       },
       articles.map((h, i) => {
         var index = m.route.param("index");
-        if (index != i) return;
+        if (index != h.id) return;
 
         current_article = h;
 
@@ -872,7 +889,7 @@ var article = {
           "article",
           {
             class: "item",
-            tabindex: 0, // Make the article focusable
+            tabindex: 0,
 
             oncreate: (vnode) => {
               vnode.dom.focus();
@@ -894,22 +911,32 @@ var article = {
                   "<img src='assets/icons/play.svg'>"
                 );
               }
+
+              if (h.type == "youtube") {
+                h.type = "youtube";
+                bottom_bar(
+                  "<img src='assets/icons/link.svg'>",
+                  "",
+                  "<img src='assets/icons/play.svg'>"
+                );
+              }
             },
           },
           [
-            m("time", dayjs(h.isoDate).format("DD MMM YYYY")),
             m(
-              "h2",
+              "time",
               {
                 id: "top",
+
                 oncreate: () => {
                   setTimeout(() => {
                     document.querySelector("#top").scrollIntoView();
                   }, 1000);
                 },
               },
-              h.title
+              dayjs(h.isoDate).format("DD MMM YYYY")
             ),
+            m("h2", h.title),
             m("div", { class: "text" }, [m.trust(clean(h.content))]),
           ]
         );
@@ -1185,6 +1212,92 @@ const VideoPlayerView = {
           style: { width: `${progressPercent}%` },
         }),
       ]),
+    ]);
+  },
+};
+
+//youtube
+
+// YouTubePlayerView definition
+const YouTubePlayerView = {
+  player: null, // Store the YouTube player instance
+
+  oncreate: ({ attrs }) => {
+    if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
+    bottom_bar("", "", "");
+
+    // Ensure the YouTube IFrame Player API is only loaded once
+    if (!window.YT || !window.YT.Player) {
+      const script = document.createElement("script");
+      script.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(script);
+    }
+
+    const createPlayer = () => {
+      // Create the player only after API is ready
+      YouTubePlayerView.player = new YT.Player("video-container", {
+        height: "390",
+        width: "640",
+        videoId: attrs.videoId, // Use the video ID from the route or attributes
+        events: {
+          "onReady": YouTubePlayerView.onPlayerReady, // Attach event for when the player is ready
+          "onStateChange": YouTubePlayerView.onPlayerStateChange, // Handle state changes
+        },
+      });
+    };
+
+    // If the API is already available, create the player immediately
+    if (window.YT && window.YT.Player) {
+      createPlayer();
+    } else {
+      // Wait for the API to be ready before creating the player
+      window.onYouTubeIframeAPIReady = createPlayer;
+    }
+
+    // Add keydown listener for controls
+    document.addEventListener("keydown", YouTubePlayerView.handleKeydown);
+  },
+
+  onPlayerReady: (event) => {
+    // The player is ready to be interacted with
+    event.target.playVideo(); // Start playing the video once the player is ready
+  },
+
+  handleKeydown: (e) => {
+    if (e.key === "Enter") {
+      // Toggle play/pause on Enter key press
+      YouTubePlayerView.togglePlayPause();
+    } else if (e.key === "ArrowLeft") {
+      YouTubePlayerView.seek("left");
+    } else if (e.key === "ArrowRight") {
+      YouTubePlayerView.seek("right");
+    }
+  },
+
+  togglePlayPause: () => {
+    if (YouTubePlayerView.player.getPlayerState() === YT.PlayerState.PLAYING) {
+      YouTubePlayerView.player.pauseVideo();
+    } else {
+      YouTubePlayerView.player.playVideo();
+    }
+  },
+
+  seek: (direction) => {
+    const currentTime = YouTubePlayerView.player.getCurrentTime();
+    const seekAmount = 5; // 5 seconds seek step
+    if (direction === "left") {
+      YouTubePlayerView.player.seekTo(
+        Math.max(0, currentTime - seekAmount),
+        true
+      );
+    } else if (direction === "right") {
+      YouTubePlayerView.player.seekTo(currentTime + seekAmount, true);
+    }
+  },
+
+  view: () => {
+    return m("div", { class: "youtube-player" }, [
+      m("div", { id: "video-container", class: "video-container" }), // The YouTube iframe player will be injected here
     ]);
   },
 };
@@ -1737,6 +1850,7 @@ m.route(root, "/intro", {
   "/localOPML": localOPML,
   "/AudioPlayerView": AudioPlayerView,
   "/VideoPlayerView": VideoPlayerView,
+  "/YouTubePlayerView": YouTubePlayerView,
 });
 
 function scrollToCenter() {
@@ -2060,6 +2174,13 @@ document.addEventListener("DOMContentLoaded", function (e) {
                 current_article.enclosure["@_url"]
               )}`
             );
+
+          if (current_article.type == "youtube")
+            m.route.set(
+              `/YouTubePlayerView?videoId=${encodeURIComponent(
+                current_article.youtubeid
+              )}`
+            );
         }
         break;
 
@@ -2091,9 +2212,12 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
       case "Backspace":
         if (r.startsWith("/article")) {
-          history.back();
-          const index = m.route.param("index"); // Get 'index' param from the current URL
-          console.log(index);
+          const index = m.route.param("index");
+          m.route.set("/start?index=" + index);
+        }
+
+        if (r.startsWith("/YouTubePlayerView")) {
+          const index = m.route.param("index");
           m.route.set("/start?index=" + index);
         }
 
@@ -2174,7 +2298,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
+    if (document.visibilityState === "visible" && settings.last_update) {
       status.visibility = true;
       let dif = new Date() / 1000 - settings.last_update / 1000;
       if (dif > 36000) {

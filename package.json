@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf dist/* && parcel build --no-source-maps --no-content-hash application/index.html  && cp application/manifest.webapp dist && mkdir dist/assets && cp -r application/assets/icons dist/assets/ &&  mkdir -p dist/assets/js/ && cp application/assets/js/kaiads.v5.min.js dist/assets/js/",
     "run": "parcel",
-    "web": "rm -rf webpage/* && parcel build --dist-dir webpage --public-url ./ --no-source-maps --no-content-hash application/index.html && cp application/manifest.webapp webpage && cp application/manifest.webmanifest webpage && mkdir -p webpage/assets && cp -r application/assets/icons webpage/assets/ && mkdir -p webpage/assets/js/ && cp application/assets/js/kaiads.v5.min.js webpage/assets/js/ &&  cp -r application/assets/fonts webpage/assets/"
+    "web": "rm -rf docs/* && parcel build --dist-dir docs --public-url ./ --no-source-maps --no-content-hash application/index.html && cp application/manifest.webapp webpage && cp application/manifest.webmanifest docs && mkdir -p docs/assets && cp -r application/assets/icons docs/assets/ && mkdir -p docs/assets/js/ && cp application/assets/js/kaiads.v5.min.js docs/assets/js/ &&  cp -r application/assets/fonts docs/assets/"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
