@@ -38,11 +38,19 @@ const parser = new fxparser.XMLParser({
 export let status = {
   visibility: true,
   deviceOnline: true,
-  notKaiOS: window.innerWidth > 300 ? true : false,
+  notKaiOS: true,
   os: detectMobileOS(),
   debug: false,
   local_opml: [],
 };
+
+if (typeof window !== "undefined") {
+  status.notKaiOS = window.innerWidth > 300 ? true : false;
+} else {
+  // Fallback logic if window is not available
+  const userAgent = navigator.userAgent || "";
+  status.notKaiOS = !userAgent.includes("KaiOS");
+}
 
 let current_article = "";
 const proxy = "https://corsproxy.io/?";
@@ -52,6 +60,7 @@ let default_settings = {
     "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
   "opml_local": "",
   "proxy_url": "https://corsproxy.io/?",
+  "cache_time": 1000,
 };
 
 export let settings = {};
@@ -284,16 +293,19 @@ let clean = (i) => {
 
 const fetchOPML = async (url) => {
   try {
-    const response = await fetch(url, {
+    const uniqueUrl = `${url}?t=${new Date().getTime()}`; // Cache-busting query param
+
+    const response = await fetch(uniqueUrl, {
       method: "GET",
-      cache: "no-cache", // prevents caching if you want fresh data
-      redirect: "follow", // follow redirects automatically
+      cache: "no-cache",
+      redirect: "follow",
     });
     if (!response.ok) {
       alert(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.text();
     load_feeds(data); // Process the content (newly fetched data)
+    console.log(data);
   } catch (error) {
     console.log("Error fetching the OPML file:", error);
     m.route.set("/start/?index=0");
@@ -374,11 +386,14 @@ const fetchContent = async (feed_download_list) => {
   const totalFeeds = feed_download_list.length; // Total number of feeds to be fetched
 
   // Function to check if all feeds are loaded
+  let first = false;
+
   const checkIfAllFeedsLoaded = () => {
     if (completedFeeds === totalFeeds) {
       console.log("All feeds are loaded");
       // All feeds are done loading, you can proceed with further actions
       //cache data
+
       localforage
         .setItem("articles", articles)
         .then(() => {
@@ -389,7 +404,13 @@ const fetchContent = async (feed_download_list) => {
               channels.push(e.channel);
             }
           });
-          m.route.set("/start/?index=0");
+
+          if (channels.length > 0 && !first) {
+            channel_filter = channels[0];
+            first = true;
+          }
+
+          m.route.set("/start");
         })
         .catch((err) => {
           console.error("Feeds cached", err);
@@ -616,7 +637,7 @@ let load_mastodon = () => {
 };
 
 let start_loading = () => {
-  fetchOPML(proxy + settings.opml_url);
+  fetchOPML(proxy + settings.opml_url + "?time=" + new Date());
   if (settings.opml_local) {
     load_feeds(settings.opml_local);
   }
@@ -639,9 +660,7 @@ localforage
       settings = default_settings;
       localforage
         .setItem("settings", settings)
-        .then(function (value) {
-          // Do other things once the value has been saved.
-        })
+        .then(function (value) {})
         .catch(function (err) {
           // This code runs if there were any errors
           console.log(err);
@@ -649,16 +668,41 @@ localforage
     }
     settings = value;
 
+    settings.cache_time = settings.cache_time || 1000;
+
+    if (settings.last_update) {
+      status.last_update_duration =
+        new Date() / 1000 - settings.last_update / 1000;
+    } else {
+      status.last_update_duration = 3600;
+    }
+
+    console.log(settings);
+
     checkOnlineStatus().then((isOnline) => {
-      if (isOnline) {
+      //is online use offline data or not
+      if (isOnline && status.last_update_duration > settings.cache_time) {
         start_loading();
       } else {
         localforage
           .getItem("articles")
           .then((value) => {
             articles = value;
-            m.route.set("/start/");
-            side_toaster("Device is offline, cached feeds loaded", 15000);
+
+            articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
+            articles.forEach((e) => {
+              if (channels.indexOf(e.channel) === -1 && e.channel) {
+                channels.push(e.channel);
+              }
+            });
+
+            if (channels.length) {
+              channel_filter = channels[0];
+            }
+
+            m.route.set("/start?index=0");
+            side_toaster("Cached feeds loaded", 15000);
           })
           .catch((err) => {});
       }
@@ -760,26 +804,18 @@ var options = {
   },
 };
 
+const entries = window.performance.getEntriesByType("navigation");
+if (entries.length && entries[0].type === "reload") {
+  m.route.set("/start");
+}
+
 let counter = -1;
 let channel_filter = "";
 
 let page_index = 0;
-let first = false;
 
 var start = {
-  oninit: function () {
-    const entries = window.performance.getEntriesByType("navigation");
-    if (entries.length && entries[0].type === "reload") {
-      m.route.set("/start");
-    }
-  },
-
   view: function () {
-    if (channels.length > 0 && !first) {
-      channel_filter = channels[0];
-      first = true;
-    }
-
     const filteredArticles = articles.filter(
       (h) => channel_filter === "" || channel_filter === h.channel
     );
@@ -813,13 +849,14 @@ var start = {
       },
       m("span", { class: "channel", oncreate: () => {} }, channel_filter),
 
+      // Loop through filteredArticles and create an article for each
       filteredArticles.map((h, i) => {
         const readClass = read_articles.includes(h.id) ? "read" : "";
 
         return m(
           "article",
           {
-            class: `item  ${readClass}`,
+            class: `item ${readClass}`,
             "data-id": h.id,
             "data-type": h.type,
             oncreate: (vnode) => {
@@ -845,12 +882,13 @@ var start = {
                 }, 1000);
             },
             onclick: () => {
-              m.route.set("/article/?index=" + h.id);
+              m.route.set("/article?index=" + h.id);
+
               add_read_article(h.id);
             },
             onkeydown: (e) => {
               if (e.key === "Enter") {
-                m.route.set("/article/?index=" + h.id);
+                m.route.set("/article?index=" + h.id);
                 add_read_article(h.id);
               }
             },
@@ -938,40 +976,6 @@ var article = {
             ),
             m("h2", h.title),
             m("div", { class: "text" }, [m.trust(clean(h.content))]),
-          ]
-        );
-      })
-    );
-  },
-};
-
-var index = {
-  view: function () {
-    return m(
-      "div",
-      {
-        class: "flex",
-        id: "index",
-        oncreate: () => {
-          if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/icons/back.svg'>");
-          bottom_bar("", "", "");
-        },
-      },
-      feed_download_list.map((h, i) => {
-        return m(
-          "article",
-          {
-            class: "item flex width-100",
-            tabindex: i,
-            oncreate: (vnode) => {
-              if (i == 0) vnode.dom.focus();
-            },
-          },
-          [
-            m("span", h.channel),
-            m("span", h.title),
-            h.error ? m("span", "error") : null,
           ]
         );
       })
@@ -1217,8 +1221,6 @@ const VideoPlayerView = {
 };
 
 //youtube
-
-// YouTubePlayerView definition
 const YouTubePlayerView = {
   player: null, // Store the YouTube player instance
 
@@ -1226,46 +1228,29 @@ const YouTubePlayerView = {
     if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
     bottom_bar("", "", "");
 
-    // Ensure the YouTube IFrame Player API is only loaded once
-    if (!window.YT || !window.YT.Player) {
-      const script = document.createElement("script");
-      script.src = "https://www.youtube.com/iframe_api";
-      document.body.appendChild(script);
-    }
-
-    const createPlayer = () => {
-      // Create the player only after API is ready
+    if (YT) {
+      // Create the YouTube player instance and assign it to YouTubePlayerView.player
       YouTubePlayerView.player = new YT.Player("video-container", {
-        height: "390",
-        width: "640",
-        videoId: attrs.videoId, // Use the video ID from the route or attributes
+        videoId: attrs.videoId, // Load video ID from the route or attributes
         events: {
-          "onReady": YouTubePlayerView.onPlayerReady, // Attach event for when the player is ready
-          "onStateChange": YouTubePlayerView.onPlayerStateChange, // Handle state changes
+          onReady: YouTubePlayerView.onPlayerReady, // Trigger this when the player is ready
         },
       });
-    };
-
-    // If the API is already available, create the player immediately
-    if (window.YT && window.YT.Player) {
-      createPlayer();
     } else {
-      // Wait for the API to be ready before creating the player
-      window.onYouTubeIframeAPIReady = createPlayer;
+      alert("YouTube player not loaded");
     }
 
-    // Add keydown listener for controls
+    // Listen for keydown events
     document.addEventListener("keydown", YouTubePlayerView.handleKeydown);
   },
 
   onPlayerReady: (event) => {
-    // The player is ready to be interacted with
-    event.target.playVideo(); // Start playing the video once the player is ready
+    // Automatically play the video when the player is ready
+    event.target.playVideo();
   },
 
   handleKeydown: (e) => {
     if (e.key === "Enter") {
-      // Toggle play/pause on Enter key press
       YouTubePlayerView.togglePlayPause();
     } else if (e.key === "ArrowLeft") {
       YouTubePlayerView.seek("left");
@@ -1275,7 +1260,9 @@ const YouTubePlayerView = {
   },
 
   togglePlayPause: () => {
-    if (YouTubePlayerView.player.getPlayerState() === YT.PlayerState.PLAYING) {
+    const state = YouTubePlayerView.player.getPlayerState();
+    if (state === 1) {
+      // 1 indicates the player is playing
       YouTubePlayerView.player.pauseVideo();
     } else {
       YouTubePlayerView.player.playVideo();
@@ -1284,7 +1271,7 @@ const YouTubePlayerView = {
 
   seek: (direction) => {
     const currentTime = YouTubePlayerView.player.getCurrentTime();
-    const seekAmount = 5; // 5 seconds seek step
+    const seekAmount = 5; // 5 seconds step
     if (direction === "left") {
       YouTubePlayerView.player.seekTo(
         Math.max(0, currentTime - seekAmount),
@@ -1297,7 +1284,7 @@ const YouTubePlayerView = {
 
   view: () => {
     return m("div", { class: "youtube-player" }, [
-      m("div", { id: "video-container", class: "video-container" }), // The YouTube iframe player will be injected here
+      m("div", { id: "video-container", class: "video-container" }), // YouTube iframe player will be injected here
     ]);
   },
 };
@@ -1308,12 +1295,12 @@ globalAudioElement.preload = "auto";
 
 if ("b2g" in navigator) {
   try {
-    navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
-    AudioChannelClient("content");
-    HTMLMediaElement.mozAudioChannelType = "content";
-    AudioContext.mozAudioChannelType = "content";
-    globalAudioElement.mozaudiochannel = "content";
     globalAudioElement.mozAudioChannelType = "content";
+
+    // For controlling the system audio channel
+    if (navigator.b2g.AudioChannelManager) {
+      navigator.b2g.AudioChannelManager.volumeControlChannel = "content";
+    }
   } catch (e) {
     console.log(e);
   }
@@ -1839,14 +1826,13 @@ var settingsView = {
 };
 
 m.route(root, "/intro", {
+  "/article": article,
   "/settingsView": settingsView,
   "/intro": intro,
   "/start": start,
   "/options": options,
   "/about": about,
   "/privacy_policy": privacy_policy,
-  "/article": article,
-  "/index": index,
   "/localOPML": localOPML,
   "/AudioPlayerView": AudioPlayerView,
   "/VideoPlayerView": VideoPlayerView,
@@ -2078,6 +2064,12 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "Backspace":
         window.close();
         break;
+
+      case "0":
+        articles = [];
+        side_toaster("load new content", 4000);
+        start_loading();
+        break;
     }
   }
 
@@ -2301,7 +2293,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     if (document.visibilityState === "visible" && settings.last_update) {
       status.visibility = true;
       let dif = new Date() / 1000 - settings.last_update / 1000;
-      if (dif > 36000) {
+      if (dif > settings.cache_time) {
         articles = [];
 
         side_toaster("load new content", 4000);

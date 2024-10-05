@@ -37,7 +37,7 @@ self.onsystemmessage = (evt) => {
 };
 
 if (status.notKaiOS) {
-  const CACHE_NAME = "pwa-cache-v0.1034";
+  const CACHE_NAME = "pwa-cache-v0.1040";
   const urlsToCache = [
     "/assets/icons/link.svg",
     "/assets/icons/option.svg",

@@ -24,7 +24,7 @@
   ],
 
   "b2g_features": {
-    "version": "1.8.41",
+    "version": "1.8.50",
     "id": "feedolin",
     "subtitle": "RSS Reader and Mastodon Reader",
     "core": true,
@@ -63,8 +63,9 @@
       "mobiledata": {},
       "wifidata": {},
       "calllog": {},
+
       "audio-channel-content": {
-        "description": ""
+        "description": "Allow background audio playback."
       },
       "volumemanager": { "description": "" },
       "device-storage:sdcard": {

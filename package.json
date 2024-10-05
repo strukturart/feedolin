@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf dist/* && parcel build --no-source-maps --no-content-hash application/index.html  && cp application/manifest.webapp dist && mkdir dist/assets && cp -r application/assets/icons dist/assets/ &&  mkdir -p dist/assets/js/ && cp application/assets/js/kaiads.v5.min.js dist/assets/js/",
     "run": "parcel",
-    "web": "rm -rf docs/* && parcel build --dist-dir docs --public-url ./ --no-source-maps --no-content-hash application/index.html && cp application/manifest.webapp webpage && cp application/manifest.webmanifest docs && mkdir -p docs/assets && cp -r application/assets/icons docs/assets/ && mkdir -p docs/assets/js/ && cp application/assets/js/kaiads.v5.min.js docs/assets/js/ &&  cp -r application/assets/fonts docs/assets/"
+    "web": "rm -rf docs/* && parcel build --dist-dir docs --public-url ./ --no-source-maps --no-content-hash application/index.html && cp application/manifest.webapp docs && cp application/manifest.webmanifest docs && mkdir -p docs/assets && cp -r application/assets/icons docs/assets/ && mkdir -p docs/assets/js/ && cp application/assets/js/kaiads.v5.min.js docs/assets/js/ &&  cp -r application/assets/fonts docs/assets/"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
@@ -49,6 +49,7 @@
     "sanitize-html": "^2.13.0",
     "swiped-events": "^1.2.0",
     "url-search-params-polyfill": "^8.1.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "youtube-player": "^5.6.0"
   }
 }

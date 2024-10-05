@@ -1,0 +1,92 @@
+{
+  "version": "2.0.6",
+  "name": "feedolin",
+  "description": "Feedolin is an RSS / Atom / Mastodon reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml file.",
+  "launch_path": "/index.html",
+  "type": "privileged",
+  "fullscreen": "true",
+  "categories": ["News","Social"],
+  "icons": {
+    "56": "/assets/icons/icon-56-56.png",
+    "112": "/assets/icons/icon-112-112.png"
+  },
+
+  "developer": {
+    "name": "strukturart",
+    "url": "https://strukturart.com"
+  },
+
+  "dependencies": {
+    "ads-sdk": "1.5.8"
+  },
+
+  "locales": {
+    "en-US": {
+      "name": "feedolin",
+      "subtitle": "Feedolin is an RSS / Atom reader and podcast player. ",
+      "description": "Feedolin is an RSS / Atom / Mastodon reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml file."
+    }
+  },
+  "default_locale": "en-US",
+
+  "messages": [
+    {
+      "alarm": "/index.html"
+    },
+    {
+      "notification": "/index.html"
+    },
+    { "serviceworker-notification": "/index.html" },
+    { "activity": "/index.html" }
+  ],
+
+
+  "redirects": [
+    {
+      "from": "https://feedolin.strukturart.com/",
+      "to": "/index.html"
+    }
+  ],
+  
+  "serviceworker": {
+    "script_url": "sw.js"
+  },
+
+  "permissions": {
+    "mobiledata": {},
+    "wifidata": {},
+    "calllog": {},
+    "feature-detection": {
+      "description": "query which keys are available"
+    },
+
+    "device-storage:sdcard": {
+      "description": "Read/Write from/to sd-card",
+      "access": "readwrite"
+    },
+
+    "video-capture": {
+      "description": "Reading Codes using the Camera"
+    },
+
+    "audio-channel-content": {
+      "description": "Needed to play this app's audio content on the content channel"
+    },
+    "desktop-notification": {
+      "description": "Needed to fire system notifications"
+    },
+
+    "volumemanager": {},
+    "browser": {},
+    "spatialnavigation-app-manage": {
+      "navigator.spatialNavigationEnabled": false
+    },
+
+    "systemXHR": {
+      "description": "Required to load remote content"
+    },
+    "alarms": {
+      "description": "Required to schedule alarms"
+    }
+  }
+}
