@@ -82,6 +82,14 @@ localforage
     console.error("Error accessing localForage:", err);
   });
 
+let reload_data = () => {
+  articles = [];
+  side_toaster("load new content", 4000);
+  setTimeout(() => {
+    start_loading();
+  });
+};
+
 function add_read_article(id) {
   // Add the article to the global array
   let ids = [];
@@ -371,10 +379,10 @@ const generateDownloadList = (data) => {
         error: "",
         title: nested.getAttribute("title") || "Untitled",
         url: url,
-        amount: 5,
         index: index++,
         channel: outline.getAttribute("text") || "Unknown",
         type: nested.getAttribute("type") || "rss",
+        maxEpisodes: nested.getAttribute("maxEpisodes") || 5,
       });
     });
   });
@@ -417,6 +425,8 @@ const fetchContent = async (feed_download_list) => {
         });
     }
   };
+
+  let ids = [];
 
   feed_download_list.forEach((e) => {
     if (e.type === "mastodon") {
@@ -488,7 +498,7 @@ const fetchContent = async (feed_download_list) => {
           //ATOM
           if (jObj.feed)
             jObj.feed.entry.forEach((f, i) => {
-              if (i < 10) {
+              if (i < e.maxEpisodes) {
                 try {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.published);
@@ -518,7 +528,10 @@ const fetchContent = async (feed_download_list) => {
                     f.cover = f["media:thumbnail"]["@_url"];
                   }
 
-                  articles.push(f);
+                  if (!ids.includes(f.id)) {
+                    articles.push(f);
+                    ids.push(f.id); // Add the ID to the tracking array
+                  }
                 } catch (e) {
                   console.log(e);
                 }
@@ -528,7 +541,7 @@ const fetchContent = async (feed_download_list) => {
           //RSS
           if (jObj.rss)
             jObj.rss.channel.item.forEach((f, i) => {
-              if (i < 10) {
+              if (i < e.maxEpisodes) {
                 try {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.pubDate);
@@ -562,7 +575,10 @@ const fetchContent = async (feed_download_list) => {
                     f.cover = jObj.rss.channel.image.url || "";
                   }
 
-                  articles.push(f);
+                  if (!ids.includes(f.id)) {
+                    articles.push(f);
+                    ids.push(f.id); // Add the ID to the tracking array
+                  }
                 } catch (e) {
                   console.log(e);
                 }
@@ -677,8 +693,6 @@ localforage
       status.last_update_duration = 3600;
     }
 
-    console.log(settings);
-
     checkOnlineStatus().then((isOnline) => {
       //is online use offline data or not
       if (isOnline && status.last_update_duration > settings.cache_time) {
@@ -713,7 +727,6 @@ localforage
     side_toaster("The default settings was loaded", 3000);
     settings = default_settings;
     fetchOPML(proxy + settings.opml_url);
-    console.log(settings);
 
     localforage
       .setItem("settings", settings)
@@ -804,11 +817,6 @@ var options = {
   },
 };
 
-const entries = window.performance.getEntriesByType("navigation");
-if (entries.length && entries[0].type === "reload") {
-  m.route.set("/start");
-}
-
 let counter = -1;
 let channel_filter = "";
 
@@ -848,7 +856,6 @@ var start = {
         },
       },
       m("span", { class: "channel", oncreate: () => {} }, channel_filter),
-
       // Loop through filteredArticles and create an article for each
       filteredArticles.map((h, i) => {
         const readClass = read_articles.includes(h.id) ? "read" : "";
@@ -2013,6 +2020,19 @@ document.addEventListener("DOMContentLoaded", function (e) {
     let r = m.route.get();
 
     let dir = e.detail.dir;
+
+    if (dir == "down") {
+      if (window.scrollY === 0 || document.documentElement.scrollTop === 0) {
+        // Page is at the top
+        const swipeDistance = e.detail.yEnd - e.detail.yStart;
+
+        if (swipeDistance > 200) {
+          side_toaster("reload data", 3000);
+
+          reload_data();
+        }
+      }
+    }
     if (dir == "right") {
       if (r.startsWith("/start")) {
         counter--;
@@ -2310,6 +2330,33 @@ window.addEventListener("online", () => {
 });
 window.addEventListener("offline", () => {
   status.deviceOnline = false;
+});
+
+window.addEventListener("beforeunload", (event) => {
+  const entries = window.performance.getEntriesByType("navigation");
+
+  // For older browsers (fallback)
+  const navigationType = window.performance.navigation
+    ? window.performance.navigation.type
+    : null;
+
+  // Detect if the page was reloaded
+  const isReload =
+    (entries.length && entries[0].type === "reload") || // Modern check
+    navigationType === 1; // Fallback for older browsers: 1 means reload
+
+  if (isReload) {
+    // Prevent the reload or display a confirmation dialog
+    event.preventDefault();
+
+    articles = [];
+    side_toaster("load new content", 4000);
+    start_loading();
+
+    m.route.set("/intro");
+    // Most browsers ignore custom messages, so returnValue should be set
+    event.returnValue = "Are you sure you want to leave the page?";
+  }
 });
 
 //webActivity KaiOS 3

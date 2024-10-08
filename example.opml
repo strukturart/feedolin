@@ -16,7 +16,7 @@
 		</outline>
 
         <outline text="Blog" title="Blog">
-            <outline type="rss" text="KaiOs Blog" title="KaiOs Reddit" xmlUrl="https://www.kaiostech.com/feed/" htmlUrl=""/>
+            <outline maxEpisodes="8" type="rss" text="KaiOs Blog" title="KaiOs Reddit" xmlUrl="https://www.kaiostech.com/feed/" htmlUrl=""/>
         </outline>
 
         <outline text="Youtube" title="youtube">
@@ -32,7 +32,7 @@
         <outline text="Podcast" title="Podcast">
             <outline type="rss" text="breitengrad" title="breitengrad" xmlUrl="https://feeds.br.de/breitengrad/feed.xml" htmlUrl=""/>
             <outline type="rss" text="bbc news" title="bbc news" xmlUrl="https://podcasts.files.bbci.co.uk/b006qjxt.rss" htmlUrl=""/>
-            <outline type="rss" text="Lanz und Precht" title="Lanz und Precht" xmlUrl="https://lanz-precht.podigee.io/feed/mp3" htmlUrl=""/>
+            <outline maxEpisodes="8" type="rss" text="Lanz und Precht" title="Lanz und Precht" xmlUrl="https://lanz-precht.podigee.io/feed/mp3" htmlUrl=""/>
         </outline>
 
           <outline text="Mastodon" title="Mastodon">

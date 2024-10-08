@@ -33,6 +33,36 @@ For example:
 `<outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>`
 
 https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
+<br>
+
+`
+<outline text="Youtube" title="youtube">
+<outline type="rss" text="Verbrechen" title="Verbrechen" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCjMzlcG7THh8QEsP5pWFr2w" htmlUrl=""/>
+<outline type="rss" text="Bookstream" title="Bookstream" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UC07W8bIiwY-EXZ9wpPQZLPw" htmlUrl=""/>
+</outline>
+
+        <outline text="Podcast" title="Podcast">
+            <outline type="rss" text="breitengrad" title="breitengrad" xmlUrl="https://feeds.br.de/breitengrad/feed.xml" htmlUrl=""/>
+            <outline type="rss" text="bbc news" title="bbc news" xmlUrl="https://podcasts.files.bbci.co.uk/b006qjxt.rss" htmlUrl=""/>
+            <outline maxEpisodes="8" type="rss" text="Lanz und Precht" title="Lanz und Precht" xmlUrl="https://lanz-precht.podigee.io/feed/mp3" htmlUrl=""/>
+        </outline>
+
+          <outline text="Mastodon" title="Mastodon">
+            <outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
+        </outline>
+
+        <outline text="Coding" title="Coding">
+            <outline type="rss" text="bHackers Blog" title="bHackers Blog" xmlUrl="https://blog.bananahackers.net/read/feed/" htmlUrl=""/>
+            <outline type="rss" text="kaios.dev" title="kaios.dev" xmlUrl="https://kaios.dev/index.xml" htmlUrl=""/>
+            <outline type="rss" text="chickenkiller" title="chickenkiller" xmlUrl="https://far.chickenkiller.com/index.xml" htmlUrl=""/>
+        </outline>
+    `
+
+
+    <br>
+
+- 5 feeds will be loaded per source, if you want more you can set it with this attribute: maxEpisodes="8"
+- To divide the individual feeds into categories, you have to create nested outlines. In the app, you can then jump between the categories using the key: left/right or swipe
 
 ## How to install
 
@@ -41,6 +71,21 @@ https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
 
 You can download the latest version from the Releases page.
 The app is not auto-updating. To update it, you have to follow the same steps you took when installing it.
+
+## create your own
+
+`npm -i`
+
+to use another mastodon instance you need to save the necessary data in application/.env, don't forget to include it in your .gitignore.
+https://docs.joinmastodon.org/methods/apps/<br><br>
+
+```
+
+clientId=xx
+clientSecret=xxx
+redirect=https://xx
+
+```
 
 ## Mastodon
 
@@ -69,3 +114,11 @@ RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
 ## Donation
 
 <a href="https://liberapay.com/perry_______/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
+
+```
+
+```
+
+```
+
+```

@@ -1,4 +1,4 @@
-import { status } from "./index.js";
+const userAgent = navigator.userAgent || "";
 
 const channel = new BroadcastChannel("sw-messages");
 
@@ -35,37 +35,43 @@ self.onsystemmessage = (evt) => {
     evt.waitUntil(serviceHandler());
   } catch (e) {}
 };
-
-if (status.notKaiOS) {
-  const CACHE_NAME = "pwa-cache-v0.1040";
-  const urlsToCache = [
-    "/assets/icons/link.svg",
-    "/assets/icons/option.svg",
-    "/assets/icons/back.svg",
-    "/assets/icons/select.svg",
-    "/assets/icons/play.svg",
-    "/assets/fonts/Roboto-Regular.ttf",
-    "/Roboto-Regular.31363ab6.ttf",
-    "/manifest.webmanifest",
-    "/index.html",
-    "/icon-112-112.d699dfa7.png",
-    "/icon-56-56.9b02d039.png",
-    "/favicon.e23550e2.ico",
-    "/index.0bb9b423.css",
-    "/index.4149820a.css",
-    "/index.ecd1e59e.css",
-    "/index.175d5a46.js",
-    "index.f35ba7fe.js",
-    "index.runtime.2f02f579.js",
-    "index.runtime.ca873bcc.js",
-  ];
+if (!userAgent.includes("KaiOS")) {
+  const CACHE_NAME = "pwa-cache-v0.1058";
+  const FILE_LIST_URL = "/file-list.json"; // URL of the JSON file containing the array of files
 
   self.addEventListener("install", (event) => {
     event.waitUntil(
-      caches.open(CACHE_NAME).then((cache) => {
-        console.log("Opened cache");
-        return cache.addAll(urlsToCache);
-      })
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => {
+          console.log("Opened cache");
+
+          // Fetch the file list JSON and cache the URLs
+          return fetch(FILE_LIST_URL)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json(); // Parse the JSON response
+            })
+            .then((urlsToCache) => {
+              // Ensure urlsToCache is an array
+              if (Array.isArray(urlsToCache)) {
+                return Promise.all(
+                  urlsToCache.map((url) =>
+                    cache.add(url).catch((error) => {
+                      console.error(`Failed to cache ${url}:`, error);
+                    })
+                  )
+                );
+              } else {
+                console.error("Fetched data is not an array:", urlsToCache);
+              }
+            });
+        })
+        .then(() => {
+          return self.skipWaiting(); // Skip waiting and activate the new SW immediately
+        })
     );
   });
 
@@ -88,8 +94,6 @@ if (status.notKaiOS) {
   self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(event.request).then((response) => {
-        if (response) {
-        }
         // If the request is in the cache, return it. Otherwise, fetch from the network.
         return response || fetch(event.request);
       })
