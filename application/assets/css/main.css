@@ -455,6 +455,9 @@ div.nickname {
 
 .audio-player .audio-info {
   padding: 20px;
+  background: white;
+  color: black;
+  width: fit-content;
 }
 /*/ //////////////////////////
 ///VIEWS////////////////*/
