@@ -510,6 +510,7 @@ div#bottom-bar div {
 
 div#bottom-bar div.button-center img {
   width: 40px;
+  cursor: pointer;
 }
 
 div#bottom-bar div.button-left {

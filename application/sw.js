@@ -25,18 +25,13 @@ self.onsystemmessage = (evt) => {
           });
           return "OK";
         }
-        if (activityName == "pick") {
-          channel.postMessage({
-            "test": "test",
-          });
-        }
       }
     };
     evt.waitUntil(serviceHandler());
   } catch (e) {}
 };
 if (!userAgent.includes("KaiOS")) {
-  const CACHE_NAME = "pwa-cache-v0.1058";
+  const CACHE_NAME = "pwa-cache-v0.1074";
   const FILE_LIST_URL = "/file-list.json"; // URL of the JSON file containing the array of files
 
   self.addEventListener("install", (event) => {

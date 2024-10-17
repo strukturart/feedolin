@@ -114,11 +114,3 @@ RSS-Feed from public Youtube/Soundcloud/Instagram/Twitter.....
 ## Donation
 
 <a href="https://liberapay.com/perry_______/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-
-```
-
-```
-
-```
-
-```

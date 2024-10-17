@@ -84,10 +84,12 @@ localforage
 
 let reload_data = () => {
   articles = [];
-  side_toaster("load new content", 4000);
+  side_toaster("reload data", 3000);
+  localStorage.setItem("last_channel_filter", channel_filter);
+
   setTimeout(() => {
     start_loading();
-  });
+  }, 3000);
 };
 
 function add_read_article(id) {
@@ -301,7 +303,7 @@ let clean = (i) => {
 
 const fetchOPML = async (url) => {
   try {
-    const uniqueUrl = `${url}?t=${new Date().getTime()}`; // Cache-busting query param
+    const uniqueUrl = `${url}?t=${new Date().getTime()}`;
 
     const response = await fetch(uniqueUrl, {
       method: "GET",
@@ -312,8 +314,7 @@ const fetchOPML = async (url) => {
       alert(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.text();
-    load_feeds(data); // Process the content (newly fetched data)
-    console.log(data);
+    load_feeds(data);
   } catch (error) {
     console.log("Error fetching the OPML file:", error);
     m.route.set("/start/?index=0");
@@ -397,6 +398,7 @@ const fetchContent = async (feed_download_list) => {
   let first = false;
 
   const checkIfAllFeedsLoaded = () => {
+    channel_filter = localStorage.getItem("last_channel_filter");
     if (completedFeeds === totalFeeds) {
       console.log("All feeds are loaded");
       // All feeds are done loading, you can proceed with further actions
@@ -405,6 +407,7 @@ const fetchContent = async (feed_download_list) => {
       localforage
         .setItem("articles", articles)
         .then(() => {
+          console.log("feeds cached");
           articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
 
           articles.forEach((e) => {
@@ -414,7 +417,8 @@ const fetchContent = async (feed_download_list) => {
           });
 
           if (channels.length > 0 && !first) {
-            channel_filter = channels[0];
+            channel_filter =
+              localStorage.getItem("last_channel_filter") || channels[0];
             first = true;
           }
 
@@ -475,12 +479,14 @@ const fetchContent = async (feed_download_list) => {
         });
     } else {
       let xhr = new XMLHttpRequest();
-      xhr.open("GET", proxy + e.url, true);
+      let tt = new Date().getTime();
+      let url = e.url;
+      xhr.open("GET", proxy + url, true);
 
       xhr.onload = function () {
         if (xhr.status !== 200) {
           e.error = xhr.status;
-          completedFeeds++; // Increment the counter even in case of error
+          completedFeeds++;
           checkIfAllFeedsLoaded();
           return;
         }
@@ -546,7 +552,8 @@ const fetchContent = async (feed_download_list) => {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.pubDate);
                   f.type = check_media(f);
-                  f.url = f.link;
+                  f.url = f.link || e.url;
+
                   f.feed_title = e.title;
                   f.typeOfFeed = "RSS";
 
@@ -667,6 +674,8 @@ let start_loading = () => {
       load_mastodon();
     });
   }
+
+  channel_filter = localStorage.getItem("last_channel_filter");
 };
 
 localforage
@@ -683,7 +692,7 @@ localforage
         });
     }
     settings = value;
-
+    //todo set value in settings view, default is 1sec
     settings.cache_time = settings.cache_time || 1000;
 
     if (settings.last_update) {
@@ -693,10 +702,17 @@ localforage
       status.last_update_duration = 3600;
     }
 
+    if (!settings.opml_url && !settings.opml_local_filename)
+      side_toaster(
+        "The feed could not be loaded because no OPML was defined in the settings.",
+        6000
+      );
+
     checkOnlineStatus().then((isOnline) => {
       //is online use offline data or not
       if (isOnline && status.last_update_duration > settings.cache_time) {
         start_loading();
+        side_toaster("Load feeds", 4000);
       } else {
         localforage
           .getItem("articles")
@@ -712,11 +728,12 @@ localforage
             });
 
             if (channels.length) {
-              channel_filter = channels[0];
+              channel_filter =
+                localStorage.getItem("last_channel_filter") || channels[0];
             }
 
             m.route.set("/start?index=0");
-            side_toaster("Cached feeds loaded", 15000);
+            side_toaster("Cached feeds loaded", 4000);
           })
           .catch((err) => {});
       }
@@ -818,7 +835,7 @@ var options = {
 };
 
 let counter = -1;
-let channel_filter = "";
+let channel_filter = localStorage.getItem("last_channel_filter") || "";
 
 let page_index = 0;
 
@@ -836,19 +853,18 @@ var start = {
           page_index = m.route.param("index") || 0;
 
           bottom_bar(
-            "",
+            "<img src='assets/icons/save.svg'>",
             "<img src='assets/icons/select.svg'>",
             "<img src='assets/icons/option.svg'>"
           );
 
           if (status.notKaiOS)
-            bottom_bar("", "", "<img src='assets/icons/option.svg'>");
-
-          if (!settings.opml_url && !settings.opml_local_filename)
-            side_toaster(
-              "The feed could not be loaded because no OPML was defined in the settings.",
-              6000
+            bottom_bar(
+              "<img src='assets/icons/save.svg'>",
+              "",
+              "<img src='assets/icons/option.svg'>"
             );
+
           if (status.notKaiOS) top_bar("", "", "");
 
           if (status.notKaiOS && status.player)
@@ -929,6 +945,8 @@ var article = {
         if (index != h.id) return;
 
         current_article = h;
+
+        console.log(h);
 
         return m(
           "article",
@@ -1948,6 +1966,47 @@ document.addEventListener("DOMContentLoaded", function (e) {
     scrollToCenter();
   };
 
+  //detect swiping to fire animation
+
+  let swiper = () => {
+    let startX = 0;
+    let maxSwipeDistance = 300; // Maximum swipe distance for full fade-out
+
+    document.addEventListener(
+      "touchstart",
+      function (e) {
+        startX = e.touches[0].pageX;
+        document.querySelector("body").style.opacity = 1; // Start with full opacity
+      },
+      false
+    );
+
+    document.addEventListener(
+      "touchmove",
+      function (e) {
+        let diffX = Math.abs(e.touches[0].pageX - startX);
+
+        // Calculate the inverted opacity based on swipe distance
+        let opacity = 1 - Math.min(diffX / maxSwipeDistance, 1);
+
+        // Apply opacity to the body (or any other element)
+        document.querySelector("body").style.opacity = opacity;
+      },
+      false
+    );
+
+    document.addEventListener(
+      "touchend",
+      function (e) {
+        // Reset opacity to 1 when the swipe ends
+        document.querySelector("body").style.opacity = 1;
+      },
+      false
+    );
+  };
+
+  swiper();
+
   // Add click listeners to simulate key events
   document
     .querySelector("div.button-left")
@@ -2026,10 +2085,8 @@ document.addEventListener("DOMContentLoaded", function (e) {
         // Page is at the top
         const swipeDistance = e.detail.yEnd - e.detail.yStart;
 
-        if (swipeDistance > 200) {
-          side_toaster("reload data", 3000);
-
-          reload_data();
+        if (swipeDistance > 300) {
+          // reload_data();
         }
       }
     }
@@ -2087,8 +2144,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
       case "0":
         articles = [];
-        side_toaster("load new content", 4000);
-        start_loading();
+        reload_data();
         break;
     }
   }
@@ -2199,7 +2255,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "SoftLeft":
       case "Control":
         if (r.startsWith("/start")) {
-          m.route.set("/index");
+          reload_data();
         }
 
         if (r.startsWith("/article")) {
