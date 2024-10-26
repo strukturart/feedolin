@@ -97,6 +97,16 @@ h2 {
   width: 100%;
 }
 
+h2.reblog::before {
+  content: "";
+  display: inline-block;
+  width: 20px; /* Adjust to your image size */
+  height: 20px; /* Adjust to your image size */
+  background-image: url("../icons/reblog.svg");
+  background-size: cover; /* Adjusts image to fill the box */
+  margin-right: 5px; /* Space between image and text */
+}
+
 h3 {
   font-size: 1rem;
 }

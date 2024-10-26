@@ -11,7 +11,7 @@ import {
   list_files,
   volume_control,
 } from "./assets/js/helper.js";
-import { mastodon_account_info } from "./assets/js/mastodon.js";
+import { mastodon_account_info, reblog } from "./assets/js/mastodon.js";
 
 import localforage from "localforage";
 import { detectMobileOS } from "./assets/js/helper.js";
@@ -467,6 +467,30 @@ const fetchContent = async (feed_download_list) => {
               }
             }
 
+            //reblog
+            if (k.content == "") {
+              f.content = k.reblog.content;
+
+              f.reblog = true;
+              f.reblogUser = k.account.display_name || k.reblog.account.acct;
+
+              if (k.reblog.media_attachments.length > 0) {
+                if (k.reblog.media_attachments[0].type === "image") {
+                  f.content += `<br><img src='${k.reblog.media_attachments[0].preview_url}'>`;
+                } else if (k.reblog.media_attachments[0].type === "video") {
+                  f.enclosure = {
+                    "@_type": "video",
+                    url: k.reblog.media_attachments[0].url,
+                  };
+                } else if (k.reblog.media_attachments[0].type === "audio") {
+                  f.enclosure = {
+                    "@_type": "audio",
+                    url: k.reblog.media_attachments[0].url,
+                  };
+                }
+              }
+            }
+
             articles.push(f);
           });
         })
@@ -611,6 +635,7 @@ const fetchContent = async (feed_download_list) => {
   });
 };
 
+//Mastadon private
 let load_mastodon = () => {
   let accessToken = settings.mastodon_token;
 
@@ -626,6 +651,7 @@ let load_mastodon = () => {
     .then((data) => {
       data.forEach((k, i) => {
         if (i > 15) return;
+
         let f = {
           channel: "Mastodon",
           id: k.id,
@@ -651,6 +677,35 @@ let load_mastodon = () => {
               url: k.media_attachments[0].url,
             };
           }
+        }
+
+        //reblog
+        try {
+          if (k.content == "") {
+            f.content = k.reblog.content;
+
+            f.reblog = true;
+            f.reblogUser =
+              k.reblog.account.display_name || k.reblog.account.acct;
+
+            if (k.reblog.media_attachments.length > 0) {
+              if (k.reblog.media_attachments[0].type === "image") {
+                f.content += `<br><img src='${k.reblog.media_attachments[0].preview_url}'>`;
+              } else if (k.reblog.media_attachments[0].type === "video") {
+                f.enclosure = {
+                  "@_type": "video",
+                  url: k.reblog.media_attachments[0].url,
+                };
+              } else if (k.reblog.media_attachments[0].type === "audio") {
+                f.enclosure = {
+                  "@_type": "audio",
+                  url: k.reblog.media_attachments[0].url,
+                };
+              }
+            }
+          }
+        } catch (e) {
+          alert(e);
         }
 
         articles.push(f);
@@ -919,7 +974,17 @@ var start = {
           [
             m("span", { class: "type-indicator" }, h.type),
             m("time", dayjs(h.isoDate).format("DD MMM YYYY")),
-            m("h2", clean(h.feed_title)),
+            m(
+              "h2",
+              {
+                oncreate: ({ dom }) => {
+                  if (h.reblog) {
+                    dom.classList.add("reblog");
+                  }
+                },
+              },
+              clean(h.feed_title)
+            ),
             m("h3", clean(h.title)),
           ]
         );
@@ -999,8 +1064,21 @@ var article = {
               },
               dayjs(h.isoDate).format("DD MMM YYYY")
             ),
-            m("h2", h.title),
+            m(
+              "h2",
+              {
+                oncreate: ({ dom }) => {
+                  if (h.reblog) {
+                    dom.classList.add("reblog");
+                  }
+                },
+              },
+              h.title
+            ),
             m("div", { class: "text" }, [m.trust(clean(h.content))]),
+            h.reblog
+              ? m("div", { class: "text" }, "reblogged from:" + h.reblogUser)
+              : "",
           ]
         );
       })
@@ -1523,8 +1601,10 @@ var about = {
               if (status.notKaiOS) vnode.dom.style.display = "none";
             },
           },
-          m.trust("Use <strong>*</strong> Audioplayer")
+          m.trust("Use <strong>*</strong> Audioplayer<br><br>")
         ),
+
+        m("li", "Version: " + status.version),
       ])
     );
   },
