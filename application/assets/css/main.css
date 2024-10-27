@@ -464,7 +464,7 @@ div.nickname {
 }
 
 .audio-player .audio-info {
-  padding: 20px;
+  padding: 10px;
   background: white;
   color: black;
   width: fit-content;
@@ -897,5 +897,12 @@ video {
   .page {
     margin: 10px 0 0 0;
     padding: 10px 10px 40px 10px;
+  }
+
+  .audio-player .audio-info {
+    padding: 10px;
+    background: white;
+    color: black;
+    width: fit-content;
   }
 }

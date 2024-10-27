@@ -1454,6 +1454,14 @@ const AudioPlayerView = {
       .addEventListener("click", function (event) {
         AudioPlayerView.togglePlayPause();
       });
+
+    document.addEventListener("swiped-left", () => {
+      AudioPlayerView.seek("left");
+    });
+
+    document.addEventListener("swiped-right", () => {
+      AudioPlayerView.seek("right");
+    });
   },
 
   onremove: () => {
@@ -1515,11 +1523,20 @@ const AudioPlayerView = {
           "background-image": `url(${current_article.cover})`,
         },
       }),
-      m("div", { class: "audio-info" }, [
-        `${formatTime(AudioPlayerView.currentTime)} / ${formatTime(
-          AudioPlayerView.audioDuration
-        )}`,
-      ]),
+      m(
+        "div",
+        {
+          class: "audio-info",
+          style: {
+            background: `linear-gradient(to right, #3498db ${progressPercent}%, white ${progressPercent}%)`,
+          },
+        },
+        [
+          `${formatTime(AudioPlayerView.currentTime)} / ${formatTime(
+            AudioPlayerView.audioDuration
+          )}`,
+        ]
+      ),
 
       // Progress bar container
       m("div", { class: "progress-bar-container" }, [
