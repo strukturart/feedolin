@@ -12,29 +12,50 @@ import {
   volume_control,
 } from "./assets/js/helper.js";
 import { mastodon_account_info, reblog } from "./assets/js/mastodon.js";
-
 import localforage from "localforage";
 import { detectMobileOS } from "./assets/js/helper.js";
 import m from "mithril";
 import { v4 as uuidv4 } from "uuid";
 import * as sanitizeHtml from "sanitize-html";
-
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-
 import swiped from "swiped-events";
-
 import fxparser from "fast-xml-parser";
+import Timeworker from "./worker.js";
 
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
+
+const worker = new Worker(new URL("./worker.js", import.meta.url), {
+  type: "module",
+});
+
+const sw_channel = new BroadcastChannel("sw-messages");
+
+function startTimer(timerDuration) {
+  worker.postMessage({ action: "start", duration: timerDuration });
+  side_toaster("sleep mode on", 3000);
+  status.sleepTimer = true;
+}
+
+function stopTimer() {
+  worker.postMessage({ action: "stop" });
+  side_toaster("sleep mode off", 3000);
+}
+
+worker.onmessage = function (event) {
+  console.log(event.data.remaining);
+  if (event.data.action === "stop") {
+    globalAudioElement.pause();
+    status.sleepTimer = false;
+  }
+};
 
 const parser = new fxparser.XMLParser({
   ignoreAttributes: false,
   parseAttributeValue: true,
 });
 
-//github.com/laurentpayot/minidenticons#usage
 export let status = {
   visibility: true,
   deviceOnline: true,
@@ -115,8 +136,6 @@ function add_read_article(id) {
 
 let xml_parser = new DOMParser();
 
-let feed_download_list = [];
-
 if ("b2g" in navigator || "navigator.mozApps" in navigator)
   status.notKaiOS = false;
 
@@ -138,7 +157,6 @@ if (!status.notKaiOS) {
 }
 
 let articles = [];
-const channel = new BroadcastChannel("sw-messages");
 
 if (status.debug) {
   window.onerror = function (msg, url, linenumber) {
@@ -206,6 +224,7 @@ let app_launcher = () => {
 
   const params = new URLSearchParams(currentUrl.split("?")[1]);
   const code = params.get("code");
+
   if (!code) return false;
 
   let result = code.split("#")[0];
@@ -218,34 +237,45 @@ let app_launcher = () => {
       });
       activity.onsuccess = function () {
         console.log("Activity successfuly handled");
+        setTimeout(() => {
+          window.close();
+        }, 4000);
       };
 
       activity.onerror = function () {
         console.log("The activity encouter en error: " + this.error);
         alert(this.error);
       };
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
+
     if ("b2g" in navigator) {
       try {
         let activity = new WebActivity("feedolin", {
           name: "feedolin",
-          type: "string",
           data: result,
         });
         activity.start().then(
           (rv) => {
-            window.close();
+            setTimeout(() => {
+              window.close();
+            }, 3000);
 
-            console.log("Results passed back from activity handler:");
-            console.log(rv);
+            // alert(rv);
           },
           (err) => {
-            alert(err);
+            //alert(err);
+
+            if (err == "NO_PROVIDER") {
+            }
           }
         );
-      } catch (e) {}
+      } catch (e) {
+        alert(e);
+      }
     }
-  }, 4000);
+  }, 2000);
 };
 app_launcher();
 
@@ -449,6 +479,7 @@ const fetchContent = async (feed_download_list) => {
               title: k.account.display_name || k.account.username,
               content: k.content,
               url: k.uri,
+              reblog: false,
             };
 
             if (k.media_attachments.length > 0) {
@@ -536,6 +567,7 @@ const fetchContent = async (feed_download_list) => {
                   f.url = f.link["@_href"];
                   f.feed_title = e.title;
                   f.typeOfFeed = "ATOM";
+                  f.reblog = false;
 
                   if (f["yt:videoId"]) f.youtubeid = f["yt:videoId"];
 
@@ -580,6 +612,7 @@ const fetchContent = async (feed_download_list) => {
 
                   f.feed_title = e.title;
                   f.typeOfFeed = "RSS";
+                  f.reblog = false;
 
                   if (
                     dayjs(
@@ -661,6 +694,7 @@ let load_mastodon = () => {
           title: k.account.display_name,
           content: k.content,
           url: k.uri,
+          reblog: false,
         };
 
         if (k.media_attachments.length > 0) {
@@ -704,9 +738,7 @@ let load_mastodon = () => {
               }
             }
           }
-        } catch (e) {
-          alert(e);
-        }
+        } catch (e) {}
 
         articles.push(f);
       });
@@ -721,13 +753,14 @@ let start_loading = () => {
   }
   //load mastodon
   if (settings.mastodon_token) {
-    mastodon_account_info(
-      settings.mastodon_server_url,
-      settings.mastodon_token
-    ).then((f) => {
-      status.mastodon_logged = f.display_name;
-      load_mastodon();
-    });
+    mastodon_account_info(settings.mastodon_server_url, settings.mastodon_token)
+      .then((f) => {
+        status.mastodon_logged = f.display_name;
+        load_mastodon();
+      })
+      .catch((e) => {
+        alert(e);
+      });
   }
 
   channel_filter = localStorage.getItem("last_channel_filter");
@@ -789,6 +822,18 @@ localforage
 
             m.route.set("/start?index=0");
             side_toaster("Cached feeds loaded", 4000);
+
+            //load mastodon
+            if (settings.mastodon_token) {
+              mastodon_account_info(
+                settings.mastodon_server_url,
+                settings.mastodon_token
+              )
+                .then((f) => {
+                  status.mastodon_logged = f.display_name;
+                })
+                .catch((e) => {});
+            }
           })
           .catch((err) => {});
       }
@@ -824,7 +869,7 @@ var options = {
           top_bar("", "", "");
 
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/icons/back.svg'>");
+            top_bar("<img src='assets/icons/back.svg'>", "", "");
 
           bottom_bar(
             "",
@@ -844,6 +889,8 @@ var options = {
             class: "item",
             oncreate: ({ dom }) => {
               dom.focus();
+
+              scrollToCenter();
             },
             onclick: () => {
               m.route.set("/about");
@@ -923,7 +970,7 @@ var start = {
           if (status.notKaiOS) top_bar("", "", "");
 
           if (status.notKaiOS && status.player)
-            top_bar("<img src='assets/icons/play.svg'>", "", "");
+            top_bar("", "", "<img src='assets/icons/play.svg'>");
         },
       },
       m("span", { class: "channel", oncreate: () => {} }, channel_filter),
@@ -942,13 +989,13 @@ var start = {
               if (page_index == 0 && i == 0) {
                 setTimeout(() => {
                   vnode.dom.focus();
-                }, 2000);
+                }, 1200);
               } else {
                 if (h.id == page_index) {
                   setTimeout(() => {
                     vnode.dom.focus();
                     scrollToCenter();
-                  }, 1100);
+                  }, 1200);
                 }
               }
 
@@ -978,7 +1025,7 @@ var start = {
               "h2",
               {
                 oncreate: ({ dom }) => {
-                  if (h.reblog) {
+                  if (h.reblog === true) {
                     dom.classList.add("reblog");
                   }
                 },
@@ -995,93 +1042,82 @@ var start = {
 
 var article = {
   view: function () {
+    const matchedArticle = articles.find((h) => {
+      var index = m.route.param("index");
+      if (index != h.id) return false;
+
+      current_article = h;
+      return true;
+    });
+
     return m(
       "div",
       {
         id: "article",
+        class: "page",
         oncreate: () => {
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/icons/back.svg'>");
+            top_bar("<img src='assets/icons/back.svg'>", "", "");
           bottom_bar("<img src='assets/icons/link.svg'>", "", "");
         },
       },
-      articles.map((h, i) => {
-        var index = m.route.param("index");
-        if (index != h.id) return;
-
-        current_article = h;
-
-        console.log(h);
-
-        return m(
-          "article",
-          {
-            class: "item",
-            tabindex: 0,
-
-            oncreate: (vnode) => {
-              vnode.dom.focus();
-
-              if (h.type == "audio") {
-                h.type = "audio";
-                bottom_bar(
-                  "<img src='assets/icons/link.svg'>",
-                  "",
-                  "<img src='assets/icons/play.svg'>"
-                );
-              }
-
-              if (h.type == "video") {
-                h.type = "video";
-                bottom_bar(
-                  "<img src='assets/icons/link.svg'>",
-                  "",
-                  "<img src='assets/icons/play.svg'>"
-                );
-              }
-
-              if (h.type == "youtube") {
-                h.type = "youtube";
-                bottom_bar(
-                  "<img src='assets/icons/link.svg'>",
-                  "",
-                  "<img src='assets/icons/play.svg'>"
-                );
-              }
+      matchedArticle
+        ? m(
+            "article",
+            {
+              class: "item",
+              tabindex: 0,
+              oncreate: (vnode) => {
+                vnode.dom.focus();
+                if (
+                  matchedArticle.type === "audio" ||
+                  matchedArticle.type === "video" ||
+                  matchedArticle.type === "youtube"
+                ) {
+                  bottom_bar(
+                    "<img src='assets/icons/link.svg'>",
+                    "",
+                    "<img src='assets/icons/play.svg'>"
+                  );
+                }
+              },
             },
-          },
-          [
-            m(
-              "time",
-              {
-                id: "top",
-
-                oncreate: () => {
-                  setTimeout(() => {
-                    document.querySelector("#top").scrollIntoView();
-                  }, 1000);
+            [
+              m(
+                "time",
+                {
+                  id: "top",
+                  oncreate: () => {
+                    setTimeout(() => {
+                      document.querySelector("#top").scrollIntoView();
+                    }, 1000);
+                  },
                 },
-              },
-              dayjs(h.isoDate).format("DD MMM YYYY")
-            ),
-            m(
-              "h2",
-              {
-                oncreate: ({ dom }) => {
-                  if (h.reblog) {
-                    dom.classList.add("reblog");
-                  }
+                dayjs(matchedArticle.isoDate).format("DD MMM YYYY")
+              ),
+              m(
+                "h2",
+                {
+                  class: "article-title",
+                  oncreate: ({ dom }) => {
+                    if (matchedArticle.reblog) dom.classList.add("reblog");
+                  },
                 },
-              },
-              h.title
-            ),
-            m("div", { class: "text" }, [m.trust(clean(h.content))]),
-            h.reblog
-              ? m("div", { class: "text" }, "reblogged from:" + h.reblogUser)
-              : "",
-          ]
-        );
-      })
+                matchedArticle.title
+              ),
+              m("div", { class: "text" }, [
+                m.trust(clean(matchedArticle.content)),
+              ]),
+              matchedArticle.reblog
+                ? m(
+                    "div",
+                    { class: "text" },
+                    "reblogged from:" + matchedArticle.reblogUser
+                  )
+                : "",
+            ]
+          )
+        : m("div", "Article not found") // Fallback if no match
     );
   },
 };
@@ -1096,7 +1132,7 @@ var localOPML = {
         id: "index",
         oncreate: () => {
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/icons/back.svg'>");
+            top_bar("<img src='assets/icons/back.svg'>", "", "");
           bottom_bar("", "", "");
         },
       },
@@ -1161,7 +1197,7 @@ var intro = {
         id: "intro",
         oninit: () => {
           //check if is a mastodon redirect
-          mastodon_connect();
+          if (status.notKaiOS) mastodon_connect();
         },
         onremove: () => {
           localStorage.setItem("version", status.version);
@@ -1227,7 +1263,7 @@ const VideoPlayerView = {
   seekAmount: 5, // Seek by 5 seconds
 
   oncreate: ({ attrs }) => {
-    if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
+    if (status.notKaiOS) top_bar("<img src='assets/icons/back.svg'>", "", "");
     // Mount the video element to the DOM when the component is created
     VideoPlayerView.videoElement = document.createElement("video");
     const videoContainer = document.getElementById("video-container");
@@ -1328,7 +1364,8 @@ const YouTubePlayerView = {
   player: null, // Store the YouTube player instance
 
   oncreate: ({ attrs }) => {
-    if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
+    if (status.notKaiOS) top_bar("<img src='assets/icons/back.svg'>", "", "");
+
     bottom_bar("", "", "");
 
     if (YT) {
@@ -1446,8 +1483,25 @@ const AudioPlayerView = {
 
     top_bar("", "", "");
     bottom_bar("", "<img src='assets/icons/play.svg'>", "");
+    if (settings.sleepTimer) {
+      bottom_bar(
+        "<img src='assets/icons/sleep.svg'>",
+        "<img src='assets/icons/play.svg'>",
+        ""
+      );
 
-    if (status.notKaiOS) top_bar("", "", "<img src='assets/icons/back.svg'>");
+      document
+        .querySelector("div.button-left")
+        .addEventListener("click", function (event) {
+          status.sleepTimer
+            ? stopTimer()
+            : startTimer(settings.sleepTimer * 60 * 1000);
+        });
+    }
+
+    if (status.notKaiOS) {
+      top_bar("<img src='assets/icons/back.svg'>", "", "");
+    }
 
     document
       .querySelector("div.button-center")
@@ -1456,11 +1510,19 @@ const AudioPlayerView = {
       });
 
     document.addEventListener("swiped-left", () => {
-      AudioPlayerView.seek("left");
+      let r = m.route.get();
+
+      if (r.startsWith("Audio")) {
+        AudioPlayerView.seek("left");
+      }
     });
 
     document.addEventListener("swiped-right", () => {
       AudioPlayerView.seek("right");
+
+      if (r.startsWith("Audio")) {
+        AudioPlayerView.seek("right");
+      }
     });
   },
 
@@ -1723,7 +1785,7 @@ var settingsView = {
           });
 
           if (status.notKaiOS)
-            top_bar("", "", "<img src='assets/icons/back.svg'>");
+            top_bar("<img src='assets/icons/back.svg'>", "", "");
           if (status.notKaiOS) bottom_bar("", "", "");
         },
       },
@@ -1732,6 +1794,9 @@ var settingsView = {
           "div",
           {
             class: "item input-parent  flex",
+            oncreate: () => {
+              scrollToTop();
+            },
           },
           [
             m(
@@ -1808,9 +1873,7 @@ var settingsView = {
         m(
           "div",
           {
-            tabindex: 1,
-
-            class: "item input-parent  flex ",
+            class: "item input-parent flex ",
           },
           [
             m(
@@ -1841,6 +1904,7 @@ var settingsView = {
               "div",
               {
                 id: "account_info",
+                class: "item",
               },
               `You have successfully logged in as ${status.mastodon_logged} and the data is being loaded from server ${settings.mastodon_server_url}.`
             )
@@ -1912,6 +1976,29 @@ var settingsView = {
               "Connect"
             ),
 
+        m("div", { class: "seperation" }),
+        m(
+          "div",
+          {
+            class: "item input-parent flex ",
+          },
+          [
+            m(
+              "label",
+              {
+                for: "sleep-timer",
+              },
+              "Sleep timer in minutes"
+            ),
+            m("input", {
+              id: "sleep-timer",
+              placeholder: "",
+              value: settings.sleepTimer,
+              type: "tel",
+            }),
+          ]
+        ),
+
         m(
           "button",
           {
@@ -1922,6 +2009,18 @@ var settingsView = {
                 side_toaster("URL not valid");
               settings.opml_url = document.getElementById("url-opml").value;
               settings.proxy_url = document.getElementById("url-proxy").value;
+              let sleepTimerInput =
+                document.getElementById("sleep-timer").value;
+              if (
+                sleepTimerInput &&
+                !isNaN(sleepTimerInput) &&
+                Number(sleepTimerInput) > 0
+              ) {
+                settings.sleepTimer = parseInt(sleepTimerInput, 10);
+              } else {
+                settings.sleepTimer = ""; // Or leave it undefined if that's preferred
+              }
+
               status.mastodon_logged
                 ? null
                 : (settings.mastodon_server_url = document.getElementById(
@@ -2126,13 +2225,13 @@ document.addEventListener("DOMContentLoaded", function (e) {
   //top bar
 
   document
-    .querySelector("#top-bar div div.button-right")
+    .querySelector("#top-bar div div.button-left")
     .addEventListener("click", function (event) {
       simulateKeyPress("Backspace");
     });
 
   document
-    .querySelector("#top-bar div div.button-left")
+    .querySelector("#top-bar div div.button-right")
     .addEventListener("click", function (event) {
       simulateKeyPress("*");
     });
@@ -2359,6 +2458,12 @@ document.addEventListener("DOMContentLoaded", function (e) {
           window.open(current_article.url);
         }
 
+        if (r.startsWith("/AudioPlayerView")) {
+          status.sleepTimer
+            ? stopTimer()
+            : startTimer(settings.sleepTimer * 60 * 1000);
+        }
+
         break;
 
       case "Enter":
@@ -2514,43 +2619,47 @@ window.addEventListener("beforeunload", (event) => {
 
 //webActivity KaiOS 3
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistration().then((registration) => {
-    if (!registration) {
-      // No service worker registered, proceed with registration
-      try {
-        navigator.serviceWorker
-          .register(new URL("sw.js", import.meta.url), {
-            type: "module",
-          })
-          .then((registration) => {
-            if (registration.waiting) {
-              // Handle waiting service worker if needed
-            } else {
-              // Registration was successful, no waiting worker
-            }
+try {
+  navigator.serviceWorker
+    .register(new URL("sw.js", import.meta.url), {
+      type: "module",
+    })
+    .then((registration) => {
+      console.log("Service Worker registered successfully.");
 
-            registration.systemMessageManager.subscribe("activity").then(
-              (rv) => {
-                console.log(rv);
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
-          });
-      } catch (e) {
-        console.log(e);
+      // Check if a service worker is waiting to be activated
+      if (registration.waiting) {
+        console.log("A waiting Service Worker is already in place.");
+        registration.update();
       }
-    } else {
-      // Service worker already registered
-    }
-  });
+
+      if ("b2g" in navigator) {
+        // Subscribe to system messages if available
+        if (registration.systemMessageManager) {
+          registration.systemMessageManager.subscribe("activity").then(
+            () => {
+              console.log("Subscribed to general activity.");
+            },
+            (error) => {
+              alert("Error subscribing to activity:", error);
+            }
+          );
+        } else {
+          alert("systemMessageManager is not available.");
+        }
+      }
+    })
+    .catch((error) => {
+      alert("Service Worker registration failed:", error);
+    });
+} catch (e) {
+  console.error("Error during Service Worker setup:", e);
 }
 
-const sw_channel = new BroadcastChannel("sw-messages");
+//KaiOS3 handel mastodon oauth
 sw_channel.addEventListener("message", (event) => {
-  let result = event.data.oauth_success.data;
+  let result = event.data.oauth_success;
+  console.log(result);
 
   if (result) {
     var myHeaders = new Headers();
@@ -2575,8 +2684,6 @@ sw_channel.addEventListener("message", (event) => {
     fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
       .then((response) => response.json()) // Parse the JSON once
       .then((data) => {
-        console.log(data); // Log the parsed data
-
         settings.mastodon_token = data.access_token; // Access the token
         localforage.setItem("settings", settings);
         m.route.set("/start?index=0");

@@ -24,13 +24,13 @@
   ],
 
   "b2g_features": {
-    "version": "1.8.66",
+    "version": "1.8.111",
     "id": "feedolin",
     "subtitle": "RSS Reader and Mastodon Reader",
     "core": true,
     "type": "privileged",
     "display": "fullscreen",
-    "theme_color": "#ffffff",
+    "origin": "http://feedolin.localhost",
 
     "developer": {
       "name": "strukturart",
@@ -40,7 +40,11 @@
     "dependencies": {
       "ads-sdk": "1.5.8"
     },
-    "messages": [{ "serviceworker-notification": "index.html" }, "activity"],
+
+    "messages": [
+      { "serviceworker-notification": "index.html" },
+      { "activity": "/index.html" }
+    ],
 
     "activities": {
       "feedolin": {}

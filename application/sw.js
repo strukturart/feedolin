@@ -1,37 +1,37 @@
+const sw_channel = new BroadcastChannel("sw-messages");
+sw_channel.addEventListener("message", (event) => {
+  sw_channel.postMessage({
+    test: event.data.test,
+  });
+});
+self.addEventListener("systemmessage", async (evt) => {
+  // Store evt data early
+  let activityData;
+
+  if (evt.name === "activity") {
+    try {
+      const handler = evt.data.webActivityRequestHandler();
+
+      const { name: activityName, data } = handler.source;
+
+      // Store data for later use
+      activityData = data;
+
+      if (activityData.name === "feedolin") {
+        sw_channel.postMessage({
+          oauth_success: activityData.data,
+        });
+      }
+    } catch (error) {
+      console.error("Error handling system message:", error);
+    }
+  }
+});
+
 const userAgent = navigator.userAgent || "";
 
-const channel = new BroadcastChannel("sw-messages");
-
-self.addEventListener("activate", (event) => {});
-
-self.onsystemmessage = (evt) => {
-  try {
-    let m = evt.data.json();
-    self.registration.showNotification("feedolin", {
-      body: m.data.note,
-    });
-  } catch (e) {}
-
-  try {
-    const serviceHandler = () => {
-      if (evt.name === "activity") {
-        handler = evt.data.webActivityRequestHandler();
-        const { name: activityName, data: activityData } = handler.source;
-        if (activityName == "feedolin") {
-          let code = activityData;
-
-          channel.postMessage({
-            oauth_success: code,
-          });
-          return "OK";
-        }
-      }
-    };
-    evt.waitUntil(serviceHandler());
-  } catch (e) {}
-};
-if (!userAgent.includes("KaiOS")) {
-  const CACHE_NAME = "pwa-cache-v0.1092";
+if (userAgent && !userAgent.includes("KAIOS")) {
+  const CACHE_NAME = "pwa-cache-v0.1161";
   const FILE_LIST_URL = "/file-list.json"; // URL of the JSON file containing the array of files
 
   self.addEventListener("install", (event) => {

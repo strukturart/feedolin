@@ -100,10 +100,11 @@ h2 {
 h2.reblog::before {
   content: "";
   display: inline-block;
-  width: 20px; /* Adjust to your image size */
-  height: 20px; /* Adjust to your image size */
+  width: 1.1rem; /* Adjust to your image size */
+  height: 1.1rem; /* Adjust to your image size */
   background-image: url("../icons/reblog.svg");
   background-size: cover; /* Adjusts image to fill the box */
+  padding: 3px 0 0 0;
   margin-right: 5px; /* Space between image and text */
 }
 
@@ -350,6 +351,12 @@ article {
   margin: 0 0 10px 0;
 }
 
+h2.article-title {
+  overflow-wrap: break-word !important;
+  max-width: 90vw;
+  min-width: 90vw;
+}
+
 #article {
   padding: 20px 20px 20px 20px;
 }
@@ -384,7 +391,7 @@ article {
 }
 
 .page {
-  margin: 30px 0 0 0;
+  margin: 35px 0 0 0;
   padding: 10px 10px 40px 10px;
 }
 
@@ -468,6 +475,8 @@ div.nickname {
   background: white;
   color: black;
   width: fit-content;
+  position: absolute;
+  right: 0;
 }
 /*/ //////////////////////////
 ///VIEWS////////////////*/
