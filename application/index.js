@@ -44,7 +44,6 @@ function stopTimer() {
 }
 
 worker.onmessage = function (event) {
-  console.log(event.data.remaining);
   if (event.data.action === "stop") {
     globalAudioElement.pause();
     status.sleepTimer = false;
@@ -65,13 +64,10 @@ export let status = {
   local_opml: [],
 };
 
-if (typeof window !== "undefined") {
-  status.notKaiOS = window.innerWidth > 300 ? true : false;
-} else {
-  // Fallback logic if window is not available
-  const userAgent = navigator.userAgent || "";
-  status.notKaiOS = !userAgent.includes("KaiOS");
-}
+if ("b2g" in navigator || "navigator.mozApps" in navigator)
+  status.notKaiOS = false;
+
+console.log(status);
 
 let current_article = "";
 const proxy = "https://corsproxy.io/?";
@@ -135,9 +131,6 @@ function add_read_article(id) {
 }
 
 let xml_parser = new DOMParser();
-
-if ("b2g" in navigator || "navigator.mozApps" in navigator)
-  status.notKaiOS = false;
 
 if (!status.notKaiOS) {
   const scripts = [
@@ -1446,6 +1439,42 @@ if ("b2g" in navigator) {
   }
 }
 
+let hasPlayedAudio = [];
+
+try {
+  localforage.getItem("hasPlayedAudio").then((value) => {
+    hasPlayedAudio = value || []; // If no data, initialize as an empty array
+    console.log("Loaded hasPlayedAudio:", hasPlayedAudio);
+  });
+} catch (error) {
+  console.error("Failed to load hasPlayedAudio:", error);
+}
+
+// Function to play and update audio
+let playedAudio = async (url, time) => {
+  const index = hasPlayedAudio.findIndex((e) => e.url === url);
+
+  if (index !== -1) {
+    // If the URL exists, update the time
+    hasPlayedAudio[index].time = time;
+  } else {
+    // If the URL does not exist, push a new object
+    hasPlayedAudio.push({ url, time });
+  }
+
+  // Save the updated hasPlayedAudio array to localforage
+  localforage.setItem("hasPlayedAudio", hasPlayedAudio).then(() => {
+    console.log(hasPlayedAudio);
+  });
+};
+
+let startX = 0; // Initial X position
+let startY = 0; // Initial Y position
+let currentX = 0; // Current X position
+let currentY = 0; // Current Y position
+let isSwiping = false; // Track if the user is actively swiping
+let seekInterval = null;
+
 const AudioPlayerView = {
   audioDuration: 0, // Store audio duration
   currentTime: 0, // Store current time of the audio
@@ -1456,19 +1485,31 @@ const AudioPlayerView = {
     // Load the audio URL if it changes
     if (attrs.url && globalAudioElement.src !== attrs.url) {
       globalAudioElement.src = attrs.url;
-      globalAudioElement.play().catch(() => {}); // Handle play promise rejection
+      globalAudioElement.play().catch(() => {});
       AudioPlayerView.isPlaying = true;
+
+      hasPlayedAudio.map((e) => {
+        if (e.url === globalAudioElement.src) {
+          if (confirm("contiune playing ?") == true) {
+            globalAudioElement.currentTime = e.time;
+          }
+        }
+      });
     }
 
     // Set up event listeners
     globalAudioElement.onloadedmetadata = () => {
       AudioPlayerView.audioDuration = globalAudioElement.duration;
-      m.redraw(); // Force a redraw to update the UI with the duration
+      m.redraw();
     };
 
     globalAudioElement.ontimeupdate = () => {
       AudioPlayerView.currentTime = globalAudioElement.currentTime;
-      m.redraw(); // Update UI with the current time and progress
+
+      //store audio url to contiune to play
+      playedAudio(globalAudioElement.src, globalAudioElement.currentTime);
+
+      m.redraw();
     };
 
     // Restore play/pause state
@@ -1479,8 +1520,6 @@ const AudioPlayerView = {
   },
 
   oncreate: () => {
-    status.player = true;
-
     top_bar("", "", "");
     bottom_bar("", "<img src='assets/icons/play.svg'>", "");
     if (settings.sleepTimer) {
@@ -1509,25 +1548,69 @@ const AudioPlayerView = {
         AudioPlayerView.togglePlayPause();
       });
 
-    document.addEventListener("swiped-left", () => {
-      let r = m.route.get();
+    const threshold = 30;
 
-      if (r.startsWith("Audio")) {
-        AudioPlayerView.seek("left");
+    document.addEventListener("touchstart", (event) => {
+      const touch = event.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+    });
+
+    document.addEventListener("touchmove", (event) => {
+      const touch = event.touches[0];
+      currentX = touch.clientX;
+      currentY = touch.clientY;
+
+      const diffX = currentX - startX;
+      const diffY = currentY - startY;
+
+      // Determine swipe direction based on the larger movement
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > threshold) {
+          startContinuousSeek("right");
+          isSwiping = true;
+        } else if (diffX < -threshold) {
+          startContinuousSeek("left");
+          isSwiping = true;
+        }
+      } else {
+        if (diffY > threshold) {
+          console.log("Swiping down (not used in this context)");
+        } else if (diffY < -threshold) {
+          console.log("Swiping up (not used in this context)");
+        }
       }
     });
 
-    document.addEventListener("swiped-right", () => {
-      AudioPlayerView.seek("right");
-
-      if (r.startsWith("Audio")) {
-        AudioPlayerView.seek("right");
+    document.addEventListener("touchend", () => {
+      if (isSwiping) {
+        isSwiping = false;
+        stopContinuousSeek();
+      } else {
       }
     });
+
+    function startContinuousSeek(direction) {
+      if (seekInterval) return; // Prevent multiple intervals
+      AudioPlayerView.seek(direction);
+
+      // Start a repeating interval for continuous seeking
+      seekInterval = setInterval(() => {
+        AudioPlayerView.seek(direction);
+        document.querySelector(".audio-info").style.padding = "20px";
+      }, 1000);
+    }
+
+    function stopContinuousSeek() {
+      if (seekInterval) {
+        clearInterval(seekInterval);
+        seekInterval = null;
+        document.querySelector(".audio-info").style.padding = "10px";
+      }
+    }
   },
 
   onremove: () => {
-    // Remove the keydown listener when the view is removed
     document.removeEventListener("keydown", AudioPlayerView.handleKeydown);
   },
 
@@ -2172,7 +2255,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
       "touchstart",
       function (e) {
         startX = e.touches[0].pageX;
-        document.querySelector("body").style.opacity = 1; // Start with full opacity
+        document.querySelector("body").style.opacity = 1;
       },
       false
     );
@@ -2185,8 +2268,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
         // Calculate the inverted opacity based on swipe distance
         let opacity = 1 - Math.min(diffX / maxSwipeDistance, 1);
 
-        // Apply opacity to the body (or any other element)
-        document.querySelector("body").style.opacity = opacity;
+        let r = m.route.get();
+        if (r.startsWith("/article"))
+          document.querySelector("body").style.opacity = opacity;
       },
       false
     );

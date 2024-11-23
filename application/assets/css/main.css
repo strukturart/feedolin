@@ -477,6 +477,7 @@ div.nickname {
   width: fit-content;
   position: absolute;
   right: 0;
+  transition: padding 0.3s ease;
 }
 /*/ //////////////////////////
 ///VIEWS////////////////*/

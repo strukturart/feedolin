@@ -201,8 +201,8 @@ export function share(url) {
       if (navigator.share) {
         navigator
           .share({
-            title: "Flop P2P-Messenger",
-            text: "Flop P2P-Messenger",
+            title: "Feedolin",
+            text: "Feedolin",
             url: url,
           })
           .then(() => {
@@ -232,10 +232,6 @@ export function detectMobileOS() {
   // Android detection
   if (/android/i.test(userAgent)) {
     return "Android";
-  }
-
-  if ("b2g" in navigator || "b2g" in navigator) {
-    // return "KaiOS";
   }
 
   // Other mobile OS or not a mobile device
