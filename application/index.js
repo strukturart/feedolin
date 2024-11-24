@@ -15,7 +15,6 @@ import { mastodon_account_info, reblog } from "./assets/js/mastodon.js";
 import localforage from "localforage";
 import { detectMobileOS } from "./assets/js/helper.js";
 import m from "mithril";
-import { v4 as uuidv4 } from "uuid";
 import * as sanitizeHtml from "sanitize-html";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -79,6 +78,8 @@ let default_settings = {
   "proxy_url": "https://corsproxy.io/?",
   "cache_time": 1000,
 };
+//store all articles id to compare
+let articlesID = [];
 
 export let settings = {};
 let channels = [];
@@ -324,6 +325,12 @@ let clean = (i) => {
   });
 };
 
+let raw = (i) => {
+  return sanitizeHtml(i, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
+};
 const fetchOPML = async (url) => {
   try {
     const uniqueUrl = `${url}?t=${new Date().getTime()}`;
@@ -430,7 +437,6 @@ const fetchContent = async (feed_download_list) => {
       localforage
         .setItem("articles", articles)
         .then(() => {
-          console.log("feeds cached");
           articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
 
           articles.forEach((e) => {
@@ -736,6 +742,7 @@ let load_mastodon = () => {
         articles.push(f);
       });
       channels.push("Mastodon");
+      side_toaster("Logged in as " + status.mastodon_logged, 4000);
     });
 };
 
@@ -750,10 +757,9 @@ let start_loading = () => {
       .then((f) => {
         status.mastodon_logged = f.display_name;
         load_mastodon();
+        setTimeout(() => {}, 5000);
       })
-      .catch((e) => {
-        alert(e);
-      });
+      .catch((e) => {});
   }
 
   channel_filter = localStorage.getItem("last_channel_filter");
@@ -940,6 +946,10 @@ var start = {
       (h) => channel_filter === "" || channel_filter === h.channel
     );
 
+    articles.forEach((e) => {
+      articlesID.push(e.id);
+    });
+
     return m(
       "div",
       {
@@ -1026,6 +1036,9 @@ var start = {
               clean(h.feed_title)
             ),
             m("h3", clean(h.title)),
+            h.type == "mastodon"
+              ? m("h3", raw(h.content.substring(0, 30)) + "...")
+              : null,
           ]
         );
       })
@@ -1451,7 +1464,7 @@ try {
 }
 
 // Function to play and update audio
-let playedAudio = async (url, time) => {
+let playedAudio = async (url, time, id) => {
   const index = hasPlayedAudio.findIndex((e) => e.url === url);
 
   if (index !== -1) {
@@ -1459,13 +1472,17 @@ let playedAudio = async (url, time) => {
     hasPlayedAudio[index].time = time;
   } else {
     // If the URL does not exist, push a new object
-    hasPlayedAudio.push({ url, time });
+    hasPlayedAudio.push({ url, time, id });
   }
 
+  clean_hasPlayedaudio();
+
   // Save the updated hasPlayedAudio array to localforage
-  localforage.setItem("hasPlayedAudio", hasPlayedAudio).then(() => {
-    console.log(hasPlayedAudio);
-  });
+  localforage.setItem("hasPlayedAudio", hasPlayedAudio).then(() => {});
+};
+
+let clean_hasPlayedaudio = () => {
+  hasPlayedAudio = hasPlayedAudio.filter((e) => articlesID.includes(e.id));
 };
 
 let startX = 0; // Initial X position
@@ -1490,7 +1507,7 @@ const AudioPlayerView = {
 
       hasPlayedAudio.map((e) => {
         if (e.url === globalAudioElement.src) {
-          if (confirm("contiune playing ?") == true) {
+          if (confirm("continue playing ?") == true) {
             globalAudioElement.currentTime = e.time;
           }
         }
@@ -1507,8 +1524,12 @@ const AudioPlayerView = {
       AudioPlayerView.currentTime = globalAudioElement.currentTime;
 
       //store audio url to contiune to play
-      playedAudio(globalAudioElement.src, globalAudioElement.currentTime);
-
+      playedAudio(
+        globalAudioElement.src,
+        globalAudioElement.currentTime,
+        attrs.id
+      );
+      status.player = true;
       m.redraw();
     };
 
@@ -2513,7 +2534,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
             m.route.set(
               `/AudioPlayerView?url=${encodeURIComponent(
                 current_article.enclosure["@_url"]
-              )}`
+              )}&id=${current_article.id}`
             );
 
           if (current_article.type == "video")
@@ -2743,7 +2764,6 @@ try {
 //KaiOS3 handel mastodon oauth
 sw_channel.addEventListener("message", (event) => {
   let result = event.data.oauth_success;
-  console.log(result);
 
   if (result) {
     var myHeaders = new Headers();

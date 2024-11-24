@@ -19,8 +19,8 @@ export let setTabindex = () => {
 export let load_ads = function () {
   getKaiAd({
     publisher: "4408b6fa-4e1d-438f-af4d-f3be2fa97208",
-    app: "flop",
-    slot: "flop",
+    app: "feedolin",
+    slot: "feedolin",
     test: 0,
     timeout: 10000,
     h: 120,
