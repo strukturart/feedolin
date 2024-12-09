@@ -452,7 +452,6 @@ function startVolumeManager() {
         navigator.volumeManager = AudioVolumeManagerService;
       })
       .catch((e) => {
-        // console.log(Error calling AudioVolumeManager service${JSON.stringify(e)});
         navigator.volumeManager = null;
       });
   };
@@ -473,6 +472,8 @@ export let volume_control = function () {
         status.window_status = "";
       }, 2000);
     } catch (e) {}
+  } else {
+    navigator.volumeManager.requestShow();
   }
 };
 

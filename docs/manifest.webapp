@@ -1,20 +1,23 @@
 {
-  "version": "2.0.8",
+  "version": "2.0.15",
   "name": "feedolin",
   "description": "Feedolin is an RSS / Atom / Mastodon reader and podcast player. It is intended for users who already use an rss reader client and want to read their feeds on a kaios device. the list of subscribed websites / podcasts is managed locally or online in an opml file.",
   "launch_path": "/index.html",
   "type": "privileged",
   "fullscreen": "true",
   "categories": ["News","Social"],
+  "userAgentInfo": "Feedolin written by strukturart@gmail.com",
+
+
   "icons": {
     "56": "/assets/icons/icon-56-56.png",
     "112": "/assets/icons/icon-112-112.png"
   },
 
-  "developer": {
-    "name": "strukturart",
-    "url": "https://strukturart.com"
-  },
+ "developer": {
+      "name": "strukturart",
+      "url": "https://github.com/strukturart/feedolin"
+    },
 
   "dependencies": {
     "ads-sdk": "1.5.8"
@@ -48,11 +51,16 @@
     }
   ],
   
-  "serviceworker": {
+   "serviceworker": {
     "script_url": "sw.js"
   },
 
+  
+
   "permissions": {
+    "serviceworker": {
+      "description": "Needed for assocating service worker"
+    },
     "mobiledata": {},
     "wifidata": {},
     "calllog": {},
@@ -65,10 +73,7 @@
       "access": "readwrite"
     },
 
-    "video-capture": {
-      "description": "Reading Codes using the Camera"
-    },
-
+    
     "audio-channel-content": {
       "description": "Needed to play this app's audio content on the content channel"
     },

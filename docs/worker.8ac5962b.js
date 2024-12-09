@@ -1,0 +1,1 @@
+var a=null,e=0;self.onmessage=function(n){var t=n.data,l=t.action,s=t.duration;"start"===l?(e=Date.now()+s,clearInterval(a),a=setInterval(function(){var n=e-Date.now();self.postMessage({remaining:n}),n<=0&&(clearInterval(a),a=null,self.postMessage({action:"stop"}))},1e3)):"stop"===l&&(clearInterval(a),a=null,e=0)};

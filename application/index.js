@@ -11,48 +11,67 @@ import {
   list_files,
   volume_control,
 } from "./assets/js/helper.js";
-import { mastodon_account_info, reblog } from "./assets/js/mastodon.js";
+import { mastodon_account_info } from "./assets/js/mastodon.js";
 import localforage from "localforage";
 import { detectMobileOS } from "./assets/js/helper.js";
 import m from "mithril";
 import * as sanitizeHtml from "sanitize-html";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import swiped from "swiped-events";
 import fxparser from "fast-xml-parser";
 import Timeworker from "./worker.js";
+import swiped from "swiped-events";
+
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
-
-const worker = new Worker(new URL("./worker.js", import.meta.url), {
-  type: "module",
-});
-
 const sw_channel = new BroadcastChannel("sw-messages");
-
-function startTimer(timerDuration) {
-  worker.postMessage({ action: "start", duration: timerDuration });
-  side_toaster("sleep mode on", 3000);
-  status.sleepTimer = true;
-}
-
-function stopTimer() {
-  worker.postMessage({ action: "stop" });
-  side_toaster("sleep mode off", 3000);
-}
-
-worker.onmessage = function (event) {
-  if (event.data.action === "stop") {
-    globalAudioElement.pause();
-    status.sleepTimer = false;
-  }
-};
 
 const parser = new fxparser.XMLParser({
   ignoreAttributes: false,
   parseAttributeValue: true,
 });
+
+//webActivity KaiOS 3
+
+try {
+  navigator.serviceWorker
+    .register(new URL("./sw.js", import.meta.url), {
+      type: "module",
+    })
+    .then((registration) => {
+      console.log("Service Worker registered successfully.");
+
+      // Check if a service worker is waiting to be activated
+      if (registration.waiting) {
+        console.log("A waiting Service Worker is already in place.");
+        registration.update();
+      }
+
+      if ("b2g" in navigator) {
+        // Subscribe to system messages if available
+        if (registration.systemMessageManager) {
+          registration.systemMessageManager.subscribe("activity").then(
+            () => {
+              console.log("Subscribed to general activity.");
+            },
+            (error) => {
+              alert("Error subscribing to activity:", error);
+            }
+          );
+        } else {
+          alert("systemMessageManager is not available.");
+        }
+      }
+    })
+    .catch((error) => {
+      alert("Service Worker registration failed:", error);
+    });
+} catch (e) {
+  alert("Error during Service Worker setup:", e);
+}
 
 export let status = {
   visibility: true,
@@ -63,17 +82,18 @@ export let status = {
   local_opml: [],
 };
 
-if ("b2g" in navigator || "navigator.mozApps" in navigator)
+const userAgent = navigator.userAgent || "";
+if (userAgent && userAgent.includes("KAIOS")) {
   status.notKaiOS = false;
-
-console.log(status);
+}
 
 let current_article = "";
 const proxy = "https://corsproxy.io/?";
 
+//https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml
+
 let default_settings = {
-  "opml_url":
-    "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
+  "opml_url": "https://rss.strukturart.com/rss.opml",
   "opml_local": "",
   "proxy_url": "https://corsproxy.io/?",
   "cache_time": 1000,
@@ -102,12 +122,13 @@ localforage
 
 let reload_data = () => {
   articles = [];
-  side_toaster("reload data", 3000);
-  localStorage.setItem("last_channel_filter", channel_filter);
+  localforage.setItem("last_channel_filter", channel_filter).then(() => {
+    side_toaster("load data", 3000);
 
-  setTimeout(() => {
     start_loading();
-  }, 3000);
+  });
+
+  setTimeout(() => {}, 3000);
 };
 
 function add_read_article(id) {
@@ -240,9 +261,7 @@ let app_launcher = () => {
         console.log("The activity encouter en error: " + this.error);
         alert(this.error);
       };
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
 
     if ("b2g" in navigator) {
       try {
@@ -283,14 +302,9 @@ function stringToHash(str) {
   return hash.toString(36); // Convert to base-36 for a shorter result
 }
 
-//test if device online
-let checkOnlineStatus = () => {
-  return fetch("https://www.google.com", {
-    method: "HEAD",
-    mode: "no-cors",
-  })
-    .then(() => true)
-    .catch(() => false);
+//test if device online and proxy server accesible server
+let checkOnlineStatus = async () => {
+  return status.deviceOnline;
 };
 
 //media check
@@ -331,30 +345,40 @@ let raw = (i) => {
     allowedAttributes: {},
   });
 };
-const fetchOPML = async (url) => {
-  try {
-    const uniqueUrl = `${url}?t=${new Date().getTime()}`;
 
-    const response = await fetch(uniqueUrl, {
-      method: "GET",
-      cache: "no-cache",
-      redirect: "follow",
-    });
-    if (!response.ok) {
-      alert(`HTTP error! Status: ${response.status}`);
+const fetchOPML = (url) => {
+  let t = url;
+  if (status.notKaiOS) t = settings.proxy_url + url;
+
+  const xhr = new XMLHttpRequest({ "mozSystem": true });
+
+  xhr.open("GET", t, true);
+  xhr.setRequestHeader("Accept", "application/xml");
+
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // Success
+      load_feeds(xhr.responseText);
+    } else {
+      // HTTP error handling
+      console.log(`HTTP error! Status: ${xhr.status}`);
     }
-    const data = await response.text();
-    load_feeds(data);
-  } catch (error) {
-    console.log("Error fetching the OPML file:", error);
-    m.route.set("/start/?index=0");
-  }
+  };
+
+  xhr.onerror = function (error) {
+    m.route.set("/start");
+
+    side_toaster("Error fetching the OPML file" + error, 4000);
+  };
+
+  xhr.send();
 };
 
 const load_feeds = async (data) => {
   if (data) {
     let downloadList;
-    const downloadListData = generateDownloadList(data); // Capture the returned list
+    const downloadListData = generateDownloadList(data);
+
     if (downloadListData.error) {
       side_toaster(downloadListData.error, 3000);
       return false;
@@ -368,7 +392,9 @@ const load_feeds = async (data) => {
         await fetchContent(downloadList);
         settings.last_update = new Date();
         localforage.setItem("settings", settings);
-      } catch (error) {}
+      } catch (error) {
+        alert(error);
+      }
     } else {
       alert("Generated download list is empty.");
     }
@@ -420,6 +446,7 @@ const generateDownloadList = (data) => {
 
   return { error: "", downloadList }; // Return the generated list with no error
 };
+
 const fetchContent = async (feed_download_list) => {
   let completedFeeds = 0; // Counter to track how many feeds have finished loading
   const totalFeeds = feed_download_list.length; // Total number of feeds to be fetched
@@ -430,6 +457,8 @@ const fetchContent = async (feed_download_list) => {
   const checkIfAllFeedsLoaded = () => {
     channel_filter = localStorage.getItem("last_channel_filter");
     if (completedFeeds === totalFeeds) {
+      m.route.set("/start");
+
       console.log("All feeds are loaded");
       // All feeds are done loading, you can proceed with further actions
       //cache data
@@ -532,10 +561,21 @@ const fetchContent = async (feed_download_list) => {
           checkIfAllFeedsLoaded(); // Check if all feeds are done
         });
     } else {
-      let xhr = new XMLHttpRequest();
-      let tt = new Date().getTime();
+      let xhr = new XMLHttpRequest({ "mozSystem": true });
+      xhr.timeout = 5000;
+
       let url = e.url;
-      xhr.open("GET", proxy + url, true);
+      if (status.notKaiOS) {
+        xhr.open("GET", proxy + url, true);
+      } else {
+        xhr.open("GET", url, true);
+      }
+
+      xhr.ontimeout = function () {
+        console.error("Request timed out");
+        completedFeeds++;
+        checkIfAllFeedsLoaded();
+      };
 
       xhr.onload = function () {
         if (xhr.status !== 200) {
@@ -668,7 +708,7 @@ const fetchContent = async (feed_download_list) => {
 };
 
 //Mastadon private
-let load_mastodon = () => {
+let load_mastodon = async () => {
   let accessToken = settings.mastodon_token;
 
   let url = settings.mastodon_server_url + "/api/v1/timelines/home";
@@ -737,17 +777,23 @@ let load_mastodon = () => {
               }
             }
           }
-        } catch (e) {}
+        } catch (e) {
+          console.log(e);
+        }
 
         articles.push(f);
       });
       channels.push("Mastodon");
       side_toaster("Logged in as " + status.mastodon_logged, 4000);
+
+      localforage.setItem("articles", articles).then(() => {
+        console.log("cached");
+      });
     });
 };
 
 let start_loading = () => {
-  fetchOPML(proxy + settings.opml_url + "?time=" + new Date());
+  fetchOPML(settings.opml_url);
   if (settings.opml_local) {
     load_feeds(settings.opml_local);
   }
@@ -757,7 +803,6 @@ let start_loading = () => {
       .then((f) => {
         status.mastodon_logged = f.display_name;
         load_mastodon();
-        setTimeout(() => {}, 5000);
       })
       .catch((e) => {});
   }
@@ -789,11 +834,18 @@ localforage
       status.last_update_duration = 3600;
     }
 
-    if (!settings.opml_url && !settings.opml_local_filename)
+    if (!settings.opml_url && !settings.opml_local_filename) {
       side_toaster(
         "The feed could not be loaded because no OPML was defined in the settings.",
         6000
       );
+
+      settings = default_settings;
+      localforage
+        .setItem("settings", settings)
+        .then(function (value) {})
+        .catch(function (err) {});
+    }
 
     checkOnlineStatus().then((isOnline) => {
       //is online use offline data or not
@@ -820,6 +872,8 @@ localforage
             }
 
             m.route.set("/start?index=0");
+            document.querySelector("body").classList.add("cache");
+
             side_toaster("Cached feeds loaded", 4000);
 
             //load mastodon
@@ -842,15 +896,12 @@ localforage
     // This code runs if there were any errors
     side_toaster("The default settings was loaded", 3000);
     settings = default_settings;
-    fetchOPML(proxy + settings.opml_url);
+    fetchOPML(settings.opml_url);
 
     localforage
       .setItem("settings", settings)
-      .then(function (value) {
-        // Do other things once the value has been saved.
-      })
+      .then(function (value) {})
       .catch(function (err) {
-        // This code runs if there were any errors
         console.log(err);
       });
   });
@@ -1155,9 +1206,41 @@ var localOPML = {
               if (i == 0) vnode.dom.focus();
             },
             onclick: () => {
-              try {
-                let sdcard = navigator.b2g.getDeviceStorage("sdcard");
+              if ("b2g" in navigator) {
+                try {
+                  let sdcard = navigator.b2g.getDeviceStorage("sdcard");
+                  let request = sdcard.get(h);
+                  request.onsuccess = function () {
+                    const reader = new FileReader();
+
+                    reader.onload = () => {
+                      const downloadListData = generateDownloadList(
+                        reader.result
+                      );
+                      if (downloadListData.error) {
+                        side_toaster("OPML file not valid", 4000);
+                      } else {
+                        settings.opml_local = reader.result;
+                        settings.opml_local_filename = filename;
+                        localforage.setItem("settings", settings).then(() => {
+                          side_toaster("OPML file added", 4000);
+                          m.route.set("/settingsView");
+                        });
+                      }
+                    };
+
+                    reader.onerror = () => {
+                      side_toaster("OPML file not valid", 4000);
+                    };
+
+                    reader.readAsText(this.result);
+                  };
+                  request.onerror = function (error) {};
+                } catch (e) {}
+              } else {
+                let sdcard = navigator.getDeviceStorage("sdcard");
                 let request = sdcard.get(h);
+
                 request.onsuccess = function () {
                   const reader = new FileReader();
 
@@ -1184,7 +1267,7 @@ var localOPML = {
                   reader.readAsText(this.result);
                 };
                 request.onerror = function (error) {};
-              } catch (e) {}
+              }
             },
           },
           filename
@@ -1438,6 +1521,7 @@ const YouTubePlayerView = {
 // Define the audio element globally
 const globalAudioElement = document.createElement("audio");
 globalAudioElement.preload = "auto";
+globalAudioElement.src = "";
 
 if ("b2g" in navigator) {
   try {
@@ -1457,7 +1541,6 @@ let hasPlayedAudio = [];
 try {
   localforage.getItem("hasPlayedAudio").then((value) => {
     hasPlayedAudio = value || []; // If no data, initialize as an empty array
-    console.log("Loaded hasPlayedAudio:", hasPlayedAudio);
   });
 } catch (error) {
   console.error("Failed to load hasPlayedAudio:", error);
@@ -1500,18 +1583,25 @@ const AudioPlayerView = {
 
   oninit: ({ attrs }) => {
     // Load the audio URL if it changes
-    if (attrs.url && globalAudioElement.src !== attrs.url) {
-      globalAudioElement.src = attrs.url;
-      globalAudioElement.play().catch(() => {});
-      AudioPlayerView.isPlaying = true;
 
-      hasPlayedAudio.map((e) => {
-        if (e.url === globalAudioElement.src) {
-          if (confirm("continue playing ?") == true) {
-            globalAudioElement.currentTime = e.time;
+    if (attrs.url && globalAudioElement.src !== attrs.url) {
+      try {
+        globalAudioElement.src = attrs.url;
+        globalAudioElement.play().catch((e) => {
+          alert(e);
+        });
+        AudioPlayerView.isPlaying = true;
+
+        hasPlayedAudio.map((e) => {
+          if (e.url === globalAudioElement.src) {
+            if (confirm("continue playing ?") == true) {
+              globalAudioElement.currentTime = e.time;
+            }
           }
-        }
-      });
+        });
+      } catch (e) {
+        globalAudioElement.src = attrs.url;
+      }
     }
 
     // Set up event listeners
@@ -1552,7 +1642,8 @@ const AudioPlayerView = {
 
       document
         .querySelector("div.button-left")
-        .addEventListener("click", function (event) {
+        .addEventListener("click", function () {
+          alert("j");
           status.sleepTimer
             ? stopTimer()
             : startTimer(settings.sleepTimer * 60 * 1000);
@@ -1569,47 +1660,48 @@ const AudioPlayerView = {
         AudioPlayerView.togglePlayPause();
       });
 
-    const threshold = 30;
+    //toch events for non KaiOS devices
+    if (status.notKaiOS) {
+      const threshold = 30;
+      document.addEventListener("touchstart", (event) => {
+        const touch = event.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+      });
 
-    document.addEventListener("touchstart", (event) => {
-      const touch = event.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-    });
+      document.addEventListener("touchmove", (event) => {
+        const touch = event.touches[0];
+        currentX = touch.clientX;
+        currentY = touch.clientY;
 
-    document.addEventListener("touchmove", (event) => {
-      const touch = event.touches[0];
-      currentX = touch.clientX;
-      currentY = touch.clientY;
+        const diffX = currentX - startX;
+        const diffY = currentY - startY;
 
-      const diffX = currentX - startX;
-      const diffY = currentY - startY;
-
-      // Determine swipe direction based on the larger movement
-      if (Math.abs(diffX) > Math.abs(diffY)) {
-        if (diffX > threshold) {
-          startContinuousSeek("right");
-          isSwiping = true;
-        } else if (diffX < -threshold) {
-          startContinuousSeek("left");
-          isSwiping = true;
+        // Determine swipe direction based on the larger movement
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+          if (diffX > threshold) {
+            startContinuousSeek("right");
+            isSwiping = true;
+          } else if (diffX < -threshold) {
+            startContinuousSeek("left");
+            isSwiping = true;
+          }
+        } else {
+          if (diffY > threshold) {
+            console.log("Swiping down (not used in this context)");
+          } else if (diffY < -threshold) {
+            console.log("Swiping up (not used in this context)");
+          }
         }
-      } else {
-        if (diffY > threshold) {
-          console.log("Swiping down (not used in this context)");
-        } else if (diffY < -threshold) {
-          console.log("Swiping up (not used in this context)");
-        }
-      }
-    });
+      });
 
-    document.addEventListener("touchend", () => {
-      if (isSwiping) {
-        isSwiping = false;
-        stopContinuousSeek();
-      } else {
-      }
-    });
+      document.addEventListener("touchend", () => {
+        if (isSwiping) {
+          isSwiping = false;
+          stopContinuousSeek();
+        }
+      });
+    }
 
     function startContinuousSeek(direction) {
       if (seekInterval) return; // Prevent multiple intervals
@@ -1719,7 +1811,12 @@ var about = {
   view: function () {
     return m(
       "div",
-      { class: "page" },
+      {
+        class: "page scrollable",
+        oncreate: () => {
+          bottom_bar("", "", "");
+        },
+      },
       m(
         "p",
         "Feedolin is an RSS/Atom reader and podcast player, available for both KaiOS and non-KaiOS users."
@@ -1795,74 +1892,84 @@ var about = {
 
 var privacy_policy = {
   view: function () {
-    return m("div", { id: "privacy_policy", class: "page" }, [
-      m("h1", "Privacy Policy for Feedolin"),
-      m(
-        "p",
-        "Feedolin is committed to protecting your privacy. This policy explains how data is handled within the app."
-      ),
-
-      m("h2", "Data Storage and Collection"),
-      m("p", [
-        "All data related to your RSS/Atom feeds and Mastodon account is stored ",
-        m("strong", "locally"),
-        " in your device’s browser. Feedolin does ",
-        m("strong", "not"),
-        " collect or store any data on external servers. The following information is stored locally:",
-      ]),
-      m("ul", [
-        m("li", "Your subscribed RSS/Atom feeds and podcasts."),
-        m("li", "OPML files you upload or manage."),
-        m("li", "Your Mastodon account information and related data."),
-      ]),
-      m("p", "No server-side data storage or collection is performed."),
-
-      m("h2", "KaiOS Users"),
-      m("p", [
-        "If you are using Feedolin on a KaiOS device, the app uses ",
-        m("strong", "KaiOS Ads"),
-        ", which may collect data related to your usage. The data collected by KaiOS Ads is subject to the ",
+    return m(
+      "div",
+      {
+        id: "privacy_policy",
+        class: "page scrollable",
+        oncreate: () => {
+          bottom_bar("", "", "");
+        },
+      },
+      [
+        m("h1", "Privacy Policy for Feedolin"),
         m(
-          "a",
-          {
-            href: "https://www.kaiostech.com/privacy-policy/",
-            target: "_blank",
-            rel: "noopener noreferrer",
-          },
-          "KaiOS privacy policy"
+          "p",
+          "Feedolin is committed to protecting your privacy. This policy explains how data is handled within the app."
         ),
-        ".",
-      ]),
-      m("p", [
-        "For users on all other platforms, ",
-        m("strong", "no ads"),
-        " are used, and no external data collection occurs.",
-      ]),
 
-      m("h2", "External Sources Responsibility"),
-      m("p", [
-        "Feedolin enables you to add feeds and connect to external sources such as RSS/Atom feeds, podcasts, and Mastodon accounts. You are ",
-        m("strong", "solely responsible"),
-        " for the sources you choose to trust and subscribe to. Feedolin does not verify or control the content or data provided by these external sources.",
-      ]),
+        m("h2", "Data Storage and Collection"),
+        m("p", [
+          "All data related to your RSS/Atom feeds and Mastodon account is stored ",
+          m("strong", "locally"),
+          " in your device’s browser. Feedolin does ",
+          m("strong", "not"),
+          " collect or store any data on external servers. The following information is stored locally:",
+        ]),
+        m("ul", [
+          m("li", "Your subscribed RSS/Atom feeds and podcasts."),
+          m("li", "OPML files you upload or manage."),
+          m("li", "Your Mastodon account information and related data."),
+        ]),
+        m("p", "No server-side data storage or collection is performed."),
 
-      m("h2", "Third-Party Services"),
-      m(
-        "p",
-        "Feedolin integrates with third-party services such as Mastodon. These services have their own privacy policies, and you should review them to understand how your data is handled."
-      ),
+        m("h2", "KaiOS Users"),
+        m("p", [
+          "If you are using Feedolin on a KaiOS device, the app uses ",
+          m("strong", "KaiOS Ads"),
+          ", which may collect data related to your usage. The data collected by KaiOS Ads is subject to the ",
+          m(
+            "a",
+            {
+              href: "https://www.kaiostech.com/privacy-policy/",
+              target: "_blank",
+              rel: "noopener noreferrer",
+            },
+            "KaiOS privacy policy"
+          ),
+          ".",
+        ]),
+        m("p", [
+          "For users on all other platforms, ",
+          m("strong", "no ads"),
+          " are used, and no external data collection occurs.",
+        ]),
 
-      m("h2", "Policy Updates"),
-      m(
-        "p",
-        "This Privacy Policy may be updated periodically. Any changes will be communicated through updates to the app."
-      ),
+        m("h2", "External Sources Responsibility"),
+        m("p", [
+          "Feedolin enables you to add feeds and connect to external sources such as RSS/Atom feeds, podcasts, and Mastodon accounts. You are ",
+          m("strong", "solely responsible"),
+          " for the sources you choose to trust and subscribe to. Feedolin does not verify or control the content or data provided by these external sources.",
+        ]),
 
-      m(
-        "p",
-        "By using Feedolin, you acknowledge and agree to this Privacy Policy."
-      ),
-    ]);
+        m("h2", "Third-Party Services"),
+        m(
+          "p",
+          "Feedolin integrates with third-party services such as Mastodon. These services have their own privacy policies, and you should review them to understand how your data is handled."
+        ),
+
+        m("h2", "Policy Updates"),
+        m(
+          "p",
+          "This Privacy Policy may be updated periodically. Any changes will be communicated through updates to the app."
+        ),
+
+        m(
+          "p",
+          "By using Feedolin, you acknowledge and agree to this Privacy Policy."
+        ),
+      ]
+    );
   },
 };
 
@@ -1953,7 +2060,7 @@ var settingsView = {
                 } else {
                   status.local_opml.length > 0
                     ? m.route.set("/localOPML")
-                    : side_toaster("not enough", 3000);
+                    : side_toaster("no OPML file found", 3000);
                 }
               } else {
                 settings.opml_local = "";
@@ -1974,27 +2081,29 @@ var settingsView = {
         m("div", settings.opml_local_filename),
 
         m("div", { class: "seperation" }),
-        m(
-          "div",
-          {
-            class: "item input-parent flex ",
-          },
-          [
-            m(
-              "label",
+        status.notKaiOS
+          ? m(
+              "div",
               {
-                for: "url-proxy",
+                class: "item input-parent flex ",
               },
-              "PROXY"
-            ),
-            m("input", {
-              id: "url-proxy",
-              placeholder: "",
-              value: settings.proxy_url || "",
-              type: "url",
-            }),
-          ]
-        ),
+              [
+                m(
+                  "label",
+                  {
+                    for: "url-proxy",
+                  },
+                  "PROXY"
+                ),
+                m("input", {
+                  id: "url-proxy",
+                  placeholder: "",
+                  value: settings.proxy_url || "",
+                  type: "url",
+                }),
+              ]
+            )
+          : null,
         m("div", { class: "seperation" }),
 
         m(
@@ -2084,22 +2193,31 @@ var settingsView = {
         m(
           "div",
           {
-            class: "item input-parent flex ",
+            class: "item input-parent",
           },
           [
+            m("label", { for: "sleep-timer" }, "Sleep timer"),
             m(
-              "label",
+              "select",
               {
-                for: "sleep-timer",
+                name: "sleep-timer",
+                class: "select-box",
+                id: "sleep-timer",
+                value: settings.sleepTimer,
+                onchange: (e) => {
+                  settings.sleepTimer = e.target.value;
+                  m.redraw();
+                },
               },
-              "Sleep timer in minutes"
+              [
+                m("option", { value: "10" }, "10"),
+                m("option", { value: "20" }, "20"),
+                m("option", { value: "30" }, "30"),
+                m("option", { value: "30" }, "40"),
+                m("option", { value: "30" }, "50"),
+                m("option", { value: "30" }, "60"),
+              ]
             ),
-            m("input", {
-              id: "sleep-timer",
-              placeholder: "",
-              value: settings.sleepTimer,
-              type: "tel",
-            }),
           ]
         ),
 
@@ -2109,10 +2227,16 @@ var settingsView = {
             class: "item",
             id: "button-save-settings",
             onclick: function () {
-              if (!validate_url(document.getElementById("url-opml").value))
-                side_toaster("URL not valid");
+              if (
+                document.getElementById("url-opml").value != "" &&
+                !validate_url(document.getElementById("url-opml").value)
+              )
+                side_toaster("URL not valid", 4000);
+
               settings.opml_url = document.getElementById("url-opml").value;
-              settings.proxy_url = document.getElementById("url-proxy").value;
+              if (status.notKaiOS)
+                settings.proxy_url = document.getElementById("url-proxy").value;
+
               let sleepTimerInput =
                 document.getElementById("sleep-timer").value;
               if (
@@ -2122,7 +2246,7 @@ var settingsView = {
               ) {
                 settings.sleepTimer = parseInt(sleepTimerInput, 10);
               } else {
-                settings.sleepTimer = ""; // Or leave it undefined if that's preferred
+                settings.sleepTimer = "";
               }
 
               status.mastodon_logged
@@ -2133,13 +2257,11 @@ var settingsView = {
 
               localforage
                 .setItem("settings", settings)
-                .then(function (value) {
-                  // Do other things once the value has been saved.
+                .then(function () {
                   side_toaster("settings saved", 2000);
                 })
                 .catch(function (err) {
-                  // This code runs if there were any errors
-                  console.log(err);
+                  alert(err);
                 });
             },
           },
@@ -2306,7 +2428,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     );
   };
 
-  swiper();
+  if (status.notKaiOS) swiper();
 
   // Add click listeners to simulate key events
   document
@@ -2375,50 +2497,40 @@ document.addEventListener("DOMContentLoaded", function (e) {
       }, 300); // Optional timeout to reset the flag after a short delay
     }
   });
+  if (status.notKaiOS) {
+    document.addEventListener("swiped", function (e) {
+      let r = m.route.get();
 
-  document.addEventListener("swiped", function (e) {
-    let r = m.route.get();
+      let dir = e.detail.dir;
 
-    let dir = e.detail.dir;
+      if (dir == "right") {
+        if (r.startsWith("/start")) {
+          counter--;
+          if (counter < 1) counter = channels.length - 1;
 
-    if (dir == "down") {
-      if (window.scrollY === 0 || document.documentElement.scrollTop === 0) {
-        // Page is at the top
-        const swipeDistance = e.detail.yEnd - e.detail.yStart;
+          channel_filter = channels[counter];
+          m.redraw();
+          const currentParams = m.route.param(); // Get the current parameters
+          currentParams.index = 0; // Modify the `index` parameter
 
-        if (swipeDistance > 300) {
-          // reload_data();
+          m.route.set("/start", currentParams); // Update the route with the new parameters
         }
       }
-    }
-    if (dir == "right") {
-      if (r.startsWith("/start")) {
-        counter--;
-        if (counter < 1) counter = channels.length - 1;
+      if (dir == "left") {
+        if (r.startsWith("/start")) {
+          counter++;
+          if (counter > channels.length - 1) counter = 0;
 
-        channel_filter = channels[counter];
-        m.redraw();
-        // Update the route with the new parameter, preserving the rest
-        const currentParams = m.route.param(); // Get the current parameters
-        currentParams.index = 0; // Modify the `index` parameter
+          channel_filter = channels[counter];
+          m.redraw();
+          const currentParams = m.route.param(); // Get the current parameters
+          currentParams.index = 0; // Modify the `index` parameter
 
-        m.route.set("/start", currentParams); // Update the route with the new parameters
+          m.route.set("/start", currentParams); // Update the route with the new parameters
+        }
       }
-    }
-    if (dir == "left") {
-      if (r.startsWith("/start")) {
-        counter++;
-        if (counter > channels.length - 1) counter = 0;
-
-        channel_filter = channels[counter];
-        m.redraw();
-        const currentParams = m.route.param(); // Get the current parameters
-        currentParams.index = 0; // Modify the `index` parameter
-
-        m.route.set("/start", currentParams); // Update the route with the new parameters
-      }
-    }
-  });
+    });
+  }
 
   // ////////////////////////////
   // //KEYPAD HANDLER////////////
@@ -2441,11 +2553,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
     switch (param.key) {
       case "Backspace":
         window.close();
-        break;
-
-      case "0":
-        articles = [];
-        reload_data();
         break;
     }
   }
@@ -2586,6 +2693,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
         break;
 
       case "Backspace":
+        if (r.startsWith("/start")) {
+          window.close();
+        }
         if (r.startsWith("/article")) {
           const index = m.route.param("index");
           m.route.set("/start?index=" + index);
@@ -2717,86 +2827,77 @@ window.addEventListener("beforeunload", (event) => {
     start_loading();
 
     m.route.set("/intro");
-    // Most browsers ignore custom messages, so returnValue should be set
     event.returnValue = "Are you sure you want to leave the page?";
   }
 });
 
-//webActivity KaiOS 3
+//KaiOS3 handel mastodon oauth
 
 try {
-  navigator.serviceWorker
-    .register(new URL("sw.js", import.meta.url), {
-      type: "module",
-    })
-    .then((registration) => {
-      console.log("Service Worker registered successfully.");
+  sw_channel.addEventListener("message", (event) => {
+    let result = event.data.oauth_success;
 
-      // Check if a service worker is waiting to be activated
-      if (registration.waiting) {
-        console.log("A waiting Service Worker is already in place.");
-        registration.update();
-      }
+    if (result) {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-      if ("b2g" in navigator) {
-        // Subscribe to system messages if available
-        if (registration.systemMessageManager) {
-          registration.systemMessageManager.subscribe("activity").then(
-            () => {
-              console.log("Subscribed to general activity.");
-            },
-            (error) => {
-              alert("Error subscribing to activity:", error);
-            }
-          );
-        } else {
-          alert("systemMessageManager is not available.");
-        }
-      }
-    })
-    .catch((error) => {
-      alert("Service Worker registration failed:", error);
-    });
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("code", result);
+      urlencoded.append("scope", "read");
+
+      urlencoded.append("grant_type", "authorization_code");
+      urlencoded.append("redirect_uri", process.env.redirect);
+      urlencoded.append("client_id", process.env.clientId);
+      urlencoded.append("client_secret", process.env.clientSecret);
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
+        .then((response) => response.json()) // Parse the JSON once
+        .then((data) => {
+          settings.mastodon_token = data.access_token; // Access the token
+          localforage.setItem("settings", settings);
+          m.route.set("/start?index=0");
+
+          side_toaster("Successfully connected", 10000);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          side_toaster("Connection failed");
+        });
+    }
+  });
+} catch (e) {}
+
+//worker sleep mode
+
+let worker;
+
+try {
+  worker = new Worker(new URL("./worker.js", import.meta.url));
 } catch (e) {
-  console.error("Error during Service Worker setup:", e);
+  console.log(e);
 }
 
-//KaiOS3 handel mastodon oauth
-sw_channel.addEventListener("message", (event) => {
-  let result = event.data.oauth_success;
+function startTimer(timerDuration) {
+  worker.postMessage({ action: "start", duration: timerDuration });
+  side_toaster("sleep mode on", 3000);
+  status.sleepTimer = true;
+}
 
-  if (result) {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+function stopTimer() {
+  worker.postMessage({ action: "stop" });
+  side_toaster("sleep mode off", 3000);
+}
 
-    var urlencoded = new URLSearchParams();
-    urlencoded.append("code", result);
-    urlencoded.append("scope", "read");
-
-    urlencoded.append("grant_type", "authorization_code");
-    urlencoded.append("redirect_uri", process.env.redirect);
-    urlencoded.append("client_id", process.env.clientId);
-    urlencoded.append("client_secret", process.env.clientSecret);
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: "follow",
-    };
-
-    fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
-      .then((response) => response.json()) // Parse the JSON once
-      .then((data) => {
-        settings.mastodon_token = data.access_token; // Access the token
-        localforage.setItem("settings", settings);
-        m.route.set("/start?index=0");
-
-        side_toaster("Successfully connected", 10000);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        side_toaster("Connection failed");
-      });
+worker.onmessage = function (event) {
+  if (event.data.action === "stop") {
+    globalAudioElement.pause();
+    status.sleepTimer = false;
   }
-});
+};

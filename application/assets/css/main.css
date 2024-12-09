@@ -70,6 +70,13 @@ body {
   background-size: 5px 5px;
 }
 
+.cache {
+  background: rgb(236, 234, 234);
+
+  background-image: radial-gradient(circle, #e9e7e7 10%, transparent 11%);
+  background-size: 5px 5px;
+}
+
 #app {
   position: relative;
   height: 100%;
@@ -193,25 +200,21 @@ a {
 }
 
 select {
-  width: 95%;
+  width: 100%;
   padding: 10px;
-  margin: 10px 5% 0px 5%;
 
-  /* styling */
-  background-color: white;
-  border: thin solid rgb(56, 56, 66);
-  border-radius: 4px;
-  font: inherit;
-  line-height: 1.5em;
-  text-align: center;
-
-  /* reset */
-
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
+  background: none;
+  color: rgb(54, 54, 54);
+
+  outline: 0;
+  border: 0;
+  border-bottom: 2px solid rgb(63, 63, 63);
+  text-align: center;
+  position: relative;
+  background: #fafafa url("../icons/E264.svg") no-repeat 99% 80%;
 }
 
 textarea {
@@ -246,7 +249,7 @@ label {
   background: orange;
 }
 
-article:focus {
+#start article:focus {
   background: silver;
   padding: 5px;
 }
@@ -293,8 +296,7 @@ div#intro img {
 
 article {
   min-width: 100%;
-  background-image: radial-gradient(circle, #e2dddd 10%, transparent 11%);
-  background-size: 5px 5px;
+  background: none;
 }
 
 #start {
@@ -344,7 +346,7 @@ article {
 }
 
 #article article:focus {
-  background: white;
+  background: none;
 }
 
 #article time {
@@ -377,8 +379,6 @@ h2.article-title {
 .text {
   word-break: break-all; /* Breaks the URL at any character */
   padding: 0px 0px 50px 0px;
-  background-image: radial-gradient(circle, #e2dddd 10%, transparent 11%);
-  background-size: 5px 5px;
 }
 
 #optionsView {
@@ -808,10 +808,12 @@ video {
   }
 
   #article {
-    padding: 0px;
+    padding: 10px;
+    height: 99vh;
+  }
 
-    background-image: radial-gradient(circle, #e2dddd 10%, transparent 11%);
-    background-size: 25px 25px;
+  .scrollable {
+    height: 99vh;
   }
 
   #start article {
@@ -897,6 +899,7 @@ video {
 
   #settings-page {
     margin: 10px 0 0 0;
+    padding: 0 0 60px 0;
     width: 100vw;
   }
 
@@ -905,8 +908,8 @@ video {
   }
 
   .page {
-    margin: 10px 0 0 0;
-    padding: 10px 10px 40px 10px;
+    margin: 0px 0 0px 0;
+    padding: 10px 10px 80px 10px;
   }
 
   .audio-player .audio-info {
