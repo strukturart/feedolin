@@ -90,10 +90,9 @@ if (userAgent && userAgent.includes("KAIOS")) {
 let current_article = "";
 const proxy = "https://corsproxy.io/?";
 
-//https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml
-
 let default_settings = {
-  "opml_url": "https://rss.strukturart.com/rss.opml",
+  "opml_url":
+    "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
   "opml_local": "",
   "proxy_url": "https://corsproxy.io/?",
   "cache_time": 1000,
