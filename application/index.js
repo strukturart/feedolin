@@ -27,6 +27,9 @@ import "regenerator-runtime/runtime";
 
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
+
+let articles = [];
+
 const sw_channel = new BroadcastChannel("sw-messages");
 
 const parser = new fxparser.XMLParser({
@@ -88,14 +91,14 @@ if (userAgent && userAgent.includes("KAIOS")) {
 }
 
 let current_article = "";
-const proxy = "https://corsproxy.io/?";
+const proxy = "https://api.cors.lol/?url=";
 
 let default_settings = {
   "opml_url":
     "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
   "opml_local": "",
-  "proxy_url": "https://corsproxy.io/?",
-  "cache_time": 1000,
+  "proxy_url": "https://api.cors.lol/?url=",
+  "cache_time": 3600000,
 };
 //store all articles id to compare
 let articlesID = [];
@@ -120,14 +123,9 @@ localforage
   });
 
 let reload_data = () => {
-  articles = [];
   localforage.setItem("last_channel_filter", channel_filter).then(() => {
-    side_toaster("load data", 3000);
-
     start_loading();
   });
-
-  setTimeout(() => {}, 3000);
 };
 
 function add_read_article(id) {
@@ -169,8 +167,6 @@ if (!status.notKaiOS) {
     document.head.appendChild(js);
   });
 }
-
-let articles = [];
 
 if (status.debug) {
   window.onerror = function (msg, url, linenumber) {
@@ -347,30 +343,53 @@ let raw = (i) => {
 
 const fetchOPML = (url) => {
   let t = url;
-  if (status.notKaiOS) t = settings.proxy_url + url;
-
-  const xhr = new XMLHttpRequest({ "mozSystem": true });
+  let xhr = null;
+  if (status.notKaiOS) {
+    t = settings.proxy_url + url;
+    xhr = new XMLHttpRequest();
+  } else {
+    xhr = new XMLHttpRequest({ "mozSystem": true });
+  }
 
   xhr.open("GET", t, true);
   xhr.setRequestHeader("Accept", "application/xml");
 
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status < 300) {
-      // Success
+      side_toaster("Data loaded successfully", 3000);
       load_feeds(xhr.responseText);
     } else {
-      // HTTP error handling
-      console.log(`HTTP error! Status: ${xhr.status}`);
+      handleHttpError(xhr.status);
     }
   };
 
-  xhr.onerror = function (error) {
-    m.route.set("/start");
-
-    side_toaster("Error fetching the OPML file" + error, 4000);
+  xhr.onerror = function () {
+    handleRequestError();
   };
 
   xhr.send();
+};
+
+const handleHttpError = (status) => {
+  console.error(`HTTP Error: Status ${status}`);
+  side_toaster("OPML file not reachable", 4000);
+
+  // Route back to start if on intro
+  let r = m.route.get();
+  if (r.startsWith("/intro")) {
+    m.route.set("/start");
+  }
+};
+
+const handleRequestError = () => {
+  console.error("Network error occurred during the request.");
+  side_toaster("OPML file not reachable", 3000);
+
+  // Route back to start if on intro
+  let r = m.route.get();
+  if (r.startsWith("/intro")) {
+    m.route.set("/start");
+  }
 };
 
 const load_feeds = async (data) => {
@@ -392,7 +411,7 @@ const load_feeds = async (data) => {
         settings.last_update = new Date();
         localforage.setItem("settings", settings);
       } catch (error) {
-        alert(error);
+        console.log(error);
       }
     } else {
       alert("Generated download list is empty.");
@@ -447,6 +466,8 @@ const generateDownloadList = (data) => {
 };
 
 const fetchContent = async (feed_download_list) => {
+  articles = [];
+
   let completedFeeds = 0; // Counter to track how many feeds have finished loading
   const totalFeeds = feed_download_list.length; // Total number of feeds to be fetched
 
@@ -456,8 +477,6 @@ const fetchContent = async (feed_download_list) => {
   const checkIfAllFeedsLoaded = () => {
     channel_filter = localStorage.getItem("last_channel_filter");
     if (completedFeeds === totalFeeds) {
-      m.route.set("/start");
-
       console.log("All feeds are loaded");
       // All feeds are done loading, you can proceed with further actions
       //cache data
@@ -484,6 +503,9 @@ const fetchContent = async (feed_download_list) => {
         .catch((err) => {
           console.error("Feeds cached", err);
         });
+
+      let r = m.route.get();
+      if (r.startsWith("/intro")) m.route.set("/start");
     }
   };
 
@@ -561,7 +583,7 @@ const fetchContent = async (feed_download_list) => {
         });
     } else {
       let xhr = new XMLHttpRequest({ "mozSystem": true });
-      xhr.timeout = 5000;
+      xhr.timeout = 2000;
 
       let url = e.url;
       if (status.notKaiOS) {
@@ -818,13 +840,12 @@ localforage
         .setItem("settings", settings)
         .then(function (value) {})
         .catch(function (err) {
-          // This code runs if there were any errors
           console.log(err);
         });
     }
     settings = value;
-    //todo set value in settings view, default is 1sec
-    settings.cache_time = settings.cache_time || 1000;
+    //todo set value in settings view, default is 1h
+    settings.cache_time = settings.cache_time || 3600000;
 
     if (settings.last_update) {
       status.last_update_duration =
@@ -1534,6 +1555,9 @@ if ("b2g" in navigator) {
     console.log(e);
   }
 }
+if (navigator.mozAlarms) {
+  globalAudioElement.mozAudioChannelType = "content";
+}
 
 let hasPlayedAudio = [];
 
@@ -1642,7 +1666,6 @@ const AudioPlayerView = {
       document
         .querySelector("div.button-left")
         .addEventListener("click", function () {
-          alert("j");
           status.sleepTimer
             ? stopTimer()
             : startTimer(settings.sleepTimer * 60 * 1000);
@@ -2209,6 +2232,8 @@ var settingsView = {
                 },
               },
               [
+                m("option", { value: "1" }, "1"),
+                m("option", { value: "5" }, "5"),
                 m("option", { value: "10" }, "10"),
                 m("option", { value: "20" }, "20"),
                 m("option", { value: "30" }, "30"),
@@ -2786,8 +2811,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
       status.visibility = true;
       let dif = new Date() / 1000 - settings.last_update / 1000;
       if (dif > settings.cache_time) {
-        articles = [];
-
         side_toaster("load new content", 4000);
         start_loading();
       }
@@ -2805,6 +2828,7 @@ window.addEventListener("offline", () => {
 });
 
 window.addEventListener("beforeunload", (event) => {
+  localforage.setItem("last_channel_filter", channel_filter).then(() => {});
   const entries = window.performance.getEntriesByType("navigation");
 
   // For older browsers (fallback)
@@ -2821,7 +2845,6 @@ window.addEventListener("beforeunload", (event) => {
     // Prevent the reload or display a confirmation dialog
     event.preventDefault();
 
-    articles = [];
     side_toaster("load new content", 4000);
     start_loading();
 
@@ -2874,6 +2897,12 @@ try {
 } catch (e) {}
 
 //worker sleep mode
+if (navigator.mozAlarms) {
+  navigator.mozSetMessageHandler("alarm", function (mozAlarm) {
+    globalAudioElement.pause();
+    status.sleepTimer = false;
+  });
+}
 
 let worker;
 
@@ -2884,14 +2913,32 @@ try {
 }
 
 function startTimer(timerDuration) {
-  worker.postMessage({ action: "start", duration: timerDuration });
-  side_toaster("sleep mode on", 3000);
+  //KaiOS2
+  if (navigator.mozAlarms) {
+    let sleepDuration = settings.sleepTimer * 60 * 1000; // Convert minutes to milliseconds
+    let targetTime = new Date(Date.now() + sleepDuration); // Add duration to current time
+
+    var request = navigator.mozAlarms.add(targetTime, "honorTimezone");
+
+    request.onsuccess = function () {
+      status.alarmId = this.result;
+    };
+  }
+
   status.sleepTimer = true;
+  side_toaster("sleep mode on", 3000);
+
+  worker.postMessage({ action: "start", duration: timerDuration });
 }
 
 function stopTimer() {
-  worker.postMessage({ action: "stop" });
+  if (navigator.mozAlarms) {
+    navigator.mozAlarms.remove(status.alarmId);
+  }
+  status.sleepTimer = false;
+
   side_toaster("sleep mode off", 3000);
+  worker.postMessage({ action: "stop" });
 }
 
 worker.onmessage = function (event) {

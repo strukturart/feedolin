@@ -30,7 +30,7 @@ self.addEventListener("systemmessage", async (evt) => {
 const userAgent = navigator.userAgent || "";
 
 if (userAgent && !userAgent.includes("KAIOS")) {
-  const CACHE_NAME = "pwa-cache-v0.1181";
+  const CACHE_NAME = "pwa-cache-v0.1198";
   const FILE_LIST_URL = "/file-list.json"; // URL of the JSON file containing the array of files
 
   self.addEventListener("install", (event) => {

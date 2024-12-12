@@ -24,14 +24,12 @@
   ],
 
   "b2g_features": {
-    "version": "1.8.128",
+    "version": "1.8.132",
     "id": "feedolin",
     "subtitle": "RSS Reader and Mastodon Reader",
     "core": true,
     "type": "privileged",
     "display": "fullscreen",
-    "origin": "http://feedolin.localhost",
-
     "developer": {
       "name": "strukturart",
       "url": "https://github.com/strukturart/feedolin"
