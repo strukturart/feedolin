@@ -24,14 +24,12 @@
   ],
 
   "b2g_features": {
-    "version": "1.8.125",
+    "version": "1.8.134",
     "id": "feedolin",
     "subtitle": "RSS Reader and Mastodon Reader",
     "core": true,
     "type": "privileged",
     "display": "fullscreen",
-    "origin": "http://feedolin.localhost",
-
     "developer": {
       "name": "strukturart",
       "url": "https://github.com/strukturart/feedolin"
@@ -58,9 +56,7 @@
       "desktop-notification": {
         "description": "Needed to fire system notifications"
       },
-      "alarms": {
-        "description": "Required to schedule alarms"
-      },
+
       "feature-detection": {
         "description": "query which keys are available"
       },
