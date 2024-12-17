@@ -10,6 +10,7 @@ import {
   pick_file,
   list_files,
   volume_control,
+  setTabindex,
 } from "./assets/js/helper.js";
 import { mastodon_account_info } from "./assets/js/mastodon.js";
 import localforage from "localforage";
@@ -29,6 +30,15 @@ import "regenerator-runtime/runtime";
 dayjs.extend(duration);
 
 let articles = [];
+let downloadList = [];
+
+localforage
+  .getItem("downloadList")
+  .then((e) => {
+    downloadList = e;
+    console.log(downloadList);
+  })
+  .catch((downloadList = []));
 
 const sw_channel = new BroadcastChannel("sw-messages");
 
@@ -400,7 +410,7 @@ const fetchOPML = (url) => {
 
 const handleHttpError = (status) => {
   console.error(`HTTP Error: Status ${status}`);
-  side_toaster("OPML file not reachable", 4000);
+  side_toaster("OPML file not reachable", 8000);
 
   // Route back to start if on intro
   let r = m.route.get();
@@ -411,7 +421,7 @@ const handleHttpError = (status) => {
 
 const handleRequestError = () => {
   console.error("Network error occurred during the request.");
-  side_toaster("OPML file not reachable", 3000);
+  side_toaster("OPML file not reachable", 8000);
 
   // Route back to start if on intro
   let r = m.route.get();
@@ -422,7 +432,6 @@ const handleRequestError = () => {
 
 const load_feeds = async (data) => {
   if (data) {
-    let downloadList;
     const downloadListData = generateDownloadList(data);
 
     if (downloadListData.error) {
@@ -456,6 +465,7 @@ const generateDownloadList = (data) => {
   // Check if the OPML file is valid
   if (!xmlDoc || xmlDoc.getElementsByTagName("parsererror").length > 0) {
     console.error("Invalid OPML data.");
+    m.route.set("/start");
     return { error: "Invalid OPML data", downloadList: [] };
   }
 
@@ -468,7 +478,7 @@ const generateDownloadList = (data) => {
 
   let index = 0;
   const outlines = content.querySelectorAll("outline");
-  const downloadList = [];
+  downloadList = [];
 
   outlines.forEach((outline) => {
     const nestedOutlines = outline.querySelectorAll("outline");
@@ -496,6 +506,9 @@ const generateDownloadList = (data) => {
 const fetchContent = async (feed_download_list) => {
   articles = [];
   channels = [];
+  downloadList = feed_download_list;
+
+  localforage.setItem("downloadList", downloadList);
 
   let completedFeeds = 0; // Counter to track how many feeds have finished loading
   const totalFeeds = feed_download_list.length; // Total number of feeds to be fetched
@@ -525,7 +538,6 @@ const fetchContent = async (feed_download_list) => {
             //todo check if last_channel exist in array
             channel_filter =
               localStorage.getItem("last_channel_filter") || channels[0];
-            console.log(channel_filter);
             first = true;
           }
 
@@ -743,7 +755,6 @@ const fetchContent = async (feed_download_list) => {
           completedFeeds++; // Increment the counter
           checkIfAllFeedsLoaded(); // Check if all feeds are done
         } catch (e) {
-          console.log(e);
           completedFeeds++; // Increment the counter
           checkIfAllFeedsLoaded(); // Check if all feeds are done
         }
@@ -1023,6 +1034,18 @@ var options = {
             },
           },
           "Privacy Policy"
+        ),
+        m(
+          "button",
+          {
+            tabindex: 3,
+
+            class: "item",
+            onclick: () => {
+              m.route.set("/subscriptionsView");
+            },
+          },
+          "Subscriptions"
         ),
         m("div", {
           id: "KaiOSads-Wrapper",
@@ -2328,6 +2351,58 @@ var settingsView = {
   },
 };
 
+var subscriptionsView = {
+  view: function () {
+    return m(
+      "div",
+      {
+        id: "subscriptionsView",
+        class: "flex page",
+        oncreate: () => {
+          top_bar("", "", "");
+
+          console.log(downloadList);
+
+          if (status.notKaiOS)
+            top_bar("<img src='assets/icons/back.svg'>", "", "");
+
+          bottom_bar(
+            "",
+            "<img class='not-desktop' src='assets/icons/select.svg'>",
+            ""
+          );
+
+          if (status.notKaiOS) bottom_bar("", "", "");
+        },
+      },
+      [
+        m(
+          "div",
+          m.trust(
+            "<strong>Subscriptions</strong><br>The red could not be loaded.<br><br>"
+          )
+        ),
+        downloadList.map((e) => {
+          return m(
+            "article",
+            {
+              class: "item",
+              oncreate: (vnode) => {
+                setTabindex();
+                if (e.error) vnode.dom.classList.add("error");
+              },
+            },
+            [
+              m("span", { class: "type-indicator" }, e.channel),
+              m("H2", e.title),
+            ]
+          );
+        }),
+      ]
+    );
+  },
+};
+
 m.route(root, "/intro", {
   "/article": article,
   "/settingsView": settingsView,
@@ -2340,6 +2415,7 @@ m.route(root, "/intro", {
   "/AudioPlayerView": AudioPlayerView,
   "/VideoPlayerView": VideoPlayerView,
   "/YouTubePlayerView": YouTubePlayerView,
+  "/subscriptionsView": subscriptionsView,
 });
 
 function scrollToCenter() {
@@ -2768,6 +2844,10 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
         if (r.startsWith("/index")) {
           m.route.set("/start?index=0");
+        }
+
+        if (r.startsWith("/subscriptionsView")) {
+          m.route.set("/options");
         }
 
         if (r.startsWith("/about")) {

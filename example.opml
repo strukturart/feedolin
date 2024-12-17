@@ -38,6 +38,8 @@
             <outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
         </outline>
 
+        
+
 
         <outline text="Coding" title="Coding">
             <outline type="rss" text="bHackers Blog" title="bHackers Blog" xmlUrl="https://blog.bananahackers.net/read/feed/" htmlUrl=""/>
@@ -47,6 +49,10 @@
 
         <outline text="News" title="News">
             <outline type="rss" text="t-online" title="t-online" xmlUrl="https://feeds.t-online.de/rss/ausland" htmlUrl=""/>
+        </outline>
+
+        <outline text="PeerTube" title="PeerTube">
+            <outline type="rss" text="Farooq Karimi Zadeh" title="Farooq Karimi Zadeh" xmlUrl="https://peertube.linuxrocks.online/feeds/videos.xml?videoChannelId=4132" htmlUrl=""/>
         </outline>
 
 

@@ -199,6 +199,10 @@ a {
   text-decoration: none;
 }
 
+.error {
+  color: red;
+}
+
 select {
   width: 100%;
   padding: 10px;
@@ -314,10 +318,10 @@ article {
   opacity: 0.6;
 }
 
-#start article .type-indicator {
+article .type-indicator {
   width: auto;
   position: absolute;
-  right: 5px;
+  right: 15px;
   font-size: 0.7rem;
   border: 2px solid black;
   border-radius: 8px;
@@ -361,6 +365,15 @@ h2.article-title {
 
 #article {
   padding: 20px 20px 20px 20px;
+}
+
+#subscriptionsView article {
+  margin: 0 0 20px 0;
+  padding: 10px;
+}
+
+#subscriptionsView article:focus {
+  background: silver;
 }
 
 #KaiOSAd {
