@@ -456,6 +456,7 @@ const generateDownloadList = (data) => {
   // Check if the OPML file is valid
   if (!xmlDoc || xmlDoc.getElementsByTagName("parsererror").length > 0) {
     console.error("Invalid OPML data.");
+    m.route.set("/start");
     return { error: "Invalid OPML data", downloadList: [] };
   }
 
