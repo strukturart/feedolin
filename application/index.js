@@ -36,7 +36,6 @@ localforage
   .getItem("downloadList")
   .then((e) => {
     downloadList = e;
-    console.log(downloadList);
   })
   .catch((downloadList = []));
 
@@ -85,8 +84,6 @@ try {
       type: "module",
     })
     .then((registration) => {
-      console.log("Service Worker registered successfully.");
-
       // Check if a service worker is waiting to be activated
       if (registration.waiting) {
         console.log("A waiting Service Worker is already in place.");
@@ -132,13 +129,14 @@ if (userAgent && userAgent.includes("KAIOS")) {
 
 let current_article = "";
 const proxy = "https://api.cors.lol/?url=";
+//"proxy_url": "https://api.cors.lol/?url=",
 
 let default_settings = {
   "opml_url":
     "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
   "opml_local": "",
   "proxy_url": "https://api.cors.lol/?url=",
-  "cache_time": 3600000,
+  "cache_time": 3600,
 };
 //store all articles id to compare
 let articlesID = [];
@@ -161,6 +159,33 @@ localforage
   .catch((err) => {
     console.error("Error accessing localForage:", err);
   });
+
+let lastPlayedMediaList = [];
+let getLastMediaList = () => {
+  localforage
+    .getItem("lastPlayedMedia")
+    .then((value) => {
+      if (value === null) {
+      } else {
+        lastPlayedMediaList = value;
+
+        if (channels.indexOf("lastPlayed") === -1) {
+          channels.push("lastPlayed");
+        }
+
+        articles.map((h, i) => {
+          if (lastPlayedMediaList.includes(h.id)) {
+            h.lastPlayedMedia = true;
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      console.error("Error accessing localForage:", err);
+    });
+};
+
+getLastMediaList();
 
 let reload_data = () => {
   start_loading();
@@ -307,15 +332,8 @@ let app_launcher = () => {
             setTimeout(() => {
               window.close();
             }, 3000);
-
-            // alert(rv);
           },
-          (err) => {
-            //alert(err);
-
-            if (err == "NO_PROVIDER") {
-            }
-          }
+          (err) => {}
         );
       } catch (e) {
         alert(e);
@@ -395,7 +413,7 @@ const fetchOPML = (url) => {
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status < 300) {
       side_toaster("Data loaded successfully", 3000);
-      load_feeds(xhr.responseText);
+      console.log(xhr.responseText);
     } else {
       handleHttpError(xhr.status);
     }
@@ -412,6 +430,8 @@ const handleHttpError = (status) => {
   console.error(`HTTP Error: Status ${status}`);
   side_toaster("OPML file not reachable", 8000);
 
+  load_cached_feeds();
+
   // Route back to start if on intro
   let r = m.route.get();
   if (r.startsWith("/intro")) {
@@ -423,6 +443,8 @@ const handleRequestError = () => {
   console.error("Network error occurred during the request.");
   side_toaster("OPML file not reachable", 8000);
 
+  load_cached_feeds();
+
   // Route back to start if on intro
   let r = m.route.get();
   if (r.startsWith("/intro")) {
@@ -431,6 +453,7 @@ const handleRequestError = () => {
 };
 
 const load_feeds = async (data) => {
+  console.log(data);
   if (data) {
     const downloadListData = generateDownloadList(data);
 
@@ -626,7 +649,7 @@ const fetchContent = async (feed_download_list) => {
         });
     } else {
       let xhr = new XMLHttpRequest({ "mozSystem": true });
-      xhr.timeout = 2000;
+      xhr.timeout = 10000;
 
       let url = e.url;
       if (status.notKaiOS) {
@@ -637,6 +660,7 @@ const fetchContent = async (feed_download_list) => {
 
       xhr.ontimeout = function () {
         console.error("Request timed out");
+        e.error = "timeout";
         completedFeeds++;
         checkIfAllFeedsLoaded();
       };
@@ -754,13 +778,16 @@ const fetchContent = async (feed_download_list) => {
 
           completedFeeds++; // Increment the counter
           checkIfAllFeedsLoaded(); // Check if all feeds are done
-        } catch (e) {
+        } catch (event) {
+          e.error = event;
+
           completedFeeds++; // Increment the counter
           checkIfAllFeedsLoaded(); // Check if all feeds are done
         }
       };
 
-      xhr.onerror = function () {
+      xhr.onerror = function (event) {
+        e.error = event;
         completedFeeds++; // Increment the counter in case of error
         checkIfAllFeedsLoaded();
       };
@@ -873,6 +900,33 @@ let start_loading = () => {
   channel_filter = localStorage.getItem("last_channel_filter");
 };
 
+let load_cached_feeds = () => {
+  localforage
+    .getItem("articles")
+    .then((value) => {
+      articles = value;
+
+      articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
+      articles.forEach((e) => {
+        if (channels.indexOf(e.channel) === -1 && e.channel) {
+          channels.push(e.channel);
+        }
+      });
+
+      if (channels.length) {
+        channel_filter =
+          localStorage.getItem("last_channel_filter") || channels[0];
+      }
+
+      m.route.set("/start?index=0");
+      document.querySelector("body").classList.add("cache");
+
+      side_toaster("Cached feeds loaded", 4000);
+    })
+    .catch((err) => {});
+};
+
 localforage
   .getItem("settings")
   .then(function (value) {
@@ -887,7 +941,7 @@ localforage
     }
     settings = value;
     //todo set value in settings view, default is 1h
-    settings.cache_time = settings.cache_time || 3600000;
+    settings.cache_time = settings.cache_time || 3600;
 
     if (settings.last_update) {
       status.last_update_duration =
@@ -914,43 +968,20 @@ localforage
       if (isOnline && status.last_update_duration > settings.cache_time) {
         start_loading();
         side_toaster("Load feeds", 4000);
+
+        //load mastodon acc info
+        if (settings.mastodon_token) {
+          mastodon_account_info(
+            settings.mastodon_server_url,
+            settings.mastodon_token
+          )
+            .then((f) => {
+              status.mastodon_logged = f.display_name;
+            })
+            .catch((e) => {});
+        }
       } else {
-        localforage
-          .getItem("articles")
-          .then((value) => {
-            articles = value;
-
-            articles.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
-
-            articles.forEach((e) => {
-              if (channels.indexOf(e.channel) === -1 && e.channel) {
-                channels.push(e.channel);
-              }
-            });
-
-            if (channels.length) {
-              channel_filter =
-                localStorage.getItem("last_channel_filter") || channels[0];
-            }
-
-            m.route.set("/start?index=0");
-            document.querySelector("body").classList.add("cache");
-
-            side_toaster("Cached feeds loaded", 4000);
-
-            //load mastodon
-            if (settings.mastodon_token) {
-              mastodon_account_info(
-                settings.mastodon_server_url,
-                settings.mastodon_token
-              )
-                .then((f) => {
-                  status.mastodon_logged = f.display_name;
-                })
-                .catch((e) => {});
-            }
-          })
-          .catch((err) => {});
+        load_cached_feeds();
       }
     });
   })
@@ -967,6 +998,34 @@ localforage
         console.log(err);
       });
   });
+
+let lastPlayedMedia = (id) => {
+  return localforage.getItem("lastPlayedMedia").then(function (mediaList) {
+    if (!Array.isArray(mediaList)) {
+      mediaList = [];
+    }
+
+    if (id) {
+      mediaList = mediaList.filter(function (x) {
+        return x !== id;
+      });
+      mediaList.unshift(id);
+
+      if (mediaList.length > 20) {
+        mediaList = mediaList.slice(0, 20);
+      }
+
+      return localforage
+        .setItem("lastPlayedMedia", mediaList)
+        .then(function () {
+          console.log(mediaList);
+          return mediaList;
+        });
+    }
+
+    return mediaList;
+  });
+};
 
 var root = document.getElementById("app");
 
@@ -1067,7 +1126,7 @@ let page_index = 0;
 
 var start = {
   view: function () {
-    const filteredArticles = articles.filter(
+    let filteredArticles = articles.filter(
       (h) => channel_filter === "" || channel_filter === h.channel
     );
 
@@ -1075,6 +1134,11 @@ var start = {
       articlesID.push(e.id);
     });
     localStorage.setItem("last_channel_filter", channel_filter);
+
+    if (channel_filter == "lastPlayed") {
+      getLastMediaList();
+      filteredArticles = articles.filter((h) => h.lastPlayedMedia == true);
+    }
 
     return m(
       "div",
@@ -1479,6 +1543,8 @@ const VideoPlayerView = {
       VideoPlayerView.videoElement.play();
     }
     VideoPlayerView.isPlaying = !VideoPlayerView.isPlaying;
+
+    lastPlayedMedia(attrs.id);
   },
 
   seek: (direction) => {
@@ -1588,7 +1654,7 @@ const YouTubePlayerView = {
 
   view: () => {
     return m("div", { class: "youtube-player" }, [
-      m("div", { id: "video-container", class: "video-container" }), // YouTube iframe player will be injected here
+      m("div", { id: "video-container", class: "video-container" }),
     ]);
   },
 };
@@ -1638,6 +1704,8 @@ let playedAudio = async (url, time, id) => {
 
   clean_hasPlayedaudio();
 
+  lastPlayedMedia(id);
+
   // Save the updated hasPlayedAudio array to localforage
   localforage.setItem("hasPlayedAudio", hasPlayedAudio).then(() => {});
 };
@@ -1657,7 +1725,7 @@ const AudioPlayerView = {
   audioDuration: 0, // Store audio duration
   currentTime: 0, // Store current time of the audio
   isPlaying: false, // Track play state
-  seekAmount: 5, // Seek by 5 seconds
+  seekAmount: 10, // Seek by 5 seconds
 
   oninit: ({ attrs }) => {
     // Load the audio URL if it changes
@@ -1697,6 +1765,9 @@ const AudioPlayerView = {
         globalAudioElement.currentTime,
         attrs.id
       );
+
+      lastPlayedMedia(attrs.id);
+
       status.player = true;
       m.redraw();
     };
@@ -1729,6 +1800,13 @@ const AudioPlayerView = {
 
     if (status.notKaiOS) {
       top_bar("<img src='assets/icons/back.svg'>", "", "");
+
+      document.addEventListener(
+        "touchstart",
+        AudioPlayerView.touchStartHandler
+      );
+      document.addEventListener("touchmove", AudioPlayerView.touchMoveHandler);
+      document.addEventListener("touchend", AudioPlayerView.touchEndHandler);
     }
 
     document
@@ -1781,14 +1859,17 @@ const AudioPlayerView = {
     }
 
     function startContinuousSeek(direction) {
-      if (seekInterval) return; // Prevent multiple intervals
-      AudioPlayerView.seek(direction);
-
-      // Start a repeating interval for continuous seeking
-      seekInterval = setInterval(() => {
+      let r = m.route.get();
+      if (r.startsWith("/Audio")) {
+        if (seekInterval) return; // Prevent multiple intervals
         AudioPlayerView.seek(direction);
-        document.querySelector(".audio-info").style.padding = "20px";
-      }, 1000);
+
+        // Start a repeating interval for continuous seeking
+        seekInterval = setInterval(() => {
+          AudioPlayerView.seek(direction);
+          document.querySelector(".audio-info").style.padding = "20px";
+        }, 1000);
+      }
     }
 
     function stopContinuousSeek() {
@@ -1801,7 +1882,17 @@ const AudioPlayerView = {
   },
 
   onremove: () => {
-    document.removeEventListener("keydown", AudioPlayerView.handleKeydown);
+    if (status.notKaiOS) {
+      document.removeEventListener(
+        "touchstart",
+        AudioPlayerView.touchStartHandler
+      );
+      document.removeEventListener(
+        "touchmove",
+        AudioPlayerView.touchMoveHandler
+      );
+      document.removeEventListener("touchend", AudioPlayerView.touchEndHandler);
+    }
   },
 
   handleKeydown: (e) => {
@@ -1818,7 +1909,7 @@ const AudioPlayerView = {
     if (AudioPlayerView.isPlaying) {
       globalAudioElement.pause();
     } else {
-      globalAudioElement.play().catch(() => {}); // Handle play promise rejection
+      globalAudioElement.play();
     }
     AudioPlayerView.isPlaying = !AudioPlayerView.isPlaying;
   },

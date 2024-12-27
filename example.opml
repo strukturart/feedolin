@@ -18,6 +18,7 @@
 
         <outline text="Blog" title="Blog">
             <outline type="rss" text="KaiOs Blog" title="KaiOs Reddit" xmlUrl="https://www.kaiostech.com/feed/" htmlUrl=""/>
+            <outline type="rss" text="Martin" title="Martin" xmlUrl="https://www.martinkaptein.com/index.xml" htmlUrl=""/>
         </outline>
 
         <outline text="Youtube" title="youtube">

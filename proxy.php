@@ -17,7 +17,7 @@ if (json_last_error() === JSON_ERROR_NONE) {
 $method = $_REQUEST['method'] ?? 'GET'; // Default to GET if method is not provided
 $url = $isJsonRequest ? $requestData['cors'] ?? null : ($_REQUEST['cors'] ?? null);
 
-// Handle direct query string URL (e.g., ?https://rss.strukturart.com/...)
+// Handle direct query string URL (e.g., ?https://example.com..)
 if (!$url && isset($_SERVER['QUERY_STRING']) && filter_var($_SERVER['QUERY_STRING'], FILTER_VALIDATE_URL)) {
     $url = $_SERVER['QUERY_STRING'];
 }
@@ -85,4 +85,3 @@ if (json_decode($response) !== null) {
 
 // Output the response
 echo $response;
-
