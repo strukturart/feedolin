@@ -128,14 +128,13 @@ if (userAgent && userAgent.includes("KAIOS")) {
 }
 
 let current_article = "";
-const proxy = "https://api.cors.lol/?url=";
-//"proxy_url": "https://api.cors.lol/?url=",
+const proxy = "https://feedolin.strukturart.com/proxy.php/?";
 
 let default_settings = {
   "opml_url":
     "https://raw.githubusercontent.com/strukturart/feedolin/master/example.opml",
   "opml_local": "",
-  "proxy_url": "https://api.cors.lol/?url=",
+  "proxy_url": "https://feedolin.strukturart.com/proxy.php/?",
   "cache_time": 3600,
 };
 //store all articles id to compare
@@ -169,26 +168,23 @@ let getLastMediaList = () => {
       } else {
         lastPlayedMediaList = value;
 
-        if (channels.indexOf("lastPlayed") === -1) {
-          channels.push("lastPlayed");
-        }
-
-        articles.map((h, i) => {
-          if (lastPlayedMediaList.includes(h.id)) {
-            h.lastPlayedMedia = true;
+        if (lastPlayedMediaList.length > 0) {
+          status.lastPlayedMedia = true;
+          if (channels.indexOf("lastPlayed") === -1) {
+            channels.push("lastPlayed");
           }
-        });
+
+          articles.map((h) => {
+            if (lastPlayedMediaList.includes(h.id)) {
+              h.lastPlayedMedia = true;
+            }
+          });
+        }
       }
     })
     .catch((err) => {
       console.error("Error accessing localForage:", err);
     });
-};
-
-getLastMediaList();
-
-let reload_data = () => {
-  start_loading();
 };
 
 function add_read_article(id) {
@@ -413,7 +409,7 @@ const fetchOPML = (url) => {
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status < 300) {
       side_toaster("Data loaded successfully", 3000);
-      console.log(xhr.responseText);
+      load_feeds(xhr.responseText);
     } else {
       handleHttpError(xhr.status);
     }
@@ -453,7 +449,6 @@ const handleRequestError = () => {
 };
 
 const load_feeds = async (data) => {
-  console.log(data);
   if (data) {
     const downloadListData = generateDownloadList(data);
 
@@ -467,6 +462,7 @@ const load_feeds = async (data) => {
     if (downloadList.length > 0) {
       // Fetch content for the feeds
       try {
+        console.log("try to load feeds");
         await fetchContent(downloadList);
         settings.last_update = new Date();
         localforage.setItem("settings", settings);
@@ -898,6 +894,7 @@ let start_loading = () => {
   }
 
   channel_filter = localStorage.getItem("last_channel_filter");
+  getLastMediaList();
 };
 
 let load_cached_feeds = () => {
@@ -934,7 +931,9 @@ localforage
       settings = default_settings;
       localforage
         .setItem("settings", settings)
-        .then(function (value) {})
+        .then(function (value) {
+          console.log("default settings");
+        })
         .catch(function (err) {
           console.log(err);
         });
@@ -999,7 +998,7 @@ localforage
       });
   });
 
-let lastPlayedMedia = (id) => {
+let lastPlayedMedia = async (id) => {
   return localforage.getItem("lastPlayedMedia").then(function (mediaList) {
     if (!Array.isArray(mediaList)) {
       mediaList = [];
@@ -1018,7 +1017,8 @@ let lastPlayedMedia = (id) => {
       return localforage
         .setItem("lastPlayedMedia", mediaList)
         .then(function () {
-          console.log(mediaList);
+          getLastMediaList();
+
           return mediaList;
         });
     }
@@ -1094,18 +1094,20 @@ var options = {
           },
           "Privacy Policy"
         ),
-        m(
-          "button",
-          {
-            tabindex: 3,
+        downloadList
+          ? m(
+              "button",
+              {
+                tabindex: 3,
 
-            class: "item",
-            onclick: () => {
-              m.route.set("/subscriptionsView");
-            },
-          },
-          "Subscriptions"
-        ),
+                class: "item",
+                onclick: () => {
+                  m.route.set("/subscriptionsView");
+                },
+              },
+              "Subscriptions"
+            )
+          : null,
         m("div", {
           id: "KaiOSads-Wrapper",
           class: "",
@@ -1126,6 +1128,10 @@ let page_index = 0;
 
 var start = {
   view: function () {
+    if (!articles) {
+      m.route.set("/intro");
+      return;
+    }
     let filteredArticles = articles.filter(
       (h) => channel_filter === "" || channel_filter === h.channel
     );
@@ -1135,8 +1141,9 @@ var start = {
     });
     localStorage.setItem("last_channel_filter", channel_filter);
 
+    getLastMediaList();
+
     if (channel_filter == "lastPlayed") {
-      getLastMediaList();
       filteredArticles = articles.filter((h) => h.lastPlayedMedia == true);
     }
 
@@ -1417,6 +1424,13 @@ var localOPML = {
 };
 
 var intro = {
+  oninit: (vnode) => {
+    vnode.state.stoptimeout = false;
+  },
+  onremove: () => {
+    vnode.state.stoptimeout = true;
+  },
+
   view: function () {
     return m(
       "div",
@@ -1437,6 +1451,11 @@ var intro = {
           src: "./assets/icons/intro.svg",
 
           oncreate: () => {
+            //timeout
+            setTimeout(() => {
+              if (!vnode.state.stoptimeout) m.route.set("/settingsView");
+            }, 10000);
+
             document.querySelector(".loading-spinner").style.display = "block";
             let get_manifest_callback = (e) => {
               try {
@@ -2452,8 +2471,6 @@ var subscriptionsView = {
         oncreate: () => {
           top_bar("", "", "");
 
-          console.log(downloadList);
-
           if (status.notKaiOS)
             top_bar("<img src='assets/icons/back.svg'>", "", "");
 
@@ -2798,12 +2815,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
           m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
-          m.route.set("/start", currentParams); // Update the route with the new parameters
+          currentParams.channel = channel_filter;
 
-          setTimeout(() => {
-            document.querySelectorAll("article.item")[0].focus();
-            scrollToCenter();
-          }, 500);
+          m.route.set("/start", currentParams); // Update the route with the new parameters
         }
         break;
 
@@ -2819,12 +2833,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
           // Update the route with the new parameter, preserving the rest
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
-          m.route.set("/start", currentParams); // Update the route with the new parameters
-          setTimeout(() => {
-            document.querySelectorAll("article.item")[0].focus();
+          currentParams.channel = channel_filter;
 
-            scrollToCenter();
-          }, 500);
+          m.route.set("/start", currentParams); // Update the route with the new parameters
         }
         break;
       case "ArrowUp":
@@ -2886,7 +2897,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
       case "SoftLeft":
       case "Control":
         if (r.startsWith("/start")) {
-          reload_data();
+          start_loading();
         }
 
         if (r.startsWith("/article")) {

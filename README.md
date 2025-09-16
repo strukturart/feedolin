@@ -12,7 +12,7 @@ Feedolin is an RSS / Atom reader and podcast player. It is intended for users wh
 
 Now it is also possible to load mastodon content, in the settings of the app you will find a login button with which you can log in with your mastodon account.
 
-## RSS/Atom/Mastodon reader and Podcastplayer for KaiOS
+## RSS/Atom/Mastodon reader and Mediaplayer for KaiOS
 
 - read you favorit rss/atom feeds
 - stream your podcasts
@@ -66,7 +66,7 @@ https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
 
 ## How to install
 
-- KaiOs Store
+- KaiOS Store
 - Sideloading <a href="https://www.martinkaptein.com/blog/sideloading-and-deploying-apps-to-kai-os/">step-by-step article</a> by martinkaptein
 
 You can download the latest version from the Releases page.
