@@ -169,14 +169,14 @@ let getLastMediaList = () => {
         lastPlayedMediaList = value;
 
         if (lastPlayedMediaList.length > 0) {
-          status.lastPlayedMedia = true;
-          if (channels.indexOf("lastPlayed") === -1) {
-            channels.push("lastPlayed");
-          }
-
           articles.map((h) => {
             if (lastPlayedMediaList.includes(h.id)) {
               h.lastPlayedMedia = true;
+
+              status.lastPlayedMedia = true;
+              if (channels.indexOf("lastPlayed") === -1) {
+                channels.push("lastPlayed");
+              }
             }
           });
         }
@@ -243,7 +243,14 @@ let mastodon_connect = () => {
     var currentUrl = window.location.href;
     const params = new URLSearchParams(currentUrl.split("?")[1]);
     const code = params.get("code");
-    if (code) {
+
+    const mastodon = params.get("redirect");
+
+    if (mastodon != "mastodon") {
+      return;
+    }
+
+    if (code && mastodon) {
       let result = code.split("#")[0];
       if (code) {
         localforage.setItem("mastodon_code", result);
@@ -270,6 +277,62 @@ let mastodon_connect = () => {
           .then((response) => response.json()) // Parse the JSON once
           .then((data) => {
             settings.mastodon_token = data.access_token; // Access the token
+            localforage.setItem("settings", settings);
+            m.route.set("/start?index=0");
+
+            side_toaster("Successfully connected", 10000);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            side_toaster("Connection failed");
+          });
+      }
+    }
+  });
+};
+
+let pixelfed_connect = () => {
+  localforage.getItem("settings").then(function (value) {
+    settings = value;
+
+    var currentUrl = window.location.href;
+    const params = new URLSearchParams(currentUrl.split("?")[1]);
+    const code = params.get("code");
+
+    const re = params.get("redirect");
+
+    if (re != "pixelfed") {
+      return;
+    }
+
+    if (code) {
+      let result = code.split("#")[0];
+      if (code) {
+        localforage.setItem("pixelfed_code", result);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("code", result);
+        urlencoded.append("scope", "read");
+
+        urlencoded.append("grant_type", "authorization_code");
+        urlencoded.append("redirect_uri", process.env.pixelfedRedirect);
+        urlencoded.append("client_id", process.env.pixelfedId);
+        urlencoded.append("client_secret", process.env.pixelfedSecret);
+
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: "follow",
+        };
+
+        fetch(settings.pixelfed_server_url + "/oauth/token", requestOptions)
+          .then((response) => response.json()) // Parse the JSON once
+          .then((data) => {
+            console.log(data.access_token);
+            settings.pixelfed_token = data.access_token; // Access the token
             localforage.setItem("settings", settings);
             m.route.set("/start?index=0");
 
@@ -462,7 +525,6 @@ const load_feeds = async (data) => {
     if (downloadList.length > 0) {
       // Fetch content for the feeds
       try {
-        console.log("try to load feeds");
         await fetchContent(downloadList);
         settings.last_update = new Date();
         localforage.setItem("settings", settings);
@@ -878,6 +940,93 @@ let load_mastodon = async () => {
     });
 };
 
+//load pixelfed
+let load_pixelfed = async () => {
+  let accessToken = settings.pixelfed_token;
+
+  let url = settings.pixelfed_server_url + "/api/v1/timelines/home";
+
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+
+      data.forEach((k, i) => {
+        if (i > 15) return;
+
+        let f = {
+          channel: "Pixelfed",
+          id: k.id,
+          type: "pixelfed",
+          pubDate: k.created_at,
+          isoDate: k.created_at,
+          title: k.account.display_name,
+          content: k.content,
+          url: k.uri,
+          reblog: false,
+        };
+
+        if (k.media_attachments.length > 0) {
+          if (k.media_attachments[0].type === "image") {
+            f.content += `<br><img src='${k.media_attachments[0].preview_url}'>`;
+          } else if (k.media_attachments[0].type === "video") {
+            f.enclosure = {
+              "@_type": "video",
+              url: k.media_attachments[0].url,
+            };
+          } else if (k.media_attachments[0].type === "audio") {
+            f.enclosure = {
+              "@_type": "audio",
+              url: k.media_attachments[0].url,
+            };
+          }
+        }
+
+        //reblog
+        try {
+          if (k.content == "") {
+            f.content = k.reblog.content;
+
+            f.reblog = true;
+            f.reblogUser =
+              k.reblog.account.display_name || k.reblog.account.acct;
+
+            if (k.reblog.media_attachments.length > 0) {
+              if (k.reblog.media_attachments[0].type === "image") {
+                f.content += `<br><img src='${k.reblog.media_attachments[0].preview_url}'>`;
+              } else if (k.reblog.media_attachments[0].type === "video") {
+                f.enclosure = {
+                  "@_type": "video",
+                  url: k.reblog.media_attachments[0].url,
+                };
+              } else if (k.reblog.media_attachments[0].type === "audio") {
+                f.enclosure = {
+                  "@_type": "audio",
+                  url: k.reblog.media_attachments[0].url,
+                };
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+
+        articles.push(f);
+      });
+      channels.push("Pixelfed");
+      side_toaster("Logged in as " + status.pixelfed_logged, 4000);
+
+      localforage.setItem("articles", articles).then(() => {
+        console.log("cached");
+      });
+    });
+};
+
 let start_loading = () => {
   fetchOPML(settings.opml_url);
   if (settings.opml_local) {
@@ -889,6 +1038,18 @@ let start_loading = () => {
       .then((f) => {
         status.mastodon_logged = f.display_name;
         load_mastodon();
+      })
+      .catch((e) => {});
+  }
+
+  //load pixelfed
+  if (settings.pixelfed_token) {
+    load_pixelfed();
+
+    mastodon_account_info(settings.pixelfed_server_url, settings.pixelfed_token)
+      .then((f) => {
+        status.pixelfed_logged = f.display_name;
+        load_pixelfed();
       })
       .catch((e) => {});
   }
@@ -1145,6 +1306,13 @@ var start = {
 
     if (channel_filter == "lastPlayed") {
       filteredArticles = articles.filter((h) => h.lastPlayedMedia == true);
+    }
+
+    if (m.route.param("feed")) {
+      filteredArticles = articles.filter(
+        (h) => h.feed_title == m.route.param("feed")
+      );
+      channel_filter = channel_filter.substring(0, 10);
     }
 
     return m(
@@ -1424,10 +1592,25 @@ var localOPML = {
 };
 
 var intro = {
-  oninit: (vnode) => {
+  oninit: function (vnode) {
+    // check if is a mastodon redirect
+    if (status.notKaiOS) {
+      mastodon_connect();
+      pixelfed_connect();
+    }
+
     vnode.state.stoptimeout = false;
+
+    setTimeout(() => {
+      if (!vnode.state.stoptimeout) {
+        m.route.set("/settingsView");
+      }
+    }, 10000);
   },
-  onremove: () => {
+
+  onremove: function (vnode) {
+    localStorage.setItem("version", status.version);
+    document.querySelector(".loading-spinner").style.display = "none";
     vnode.state.stoptimeout = true;
   },
 
@@ -1437,14 +1620,6 @@ var intro = {
       {
         class: "width-100 height-100",
         id: "intro",
-        oninit: () => {
-          //check if is a mastodon redirect
-          if (status.notKaiOS) mastodon_connect();
-        },
-        onremove: () => {
-          localStorage.setItem("version", status.version);
-          document.querySelector(".loading-spinner").style.display = "none";
-        },
       },
       [
         m("img", {
@@ -1452,9 +1627,6 @@ var intro = {
 
           oncreate: () => {
             //timeout
-            setTimeout(() => {
-              if (!vnode.state.stoptimeout) m.route.set("/settingsView");
-            }, 10000);
 
             document.querySelector(".loading-spinner").style.display = "block";
             let get_manifest_callback = (e) => {
@@ -1934,17 +2106,20 @@ const AudioPlayerView = {
   },
 
   seek: (direction) => {
-    const currentTime = globalAudioElement.currentTime;
-    if (direction === "left") {
-      globalAudioElement.currentTime = Math.max(
-        0,
-        currentTime - AudioPlayerView.seekAmount
-      );
-    } else if (direction === "right") {
-      globalAudioElement.currentTime = Math.min(
-        AudioPlayerView.audioDuration,
-        currentTime + AudioPlayerView.seekAmount
-      );
+    let r = m.route.get();
+    if (r.startsWith("/Audio")) {
+      const currentTime = globalAudioElement.currentTime;
+      if (direction === "left") {
+        globalAudioElement.currentTime = Math.max(
+          0,
+          currentTime - AudioPlayerView.seekAmount
+        );
+      } else if (direction === "right") {
+        globalAudioElement.currentTime = Math.min(
+          AudioPlayerView.audioDuration,
+          currentTime + AudioPlayerView.seekAmount
+        );
+      }
     }
   },
 
@@ -2377,6 +2552,91 @@ var settingsView = {
             ),
 
         m("div", { class: "seperation" }),
+
+        m(
+          "h2",
+          { class: "flex justify-content-spacearound" },
+          "Pixelfed Account"
+        ),
+
+        status.pixelfed_logged
+          ? m(
+              "div",
+              {
+                id: "account_info",
+                class: "item",
+              },
+              `You have successfully logged in as ${status.pixelfed_logged} and the data is being loaded from server ${settings.pixelfed_server_url}.`
+            )
+          : null,
+
+        status.pixelfed_logged
+          ? m(
+              "button",
+              {
+                class: "item",
+                onclick: function () {
+                  settings.pixelfed_server_url = "";
+                  settings.pixelfed_token = "";
+                  localforage.setItem("settings", settings);
+                  status.pixelfed_logged = "";
+                  m.route.set("/settingsView");
+                },
+              },
+              "Disconnect"
+            )
+          : null,
+
+        status.pixelfed_logged
+          ? null
+          : m(
+              "div",
+              {
+                class: "item input-parent flex justify-content-spacearound",
+              },
+              [
+                m(
+                  "label",
+                  {
+                    for: "pixelfed-server-url",
+                  },
+                  "URL"
+                ),
+                m("input", {
+                  id: "pixelfed-server-url",
+                  placeholder: "Server URL",
+                  value: settings.pixelfed_server_url,
+                }),
+              ]
+            ),
+
+        status.pixelfed_logged
+          ? null
+          : m(
+              "button",
+              {
+                class: "item",
+                onclick: function () {
+                  localforage.setItem("settings", settings);
+
+                  settings.pixelfed_server_url = document.getElementById(
+                    "pixelfed-server-url"
+                  ).value;
+
+                  let url =
+                    settings.pixelfed_server_url +
+                    "/oauth/authorize?client_id=" +
+                    process.env.pixelfedId +
+                    "&scope=read&redirect_uri=" +
+                    process.env.pixelfedRedirect +
+                    "&response_type=code";
+                  window.open(url);
+                },
+              },
+              "Connect"
+            ),
+
+        m("div", { class: "seperation" }),
         m(
           "div",
           {
@@ -2444,6 +2704,12 @@ var settingsView = {
                     "mastodon-server-url"
                   ).value);
 
+              status.pixelfed_logged
+                ? null
+                : (settings.pixelfed_server_url = document.getElementById(
+                    "pixelfed-server-url"
+                  ).value);
+
               localforage
                 .setItem("settings", settings)
                 .then(function () {
@@ -2492,12 +2758,15 @@ var subscriptionsView = {
         ),
         downloadList.map((e) => {
           return m(
-            "article",
+            "button",
             {
               class: "item",
               oncreate: (vnode) => {
                 setTabindex();
                 if (e.error) vnode.dom.classList.add("error");
+              },
+              onclick: () => {
+                m.route.set("/start", { "index": 0, "feed": e.title });
               },
             },
             [
@@ -2752,6 +3021,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
           m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
+          currentParams.channel = channel_filter;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
         }
@@ -2765,6 +3035,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
           m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
+          currentParams.channel = channel_filter;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
         }

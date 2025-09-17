@@ -819,6 +819,7 @@ video {
     min-width: 100vw;
     width: 100vw;
     padding: 0;
+    overflow-x: hidden;
   }
 
   #article {
@@ -833,12 +834,13 @@ video {
   #start article {
     padding: 10px;
     margin: 0 0 10px 0;
-    min-width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   #start {
     min-width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
     padding: 30px 0px;
   }
 
@@ -913,7 +915,7 @@ video {
 
   #settings-page {
     margin: 10px 0 0 0;
-    padding: 0 0 60px 0;
+    padding: 0 0 80px 0;
     width: 100vw;
   }
 
