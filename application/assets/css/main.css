@@ -305,7 +305,8 @@ article {
 
 #start {
   min-width: 100%;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   padding: 20px 20px 60px 20px;
 }
 
@@ -365,6 +366,8 @@ h2.article-title {
 
 #article {
   padding: 20px 20px 20px 20px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 #subscriptionsView article {

@@ -128,7 +128,6 @@ if (userAgent && userAgent.includes("KAIOS")) {
 }
 
 let current_article = "";
-const proxy = "https://feedolin.strukturart.com/proxy.php/?";
 
 let default_settings = {
   "opml_url":
@@ -357,7 +356,16 @@ let app_launcher = () => {
   const params = new URLSearchParams(currentUrl.split("?")[1]);
   const code = params.get("code");
 
-  if (!code) return false;
+  const re = params.get("redirect");
+  let type = "";
+
+  if (re == "pixelfed") {
+    type = "pixelfed";
+  }
+
+  if (re == "mastodon") {
+    type = "mastodon";
+  }
 
   let result = code.split("#")[0];
 
@@ -365,7 +373,7 @@ let app_launcher = () => {
     try {
       const activity = new MozActivity({
         name: "feedolin",
-        data: result,
+        data: { type: type, key: result },
       });
       activity.onsuccess = function () {
         console.log("Activity successfuly handled");
@@ -384,7 +392,7 @@ let app_launcher = () => {
       try {
         let activity = new WebActivity("feedolin", {
           name: "feedolin",
-          data: result,
+          data: { type: type, key: result },
         });
         activity.start().then(
           (rv) => {
@@ -711,7 +719,7 @@ const fetchContent = async (feed_download_list) => {
 
       let url = e.url;
       if (status.notKaiOS) {
-        xhr.open("GET", proxy + url, true);
+        xhr.open("GET", settings.proxy_url + url, true);
       } else {
         xhr.open("GET", url, true);
       }
@@ -954,8 +962,6 @@ let load_pixelfed = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-
       data.forEach((k, i) => {
         if (i > 15) return;
 
@@ -972,19 +978,21 @@ let load_pixelfed = async () => {
         };
 
         if (k.media_attachments.length > 0) {
-          if (k.media_attachments[0].type === "image") {
-            f.content += `<br><img src='${k.media_attachments[0].preview_url}'>`;
-          } else if (k.media_attachments[0].type === "video") {
-            f.enclosure = {
-              "@_type": "video",
-              url: k.media_attachments[0].url,
-            };
-          } else if (k.media_attachments[0].type === "audio") {
-            f.enclosure = {
-              "@_type": "audio",
-              url: k.media_attachments[0].url,
-            };
-          }
+          k.media_attachments.forEach((att) => {
+            if (att.type === "image") {
+              f.content += `<br><img src='${att.preview_url}'>`;
+            } else if (att.type === "video") {
+              f.enclosure = {
+                "@_type": "video",
+                url: att.url,
+              };
+            } else if (att.type === "audio") {
+              f.enclosure = {
+                "@_type": "audio",
+                url: att.url,
+              };
+            }
+          });
         }
 
         //reblog
@@ -996,20 +1004,22 @@ let load_pixelfed = async () => {
             f.reblogUser =
               k.reblog.account.display_name || k.reblog.account.acct;
 
-            if (k.reblog.media_attachments.length > 0) {
-              if (k.reblog.media_attachments[0].type === "image") {
-                f.content += `<br><img src='${k.reblog.media_attachments[0].preview_url}'>`;
-              } else if (k.reblog.media_attachments[0].type === "video") {
-                f.enclosure = {
-                  "@_type": "video",
-                  url: k.reblog.media_attachments[0].url,
-                };
-              } else if (k.reblog.media_attachments[0].type === "audio") {
-                f.enclosure = {
-                  "@_type": "audio",
-                  url: k.reblog.media_attachments[0].url,
-                };
-              }
+            if (k.reblog && k.reblog.media_attachments.length > 0) {
+              k.reblog.media_attachments.forEach((att) => {
+                if (att.type === "image") {
+                  f.content += `<br><img src='${att.preview_url}'>`;
+                } else if (att.type === "video") {
+                  f.enclosure = {
+                    "@_type": "video",
+                    url: att.url,
+                  };
+                } else if (att.type === "audio") {
+                  f.enclosure = {
+                    "@_type": "audio",
+                    url: att.url,
+                  };
+                }
+              });
             }
           }
         } catch (e) {
@@ -1018,6 +1028,7 @@ let load_pixelfed = async () => {
 
         articles.push(f);
       });
+
       channels.push("Pixelfed");
       side_toaster("Logged in as " + status.pixelfed_logged, 4000);
 
@@ -1044,8 +1055,6 @@ let start_loading = () => {
 
   //load pixelfed
   if (settings.pixelfed_token) {
-    load_pixelfed();
-
     mastodon_account_info(settings.pixelfed_server_url, settings.pixelfed_token)
       .then((f) => {
         status.pixelfed_logged = f.display_name;
@@ -1103,6 +1112,31 @@ localforage
     //todo set value in settings view, default is 1h
     settings.cache_time = settings.cache_time || 3600;
 
+    //load fediverse account info
+
+    if (settings.mastodon_token) {
+      mastodon_account_info(
+        settings.mastodon_server_url,
+        settings.mastodon_token
+      )
+        .then((f) => {
+          status.mastodon_logged = f.display_name;
+        })
+        .catch((e) => {});
+    }
+
+    //load pixelfed
+    if (settings.pixelfed_token) {
+      mastodon_account_info(
+        settings.pixelfed_server_url,
+        settings.pixelfed_token
+      )
+        .then((f) => {
+          status.pixelfed_logged = f.display_name;
+        })
+        .catch((e) => {});
+    }
+
     if (settings.last_update) {
       status.last_update_duration =
         new Date() / 1000 - settings.last_update / 1000;
@@ -1128,18 +1162,6 @@ localforage
       if (isOnline && status.last_update_duration > settings.cache_time) {
         start_loading();
         side_toaster("Load feeds", 4000);
-
-        //load mastodon acc info
-        if (settings.mastodon_token) {
-          mastodon_account_info(
-            settings.mastodon_server_url,
-            settings.mastodon_token
-          )
-            .then((f) => {
-              status.mastodon_logged = f.display_name;
-            })
-            .catch((e) => {});
-        }
       } else {
         load_cached_feeds();
       }
@@ -3338,18 +3360,19 @@ window.addEventListener("beforeunload", (event) => {
   }
 });
 
-//KaiOS3 handel mastodon oauth
+//KaiOS3 handel  oauth
 
 try {
   sw_channel.addEventListener("message", (event) => {
     let result = event.data.oauth_success;
 
-    if (result) {
+    //handel mastodon
+    if (result.type == "mastodon") {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
       var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result);
+      urlencoded.append("code", result.key);
       urlencoded.append("scope", "read");
 
       urlencoded.append("grant_type", "authorization_code");
@@ -3378,6 +3401,51 @@ try {
           side_toaster("Connection failed");
         });
     }
+    //handel pixelfed
+    if (result.type == "pixelfed") {
+      localforage.setItem("pixelfed_code", result.key);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("code", result);
+      urlencoded.append("scope", "read");
+
+      urlencoded.append("grant_type", "authorization_code");
+      urlencoded.append("redirect_uri", process.env.pixelfedRedirect);
+      urlencoded.append("client_id", process.env.pixelfedId);
+      urlencoded.append("client_secret", process.env.pixelfedSecret);
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      fetch(settings.pixelfed_server_url + "/oauth/token", requestOptions)
+        .then((response) => response.json()) // Parse the JSON once
+        .then((data) => {
+          settings.pixelfed_token = data.access_token; // Access the token
+          localforage.setItem("settings", settings);
+          m.route.set("/start?index=0");
+
+          side_toaster("Successfully connected", 10000);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          side_toaster("Connection failed");
+        });
+    }
+  });
+} catch (e) {}
+
+//KaiOS 2 oauth
+
+try {
+  navigator.mozSetMessageHandler("activity", function (activityRequest) {
+    var option = activityRequest.source;
+    alert(option.data);
   });
 } catch (e) {}
 

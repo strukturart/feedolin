@@ -1,9 +1,5 @@
 const sw_channel = new BroadcastChannel("sw-messages");
-sw_channel.addEventListener("message", (event) => {
-  sw_channel.postMessage({
-    test: event.data.test,
-  });
-});
+
 self.addEventListener("systemmessage", async (evt) => {
   let activityData;
 

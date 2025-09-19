@@ -4,6 +4,7 @@
   "source": "application/index.html",
   "browserslist": "Firefox <= 48",
   "scripts": {
+    "dev": "parcel dist/index.html",
     "build": "rm -rf dist/* && parcel build --no-source-maps --no-content-hash application/index.html  && cp application/manifest.webapp dist && mkdir dist/assets && cp -r application/assets/icons dist/assets/ &&  mkdir -p dist/assets/js/ && cp application/assets/js/kaiads.v5.min.js dist/assets/js/",
     "run": "parcel",
     "web": "rm -rf docs/* && parcel build --dist-dir docs --public-url ./ --no-source-maps --no-content-hash application/index.html && cp application/manifest.webapp docs && cp application/manifest.webmanifest docs && mkdir -p docs/assets && cp -r application/assets/icons docs/assets/ && mkdir -p docs/assets/js/ && cp application/assets/js/kaiads.v5.min.js docs/assets/js/ &&  cp -r application/assets/fonts docs/assets/&& ./generate_file_list.sh"
@@ -29,7 +30,7 @@
     "events": "^3.3.0",
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
-    "parcel": "^2.13.3",
+    "parcel": "^2.16.0",
     "parcel-namer-rewrite": "^2.10.3-rc.2",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",

@@ -1,4 +1,4 @@
-export let load_context = (url, id, mode) => {
+export let load_context = async (url, id, mode) => {
   let a = JSON.parse(localStorage.getItem("oauth_auth"));
   let accessToken = a.access_token;
 

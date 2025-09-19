@@ -12,11 +12,12 @@ Feedolin is an RSS / Atom reader and podcast player. It is intended for users wh
 
 Now it is also possible to load mastodon content, in the settings of the app you will find a login button with which you can log in with your mastodon account.
 
-## RSS/Atom/Mastodon reader and Mediaplayer for KaiOS
+## RSS/Atom/Fediverse reader and Mediaplayer for KaiOS
 
 - read you favorit rss/atom feeds
 - stream your podcasts
 - read mastodon publice & home timeline
+- read pixelfed publice & home timeline
 - open rss feedlink
 - offline use (caching)
 
@@ -49,6 +50,10 @@ https://raw.githubusercontent.com/strukturart/rss-reader/master/example.opml
 
           <outline text="Mastodon" title="Mastodon">
             <outline type="mastodon" text="mastodon.social" title="mastodon.social" xmlUrl="https://mastodon.social/api/v1/timelines/public" htmlUrl=""/>
+        </outline>
+
+         <outline text="Pixelfed" title="Pixelfed">
+            <outline type="pixelfed" text="pixelfed.social" title="pixelfed.social" xmlUrl="https://pixelfed.social/api/v1/timelines/public" htmlUrl=""/>
         </outline>
 
         <outline text="Coding" title="Coding">
