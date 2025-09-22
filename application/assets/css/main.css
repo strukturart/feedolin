@@ -1,15 +1,5 @@
 /*GENERAL*/
 
-:root {
-  --color-one: black;
-  --color-two: yellow;
-  --color-three: silver;
-  --color-four: rgb(190, 185, 185);
-  --color-five: rgba(214, 225, 228, 0.322);
-  --color-seven: rgba(101, 216, 24, 0.288);
-  --color-eight: rgba(47, 82, 196, 0.188);
-}
-
 @font-face {
   font-family: "Roboto";
   src: url("../fonts/Roboto-Regular.ttf");
@@ -22,19 +12,17 @@
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
-
-  overflow-wrap: break-word;
-  word-wrap: break-word;
   scroll-behavior: smooth;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
   font-family: "Roboto" !important;
 }
 
 ::-webkit-scrollbar {
   display: none !important;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 :focus {
@@ -77,22 +65,18 @@ body {
   background-size: 5px 5px;
 }
 
+#wrapper {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 20px 0 0 0;
+  background: white !important;
+}
+
 #app {
   position: relative;
   height: 100%;
-  min-width: 40vw;
-  width: 40vw;
-  overflow: scroll;
-}
-
-#wrapper {
-  min-height: 90vh;
-  max-height: 90vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  overflow: scroll;
-  padding: 20px 0 0 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -281,6 +265,8 @@ div#intro img {
   position: absolute;
   bottom: 50px;
   height: 40px;
+  left: 50%;
+  margin-left: -20px;
 }
 
 #intro #version-box kbd {
@@ -299,20 +285,21 @@ div#intro img {
 }
 
 article {
-  min-width: 100%;
   background: none;
+  height: auto;
 }
 
 #start {
-  min-width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 20px 20px 60px 20px;
+  height: 100vh;
 }
 
-#start article {
+article {
   margin: 30px 0 10px 0;
   position: relative;
+  text-align: left;
 }
 
 #start article.read {
@@ -346,6 +333,35 @@ article .type-indicator {
   font-size: 1rem;
 }
 
+#start #liberapay {
+  width: 100px;
+  height: auto;
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 2000000;
+}
+
+#start kbd#version {
+  border: 2px solid rgb(17, 2, 5);
+  box-shadow: 8px 8px rgb(46, 96, 233);
+  font-size: small;
+  line-height: 0.85em;
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 3px 5px;
+  white-space: nowrap;
+  color: white;
+  width: fit-content;
+  height: 20px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 200000;
+  color: black;
+}
+
 .channel:empty::before {
   content: "All feeds";
 }
@@ -365,7 +381,13 @@ h2.article-title {
 }
 
 #article {
-  padding: 20px 20px 20px 20px;
+  padding: 40px 20px 20px 20px !important;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+#subscriptionsView {
   overflow-x: hidden;
   overflow-y: scroll;
 }
@@ -393,8 +415,13 @@ h2.article-title {
 }
 
 .text {
-  word-break: break-all; /* Breaks the URL at any character */
   padding: 0px 0px 50px 0px;
+  hyphens: auto;
+  overflow-wrap: normal;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 
 #optionsView {
@@ -409,6 +436,8 @@ h2.article-title {
 .page {
   margin: 35px 0 0 0;
   padding: 10px 10px 40px 10px;
+  overflow-y: scroll;
+  max-height: 90vh;
 }
 
 #button-save-settings {
@@ -422,7 +451,7 @@ h2.article-title {
 }
 
 /*///////////////////////////
-///TOAST////////////////*/
+  ///TOAST////////////////*/
 
 div#toast {
   position: fixed;
@@ -496,7 +525,7 @@ div.nickname {
   transition: padding 0.3s ease;
 }
 /*/ //////////////////////////
-///VIEWS////////////////*/
+  ///VIEWS////////////////*/
 
 div#options {
   display: none;
@@ -511,28 +540,22 @@ div#options {
 }
 
 /*/////////////////
-///BOTTOM BAR////
-////////////////*/
+  ///BOTTOM BAR////
+  ////////////////*/
 
 div#bottom-bar {
-  position: fixed;
   z-index: 2000;
   bottom: 20px;
   left: 0px;
   height: 50px;
-  z-index: 6;
+  z-index: 6000000;
   background: none;
+  position: fixed;
   width: 100vw;
-
-  display: flex;
-  justify-content: center; /* Horizontally center all child elements */
-  align-items: center; /* Vertically center all child elements */
 }
 
 div#bottom-bar div.inner {
   position: relative;
-  display: flex;
-  justify-content: space-between;
 
   padding: 10px;
 }
@@ -554,8 +577,9 @@ div#bottom-bar div.button-left {
   color: white;
   padding: 2px;
   width: 32%;
-  display: flex;
-  justify-content: flex-start;
+  text-align: left;
+  padding-left: 5px;
+  cursor: pointer;
 }
 
 div#bottom-bar div.button-left img {
@@ -571,14 +595,11 @@ div#bottom-bar div.button-right {
   color: white;
   padding: 2px;
   width: 32%;
-  display: flex;
-  justify-content: flex-end;
+  text-align: right;
+  padding-right: 5px;
 }
 
 div#bottom-bar div.button-center {
-  display: flex; /* Enable flexbox for the button-center div */
-  justify-content: center; /* Horizontally center the image */
-  align-items: center; /* Vertically center the image */
   background: none;
   color: white;
   padding: 2px;
@@ -586,7 +607,7 @@ div#bottom-bar div.button-center {
 }
 
 /*/ ////////////////
-///TOP-BAR///////*/
+  ///TOP-BAR///////*/
 
 div#top-bar {
   position: fixed;
@@ -596,16 +617,11 @@ div#top-bar {
   height: 30px;
   z-index: 6;
   min-width: 100vw;
-  display: flex;
-  justify-content: center; /* Horizontally center all child elements */
-  align-items: center; /* Vertically center all child elements */
 }
 
 div#top-bar div.inner {
   position: relative;
-  display: flex;
   padding: 10px;
-  justify-content: space-between;
 }
 
 div#top-bar div {
@@ -630,25 +646,20 @@ div#top-bar div.button-center img {
 div#top-bar div.button-left {
   background: none;
   color: white;
-  padding: 2px;
+  padding-left: 5px;
   width: 32%;
-  display: flex;
-  justify-content: flex-start;
+  text-align: left;
 }
 
 div#top-bar div.button-right {
   background: none;
   color: white;
-  padding: 2px;
+  padding-right: 5px;
   width: 32%;
-  display: flex;
-  justify-content: flex-end;
+  text-align: right;
 }
 
 div#top-bar div.button-center {
-  display: flex; /* Enable flexbox for the button-center div */
-  justify-content: center; /* Horizontally center the image */
-  align-items: center; /* Vertically center the image */
   background: none;
   color: white;
   padding: 2px;
@@ -732,21 +743,11 @@ video {
     background-size: 5px 5px;
   }
 
-  #wrapper {
-    min-height: 100vh;
-    max-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: scroll;
-    padding: 20px 0 0 0;
-  }
   #app {
     position: relative;
-    height: 100%;
-    min-width: 100vw;
-    width: 100vw;
+    min-height: 100vh;
     padding: 0;
+    overflow-x: hidden;
   }
 
   h1 {
@@ -767,12 +768,12 @@ video {
     font-size: 0.9rem;
   }
 
-  #app {
-    position: relative;
-    height: 100%;
-    min-width: 100vw;
-    width: 100vw;
-    padding: 0;
+  #start #liberapay {
+    display: none;
+  }
+
+  #start kbd#version {
+    display: none;
   }
 }
 
@@ -806,27 +807,25 @@ video {
     font-size: 0.9rem;
   }
 
-  #wrapper {
-    min-height: 100vh;
-    max-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: scroll;
-    padding: 20px 0 0 0;
-  }
-
   #app {
     position: relative;
     height: 100%;
-    min-width: 100vw;
-    width: 100vw;
+    min-height: 100vh;
     padding: 0;
     overflow-x: hidden;
   }
 
+  #start #liberapay {
+    display: none;
+  }
+
+  #start kbd#version {
+    display: none;
+  }
+
   #article {
-    padding: 10px;
+    overflow-x: hidden;
+    padding: 40px 10px 10px 10px;
     height: 99vh;
   }
 
@@ -837,12 +836,11 @@ video {
   #start article {
     padding: 10px;
     margin: 0 0 10px 0;
-    max-width: 100%;
     overflow-x: hidden;
+    text-align: left;
   }
 
   #start {
-    min-width: 100%;
     overflow-x: hidden;
     padding: 30px 0px;
   }

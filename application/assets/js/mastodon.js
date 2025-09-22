@@ -94,7 +94,8 @@ export let mastodon_account_info = async (url, accessToken) => {
   });
   if (!response.ok) {
     console.log("Network response was not OK");
+    return "Login not OK";
   }
-  const data_1 = await response.json();
-  return data_1;
+  const data = await response.json();
+  return data;
 };

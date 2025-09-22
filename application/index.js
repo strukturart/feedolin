@@ -23,11 +23,10 @@ import fxparser from "fast-xml-parser";
 import Timeworker from "./worker.js";
 import swiped from "swiped-events";
 
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
+
+document.documentElement.lang = navigator.language || "en";
 
 let articles = [];
 let downloadList = [];
@@ -719,6 +718,7 @@ const fetchContent = async (feed_download_list) => {
 
       let url = e.url;
       if (status.notKaiOS) {
+        xhr = new XMLHttpRequest();
         xhr.open("GET", settings.proxy_url + url, true);
       } else {
         xhr.open("GET", url, true);
@@ -749,6 +749,10 @@ const fetchContent = async (feed_download_list) => {
         try {
           let jObj = parser.parse(data);
 
+          if (!jObj.feed && !jObj.rss) {
+            e.error = "not valid xml";
+          }
+
           //ATOM
           if (jObj.feed)
             jObj.feed.entry.forEach((f, i) => {
@@ -757,6 +761,7 @@ const fetchContent = async (feed_download_list) => {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.published);
                   f.type = f["yt:videoId"] ? "youtube" : "text";
+
                   f.url = f.link["@_href"];
                   f.feed_title = e.title;
                   f.typeOfFeed = "ATOM";
@@ -767,7 +772,7 @@ const fetchContent = async (feed_download_list) => {
                   if (dayjs(f.published).isValid()) {
                     f.isoDate = dayjs(f.published).toISOString();
                   } else {
-                    f.isoDate = dayjs("1970-01-01").toISOString(); // Standard fallback date
+                    f.isoDate = dayjs("1970-01-01").toISOString();
                   }
                   f.content =
                     typeof f.content === "object"
@@ -785,7 +790,7 @@ const fetchContent = async (feed_download_list) => {
 
                   if (!ids.includes(f.id)) {
                     articles.push(f);
-                    ids.push(f.id); // Add the ID to the tracking array
+                    ids.push(f.id);
                   }
                 } catch (e) {
                   console.log(e);
@@ -801,6 +806,7 @@ const fetchContent = async (feed_download_list) => {
                   f.channel = e.channel;
                   f.id = stringToHash(f.title + f.pubDate);
                   f.type = check_media(f);
+
                   f.url = f.link || e.url;
 
                   f.feed_title = e.title;
@@ -819,7 +825,7 @@ const fetchContent = async (feed_download_list) => {
                       "ddd, DD MMM YYYY HH:mm:ss Z"
                     ).toISOString();
                   } else {
-                    f.isoDate = dayjs("1970-01-01").toISOString(); // Standard fallback date
+                    f.isoDate = dayjs("1970-01-01").toISOString();
                   }
 
                   f.content = f.content || f.description;
@@ -834,7 +840,7 @@ const fetchContent = async (feed_download_list) => {
 
                   if (!ids.includes(f.id)) {
                     articles.push(f);
-                    ids.push(f.id); // Add the ID to the tracking array
+                    ids.push(f.id);
                   }
                 } catch (e) {
                   console.log(e);
@@ -867,7 +873,7 @@ const fetchContent = async (feed_download_list) => {
 let load_mastodon = async () => {
   let accessToken = settings.mastodon_token;
 
-  let url = settings.mastodon_server_url + "/api/v1/timelines/home";
+  let url = settings.mastodon_server_url + "/api/v1/timelines/home/";
 
   fetch(url, {
     headers: {
@@ -878,8 +884,6 @@ let load_mastodon = async () => {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((k, i) => {
-        if (i > 15) return;
-
         let f = {
           channel: "Mastodon",
           id: k.id,
@@ -952,7 +956,7 @@ let load_mastodon = async () => {
 let load_pixelfed = async () => {
   let accessToken = settings.pixelfed_token;
 
-  let url = settings.pixelfed_server_url + "/api/v1/timelines/home";
+  let url = settings.pixelfed_server_url + "/api/v1/timelines/home/";
 
   fetch(url, {
     headers: {
@@ -963,8 +967,6 @@ let load_pixelfed = async () => {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((k, i) => {
-        if (i > 15) return;
-
         let f = {
           channel: "Pixelfed",
           id: k.id,
@@ -1047,8 +1049,12 @@ let start_loading = () => {
   if (settings.mastodon_token) {
     mastodon_account_info(settings.mastodon_server_url, settings.mastodon_token)
       .then((f) => {
-        status.mastodon_logged = f.display_name;
-        load_mastodon();
+        if (f == "Login not OK") {
+          side_toaster("Login not OK", 2000);
+        } else {
+          status.mastodon_logged = f.display_name;
+          load_mastodon();
+        }
       })
       .catch((e) => {});
   }
@@ -1057,8 +1063,12 @@ let start_loading = () => {
   if (settings.pixelfed_token) {
     mastodon_account_info(settings.pixelfed_server_url, settings.pixelfed_token)
       .then((f) => {
-        status.pixelfed_logged = f.display_name;
-        load_pixelfed();
+        if (f == "Login not OK") {
+          side_toaster("Login not OK", 2000);
+        } else {
+          status.pixelfed_logged = f.display_name;
+          load_pixelfed();
+        }
       })
       .catch((e) => {});
   }
@@ -1120,7 +1130,11 @@ localforage
         settings.mastodon_token
       )
         .then((f) => {
-          status.mastodon_logged = f.display_name;
+          if (f == "Login not OK") {
+            side_toaster("Login not OK", 2000);
+          } else {
+            status.mastodon_logged = f.display_name;
+          }
         })
         .catch((e) => {});
     }
@@ -1132,7 +1146,11 @@ localforage
         settings.pixelfed_token
       )
         .then((f) => {
-          status.pixelfed_logged = f.display_name;
+          if (f == "Login not OK") {
+            side_toaster("Login not OK", 2000);
+          } else {
+            status.pixelfed_logged = f.display_name;
+          }
         })
         .catch((e) => {});
     }
@@ -1210,6 +1228,10 @@ let lastPlayedMedia = async (id) => {
   });
 };
 
+/*-------------*/
+/*VIEWS*/
+/*-------------*/
+
 var root = document.getElementById("app");
 
 var options = {
@@ -1235,17 +1257,33 @@ var options = {
         },
       },
       [
+        downloadList
+          ? m(
+              "button",
+              {
+                tabindex: 0,
+
+                class: "item",
+                onclick: () => {
+                  m.route.set("/subscriptionsView");
+                },
+
+                oncreate: ({ dom }) => {
+                  dom.focus();
+                  scrollToCenter();
+                },
+              },
+              "Subscriptions"
+            )
+          : null,
+        ,
         m(
           "button",
           {
-            tabindex: 0,
+            tabindex: 1,
 
             class: "item",
-            oncreate: ({ dom }) => {
-              dom.focus();
 
-              scrollToCenter();
-            },
             onclick: () => {
               m.route.set("/about");
             },
@@ -1255,7 +1293,7 @@ var options = {
         m(
           "button",
           {
-            tabindex: 1,
+            tabindex: 2,
 
             class: "item",
             onclick: () => {
@@ -1268,7 +1306,7 @@ var options = {
         m(
           "button",
           {
-            tabindex: 2,
+            tabindex: 3,
 
             class: "item",
             onclick: () => {
@@ -1277,20 +1315,7 @@ var options = {
           },
           "Privacy Policy"
         ),
-        downloadList
-          ? m(
-              "button",
-              {
-                tabindex: 3,
 
-                class: "item",
-                onclick: () => {
-                  m.route.set("/subscriptionsView");
-                },
-              },
-              "Subscriptions"
-            )
-          : null,
         m("div", {
           id: "KaiOSads-Wrapper",
           class: "",
@@ -1311,10 +1336,27 @@ let page_index = 0;
 
 var start = {
   view: function () {
-    if (!articles) {
-      m.route.set("/intro");
-      return;
+    if (!articles || articles.length === 0) {
+      articles = [
+        {
+          channel: "--",
+          content: "<p>No feeds found.</p>",
+          description: "<p>There is currently no content to display.</p>",
+          feed_title: "default",
+          guid: "default-000",
+          id: "default",
+          isoDate: new Date().toISOString(),
+          link: "#",
+          pubDate: new Date().toUTCString(),
+          reblog: false,
+          title: "No feeds available",
+          type: "text",
+          typeOfFeed: "default",
+          url: "#",
+        },
+      ];
     }
+
     let filteredArticles = articles.filter(
       (h) => channel_filter === "" || channel_filter === h.channel
     );
@@ -1334,7 +1376,7 @@ var start = {
       filteredArticles = articles.filter(
         (h) => h.feed_title == m.route.param("feed")
       );
-      channel_filter = channel_filter.substring(0, 10);
+      channel_filter = m.route.param("channel").substring(0, 10);
     }
 
     return m(
@@ -1363,6 +1405,29 @@ var start = {
             top_bar("", "", "<img src='assets/icons/play.svg'>");
         },
       },
+
+      m(
+        "kbd",
+        {
+          id: "version",
+          oncreate: (vnode) => {
+            if (!status.notKaiOS) vnode.dom.style.display = "none";
+          },
+        },
+        "Version " + localStorage.getItem("version") || 0
+      ),
+      m(
+        "a",
+        {
+          id: "liberapay",
+          href: "https://liberapay.com/perry_______",
+          target: "_blank",
+          oncreate: (vnode) => {
+            if (!status.notKaiOS) vnode.dom.style.display = "none";
+          },
+        },
+        [m("img", { src: "./assets/icons/liberapay.svg" })]
+      ),
       m("span", { class: "channel", oncreate: () => {} }, channel_filter),
       // Loop through filteredArticles and create an article for each
       filteredArticles.map((h, i) => {
@@ -1482,7 +1547,7 @@ var article = {
                   id: "top",
                   oncreate: () => {
                     setTimeout(() => {
-                      document.querySelector("#top").scrollIntoView();
+                      // document.querySelector("#top").scrollIntoView();
                     }, 1000);
                   },
                 },
@@ -1625,7 +1690,7 @@ var intro = {
 
     setTimeout(() => {
       if (!vnode.state.stoptimeout) {
-        m.route.set("/settingsView");
+        m.route.set("/start");
       }
     }, 10000);
   },
@@ -1640,7 +1705,6 @@ var intro = {
     return m(
       "div",
       {
-        class: "width-100 height-100",
         id: "intro",
       },
       [
@@ -1648,8 +1712,6 @@ var intro = {
           src: "./assets/icons/intro.svg",
 
           oncreate: () => {
-            //timeout
-
             document.querySelector(".loading-spinner").style.display = "block";
             let get_manifest_callback = (e) => {
               try {
@@ -1672,7 +1734,6 @@ var intro = {
         m(
           "div",
           {
-            class: "flex width-100  justify-content-center ",
             id: "version-box",
           },
           [
@@ -2023,7 +2084,7 @@ const AudioPlayerView = {
     }
 
     document
-      .querySelector("div.button-center")
+      .querySelector("#bottom-bar div.button-center")
       .addEventListener("click", function (event) {
         AudioPlayerView.togglePlayPause();
       });
@@ -2788,7 +2849,11 @@ var subscriptionsView = {
                 if (e.error) vnode.dom.classList.add("error");
               },
               onclick: () => {
-                m.route.set("/start", { "index": 0, "feed": e.title });
+                m.route.set("/start", {
+                  "index": 0,
+                  "feed": e.title,
+                  "channel": e.channel,
+                });
               },
             },
             [
@@ -2962,20 +3027,21 @@ document.addEventListener("DOMContentLoaded", function (e) {
   if (status.notKaiOS) swiper();
 
   // Add click listeners to simulate key events
+
   document
-    .querySelector("div.button-left")
+    .querySelector("#bottom-bar div.button-left")
     .addEventListener("click", function (event) {
       simulateKeyPress("SoftLeft");
     });
 
   document
-    .querySelector("div.button-right")
+    .querySelector("#bottom-bar div.button-right")
     .addEventListener("click", function (event) {
       simulateKeyPress("SoftRight");
     });
 
   document
-    .querySelector("div.button-center")
+    .querySelector("#bottom-bar div.button-center")
     .addEventListener("click", function (event) {
       simulateKeyPress("Enter");
     });
@@ -3044,6 +3110,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
+          delete currentParams.feed;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
         }
@@ -3058,6 +3125,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
+          delete currentParams.feed;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
         }
@@ -3109,6 +3177,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
+          delete currentParams.feed;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
         }
@@ -3127,6 +3196,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
+          delete currentParams.feed;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
         }
@@ -3403,12 +3473,11 @@ try {
     }
     //handel pixelfed
     if (result.type == "pixelfed") {
-      localforage.setItem("pixelfed_code", result.key);
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
       var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result);
+      urlencoded.append("code", result.key);
       urlencoded.append("scope", "read");
 
       urlencoded.append("grant_type", "authorization_code");

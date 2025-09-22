@@ -12,17 +12,17 @@
 
 
     <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/grid.css" />
+    <link rel="stylesheet" href="assets/css/flexboxgrid.css" />
+
 
 </head>
 
 
-<body data-swipe-timeout="2000" data-swipe-threshold="150">
+<body data-swipe-timeout="2000" data-swipe-threshold="150" class="container">
     <div id="toast"></div>
     <div id="side-toast"></div>
 
 
-    <div id="wrapper" class="flex">
 
         <div class="loading-spinner">
             <div></div>
@@ -33,24 +33,45 @@
        
        
 
-            <div id="bottom-bar">
-                <div class="inner flex">
-                    <div class="button-left"></div>
-                    <div class="button-center"></div>
-                    <div class="button-right"></div>
-                </div>
-            </div>
-
-            <div id="top-bar">
-                <div class="inner flex">
-                    <div class="button-left"></div>
-                    <div class="button-center"></div>
-                    <div class="button-right"></div>
-                </div>
-            </div>
-        
-        <div id="app" class="width-100 flex justify-content-spacearound"></div>
+           
+ <div id="top-bar" class="container">
+    <div class="row center-xs center-md">
+    <div class="inner col-xs-12 col-md-5">
+      <div class="row between-xs between-md">
+        <div class="button-left"></div>
+        <div class="button-center"></div>
+        <div class="button-right"></div>
+      </div>
     </div>
+  </div>
+</div>
+
+
+
+     <div id="bottom-bar" class="container">
+        <div class="row center-xs center-md">
+            <div class="inner col-xs-12 col-md-5">
+                <div class="row between-xs between-md">
+                    <div class="button-left"></div>
+                    <div class="button-center"></div>
+                    <div class="button-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+  <div id="wrapper" class="container">
+    <div class="row center-xs center-md">
+      <div id="app" class="col-xs-12 col-md-6">
+      </div>
+    </div>
+  </div>
+
+
+    
+        
 
     </div>
 
