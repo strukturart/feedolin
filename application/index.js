@@ -1339,7 +1339,7 @@ var start = {
     if (!articles || articles.length === 0) {
       articles = [
         {
-          channel: "--",
+          channel: "No feeds",
           content: "<p>No feeds found.</p>",
           description: "<p>There is currently no content to display.</p>",
           feed_title: "default",
@@ -2258,8 +2258,9 @@ var about = {
       "div",
       {
         class: "page scrollable",
-        oncreate: () => {
+        oncreate: (vnode) => {
           bottom_bar("", "", "");
+          vnode.dom.focus();
         },
       },
       m(
@@ -2342,8 +2343,9 @@ var privacy_policy = {
       {
         id: "privacy_policy",
         class: "page scrollable",
-        oncreate: () => {
+        oncreate: (vnode) => {
           bottom_bar("", "", "");
+          vnode.dom.focus();
         },
       },
       [
@@ -3430,91 +3432,86 @@ window.addEventListener("beforeunload", (event) => {
   }
 });
 
-//KaiOS3 handel  oauth
+function handleOAuthResult(result) {
+  if (!result || !result.type) return;
 
+  if (result.type === "mastodon") {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    let urlencoded = new URLSearchParams();
+    urlencoded.append("code", result.key);
+    urlencoded.append("scope", "read");
+    urlencoded.append("grant_type", "authorization_code");
+    urlencoded.append("redirect_uri", process.env.redirect);
+    urlencoded.append("client_id", process.env.clientId);
+    urlencoded.append("client_secret", process.env.clientSecret);
+
+    fetch(settings.mastodon_server_url + "/oauth/token", {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        settings.mastodon_token = data.access_token;
+        localforage.setItem("settings", settings);
+        m.route.set("/start?index=0");
+        side_toaster("Successfully connected", 10000);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        side_toaster("Connection failed");
+      });
+  }
+
+  if (result.type === "pixelfed") {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    let urlencoded = new URLSearchParams();
+    urlencoded.append("code", result.key);
+    urlencoded.append("scope", "read");
+    urlencoded.append("grant_type", "authorization_code");
+    urlencoded.append("redirect_uri", process.env.pixelfedRedirect);
+    urlencoded.append("client_id", process.env.pixelfedId);
+    urlencoded.append("client_secret", process.env.pixelfedSecret);
+
+    fetch(settings.pixelfed_server_url + "/oauth/token", {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        settings.pixelfed_token = data.access_token;
+        localforage.setItem("settings", settings);
+        m.route.set("/start?index=0");
+        side_toaster("Successfully connected", 10000);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        side_toaster("Connection failed");
+      });
+  }
+}
+
+// KaiOS 3 Listener (SW-Channel)
 try {
   sw_channel.addEventListener("message", (event) => {
     let result = event.data.oauth_success;
-
-    //handel mastodon
-    if (result.type == "mastodon") {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result.key);
-      urlencoded.append("scope", "read");
-
-      urlencoded.append("grant_type", "authorization_code");
-      urlencoded.append("redirect_uri", process.env.redirect);
-      urlencoded.append("client_id", process.env.clientId);
-      urlencoded.append("client_secret", process.env.clientSecret);
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: "follow",
-      };
-
-      fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
-        .then((response) => response.json()) // Parse the JSON once
-        .then((data) => {
-          settings.mastodon_token = data.access_token; // Access the token
-          localforage.setItem("settings", settings);
-          m.route.set("/start?index=0");
-
-          side_toaster("Successfully connected", 10000);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          side_toaster("Connection failed");
-        });
-    }
-    //handel pixelfed
-    if (result.type == "pixelfed") {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result.key);
-      urlencoded.append("scope", "read");
-
-      urlencoded.append("grant_type", "authorization_code");
-      urlencoded.append("redirect_uri", process.env.pixelfedRedirect);
-      urlencoded.append("client_id", process.env.pixelfedId);
-      urlencoded.append("client_secret", process.env.pixelfedSecret);
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: "follow",
-      };
-
-      fetch(settings.pixelfed_server_url + "/oauth/token", requestOptions)
-        .then((response) => response.json()) // Parse the JSON once
-        .then((data) => {
-          settings.pixelfed_token = data.access_token; // Access the token
-          localforage.setItem("settings", settings);
-          m.route.set("/start?index=0");
-
-          side_toaster("Successfully connected", 10000);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          side_toaster("Connection failed");
-        });
-    }
+    handleOAuthResult(result);
   });
 } catch (e) {}
 
-//KaiOS 2 oauth
-
+// KaiOS 2 Listener (Activity)
 try {
-  navigator.mozSetMessageHandler("activity", function (activityRequest) {
-    var option = activityRequest.source;
-    alert(option.data);
+  navigator.mozSetMessageHandler("activity", (activityRequest) => {
+    let option = activityRequest.source;
+
+    handleOAuthResult(option.data);
   });
 } catch (e) {}
 

@@ -239,7 +239,6 @@ label {
 
 #start article:focus {
   background: silver;
-  padding: 5px;
 }
 
 div#intro {
@@ -284,11 +283,6 @@ div#intro img {
   height: 20px;
 }
 
-article {
-  background: none;
-  height: auto;
-}
-
 #start {
   overflow-x: hidden;
   overflow-y: scroll;
@@ -297,9 +291,12 @@ article {
 }
 
 article {
+  background: none;
+  height: auto;
   margin: 30px 0 10px 0;
   position: relative;
   text-align: left;
+  padding: 10px 10px 10px 10px;
 }
 
 #start article.read {
@@ -381,7 +378,7 @@ h2.article-title {
 }
 
 #article {
-  padding: 40px 20px 20px 20px !important;
+  padding: 40px 10px 10px 10px !important;
   overflow-x: hidden;
   overflow-y: scroll;
   height: 100vh;
@@ -556,7 +553,6 @@ div#bottom-bar {
 
 div#bottom-bar div.inner {
   position: relative;
-
   padding: 10px;
 }
 
@@ -807,6 +803,11 @@ video {
     font-size: 0.9rem;
   }
 
+  button {
+    min-width: 80%;
+    max-width: 80%;
+  }
+
   #app {
     position: relative;
     height: 100%;
@@ -825,7 +826,7 @@ video {
 
   #article {
     overflow-x: hidden;
-    padding: 40px 10px 10px 10px;
+    padding: 0px 0px 0px 0px;
     height: 99vh;
   }
 
@@ -834,7 +835,7 @@ video {
   }
 
   #start article {
-    padding: 10px;
+    padding: 5px 15px 5px 15px;
     margin: 0 0 10px 0;
     overflow-x: hidden;
     text-align: left;
@@ -842,7 +843,7 @@ video {
 
   #start {
     overflow-x: hidden;
-    padding: 30px 0px;
+    padding: 30px 0px 0px 0px;
   }
 
   div#top-bar div.button-left img {
@@ -878,18 +879,19 @@ video {
     z-index: 6;
     background: none;
     min-width: 100vw;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   div#bottom-bar div.inner {
     position: relative;
-    display: flex;
-    justify-content: space-between;
-
     padding: 5px;
+  }
+
+  div#bottom-bar div.button-right {
+    padding-right: 15px;
+  }
+
+  div#bottom-bar div.button-left {
+    padding-left: 15px;
   }
 
   div#intro img {
@@ -926,7 +928,8 @@ video {
 
   .page {
     margin: 0px 0 0px 0;
-    padding: 10px 10px 80px 10px;
+    padding: 40px 0px 80px 0px;
+    overflow-y: scroll;
   }
 
   .audio-player .audio-info {
