@@ -11,21 +11,24 @@ import {
   list_files,
   volume_control,
   setTabindex,
+  detectMobileOS,
 } from "./assets/js/helper.js";
 import { mastodon_account_info } from "./assets/js/mastodon.js";
 import localforage from "localforage";
-import { detectMobileOS } from "./assets/js/helper.js";
 import m from "mithril";
-import * as sanitizeHtml from "sanitize-html";
+
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import fxparser from "fast-xml-parser";
 import Timeworker from "./worker.js";
 import swiped from "swiped-events";
+import Parser from "rss-parser";
+import DOMPurify from "dompurify";
+
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 // Extend dayjs with the duration plugin
 dayjs.extend(duration);
-
 document.documentElement.lang = navigator.language || "en";
 
 let articles = [];
@@ -39,11 +42,7 @@ localforage
   .catch((downloadList = []));
 
 const sw_channel = new BroadcastChannel("sw-messages");
-
-const parser = new fxparser.XMLParser({
-  ignoreAttributes: false,
-  parseAttributeValue: true,
-});
+const parser = new Parser();
 
 if (navigator.mozAlarms) {
   // Define the worker script as a string
@@ -426,40 +425,45 @@ let checkOnlineStatus = async () => {
 
 //media check
 let check_media = (h) => {
-  const hasAudio =
-    h.enclosure &&
-    h.enclosure["@_type"] &&
-    h.enclosure["@_type"].includes("audio");
+  const encType = h.enclosure?.type || h.enclosure?.["@_type"] || "";
 
-  const hasVideo =
-    h.enclosure &&
-    h.enclosure["@_type"] &&
-    h.enclosure["@_type"].includes("video");
-
-  if (hasAudio) {
+  if (encType.includes("audio")) {
     return "audio";
-  } else if (hasVideo) {
-    return "video";
-  } else {
-    return "text";
   }
+
+  if (encType.includes("video")) {
+    return "video";
+  }
+
+  // YouTube-Feeds: check link or media:content
+  if (
+    (h.link && h.link.includes("youtube.com")) ||
+    (h.link && h.link.includes("youtu.be")) ||
+    (h["media:group"] &&
+      h["media:group"]["media:content"]?.url?.includes("youtube.com"))
+  ) {
+    return "youtube";
+  }
+
+  return "text";
 };
 
-//clean input
+// clean input, nur bestimmte Tags und Attribute erlaubt
 let clean = (i) => {
-  return sanitizeHtml(i, {
-    allowedTags: ["b", "i", "em", "strong", "a", "img", "src", "p"],
-    allowedAttributes: {
+  return DOMPurify.sanitize(i, {
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "img", "p"],
+    ALLOWED_ATTR: {
       "a": ["href"],
       "img": ["src"],
     },
   });
 };
 
+// raw input, alles entfernen
 let raw = (i) => {
-  return sanitizeHtml(i, {
-    allowedTags: [],
-    allowedAttributes: {},
+  return DOMPurify.sanitize(i, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: {},
   });
 };
 
@@ -747,114 +751,92 @@ const fetchContent = async (feed_download_list) => {
           return;
         }
         try {
-          let jObj = parser.parse(data);
+          parser
+            .parseString(data)
+            .then((feed) => {
+              if (!feed || !feed.items) {
+                e.error = "not valid xml";
+                completedFeeds++;
+                checkIfAllFeedsLoaded();
+                return;
+              }
 
-          if (!jObj.feed && !jObj.rss) {
-            e.error = "not valid xml";
-          }
+              feed.items.forEach((f, i) => {
+                if (i >= e.maxEpisodes) return;
 
-          //ATOM
-          if (jObj.feed)
-            jObj.feed.entry.forEach((f, i) => {
-              if (i < e.maxEpisodes) {
                 try {
                   f.channel = e.channel;
-                  f.id = stringToHash(f.title + f.published);
-                  f.type = f["yt:videoId"] ? "youtube" : "text";
-
-                  f.url = f.link["@_href"];
+                  f.id = stringToHash(f.title + (f.isoDate || f.pubDate || ""));
                   f.feed_title = e.title;
-                  f.typeOfFeed = "ATOM";
                   f.reblog = false;
 
+                  // Typ (Text, Audio, Video, YouTube)
+                  f.type = check_media(f);
                   if (f["yt:videoId"]) f.youtubeid = f["yt:videoId"];
 
-                  if (dayjs(f.published).isValid()) {
-                    f.isoDate = dayjs(f.published).toISOString();
-                  } else {
-                    f.isoDate = dayjs("1970-01-01").toISOString();
-                  }
-                  f.content =
-                    typeof f.content === "object"
-                      ? f.content["#text"]
-                      : f.content;
-
-                  if (f["media:group"]) {
-                    f.cover = f["media:group"]["media:thumbnail"]["@_url"];
-                    f.content = f["media:group"]["media:description"];
-                  }
-
-                  if (f["media:thumbnail"]) {
-                    f.cover = f["media:thumbnail"]["@_url"];
-                  }
-
-                  if (!ids.includes(f.id)) {
-                    articles.push(f);
-                    ids.push(f.id);
-                  }
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            });
-
-          //RSS
-          if (jObj.rss)
-            jObj.rss.channel.item.forEach((f, i) => {
-              if (i < e.maxEpisodes) {
-                try {
-                  f.channel = e.channel;
-                  f.id = stringToHash(f.title + f.pubDate);
-                  f.type = check_media(f);
-
+                  // URL & Datum
                   f.url = f.link || e.url;
+                  const dateStr = f.isoDate || f.pubDate || "1970-01-01";
+                  f.isoDate = dayjs(dateStr).isValid()
+                    ? dayjs(dateStr).toISOString()
+                    : dayjs("1970-01-01").toISOString();
 
-                  f.feed_title = e.title;
-                  f.typeOfFeed = "RSS";
-                  f.reblog = false;
+                  // Content
+                  f.content = f.content || f.summary || f.description || "";
 
-                  if (
-                    dayjs(
-                      f.pubDate,
-                      "ddd, DD MMM YYYY HH:mm:ss Z",
-                      true
-                    ).isValid()
-                  ) {
-                    f.isoDate = dayjs(
-                      f.pubDate,
-                      "ddd, DD MMM YYYY HH:mm:ss Z"
-                    ).toISOString();
-                  } else {
-                    f.isoDate = dayjs("1970-01-01").toISOString();
+                  // Cover-Bild
+                  if (f.enclosure?.url) {
+                    f.cover = f.enclosure.url;
+                  } else if (f["media:thumbnail"]?.url) {
+                    f.cover = f["media:thumbnail"].url;
                   }
 
-                  f.content = f.content || f.description;
-
-                  if (f["itunes:image"]) {
-                    f.cover = f["itunes:image"]["@_href"];
+                  // itunes:image
+                  if (f.itunes?.image) {
+                    f.cover = f.itunes.image;
                   }
 
-                  if (jObj.rss.channel.image) {
-                    f.cover = jObj.rss.channel.image.url || "";
+                  // feed-weites <image>
+                  if (feed.image?.url) {
+                    f.cover = feed.image.url;
+                  }
+
+                  // media:group
+                  if (f["media:group"]) {
+                    if (f["media:group"]["media:thumbnail"]) {
+                      f.cover = f["media:group"]["media:thumbnail"][0].$.url;
+                    }
+                    if (f["media:group"]["media:description"]) {
+                      f.content = f["media:group"]["media:description"][0];
+                    }
+                  }
+
+                  // media:thumbnail
+                  if (f["media:thumbnail"]) {
+                    f.cover = f["media:thumbnail"][0].$.url;
                   }
 
                   if (!ids.includes(f.id)) {
                     articles.push(f);
                     ids.push(f.id);
                   }
-                } catch (e) {
-                  console.log(e);
+                } catch (err) {
+                  console.log("Item error", err, f);
                 }
-              }
-            });
+              });
 
-          completedFeeds++; // Increment the counter
-          checkIfAllFeedsLoaded(); // Check if all feeds are done
+              completedFeeds++;
+              checkIfAllFeedsLoaded();
+            })
+            .catch((err) => {
+              e.error = err;
+              completedFeeds++;
+              checkIfAllFeedsLoaded();
+            });
         } catch (event) {
           e.error = event;
-
-          completedFeeds++; // Increment the counter
-          checkIfAllFeedsLoaded(); // Check if all feeds are done
+          completedFeeds++;
+          checkIfAllFeedsLoaded();
         }
       };
 
@@ -1339,7 +1321,7 @@ var start = {
     if (!articles || articles.length === 0) {
       articles = [
         {
-          channel: "--",
+          channel: "No feeds",
           content: "<p>No feeds found.</p>",
           description: "<p>There is currently no content to display.</p>",
           feed_title: "default",
@@ -1505,6 +1487,7 @@ var article = {
       if (index != h.id) return false;
 
       current_article = h;
+      console.log(h);
       return true;
     });
 
@@ -2258,8 +2241,9 @@ var about = {
       "div",
       {
         class: "page scrollable",
-        oncreate: () => {
+        oncreate: (vnode) => {
           bottom_bar("", "", "");
+          vnode.dom.focus();
         },
       },
       m(
@@ -2342,8 +2326,9 @@ var privacy_policy = {
       {
         id: "privacy_policy",
         class: "page scrollable",
-        oncreate: () => {
+        oncreate: (vnode) => {
           bottom_bar("", "", "");
+          vnode.dom.focus();
         },
       },
       [
@@ -3237,14 +3222,14 @@ document.addEventListener("DOMContentLoaded", function (e) {
           if (current_article.type == "audio")
             m.route.set(
               `/AudioPlayerView?url=${encodeURIComponent(
-                current_article.enclosure["@_url"]
+                current_article.enclosure.url
               )}&id=${current_article.id}`
             );
 
           if (current_article.type == "video")
             m.route.set(
               `/VideoPlayerView?url=${encodeURIComponent(
-                current_article.enclosure["@_url"]
+                current_article.enclosure.url
               )}`
             );
 
@@ -3430,91 +3415,86 @@ window.addEventListener("beforeunload", (event) => {
   }
 });
 
-//KaiOS3 handel  oauth
+function handleOAuthResult(result) {
+  if (!result || !result.type) return;
 
+  if (result.type === "mastodon") {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    let urlencoded = new URLSearchParams();
+    urlencoded.append("code", result.key);
+    urlencoded.append("scope", "read");
+    urlencoded.append("grant_type", "authorization_code");
+    urlencoded.append("redirect_uri", process.env.redirect);
+    urlencoded.append("client_id", process.env.clientId);
+    urlencoded.append("client_secret", process.env.clientSecret);
+
+    fetch(settings.mastodon_server_url + "/oauth/token", {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        settings.mastodon_token = data.access_token;
+        localforage.setItem("settings", settings);
+        m.route.set("/start?index=0");
+        side_toaster("Successfully connected", 10000);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        side_toaster("Connection failed");
+      });
+  }
+
+  if (result.type === "pixelfed") {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    let urlencoded = new URLSearchParams();
+    urlencoded.append("code", result.key);
+    urlencoded.append("scope", "read");
+    urlencoded.append("grant_type", "authorization_code");
+    urlencoded.append("redirect_uri", process.env.pixelfedRedirect);
+    urlencoded.append("client_id", process.env.pixelfedId);
+    urlencoded.append("client_secret", process.env.pixelfedSecret);
+
+    fetch(settings.pixelfed_server_url + "/oauth/token", {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        settings.pixelfed_token = data.access_token;
+        localforage.setItem("settings", settings);
+        m.route.set("/start?index=0");
+        side_toaster("Successfully connected", 10000);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        side_toaster("Connection failed");
+      });
+  }
+}
+
+// KaiOS 3 Listener (SW-Channel)
 try {
   sw_channel.addEventListener("message", (event) => {
     let result = event.data.oauth_success;
-
-    //handel mastodon
-    if (result.type == "mastodon") {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result.key);
-      urlencoded.append("scope", "read");
-
-      urlencoded.append("grant_type", "authorization_code");
-      urlencoded.append("redirect_uri", process.env.redirect);
-      urlencoded.append("client_id", process.env.clientId);
-      urlencoded.append("client_secret", process.env.clientSecret);
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: "follow",
-      };
-
-      fetch(settings.mastodon_server_url + "/oauth/token", requestOptions)
-        .then((response) => response.json()) // Parse the JSON once
-        .then((data) => {
-          settings.mastodon_token = data.access_token; // Access the token
-          localforage.setItem("settings", settings);
-          m.route.set("/start?index=0");
-
-          side_toaster("Successfully connected", 10000);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          side_toaster("Connection failed");
-        });
-    }
-    //handel pixelfed
-    if (result.type == "pixelfed") {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("code", result.key);
-      urlencoded.append("scope", "read");
-
-      urlencoded.append("grant_type", "authorization_code");
-      urlencoded.append("redirect_uri", process.env.pixelfedRedirect);
-      urlencoded.append("client_id", process.env.pixelfedId);
-      urlencoded.append("client_secret", process.env.pixelfedSecret);
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: "follow",
-      };
-
-      fetch(settings.pixelfed_server_url + "/oauth/token", requestOptions)
-        .then((response) => response.json()) // Parse the JSON once
-        .then((data) => {
-          settings.pixelfed_token = data.access_token; // Access the token
-          localforage.setItem("settings", settings);
-          m.route.set("/start?index=0");
-
-          side_toaster("Successfully connected", 10000);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          side_toaster("Connection failed");
-        });
-    }
+    handleOAuthResult(result);
   });
 } catch (e) {}
 
-//KaiOS 2 oauth
-
+// KaiOS 2 Listener (Activity)
 try {
-  navigator.mozSetMessageHandler("activity", function (activityRequest) {
-    var option = activityRequest.source;
-    alert(option.data);
+  navigator.mozSetMessageHandler("activity", (activityRequest) => {
+    let option = activityRequest.source;
+
+    handleOAuthResult(option.data);
   });
 } catch (e) {}
 
