@@ -459,7 +459,6 @@ let clean = (i) => {
   });
 };
 
-// raw input, alles entfernen
 let raw = (i) => {
   return DOMPurify.sanitize(i, {
     ALLOWED_TAGS: [],
@@ -671,12 +670,12 @@ const fetchContent = async (feed_download_list) => {
                 f.content += `<br><img src='${k.media_attachments[0].preview_url}'>`;
               } else if (k.media_attachments[0].type === "video") {
                 f.enclosure = {
-                  "@_type": "video",
+                  type: "video",
                   url: k.media_attachments[0].url,
                 };
               } else if (k.media_attachments[0].type === "audio") {
                 f.enclosure = {
-                  "@_type": "audio",
+                  type: "audio",
                   url: k.media_attachments[0].url,
                 };
               }
@@ -694,12 +693,12 @@ const fetchContent = async (feed_download_list) => {
                   f.content += `<br><img src='${k.reblog.media_attachments[0].preview_url}'>`;
                 } else if (k.reblog.media_attachments[0].type === "video") {
                   f.enclosure = {
-                    "@_type": "video",
+                    type: "video",
                     url: k.reblog.media_attachments[0].url,
                   };
                 } else if (k.reblog.media_attachments[0].type === "audio") {
                   f.enclosure = {
-                    "@_type": "audio",
+                    type: "audio",
                     url: k.reblog.media_attachments[0].url,
                   };
                 }
@@ -854,7 +853,6 @@ const fetchContent = async (feed_download_list) => {
 //Mastadon private
 let load_mastodon = async () => {
   let accessToken = settings.mastodon_token;
-
   let url = settings.mastodon_server_url + "/api/v1/timelines/home/";
 
   fetch(url, {
@@ -865,7 +863,7 @@ let load_mastodon = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      data.forEach((k, i) => {
+      data.forEach((k) => {
         let f = {
           channel: "Mastodon",
           id: k.id,
@@ -876,61 +874,57 @@ let load_mastodon = async () => {
           content: k.content,
           url: k.uri,
           reblog: false,
+          enclosures: [],
         };
 
         if (k.media_attachments.length > 0) {
-          if (k.media_attachments[0].type === "image") {
-            f.content += `<br><img src='${k.media_attachments[0].preview_url}'>`;
-          } else if (k.media_attachments[0].type === "video") {
-            f.enclosure = {
-              "@_type": "video",
-              url: k.media_attachments[0].url,
-            };
-          } else if (k.media_attachments[0].type === "audio") {
-            f.enclosure = {
-              "@_type": "audio",
-              url: k.media_attachments[0].url,
-            };
-          }
+          k.media_attachments.forEach((m) => {
+            if (m.type === "image") {
+              f.content += `<br><img src="${m.preview_url}" alt="${
+                m.description || ""
+              }">`;
+            } else if (m.type === "video" || m.type === "audio") {
+              f.enclosures.push({
+                type: m.type,
+                url: m.url,
+              });
+            }
+          });
         }
 
-        //reblog
-        try {
-          if (k.content == "") {
-            f.content = k.reblog.content;
+        if (k.reblog) {
+          f.reblog = true;
+          f.reblogUser = k.reblog.account.display_name || k.reblog.account.acct;
+          f.content = k.reblog.content;
 
-            f.reblog = true;
-            f.reblogUser =
-              k.reblog.account.display_name || k.reblog.account.acct;
-
-            if (k.reblog.media_attachments.length > 0) {
-              if (k.reblog.media_attachments[0].type === "image") {
-                f.content += `<br><img src='${k.reblog.media_attachments[0].preview_url}'>`;
-              } else if (k.reblog.media_attachments[0].type === "video") {
-                f.enclosure = {
-                  "@_type": "video",
-                  url: k.reblog.media_attachments[0].url,
-                };
-              } else if (k.reblog.media_attachments[0].type === "audio") {
-                f.enclosure = {
-                  "@_type": "audio",
-                  url: k.reblog.media_attachments[0].url,
-                };
+          if (k.reblog.media_attachments.length > 0) {
+            k.reblog.media_attachments.forEach((m) => {
+              if (m.type === "image") {
+                f.content += `<br><img src="${m.preview_url}" alt="${
+                  m.description || ""
+                }">`;
+              } else if (m.type === "video" || m.type === "audio") {
+                f.enclosures.push({
+                  type: m.type,
+                  url: m.url,
+                });
               }
-            }
+            });
           }
-        } catch (e) {
-          console.log(e);
         }
 
         articles.push(f);
       });
+
       channels.push("Mastodon");
       side_toaster("Logged in as " + status.mastodon_logged, 4000);
 
       localforage.setItem("articles", articles).then(() => {
         console.log("cached");
       });
+    })
+    .catch((err) => {
+      console.error("Mastodon fetch error:", err);
     });
 };
 
@@ -938,7 +932,10 @@ let load_mastodon = async () => {
 let load_pixelfed = async () => {
   let accessToken = settings.pixelfed_token;
 
-  let url = settings.pixelfed_server_url + "/api/v1/timelines/home/";
+  let url =
+    settings.proxy_url +
+    settings.pixelfed_server_url +
+    "/api/v1/timelines/home/";
 
   fetch(url, {
     headers: {
@@ -948,66 +945,54 @@ let load_pixelfed = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      data.forEach((k, i) => {
+      data.forEach((k) => {
         let f = {
-          channel: "Pixelfed",
+          channel: "Mastodon",
           id: k.id,
-          type: "pixelfed",
+          type: "mastodon",
           pubDate: k.created_at,
           isoDate: k.created_at,
           title: k.account.display_name,
           content: k.content,
           url: k.uri,
           reblog: false,
+          enclosures: [],
         };
 
         if (k.media_attachments.length > 0) {
-          k.media_attachments.forEach((att) => {
-            if (att.type === "image") {
-              f.content += `<br><img src='${att.preview_url}'>`;
-            } else if (att.type === "video") {
-              f.enclosure = {
-                "@_type": "video",
-                url: att.url,
-              };
-            } else if (att.type === "audio") {
-              f.enclosure = {
-                "@_type": "audio",
-                url: att.url,
-              };
+          k.media_attachments.forEach((m) => {
+            if (m.type === "image") {
+              f.content += `<br><img src="${m.preview_url}" alt="${
+                m.description || ""
+              }">`;
+            } else if (m.type === "video" || m.type === "audio") {
+              f.enclosures.push({
+                type: m.type,
+                url: m.url,
+              });
             }
           });
         }
 
-        //reblog
-        try {
-          if (k.content == "") {
-            f.content = k.reblog.content;
+        if (k.reblog) {
+          f.reblog = true;
+          f.reblogUser = k.reblog.account.display_name || k.reblog.account.acct;
+          f.content = k.reblog.content;
 
-            f.reblog = true;
-            f.reblogUser =
-              k.reblog.account.display_name || k.reblog.account.acct;
-
-            if (k.reblog && k.reblog.media_attachments.length > 0) {
-              k.reblog.media_attachments.forEach((att) => {
-                if (att.type === "image") {
-                  f.content += `<br><img src='${att.preview_url}'>`;
-                } else if (att.type === "video") {
-                  f.enclosure = {
-                    "@_type": "video",
-                    url: att.url,
-                  };
-                } else if (att.type === "audio") {
-                  f.enclosure = {
-                    "@_type": "audio",
-                    url: att.url,
-                  };
-                }
-              });
-            }
+          if (k.reblog.media_attachments.length > 0) {
+            k.reblog.media_attachments.forEach((m) => {
+              if (m.type === "image") {
+                f.content += `<br><img src="${m.preview_url}" alt="${
+                  m.description || ""
+                }">`;
+              } else if (m.type === "video" || m.type === "audio") {
+                f.enclosures.push({
+                  type: m.type,
+                  url: m.url,
+                });
+              }
+            });
           }
-        } catch (e) {
-          console.log(e);
         }
 
         articles.push(f);
@@ -1019,6 +1004,9 @@ let load_pixelfed = async () => {
       localforage.setItem("articles", articles).then(() => {
         console.log("cached");
       });
+    })
+    .catch((err) => {
+      console.error("Pixelfed fetch error:", err);
     });
 };
 
@@ -1052,7 +1040,9 @@ let start_loading = () => {
           load_pixelfed();
         }
       })
-      .catch((e) => {});
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   channel_filter = localStorage.getItem("last_channel_filter");
@@ -1528,10 +1518,8 @@ var article = {
                 "time",
                 {
                   id: "top",
-                  oncreate: () => {
-                    setTimeout(() => {
-                      // document.querySelector("#top").scrollIntoView();
-                    }, 1000);
+                  oncreate: (vnode) => {
+                    vnode.dom.focus();
                   },
                 },
                 dayjs(matchedArticle.isoDate).format("DD MMM YYYY")
