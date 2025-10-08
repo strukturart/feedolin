@@ -5,7 +5,6 @@ import {
   side_toaster,
   load_ads,
   top_bar,
-  getManifest,
   validate_url,
   pick_file,
   list_files,
@@ -13,6 +12,9 @@ import {
   setTabindex,
   detectMobileOS,
 } from "./assets/js/helper.js";
+
+import { stop_scan, start_scan } from "./assets/js/scan.js";
+
 import { mastodon_account_info } from "./assets/js/mastodon.js";
 import localforage from "localforage";
 import m from "mithril";
@@ -423,6 +425,40 @@ let checkOnlineStatus = async () => {
   return status.deviceOnline;
 };
 
+function parseItunesDuration(d) {
+  if (!d) return "00:00:00";
+
+  let dur;
+  if (/^\d+$/.test(d)) {
+    // nur Sekunden
+    dur = dayjs.duration(parseInt(d, 10), "seconds");
+  } else {
+    const parts = d.split(":").map(Number);
+    if (parts.length === 2) {
+      // mm:ss
+      dur = dayjs.duration({
+        minutes: parts[0],
+        seconds: parts[1],
+      });
+    } else if (parts.length === 3) {
+      // hh:mm:ss
+      dur = dayjs.duration({
+        hours: parts[0],
+        minutes: parts[1],
+        seconds: parts[2],
+      });
+    } else {
+      return "00:00:00";
+    }
+  }
+
+  const hh = String(dur.hours()).padStart(2, "0");
+  const mm = String(dur.minutes()).padStart(2, "0");
+  const ss = String(dur.seconds()).padStart(2, "0");
+
+  return `${hh}:${mm}:${ss}`;
+}
+
 //media check
 let check_media = (h) => {
   const encType = h.enclosure?.type || h.enclosure?.["@_type"] || "";
@@ -564,6 +600,8 @@ const generateDownloadList = (data) => {
 
   if (!content) {
     console.error("No 'body' element found in the OPML data.");
+    m.route.set("/start");
+
     return { error: "No 'body' element found", downloadList: [] };
   }
 
@@ -626,13 +664,10 @@ const fetchContent = async (feed_download_list) => {
           });
 
           if (channels.length > 0 && !first) {
-            //todo check if last_channel exist in array
             channel_filter =
               localStorage.getItem("last_channel_filter") || channels[0];
             first = true;
           }
-
-          m.route.set("/start");
         })
         .catch((err) => {
           console.error("Feeds cached", err);
@@ -717,7 +752,7 @@ const fetchContent = async (feed_download_list) => {
         });
     } else {
       let xhr = new XMLHttpRequest({ "mozSystem": true });
-      xhr.timeout = 10000;
+      xhr.timeout = 2000;
 
       let url = e.url;
       if (status.notKaiOS) {
@@ -771,6 +806,12 @@ const fetchContent = async (feed_download_list) => {
 
                   // Typ (Text, Audio, Video, YouTube)
                   f.type = check_media(f);
+
+                  if (f.type == "audio") {
+                    if (f.itunes?.duration) {
+                      f.duration = parseItunesDuration(f.itunes.duration);
+                    }
+                  }
                   if (f["yt:videoId"]) f.youtubeid = f["yt:videoId"];
 
                   // URL & Datum
@@ -795,7 +836,6 @@ const fetchContent = async (feed_download_list) => {
                     f.cover = f.itunes.image;
                   }
 
-                  // feed-weites <image>
                   if (feed.image?.url) {
                     f.cover = feed.image.url;
                   }
@@ -841,7 +881,7 @@ const fetchContent = async (feed_download_list) => {
 
       xhr.onerror = function (event) {
         e.error = event;
-        completedFeeds++; // Increment the counter in case of error
+        completedFeeds++;
         checkIfAllFeedsLoaded();
       };
 
@@ -1151,7 +1191,6 @@ localforage
       //is online use offline data or not
       if (isOnline && status.last_update_duration > settings.cache_time) {
         start_loading();
-        side_toaster("Load feeds", 4000);
       } else {
         load_cached_feeds();
       }
@@ -1205,6 +1244,38 @@ let lastPlayedMedia = async (id) => {
 /*-------------*/
 
 var root = document.getElementById("app");
+
+var scan = {
+  backHandler: function (e) {
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      history.back();
+    }
+  },
+  view: function () {
+    return m("div", {
+      oncreate: () => {
+        let scan_callback = (e) => {
+          status.scanresult = e;
+          m.route.set("/settingsView");
+        };
+        start_scan(scan_callback);
+
+        if (status.notKaiOS === true) {
+          top_bar("<img src='assets/image/back.svg'>", "", "");
+        }
+
+        // Event nur in diesem View aktiv
+        document.addEventListener("keydown", scan.backHandler);
+      },
+      onremove: () => {
+        // Wenn View verlassen wird → Listener weg
+        document.removeEventListener("keydown", scan.backHandler);
+        stop_scan();
+      },
+    });
+  },
+};
 
 var options = {
   view: function () {
@@ -1290,12 +1361,12 @@ var options = {
 
         m("div", {
           id: "KaiOSads-Wrapper",
-          class: "",
 
           oncreate: () => {
             if (status.notKaiOS == false) load_ads();
           },
         }),
+        m("div", { class: "item", style: "height:80px" }),
       ]
     );
   },
@@ -1447,7 +1518,12 @@ var start = {
           },
           [
             m("span", { class: "type-indicator" }, h.type),
-            m("time", dayjs(h.isoDate).format("DD MMM YYYY")),
+            m(
+              "time",
+              `${dayjs(h.isoDate).format("DD MMM YYYY")}${
+                h.duration ? " | " + h.duration : ""
+              }`
+            ),
             m(
               "h2",
               {
@@ -1651,7 +1727,9 @@ var localOPML = {
 
 var intro = {
   oninit: function (vnode) {
+    vnode.state.stoptimeout = false;
     // check if is a mastodon redirect
+    //only with not KaiOS devices
     if (status.notKaiOS) {
       mastodon_connect();
       pixelfed_connect();
@@ -1663,7 +1741,7 @@ var intro = {
       if (!vnode.state.stoptimeout) {
         m.route.set("/start");
       }
-    }, 10000);
+    }, 5000);
   },
 
   onremove: function (vnode) {
@@ -1684,22 +1762,24 @@ var intro = {
 
           oncreate: () => {
             document.querySelector(".loading-spinner").style.display = "block";
-            let get_manifest_callback = (e) => {
-              try {
-                status.version = e.manifest.version;
-                document.querySelector("#version").textContent =
-                  e.manifest.version;
-              } catch (e) {}
 
+            try {
               if ("b2g" in navigator || status.notKaiOS) {
                 fetch("/manifest.webmanifest")
                   .then((r) => r.json())
                   .then((parsedResponse) => {
                     status.version = parsedResponse.b2g_features.version;
+                    localStorage.setItem("version", status.version);
+                  });
+              } else {
+                fetch("/manifest.webapp")
+                  .then((r) => r.json())
+                  .then((parsedResponse) => {
+                    status.version = parsedResponse.version;
+                    localStorage.setItem("version", status.version);
                   });
               }
-            };
-            getManifest(get_manifest_callback);
+            } catch (e) {}
           },
         }),
         m(
@@ -1815,7 +1895,16 @@ const VideoPlayerView = {
         : 0;
 
     return m("div", { class: "video-player" }, [
-      m("div", { id: "video-container", class: "video-container" }), // Video element will be mounted here
+      m("div", {
+        id: "video-container",
+        class: "video-container",
+        oncreate: () => {
+          body.classList.add("landscape");
+        },
+        onremove: () => {
+          body.classList.remove("landscape");
+        },
+      }), // Video element will be mounted here
 
       m("div", { class: "video-info" }, [
         ` ${formatTime(VideoPlayerView.currentTime)} / ${formatTime(
@@ -1959,6 +2048,7 @@ let clean_hasPlayedaudio = () => {
   hasPlayedAudio = hasPlayedAudio.filter((e) => articlesID.includes(e.id));
 };
 
+//Audio Player
 let startX = 0; // Initial X position
 let startY = 0; // Initial Y position
 let currentX = 0; // Current X position
@@ -2392,11 +2482,12 @@ var privacy_policy = {
 };
 
 var settingsView = {
+  oninit: () => {},
   view: function () {
     return m(
       "div",
       {
-        class: "flex justify-content-center page",
+        class: "page",
         id: "settings-page",
         oncreate: () => {
           if (!status.notKaiOS) {
@@ -2422,7 +2513,7 @@ var settingsView = {
         m(
           "div",
           {
-            class: "item input-parent  flex",
+            class: "item input-parent",
             oncreate: () => {
               scrollToTop();
             },
@@ -2438,8 +2529,23 @@ var settingsView = {
             m("input", {
               id: "url-opml",
               placeholder: "",
-              value: settings.opml_url || "",
+              value: status.scanresult || settings.opml_url || "",
               type: "url",
+              onfocus: () => {
+                bottom_bar("", "'>", "<img src='assets/icons/E1D8.svg'>");
+                status.qr = true;
+              },
+              onblur: () => {
+                bottom_bar("", "", "");
+                status.qr = false;
+              },
+              oncreate: (vnode) => {
+                if (status.qrelement == "url-opml") {
+                  vnode.dom.focus();
+                  if (status.scanresult) {
+                  }
+                }
+              },
             }),
           ]
         ),
@@ -2778,7 +2884,8 @@ var settingsView = {
           },
           "save settings"
         ),
-      ]
+      ],
+      m("div", { style: "height:80px;" })
     );
   },
 };
@@ -2853,6 +2960,7 @@ m.route(root, "/intro", {
   "/VideoPlayerView": VideoPlayerView,
   "/YouTubePlayerView": YouTubePlayerView,
   "/subscriptionsView": subscriptionsView,
+  "/scan": scan,
 });
 
 function scrollToCenter() {
@@ -3202,6 +3310,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
       case "SoftRight":
       case "Alt":
+        if (status.qr) {
+          status.qrelement = document.activeElement.id;
+          m.route.set("/scan");
+        }
+
         if (r.startsWith("/start")) {
           m.route.set("/options");
         }

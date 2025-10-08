@@ -53,7 +53,9 @@
     "@babel/core": "^7.27.1",
     "@babel/plugin-transform-export-namespace-from": "^7.27.1",
     "@babel/preset-env": "^7.27.2",
+    "@parcel/packager-raw-url": "^2.16.0",
     "@parcel/resolver-default": "^2.16.0",
+    "@parcel/transformer-webmanifest": "^2.16.0",
     "babel-plugin-transform-async-to-promises": "^0.8.18",
     "buffer": "^6.0.3",
     "core-js": "^3.45.1",
@@ -77,6 +79,7 @@
     "mithril": "^2.0.4",
     "regenerator-runtime": "^0.14.1",
     "rss-parser": "^3.13.0",
-    "swiped-events": "1.2.0"
+    "swiped-events": "1.2.0",
+    "jsqr": "^1.4.0"
   }
 }

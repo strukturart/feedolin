@@ -23,8 +23,8 @@ export let load_ads = function () {
     slot: "feedolin",
     test: 0,
     timeout: 10000,
-    h: 120,
-    w: 240,
+    h: 150,
+    w: 250,
     container: document.getElementById("KaiOSads-Wrapper"),
     onerror: (err) => console.error("Error:", err),
     onready: (ad) => {
@@ -43,7 +43,7 @@ export let load_ads = function () {
       // calling 'display' will display the ad
       ad.call("display", {
         navClass: "item",
-        tabindex: 3,
+        tabindex: 4,
         display: "block",
       });
     },
@@ -564,20 +564,6 @@ export function validate_url(url) {
   }
   return false;
 }
-
-export let getManifest = function (callback) {
-  if (navigator.mozApps) {
-    let self = navigator.mozApps.getSelf();
-    self.onsuccess = function () {
-      callback(self.result);
-    };
-    self.onerror = function () {};
-  } else {
-    fetch("/manifest.webmanifest")
-      .then((r) => r.json())
-      .then((parsedResponse) => callback(parsedResponse));
-  }
-};
 
 //top toaster
 let queue = [];

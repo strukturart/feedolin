@@ -1208,6 +1208,14 @@
     globals "^13.24.0"
     nullthrows "^1.1.1"
 
+"@parcel/packager-raw-url@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.npmjs.org/@parcel/packager-raw-url/-/packager-raw-url-2.16.0.tgz"
+  integrity sha512-03P3gN/xi4Nf45IX1GSdm7heD4XdhjoTEqWYOvyVOyxKDsiM4IYivswviP7UOzxmP2eX+JRCB2K3w2T+XgIAqA==
+  dependencies:
+    "@parcel/plugin" "2.16.0"
+    "@parcel/utils" "2.16.0"
+
 "@parcel/packager-raw@2.16.0":
   version "2.16.0"
   resolved "https://registry.npmjs.org/@parcel/packager-raw/-/packager-raw-2.16.0.tgz"
@@ -1481,6 +1489,16 @@
     "@parcel/diagnostic" "2.16.0"
     "@parcel/plugin" "2.16.0"
     "@parcel/rust" "2.16.0"
+
+"@parcel/transformer-webmanifest@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.npmjs.org/@parcel/transformer-webmanifest/-/transformer-webmanifest-2.16.0.tgz"
+  integrity sha512-v5+xNQvjYFOjVOgvXoDn2ulnujo+Qc9hkZeD40sNt0F+HIZIvyCuCXzpb1M7PaTeJXHhqsCyu9TDKFq4bBKPAw==
+  dependencies:
+    "@mischnic/json-sourcemap" "^0.1.1"
+    "@parcel/diagnostic" "2.16.0"
+    "@parcel/plugin" "2.16.0"
+    "@parcel/utils" "2.16.0"
 
 "@parcel/types-internal@2.16.0":
   version "2.16.0"
@@ -2241,6 +2259,11 @@ json5@^2.2.1, json5@^2.2.3:
   version "2.2.3"
   resolved "https://registry.npmjs.org/json5/-/json5-2.2.3.tgz"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
+
+jsqr@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/jsqr/-/jsqr-1.4.0.tgz"
+  integrity sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==
 
 kuler@^2.0.0:
   version "2.0.0"

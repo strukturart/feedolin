@@ -8,9 +8,9 @@
       <meta name="description" content="Feedolin">
     <meta name="keywords" content="RSS,ATOM,Fediverse">
     <meta name="mobile-web-app-capable" content="yes">
-
-
-
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+    <link rel="stylesheet" href="assets/css/qr-reader.css" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <link rel="stylesheet" href="assets/css/flexboxgrid.css" />
 
@@ -61,6 +61,15 @@
     </div>
 
 
+      <div id="qr-screen">
+        <video id="video"></video>
+        <div id="corner-nw"></div>
+        <div id="corner-no"></div>
+        <div id="corner-so"></div>
+        <div id="corner-sw"></div>
+    </div>
+
+
 
   <div id="wrapper" class="container">
     <div class="row center-xs center-md">
@@ -76,7 +85,6 @@
     </div>
 
 </body>
-<script  src="assets/js/polyfill.js"></script>
 
 <script type="module" src="index.js"></script>
 <script  src="assets/js/youtube.js"></script>

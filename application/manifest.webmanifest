@@ -67,6 +67,10 @@
       "audio-channel-content": {
         "description": "Allow background audio playback."
       },
+
+      "video-capture": {
+        "description": "Reading Codes using the Camera"
+      },
       "volumemanager": { "description": "" },
       "device-storage:sdcard": {
         "description": "Read/Write from/to sd-card",

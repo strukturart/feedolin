@@ -70,6 +70,7 @@ body {
   overflow-x: hidden;
   padding: 20px 0 0 0;
   background: white !important;
+  min-height: 100vh;
 }
 
 #app {
@@ -293,7 +294,7 @@ div#intro img {
 article {
   background: none;
   height: auto;
-  margin: 30px 0 10px 0;
+  margin: 20px 0 10px 0;
   position: relative;
   text-align: left;
   padding: 10px 10px 10px 10px;
@@ -378,7 +379,7 @@ h2.article-title {
 }
 
 #article {
-  padding: 40px 10px 10px 10px !important;
+  padding: 20px 10px 10px 10px !important;
   overflow-x: hidden;
   overflow-y: scroll;
   height: 100vh;
@@ -431,7 +432,7 @@ h2.article-title {
 }
 
 .page {
-  margin: 35px 0 0 0;
+  margin: 0px 0 0 0;
   padding: 10px 10px 40px 10px;
   overflow-y: scroll;
   max-height: 90vh;
@@ -439,6 +440,7 @@ h2.article-title {
 
 #button-save-settings {
   margin: 30px 0 0 0;
+  padding: 0 0 0px 0;
 }
 
 #settings-page .seperation {
@@ -788,8 +790,7 @@ video {
     height: 100%;
     width: 100%;
     max-width: 100vw;
-    overflow: hidden;
-    background: white;
+    overflow-y: scroll;
 
     background-image: radial-gradient(circle, #e2dddd 10%, transparent 11%);
     background-size: 5px 5px;
@@ -905,7 +906,6 @@ video {
 
   #start .channel {
     font-size: 0.9rem;
-
     padding: 6px;
     line-height: 0.5rem;
   }
@@ -920,16 +920,21 @@ video {
     margin: 10px 0 0 0;
     padding: 0 0 80px 0;
     width: 100vw;
+    margin-left: 0px;
+    min-width: 103vw;
   }
 
   .input-parent {
     min-width: 100vw;
+    margin-left: 0px;
   }
 
   .page {
-    margin: 0px 0 0px 0;
-    padding: 40px 0px 80px 0px;
+    margin: 0px 0 0px 0px;
+    padding: 20px 10px 80px 10px;
     overflow-y: scroll;
+    min-width: 100vw;
+    max-height: 100vh;
   }
 
   .audio-player .audio-info {
@@ -937,5 +942,47 @@ video {
     background: white;
     color: black;
     width: fit-content;
+  }
+
+  #KaiOSAds-Wrapper {
+    margin: 0px 0px 50px 20px;
+    min-width: 100vw;
+  }
+
+  #KaiOSAd {
+    height: 200px;
+    width: 100%;
+  }
+
+  #KaiOSAds-Wrapper {
+    padding: 0px;
+    min-width: 110vw;
+    background: red;
+  }
+
+  #KaiOSAds-Wrapper iframe {
+    width: 100%;
+  }
+
+  #button-save-settings {
+    margin: 30px 0 50px 0px;
+    padding: 0 0 0px 0;
+    background: blue;
+    color: white;
+  }
+  #button-save-settings:focus {
+    border: 2px solid black;
+  }
+
+  select {
+    width: 90%;
+  }
+
+  body.landscape {
+    transform: rotate(-90deg);
+    transform-origin: center center;
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
   }
 }
