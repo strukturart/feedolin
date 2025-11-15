@@ -330,7 +330,6 @@ let pixelfed_connect = () => {
         fetch(settings.pixelfed_server_url + "/oauth/token", requestOptions)
           .then((response) => response.json()) // Parse the JSON once
           .then((data) => {
-            console.log(data.access_token);
             settings.pixelfed_token = data.access_token; // Access the token
             localforage.setItem("settings", settings);
             m.route.set("/start?index=0");
@@ -484,14 +483,15 @@ let check_media = (h) => {
   return "text";
 };
 
-// clean input, nur bestimmte Tags und Attribute erlaubt
 let clean = (i) => {
   return DOMPurify.sanitize(i, {
-    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "img", "p"],
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "img", "p", "br"],
     ALLOWED_ATTR: {
-      "a": ["href"],
-      "img": ["src"],
+      "a": ["href", "title", "target", "rel"],
+      "img": ["src", "alt", "title", "width", "height"],
     },
+    ALLOW_DATA_ATTR: false,
+    FORBID_ATTR: ["style", "onclick", "onload"],
   });
 };
 
@@ -903,6 +903,7 @@ let load_mastodon = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       data.forEach((k) => {
         let f = {
           channel: "Mastodon",
@@ -930,6 +931,14 @@ let load_mastodon = async () => {
               });
             }
           });
+        }
+
+        if (k.card) {
+          let card = k.card;
+
+          if (card.image) {
+            f.content += `<br><a href="${card.url}"><img src="${card.image}" alt=""></a>`;
+          }
         }
 
         if (k.reblog) {
@@ -972,10 +981,9 @@ let load_mastodon = async () => {
 let load_pixelfed = async () => {
   let accessToken = settings.pixelfed_token;
 
-  let url =
-    settings.proxy_url +
-    settings.pixelfed_server_url +
-    "/api/v1/timelines/home/";
+  let url = settings.pixelfed_server_url + "/api/v1/timelines/home/";
+
+  console.log("url" + url);
 
   fetch(url, {
     headers: {
@@ -983,11 +991,26 @@ let load_pixelfed = async () => {
       "Content-Type": "application/json",
     },
   })
-    .then((response) => response.json())
+    .then((response) => response.text())
+    .then((text) => {
+      console.log("RAW RESPONSE:", text);
+
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        console.error("JSON PARSE ERROR:", e);
+        return null;
+      }
+    })
     .then((data) => {
+      if (!data) {
+        console.warn("Keine Daten erhalten.");
+        return;
+      }
+
       data.forEach((k) => {
         let f = {
-          channel: "Mastodon",
+          channel: "Pixelfed",
           id: k.id,
           type: "mastodon",
           pubDate: k.created_at,
@@ -1620,6 +1643,10 @@ var article = {
                     "reblogged from:" + matchedArticle.reblogUser
                   )
                 : "",
+
+              matchedArticle?.cover
+                ? m("img", { src: matchedArticle.cover })
+                : null,
             ]
           )
         : m("div", "Article not found") // Fallback if no match
