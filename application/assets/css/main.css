@@ -238,8 +238,11 @@ label {
   background: orange;
 }
 
-#start article:focus {
-  background: silver;
+#start article.gallery-item {
+  margin: 0px;
+  padding: 5px 5px 5px 5px;
+  width: 50%;
+  float: left;
 }
 
 div#intro {
@@ -285,7 +288,7 @@ div#intro img {
 }
 
 #start {
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: scroll;
   padding: 20px 20px 60px 20px;
   height: 100vh;
@@ -298,6 +301,8 @@ article {
   position: relative;
   text-align: left;
   padding: 10px 10px 10px 10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 #start article.read {
@@ -790,6 +795,7 @@ video {
     height: 100%;
     width: 100%;
     max-width: 100vw;
+    overflow-x: hidden;
     overflow-y: scroll;
 
     background-image: radial-gradient(circle, #e2dddd 10%, transparent 11%);
@@ -812,9 +818,10 @@ video {
   #app {
     position: relative;
     height: 100%;
-    min-height: 100vh;
+    min-height: 99vh;
     padding: 0;
     overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   #start #liberapay {
@@ -826,25 +833,50 @@ video {
   }
 
   #article {
-    overflow-x: hidden;
     padding: 0px 0px 0px 0px;
     height: 99vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  #article article {
+    overflow-y: scroll;
+    height: 90%;
+    background: yellow;
   }
 
   .scrollable {
     height: 99vh;
+    overflow-y: scroll;
   }
 
   #start article {
     padding: 5px 15px 5px 15px;
     margin: 0 0 10px 0;
-    overflow-x: hidden;
+    overflow: hidden;
     text-align: left;
   }
 
   #start {
-    overflow-x: hidden;
+    overflow: hidden;
     padding: 30px 0px 0px 0px;
+  }
+
+  #start article:focus {
+    background: silver;
+  }
+
+  #start article.gallery-item {
+    margin: 0px;
+    padding: 0px !important;
+    width: 50%;
+    float: left;
+  }
+
+  #start .channel {
+    font-size: 0.9rem;
+    padding: 6px;
+    line-height: 0.5rem;
   }
 
   div#top-bar div.button-left img {
@@ -904,12 +936,6 @@ video {
     margin-left: -40px;
   }
 
-  #start .channel {
-    font-size: 0.9rem;
-    padding: 6px;
-    line-height: 0.5rem;
-  }
-
   #settings-page .seperation {
     margin: 20px 0 0 0;
     width: 100%;
@@ -933,8 +959,8 @@ video {
     margin: 0px 0 0px 0px;
     padding: 20px 10px 80px 10px;
     overflow-y: scroll;
-    min-width: 100vw;
-    max-height: 100vh;
+    min-width: 99vhw;
+    max-height: 99vh;
   }
 
   .audio-player .audio-info {

@@ -99,7 +99,7 @@ try {
             },
             (error) => {
               alert("Error subscribing to activity:", error);
-            }
+            },
           );
         } else {
           alert("systemMessageManager is not available.");
@@ -135,6 +135,7 @@ let default_settings = {
   "opml_local": "",
   "proxy_url": "https://feedolin.strukturart.com/proxy.php/?",
   "cache_time": 3600,
+  "sleepTimer": 60,
 };
 //store all articles id to compare
 let articlesID = [];
@@ -229,7 +230,12 @@ if (!status.notKaiOS) {
 if (status.debug) {
   window.onerror = function (msg, url, linenumber) {
     alert(
-      "Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber
+      "Error message: " +
+        msg +
+        "\nURL: " +
+        url +
+        "\nLine Number: " +
+        linenumber,
     );
     return true;
   };
@@ -399,7 +405,7 @@ let app_launcher = () => {
               window.close();
             }, 3000);
           },
-          (err) => {}
+          (err) => {},
         );
       } catch (e) {
         alert(e);
@@ -483,13 +489,22 @@ let check_media = (h) => {
   return "text";
 };
 
+DOMPurify.addHook("afterSanitizeAttributes", function (node) {
+  if (node.tagName === "A" && node.getAttribute("target") === "_blank") {
+    node.setAttribute("rel", "noopener noreferrer");
+  }
+});
+
 let clean = (i) => {
   return DOMPurify.sanitize(i, {
-    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "img", "p", "br"],
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "img", "p", "br", "span"],
+
     ALLOWED_ATTR: {
-      "a": ["href", "title", "target", "rel"],
-      "img": ["src", "alt", "title", "width", "height"],
+      a: ["href", "title", "target", "rel"],
+      img: ["src", "alt", "title", "width", "height"],
+      span: ["class"],
     },
+
     ALLOW_DATA_ATTR: false,
     FORBID_ATTR: ["style", "onclick", "onload"],
   });
@@ -648,8 +663,6 @@ const fetchContent = async (feed_download_list) => {
   const checkIfAllFeedsLoaded = () => {
     channel_filter = localStorage.getItem("last_channel_filter");
     if (completedFeeds === totalFeeds) {
-      console.log("All feeds are loaded");
-      // All feeds are done loading, you can proceed with further actions
       //cache data
 
       localforage
@@ -803,6 +816,7 @@ const fetchContent = async (feed_download_list) => {
                   f.id = stringToHash(f.title + (f.isoDate || f.pubDate || ""));
                   f.feed_title = e.title;
                   f.reblog = false;
+                  f.images = [];
 
                   // Typ (Text, Audio, Video, YouTube)
                   f.type = check_media(f);
@@ -829,6 +843,9 @@ const fetchContent = async (feed_download_list) => {
                     f.cover = f.enclosure.url;
                   } else if (f["media:thumbnail"]?.url) {
                     f.cover = f["media:thumbnail"].url;
+
+                    //store images
+                    f.images.push(f["media:thumbnail"].url);
                   }
 
                   // itunes:image
@@ -838,12 +855,18 @@ const fetchContent = async (feed_download_list) => {
 
                   if (feed.image?.url) {
                     f.cover = feed.image.url;
+
+                    //store images
+                    f.images.push(feed.image.url);
                   }
 
                   // media:group
                   if (f["media:group"]) {
                     if (f["media:group"]["media:thumbnail"]) {
                       f.cover = f["media:group"]["media:thumbnail"][0].$.url;
+
+                      //store images
+                      f.images.push(f.cover);
                     }
                     if (f["media:group"]["media:description"]) {
                       f.content = f["media:group"]["media:description"][0];
@@ -890,6 +913,13 @@ const fetchContent = async (feed_download_list) => {
   });
 };
 
+const esc = (s) =>
+  String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
 //Mastadon private
 let load_mastodon = async () => {
   let accessToken = settings.mastodon_token;
@@ -903,7 +933,6 @@ let load_mastodon = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       data.forEach((k) => {
         let f = {
           channel: "Mastodon",
@@ -921,9 +950,11 @@ let load_mastodon = async () => {
         if (k.media_attachments.length > 0) {
           k.media_attachments.forEach((m) => {
             if (m.type === "image") {
-              f.content += `<br><img src="${m.preview_url}" alt="${
-                m.description || ""
-              }">`;
+              f.content += `<br><img src="${esc(m.preview_url)}" alt="${esc(m.description || "")}">`;
+
+              //store images
+              f.images ??= [];
+              f.images.push(m.preview_url);
             } else if (m.type === "video" || m.type === "audio") {
               f.enclosures.push({
                 type: m.type,
@@ -937,7 +968,10 @@ let load_mastodon = async () => {
           let card = k.card;
 
           if (card.image) {
-            f.content += `<br><a href="${card.url}"><img src="${card.image}" alt=""></a>`;
+            f.content += `<br><a href="${esc(card.url)}"><img src="${esc(card.image)}"></a>`;
+            //store images
+            f.images ??= [];
+            f.images.push(card.image);
           }
         }
 
@@ -952,6 +986,9 @@ let load_mastodon = async () => {
                 f.content += `<br><img src="${m.preview_url}" alt="${
                   m.description || ""
                 }">`;
+                //store images
+                f.images ??= [];
+                f.images.push(m.preview_url);
               } else if (m.type === "video" || m.type === "audio") {
                 f.enclosures.push({
                   type: m.type,
@@ -1162,7 +1199,7 @@ localforage
     if (settings.mastodon_token) {
       mastodon_account_info(
         settings.mastodon_server_url,
-        settings.mastodon_token
+        settings.mastodon_token,
       )
         .then((f) => {
           if (f == "Login not OK") {
@@ -1178,7 +1215,7 @@ localforage
     if (settings.pixelfed_token) {
       mastodon_account_info(
         settings.pixelfed_server_url,
-        settings.pixelfed_token
+        settings.pixelfed_token,
       )
         .then((f) => {
           if (f == "Login not OK") {
@@ -1200,7 +1237,7 @@ localforage
     if (!settings.opml_url && !settings.opml_local_filename) {
       side_toaster(
         "The feed could not be loaded because no OPML was defined in the settings.",
-        6000
+        6000,
       );
 
       settings = default_settings;
@@ -1316,7 +1353,7 @@ var options = {
           bottom_bar(
             "",
             "<img class='not-desktop' src='assets/icons/select.svg'>",
-            ""
+            "",
           );
 
           if (status.notKaiOS) bottom_bar("", "", "");
@@ -1339,7 +1376,7 @@ var options = {
                   scrollToCenter();
                 },
               },
-              "Subscriptions"
+              "Subscriptions",
             )
           : null,
         ,
@@ -1354,7 +1391,7 @@ var options = {
               m.route.set("/about");
             },
           },
-          "About"
+          "About",
         ),
         m(
           "button",
@@ -1366,7 +1403,7 @@ var options = {
               m.route.set("/settingsView");
             },
           },
-          "Settings"
+          "Settings",
         ),
 
         m(
@@ -1379,7 +1416,7 @@ var options = {
               m.route.set("/privacy_policy");
             },
           },
-          "Privacy Policy"
+          "Privacy Policy",
         ),
 
         m("div", {
@@ -1390,7 +1427,7 @@ var options = {
           },
         }),
         m("div", { class: "item", style: "height:80px" }),
-      ]
+      ],
     );
   },
 };
@@ -1424,23 +1461,51 @@ var start = {
     }
 
     let filteredArticles = articles.filter(
-      (h) => channel_filter === "" || channel_filter === h.channel
+      (h) => channel_filter === "" || channel_filter === h.channel,
     );
 
     articles.forEach((e) => {
       articlesID.push(e.id);
+
+      if (e.images != "") {
+        if (channels.indexOf("gallery") == -1) channels.push("gallery");
+      }
     });
-    localStorage.setItem("last_channel_filter", channel_filter);
+
+    if (channel_filter != "gallery")
+      localStorage.setItem("last_channel_filter", channel_filter);
+
+    let tindex = 0;
 
     getLastMediaList();
 
+    //last played tab
     if (channel_filter == "lastPlayed") {
       filteredArticles = articles.filter((h) => h.lastPlayedMedia == true);
     }
 
+    //gallery tab
+    let gallery_images;
+    if (channel_filter === "gallery") {
+      const seen = new Set();
+
+      gallery_images = articles
+        .filter((h) => Array.isArray(h.images) && h.images.length > 0)
+        .map((h) => {
+          const images = h.images.filter((img) => {
+            if (seen.has(img)) return false;
+            seen.add(img);
+            return true;
+          });
+
+          return images.length ? { ...h, images } : null;
+        })
+        .filter(Boolean);
+    }
+
     if (m.route.param("feed")) {
       filteredArticles = articles.filter(
-        (h) => h.feed_title == m.route.param("feed")
+        (h) => h.feed_title == m.route.param("feed"),
       );
       channel_filter = m.route.param("channel").substring(0, 10);
     }
@@ -1449,20 +1514,22 @@ var start = {
       "div",
       {
         id: "start",
+        key: m.route.param("index") || 0,
+
         oncreate: () => {
           page_index = m.route.param("index") || 0;
 
           bottom_bar(
             "<img src='assets/icons/save.svg'>",
             "<img src='assets/icons/select.svg'>",
-            "<img src='assets/icons/option.svg'>"
+            "<img src='assets/icons/option.svg'>",
           );
 
           if (status.notKaiOS)
             bottom_bar(
               "<img src='assets/icons/save.svg'>",
               "",
-              "<img src='assets/icons/option.svg'>"
+              "<img src='assets/icons/option.svg'>",
             );
 
           if (status.notKaiOS) top_bar("", "", "");
@@ -1480,7 +1547,7 @@ var start = {
             if (!status.notKaiOS) vnode.dom.style.display = "none";
           },
         },
-        "Version " + localStorage.getItem("version") || 0
+        "Version " + localStorage.getItem("version") || 0,
       ),
       m(
         "a",
@@ -1488,83 +1555,106 @@ var start = {
           id: "liberapay",
           href: "https://liberapay.com/perry_______",
           target: "_blank",
+
           oncreate: (vnode) => {
             if (!status.notKaiOS) vnode.dom.style.display = "none";
           },
         },
-        [m("img", { src: "./assets/icons/liberapay.svg" })]
+        [m("img", { src: "./assets/icons/liberapay.svg" })],
       ),
-      m("span", { class: "channel", oncreate: () => {} }, channel_filter),
+      m("span", { class: "channel" }, channel_filter),
       // Loop through filteredArticles and create an article for each
-      filteredArticles.map((h, i) => {
-        const readClass = read_articles.includes(h.id) ? "read" : "";
+      //gallery
+      channel_filter == "gallery"
+        ? gallery_images.flatMap((h) =>
+            h.images.map((img) =>
+              m(
+                "article",
+                {
+                  "data-id": h.id,
+                  "data-type": h.type,
+                  class: "item gallery-item",
+                  tabIndex: tindex++,
+                  oncreate: (vnode) => {
+                    if (page_index == 0 && tindex == 0) {
+                      vnode.dom.focus();
+                    }
+                    if (h.id == page_index) {
+                      vnode.dom.focus();
+                      scrollToCenter();
+                    }
+                  },
 
-        return m(
-          "article",
-          {
-            class: `item ${readClass}`,
-            "data-id": h.id,
-            "data-type": h.type,
-            oncreate: (vnode) => {
-              // Set tabindex after all articles are rendered
-              if (page_index == 0 && i == 0) {
-                setTimeout(() => {
-                  vnode.dom.focus();
-                }, 1200);
-              } else {
-                if (h.id == page_index) {
-                  setTimeout(() => {
+                  onclick: () => {
+                    m.route.set("/article?index=" + h.id);
+                    add_read_article(h.id);
+                  },
+                  onkeydown: (e) => {
+                    if (e.key === "Enter") {
+                      m.route.set("/article?index=" + h.id);
+                      add_read_article(h.id);
+                    }
+                  },
+                },
+                m("img", {
+                  src: img,
+                  loading: "lazy",
+                }),
+              ),
+            ),
+          )
+        : filteredArticles.map((h, i) => {
+            const readClass = read_articles.includes(h.id) ? "read" : "";
+
+            return m(
+              "article",
+              {
+                class: `item ${readClass}`,
+                "data-id": h.id,
+                "data-type": h.type,
+                tabIndex: i,
+                key: h.id,
+
+                oncreate: (vnode) => {
+                  if (h.id == page_index) {
                     vnode.dom.focus();
                     scrollToCenter();
-                  }, 1200);
-                }
-              }
+                  }
+                },
+                onclick: () => {
+                  m.route.set("/article?index=" + h.id);
 
-              if (i == filteredArticles.length - 1)
-                setTimeout(() => {
-                  document.querySelectorAll(".item").forEach((e, k) => {
-                    e.setAttribute("tabindex", k);
-                  });
-                }, 1000);
-            },
-            onclick: () => {
-              m.route.set("/article?index=" + h.id);
-
-              add_read_article(h.id);
-            },
-            onkeydown: (e) => {
-              if (e.key === "Enter") {
-                m.route.set("/article?index=" + h.id);
-                add_read_article(h.id);
-              }
-            },
-          },
-          [
-            m("span", { class: "type-indicator" }, h.type),
-            m(
-              "time",
-              `${dayjs(h.isoDate).format("DD MMM YYYY")}${
-                h.duration ? " | " + h.duration : ""
-              }`
-            ),
-            m(
-              "h2",
-              {
-                oncreate: ({ dom }) => {
-                  if (h.reblog === true) {
-                    dom.classList.add("reblog");
+                  add_read_article(h.id);
+                },
+                onkeydown: (e) => {
+                  if (e.key === "Enter") {
+                    m.route.set("/article?index=" + h.id);
+                    add_read_article(h.id);
                   }
                 },
               },
-              clean(h.feed_title)
-            ),
-            m("h3", clean(h.title)),
-            h.type == "mastodon"
-              ? m("h3", raw(h.content.substring(0, 30)) + "...")
-              : null,
-          ]
-        );
-      })
+              [
+                m("span", { class: "type-indicator" }, h.type),
+                m(
+                  "time",
+                  `${dayjs(h.isoDate).format("DD MMM YYYY")}${
+                    h.duration ? " | " + h.duration : ""
+                  }`,
+                ),
+                m(
+                  "h2",
+                  {
+                    class: { reblog: h.reblog && h.type === "mastodon" },
+                  },
+                  clean(h.feed_title),
+                ),
+                m("h3", clean(h.title)),
+                h.type == "mastodon"
+                  ? m("h3", raw(h.content.substring(0, 30)) + "...")
+                  : null,
+              ],
+            );
+          }),
     );
   },
 };
@@ -1576,7 +1666,6 @@ var article = {
       if (index != h.id) return false;
 
       current_article = h;
-      console.log(h);
       return true;
     });
 
@@ -1607,7 +1696,7 @@ var article = {
                   bottom_bar(
                     "<img src='assets/icons/link.svg'>",
                     "",
-                    "<img src='assets/icons/play.svg'>"
+                    "<img src='assets/icons/play.svg'>",
                   );
                 }
               },
@@ -1617,11 +1706,8 @@ var article = {
                 "time",
                 {
                   id: "top",
-                  oncreate: (vnode) => {
-                    vnode.dom.focus();
-                  },
                 },
-                dayjs(matchedArticle.isoDate).format("DD MMM YYYY")
+                dayjs(matchedArticle.isoDate).format("DD MMM YYYY"),
               ),
               m(
                 "h2",
@@ -1631,25 +1717,23 @@ var article = {
                     if (matchedArticle.reblog) dom.classList.add("reblog");
                   },
                 },
-                matchedArticle.title
+                matchedArticle.title,
               ),
-              m("div", { class: "text" }, [
-                m.trust(clean(matchedArticle.content)),
-              ]),
+              m("div", { class: "text" }, [m.trust(matchedArticle.content)]),
               matchedArticle.reblog
                 ? m(
                     "div",
                     { class: "text" },
-                    "reblogged from:" + matchedArticle.reblogUser
+                    "reblogged from:" + matchedArticle.reblogUser,
                   )
                 : "",
 
               matchedArticle?.cover
                 ? m("img", { src: matchedArticle.cover })
                 : null,
-            ]
+            ],
           )
-        : m("div", "Article not found") // Fallback if no match
+        : m("div", "Article not found"),
     );
   },
 };
@@ -1690,7 +1774,7 @@ var localOPML = {
 
                     reader.onload = () => {
                       const downloadListData = generateDownloadList(
-                        reader.result
+                        reader.result,
                       );
                       if (downloadListData.error) {
                         side_toaster("OPML file not valid", 4000);
@@ -1721,7 +1805,7 @@ var localOPML = {
 
                   reader.onload = () => {
                     const downloadListData = generateDownloadList(
-                      reader.result
+                      reader.result,
                     );
                     if (downloadListData.error) {
                       side_toaster("OPML file not valid", 4000);
@@ -1745,9 +1829,9 @@ var localOPML = {
               }
             },
           },
-          filename
+          filename,
         );
-      })
+      }),
     );
   },
 };
@@ -1820,11 +1904,11 @@ var intro = {
               {
                 id: "version",
               },
-              localStorage.getItem("version") || 0
+              localStorage.getItem("version") || 0,
             ),
-          ]
+          ],
         ),
-      ]
+      ],
     );
   },
 };
@@ -1904,12 +1988,12 @@ const VideoPlayerView = {
     if (direction === "left") {
       VideoPlayerView.videoElement.currentTime = Math.max(
         0,
-        currentTime - VideoPlayerView.seekAmount
+        currentTime - VideoPlayerView.seekAmount,
       );
     } else if (direction === "right") {
       VideoPlayerView.videoElement.currentTime = Math.min(
         VideoPlayerView.videoDuration,
-        currentTime + VideoPlayerView.seekAmount
+        currentTime + VideoPlayerView.seekAmount,
       );
     }
   },
@@ -1935,7 +2019,7 @@ const VideoPlayerView = {
 
       m("div", { class: "video-info" }, [
         ` ${formatTime(VideoPlayerView.currentTime)} / ${formatTime(
-          VideoPlayerView.videoDuration
+          VideoPlayerView.videoDuration,
         )}`,
       ]),
 
@@ -2006,7 +2090,7 @@ const YouTubePlayerView = {
     if (direction === "left") {
       YouTubePlayerView.player.seekTo(
         Math.max(0, currentTime - seekAmount),
-        true
+        true,
       );
     } else if (direction === "right") {
       YouTubePlayerView.player.seekTo(currentTime + seekAmount, true);
@@ -2125,7 +2209,7 @@ const AudioPlayerView = {
       playedAudio(
         globalAudioElement.src,
         globalAudioElement.currentTime,
-        attrs.id
+        attrs.id,
       );
 
       lastPlayedMedia(attrs.id);
@@ -2148,7 +2232,7 @@ const AudioPlayerView = {
       bottom_bar(
         "<img src='assets/icons/sleep.svg'>",
         "<img src='assets/icons/play.svg'>",
-        ""
+        "",
       );
 
       document
@@ -2165,7 +2249,7 @@ const AudioPlayerView = {
 
       document.addEventListener(
         "touchstart",
-        AudioPlayerView.touchStartHandler
+        AudioPlayerView.touchStartHandler,
       );
       document.addEventListener("touchmove", AudioPlayerView.touchMoveHandler);
       document.addEventListener("touchend", AudioPlayerView.touchEndHandler);
@@ -2244,26 +2328,31 @@ const AudioPlayerView = {
   },
 
   onremove: () => {
+    document.removeEventListener("keydown", AudioPlayerView.handleKeydown);
+
     if (status.notKaiOS) {
       document.removeEventListener(
         "touchstart",
-        AudioPlayerView.touchStartHandler
+        AudioPlayerView.touchStartHandler,
       );
       document.removeEventListener(
         "touchmove",
-        AudioPlayerView.touchMoveHandler
+        AudioPlayerView.touchMoveHandler,
       );
       document.removeEventListener("touchend", AudioPlayerView.touchEndHandler);
     }
   },
 
   handleKeydown: (e) => {
-    if (e.key === "Enter") {
-      AudioPlayerView.togglePlayPause();
-    } else if (e.key === "ArrowLeft") {
-      AudioPlayerView.seek("left");
-    } else if (e.key === "ArrowRight") {
-      AudioPlayerView.seek("right");
+    let r = m.route.get();
+    if (r.startsWith("/Audio")) {
+      if (e.key === "Enter") {
+        AudioPlayerView.togglePlayPause();
+      } else if (e.key === "ArrowLeft") {
+        AudioPlayerView.seek("left");
+      } else if (e.key === "ArrowRight") {
+        AudioPlayerView.seek("right");
+      }
     }
   },
 
@@ -2283,12 +2372,12 @@ const AudioPlayerView = {
       if (direction === "left") {
         globalAudioElement.currentTime = Math.max(
           0,
-          currentTime - AudioPlayerView.seekAmount
+          currentTime - AudioPlayerView.seekAmount,
         );
       } else if (direction === "right") {
         globalAudioElement.currentTime = Math.min(
           AudioPlayerView.audioDuration,
-          currentTime + AudioPlayerView.seekAmount
+          currentTime + AudioPlayerView.seekAmount,
         );
       }
     }
@@ -2324,9 +2413,9 @@ const AudioPlayerView = {
         },
         [
           `${formatTime(AudioPlayerView.currentTime)} / ${formatTime(
-            AudioPlayerView.audioDuration
+            AudioPlayerView.audioDuration,
           )}`,
-        ]
+        ],
       ),
 
       // Progress bar container
@@ -2353,19 +2442,19 @@ var about = {
       },
       m(
         "p",
-        "Feedolin is an RSS/Atom reader and podcast player, available for both KaiOS and non-KaiOS users."
+        "Feedolin is an RSS/Atom reader and podcast player, available for both KaiOS and non-KaiOS users.",
       ),
       m(
         "p",
-        "It supports connecting a Mastodon account to display articles alongside your RSS/Atom feeds."
+        "It supports connecting a Mastodon account to display articles alongside your RSS/Atom feeds.",
       ),
       m(
         "p",
-        "The app allows you to listen to audio and watch videos directly if the feed provides the necessary URLs."
+        "The app allows you to listen to audio and watch videos directly if the feed provides the necessary URLs.",
       ),
       m(
         "p",
-        "The list of subscribed websites and podcasts is managed either locally or via an OPML file from an external source, such as a public link in the cloud."
+        "The list of subscribed websites and podcasts is managed either locally or via an OPML file from an external source, such as a public link in the cloud.",
       ),
       m("p", "For non-KaiOS users, local files must be uploaded to the app."),
       m("h4", { style: "margin-top:20px; margin-bottom:10px;" }, "Navigation:"),
@@ -2373,20 +2462,20 @@ var about = {
         m(
           "li",
           m.trust(
-            "Use the <strong>up</strong> and <strong>down</strong> arrow keys to navigate between articles.<br><br>"
-          )
+            "Use the <strong>up</strong> and <strong>down</strong> arrow keys to navigate between articles.<br><br>",
+          ),
         ),
         m(
           "li",
           m.trust(
-            "Use the <strong>left</strong> and <strong>right</strong> arrow keys to switch between categories.<br><br>"
-          )
+            "Use the <strong>left</strong> and <strong>right</strong> arrow keys to switch between categories.<br><br>",
+          ),
         ),
         m(
           "li",
           m.trust(
-            "Press <strong>Enter</strong> to view the content of an article.<br><br>"
-          )
+            "Press <strong>Enter</strong> to view the content of an article.<br><br>",
+          ),
         ),
         m(
           "li",
@@ -2395,7 +2484,7 @@ var about = {
               if (!status.notKaiOS) vnode.dom.style.display = "none";
             },
           },
-          m.trust("Use <strong>Alt</strong> to access various options.")
+          m.trust("Use <strong>Alt</strong> to access various options."),
         ),
 
         m(
@@ -2405,7 +2494,7 @@ var about = {
               if (status.notKaiOS) vnode.dom.style.display = "none";
             },
           },
-          m.trust("Use <strong>#</strong> Volume")
+          m.trust("Use <strong>#</strong> Volume"),
         ),
 
         m(
@@ -2415,11 +2504,11 @@ var about = {
               if (status.notKaiOS) vnode.dom.style.display = "none";
             },
           },
-          m.trust("Use <strong>*</strong> Audioplayer<br><br>")
+          m.trust("Use <strong>*</strong> Audioplayer<br><br>"),
         ),
 
         m("li", "Version: " + status.version),
-      ])
+      ]),
     );
   },
 };
@@ -2440,7 +2529,7 @@ var privacy_policy = {
         m("h1", "Privacy Policy for Feedolin"),
         m(
           "p",
-          "Feedolin is committed to protecting your privacy. This policy explains how data is handled within the app."
+          "Feedolin is committed to protecting your privacy. This policy explains how data is handled within the app.",
         ),
 
         m("h2", "Data Storage and Collection"),
@@ -2470,7 +2559,7 @@ var privacy_policy = {
               target: "_blank",
               rel: "noopener noreferrer",
             },
-            "KaiOS privacy policy"
+            "KaiOS privacy policy",
           ),
           ".",
         ]),
@@ -2490,20 +2579,20 @@ var privacy_policy = {
         m("h2", "Third-Party Services"),
         m(
           "p",
-          "Feedolin integrates with third-party services such as Mastodon. These services have their own privacy policies, and you should review them to understand how your data is handled."
+          "Feedolin integrates with third-party services such as Mastodon. These services have their own privacy policies, and you should review them to understand how your data is handled.",
         ),
 
         m("h2", "Policy Updates"),
         m(
           "p",
-          "This Privacy Policy may be updated periodically. Any changes will be communicated through updates to the app."
+          "This Privacy Policy may be updated periodically. Any changes will be communicated through updates to the app.",
         ),
 
         m(
           "p",
-          "By using Feedolin, you acknowledge and agree to this Privacy Policy."
+          "By using Feedolin, you acknowledge and agree to this Privacy Policy.",
         ),
-      ]
+      ],
     );
   },
 };
@@ -2551,7 +2640,7 @@ var settingsView = {
               {
                 for: "url-opml",
               },
-              "OPML"
+              "OPML",
             ),
             m("input", {
               id: "url-opml",
@@ -2574,7 +2663,7 @@ var settingsView = {
                 }
               },
             }),
-          ]
+          ],
         ),
         m(
           "button",
@@ -2587,7 +2676,7 @@ var settingsView = {
 
                   reader.onload = () => {
                     const downloadListData = generateDownloadList(
-                      reader.result
+                      reader.result,
                     );
                     if (downloadListData.error) {
                       side_toaster("OPML file not valid", 4000);
@@ -2626,7 +2715,7 @@ var settingsView = {
           },
           !settings.opml_local_filename
             ? "Upload OPML file"
-            : "Remove OPML file"
+            : "Remove OPML file",
         ),
 
         m("div", settings.opml_local_filename),
@@ -2644,7 +2733,7 @@ var settingsView = {
                   {
                     for: "url-proxy",
                   },
-                  "PROXY"
+                  "PROXY",
                 ),
                 m("input", {
                   id: "url-proxy",
@@ -2652,7 +2741,7 @@ var settingsView = {
                   value: settings.proxy_url || "",
                   type: "url",
                 }),
-              ]
+              ],
             )
           : null,
         m("div", { class: "seperation" }),
@@ -2660,7 +2749,7 @@ var settingsView = {
         m(
           "h2",
           { class: "flex justify-content-spacearound" },
-          "Mastodon Account"
+          "Mastodon Account",
         ),
 
         status.mastodon_logged
@@ -2670,7 +2759,7 @@ var settingsView = {
                 id: "account_info",
                 class: "item",
               },
-              `You have successfully logged in as ${status.mastodon_logged} and the data is being loaded from server ${settings.mastodon_server_url}.`
+              `You have successfully logged in as ${status.mastodon_logged} and the data is being loaded from server ${settings.mastodon_server_url}.`,
             )
           : null,
 
@@ -2687,7 +2776,7 @@ var settingsView = {
                   m.route.set("/settingsView");
                 },
               },
-              "Disconnect"
+              "Disconnect",
             )
           : null,
 
@@ -2704,14 +2793,14 @@ var settingsView = {
                   {
                     for: "mastodon-server-url",
                   },
-                  "URL"
+                  "URL",
                 ),
                 m("input", {
                   id: "mastodon-server-url",
                   placeholder: "Server URL",
                   value: settings.mastodon_server_url,
                 }),
-              ]
+              ],
             ),
 
         status.mastodon_logged
@@ -2724,7 +2813,7 @@ var settingsView = {
                   localforage.setItem("settings", settings);
 
                   settings.mastodon_server_url = document.getElementById(
-                    "mastodon-server-url"
+                    "mastodon-server-url",
                   ).value;
 
                   let url =
@@ -2737,7 +2826,7 @@ var settingsView = {
                   window.open(url);
                 },
               },
-              "Connect"
+              "Connect",
             ),
 
         m("div", { class: "seperation" }),
@@ -2745,7 +2834,7 @@ var settingsView = {
         m(
           "h2",
           { class: "flex justify-content-spacearound" },
-          "Pixelfed Account"
+          "Pixelfed Account",
         ),
 
         status.pixelfed_logged
@@ -2755,7 +2844,7 @@ var settingsView = {
                 id: "account_info",
                 class: "item",
               },
-              `You have successfully logged in as ${status.pixelfed_logged} and the data is being loaded from server ${settings.pixelfed_server_url}.`
+              `You have successfully logged in as ${status.pixelfed_logged} and the data is being loaded from server ${settings.pixelfed_server_url}.`,
             )
           : null,
 
@@ -2772,7 +2861,7 @@ var settingsView = {
                   m.route.set("/settingsView");
                 },
               },
-              "Disconnect"
+              "Disconnect",
             )
           : null,
 
@@ -2789,14 +2878,14 @@ var settingsView = {
                   {
                     for: "pixelfed-server-url",
                   },
-                  "URL"
+                  "URL",
                 ),
                 m("input", {
                   id: "pixelfed-server-url",
                   placeholder: "Server URL",
                   value: settings.pixelfed_server_url,
                 }),
-              ]
+              ],
             ),
 
         status.pixelfed_logged
@@ -2809,7 +2898,7 @@ var settingsView = {
                   localforage.setItem("settings", settings);
 
                   settings.pixelfed_server_url = document.getElementById(
-                    "pixelfed-server-url"
+                    "pixelfed-server-url",
                   ).value;
 
                   let url =
@@ -2822,7 +2911,7 @@ var settingsView = {
                   window.open(url);
                 },
               },
-              "Connect"
+              "Connect",
             ),
 
         m("div", { class: "seperation" }),
@@ -2854,9 +2943,9 @@ var settingsView = {
                 m("option", { value: "30" }, "40"),
                 m("option", { value: "30" }, "50"),
                 m("option", { value: "30" }, "60"),
-              ]
+              ],
             ),
-          ]
+          ],
         ),
 
         m(
@@ -2890,13 +2979,13 @@ var settingsView = {
               status.mastodon_logged
                 ? null
                 : (settings.mastodon_server_url = document.getElementById(
-                    "mastodon-server-url"
+                    "mastodon-server-url",
                   ).value);
 
               status.pixelfed_logged
                 ? null
                 : (settings.pixelfed_server_url = document.getElementById(
-                    "pixelfed-server-url"
+                    "pixelfed-server-url",
                   ).value);
 
               localforage
@@ -2909,10 +2998,10 @@ var settingsView = {
                 });
             },
           },
-          "save settings"
+          "save settings",
         ),
       ],
-      m("div", { style: "height:80px;" })
+      m("div", { style: "height:80px;" }),
     );
   },
 };
@@ -2933,7 +3022,7 @@ var subscriptionsView = {
           bottom_bar(
             "",
             "<img class='not-desktop' src='assets/icons/select.svg'>",
-            ""
+            "",
           );
 
           if (status.notKaiOS) bottom_bar("", "", "");
@@ -2943,8 +3032,8 @@ var subscriptionsView = {
         m(
           "div",
           m.trust(
-            "<strong>Subscriptions</strong><br>The red could not be loaded.<br><br>"
-          )
+            "<strong>Subscriptions</strong><br>The red could not be loaded.<br><br>",
+          ),
         ),
         downloadList.map((e) => {
           return m(
@@ -2966,10 +3055,10 @@ var subscriptionsView = {
             [
               m("span", { class: "type-indicator" }, e.channel),
               m("H2", e.title),
-            ]
+            ],
           );
         }),
-      ]
+      ],
     );
   },
 };
@@ -3096,40 +3185,39 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
   let swiper = () => {
     let startX = 0;
-    let maxSwipeDistance = 300; // Maximum swipe distance for full fade-out
+    let startY = 0;
+    const maxSwipeDistance = 300;
 
-    document.addEventListener(
-      "touchstart",
-      function (e) {
-        startX = e.touches[0].pageX;
-        document.querySelector("body").style.opacity = 1;
-      },
-      false
-    );
+    const touchStart = (e) => {
+      startX = e.touches[0].pageX;
+      startY = e.touches[0].pageY;
+      document.body.style.opacity = 1;
+    };
 
-    document.addEventListener(
-      "touchmove",
-      function (e) {
-        let diffX = Math.abs(e.touches[0].pageX - startX);
+    const touchMove = (e) => {
+      if (!m.route.get().startsWith("/start")) return;
 
-        // Calculate the inverted opacity based on swipe distance
-        let opacity = 1 - Math.min(diffX / maxSwipeDistance, 1);
+      const currentX = e.touches[0].pageX;
+      const currentY = e.touches[0].pageY;
 
-        let r = m.route.get();
-        if (r.startsWith("/article"))
-          document.querySelector("body").style.opacity = opacity;
-      },
-      false
-    );
+      const diffX = currentX - startX;
+      const diffY = currentY - startY;
 
-    document.addEventListener(
-      "touchend",
-      function (e) {
-        // Reset opacity to 1 when the swipe ends
-        document.querySelector("body").style.opacity = 1;
-      },
-      false
-    );
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        const opacity = 1 - Math.min(Math.abs(diffX) / maxSwipeDistance, 1);
+        document.body.style.opacity = opacity;
+      }
+    };
+
+    const touchEnd = () => {
+      if (!m.route.get().startsWith("/start")) return;
+
+      document.body.style.opacity = 1;
+    };
+
+    document.addEventListener("touchstart", touchStart, false);
+    document.addEventListener("touchmove", touchMove, false);
+    document.addEventListener("touchend", touchEnd, false);
   };
 
   if (status.notKaiOS) swiper();
@@ -3203,6 +3291,46 @@ document.addEventListener("DOMContentLoaded", function (e) {
     }
   });
   if (status.notKaiOS) {
+    let acc = 0;
+    let locked = false;
+
+    document.addEventListener(
+      "wheel",
+      (e) => {
+        let r = m.route.get();
+
+        acc += e.deltaX;
+
+        if (acc > 120) {
+          acc = 0;
+
+          if (r.startsWith("/start")) {
+            if (locked) return;
+            counter++;
+
+            if (counter > channels.length - 1) counter = 0;
+
+            channel_filter = channels[counter];
+            const currentParams = m.route.param(); // Get the current parameters
+            currentParams.index = 0; // Modify the `index` parameter
+            currentParams.channel = channel_filter;
+            delete currentParams.feed;
+
+            m.route.set("/start", currentParams); // Update the route with the new parameters
+            locked = true;
+            setTimeout(() => {
+              locked = false;
+            }, 1000);
+          }
+        }
+
+        if (acc < -120) {
+          acc = 0;
+        }
+      },
+      { passive: true },
+    );
+
     document.addEventListener("swiped", function (e) {
       let r = m.route.get();
 
@@ -3214,7 +3342,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
           if (counter < 1) counter = channels.length - 1;
 
           channel_filter = channels[counter];
-          m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
@@ -3229,7 +3356,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
           if (counter > channels.length - 1) counter = 0;
 
           channel_filter = channels[counter];
-          m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
@@ -3281,13 +3407,22 @@ document.addEventListener("DOMContentLoaded", function (e) {
           if (counter > channels.length - 1) counter = 0;
 
           channel_filter = channels[counter];
-          m.redraw();
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
           currentParams.channel = channel_filter;
           delete currentParams.feed;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
+
+          setTimeout(function () {
+            var wrapper = document.querySelector("#wrapper");
+            var body = document.body;
+            var app = document.querySelector("#app");
+
+            if (wrapper) wrapper.scrollTop = 20;
+            if (body) body.scrollTop = 20;
+            if (app) app.scrollTop = 20;
+          }, 1000);
         }
         break;
 
@@ -3299,7 +3434,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
           channel_filter = channels[counter];
 
-          m.redraw();
           // Update the route with the new parameter, preserving the rest
           const currentParams = m.route.param(); // Get the current parameters
           currentParams.index = 0; // Modify the `index` parameter
@@ -3307,6 +3441,16 @@ document.addEventListener("DOMContentLoaded", function (e) {
           delete currentParams.feed;
 
           m.route.set("/start", currentParams); // Update the route with the new parameters
+
+          setTimeout(function () {
+            var wrapper = document.querySelector("#wrapper");
+            var body = document.body;
+            var app = document.querySelector("#app");
+
+            if (wrapper) wrapper.scrollTop = 20;
+            if (body) body.scrollTop = 20;
+            if (app) app.scrollTop = 20;
+          }, 1000);
         }
         break;
       case "ArrowUp":
@@ -3350,22 +3494,22 @@ document.addEventListener("DOMContentLoaded", function (e) {
           if (current_article.type == "audio")
             m.route.set(
               `/AudioPlayerView?url=${encodeURIComponent(
-                current_article.enclosure.url
-              )}&id=${current_article.id}`
+                current_article.enclosure.url,
+              )}&id=${current_article.id}`,
             );
 
           if (current_article.type == "video")
             m.route.set(
               `/VideoPlayerView?url=${encodeURIComponent(
-                current_article.enclosure.url
-              )}`
+                current_article.enclosure.url,
+              )}`,
             );
 
           if (current_article.type == "youtube")
             m.route.set(
               `/YouTubePlayerView?videoId=${encodeURIComponent(
-                current_article.youtubeid
-              )}`
+                current_article.youtubeid,
+              )}`,
             );
         }
         break;
@@ -3518,7 +3662,8 @@ window.addEventListener("offline", () => {
 });
 
 window.addEventListener("beforeunload", (event) => {
-  localStorage.setItem("last_channel_filter", channel_filter);
+  if (channel_filter != "gallery")
+    localStorage.setItem("last_channel_filter", channel_filter);
   const entries = window.performance.getEntriesByType("navigation");
 
   // For older browsers (fallback)
@@ -3677,3 +3822,12 @@ worker.onmessage = function (event) {
     status.sleepTimer = false;
   }
 };
+
+const isReload =
+  performance && performance.navigation && performance.navigation.type === 1;
+
+if (isReload) {
+  status.wasReload = true;
+  console.log("was reload");
+  m.route.set("/intro");
+}

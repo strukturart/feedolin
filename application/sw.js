@@ -1,5 +1,10 @@
 const sw_channel = new BroadcastChannel("sw-messages");
 
+const userAgent =
+  typeof self !== "undefined" && self.navigator && self.navigator.userAgent
+    ? self.navigator.userAgent
+    : "";
+
 self.addEventListener("systemmessage", async (evt) => {
   let activityData;
 
@@ -23,10 +28,8 @@ self.addEventListener("systemmessage", async (evt) => {
   }
 });
 
-const userAgent = navigator.userAgent || "";
-
 if (userAgent && !userAgent.includes("KAIOS")) {
-  const CACHE_NAME = "pwa-cache-v0.1254";
+  const CACHE_NAME = "pwa-cache-v0.1366";
   const FILE_LIST_URL = "/file-list.json"; // URL of the JSON file containing the array of files
 
   self.addEventListener("install", (event) => {
@@ -51,8 +54,8 @@ if (userAgent && !userAgent.includes("KAIOS")) {
                   urlsToCache.map((url) =>
                     cache.add(url).catch((error) => {
                       console.error(`Failed to cache ${url}:`, error);
-                    })
-                  )
+                    }),
+                  ),
                 );
               } else {
                 console.error("Fetched data is not an array:", urlsToCache);
@@ -61,7 +64,7 @@ if (userAgent && !userAgent.includes("KAIOS")) {
         })
         .then(() => {
           return self.skipWaiting(); // Skip waiting and activate the new SW immediately
-        })
+        }),
     );
   });
 
@@ -74,9 +77,9 @@ if (userAgent && !userAgent.includes("KAIOS")) {
             if (!cacheWhitelist.includes(cacheName)) {
               return caches.delete(cacheName);
             }
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -86,7 +89,7 @@ if (userAgent && !userAgent.includes("KAIOS")) {
       caches.match(event.request).then((response) => {
         // If the request is in the cache, return it. Otherwise, fetch from the network.
         return response || fetch(event.request);
-      })
+      }),
     );
   });
 }
