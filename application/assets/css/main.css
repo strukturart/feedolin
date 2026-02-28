@@ -482,12 +482,13 @@ div#side-toast {
   z-index: 10;
   padding: 8px;
   top: 70vh;
+  left: 0px;
   border-bottom-right-radius: 15px;
   border-top-right-radius: 15px;
 
   transition: all 0.5s ease-in-out;
   transform-origin: left top;
-  opacity: 0;
+  opacity: 100;
   max-width: 100vw;
 }
 

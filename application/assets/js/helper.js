@@ -4,7 +4,7 @@ import { status, settings } from "../../index.js";
 
 export let setTabindex = () => {
   let visibleElements = document.querySelectorAll(
-    '.item:not([style*="display: none"])'
+    '.item:not([style*="display: none"])',
   );
 
   visibleElements.forEach((element, index) => {
@@ -136,7 +136,7 @@ export let clipboard = function () {
     document.body.removeChild(input);
     side_toaster(
       "You can now open an app of your choice and invite a person to chat, the address that leads to the chat room is in your clipboard",
-      3000
+      3000,
     );
 
     return result; // Returns true if the copy was successful, false otherwise
@@ -182,7 +182,7 @@ export function share(url) {
         (err) => {
           console.log(err);
           resolve(false);
-        }
+        },
       );
     }
 
@@ -267,7 +267,7 @@ export function open(url) {
       },
       (err) => {
         console.log(err);
-      }
+      },
     );
   }
 }
@@ -697,7 +697,7 @@ export let pick_file = function (callback) {
       },
       (err) => {
         console.log(err);
-      }
+      },
     );
   }
 
@@ -733,7 +733,9 @@ export function deleteFile(storage, path, notification) {
   requestDel.onsuccess = function () {
     if (notification == "notification") {
       helper.toaster(
-        'File "' + name + '" successfully deleted frome the sdcard storage area'
+        'File "' +
+          name +
+          '" successfully deleted frome the sdcard storage area',
       );
     }
   };
@@ -784,7 +786,7 @@ export let downloadFile = function (filename, data, callback) {
         request.onerror = function () {
           side_toaster(
             "Unable to download the file, the file probably already exists.",
-            4000
+            4000,
           );
         };
       })

@@ -1168,7 +1168,10 @@ let load_cached_feeds = () => {
           localStorage.getItem("last_channel_filter") || channels[0];
       }
 
-      m.route.set("/start?index=0");
+      setTimeout(() => {
+        m.route.set("/start?index=0");
+      }, 2000);
+
       document.querySelector("body").classList.add("cache");
 
       side_toaster("Cached feeds loaded", 4000);
@@ -1246,6 +1249,8 @@ localforage
         .then(function (value) {})
         .catch(function (err) {});
     }
+
+    load_cached_feeds();
 
     checkOnlineStatus().then((isOnline) => {
       //is online use offline data or not
@@ -1838,7 +1843,6 @@ var localOPML = {
 
 var intro = {
   oninit: function (vnode) {
-    vnode.state.stoptimeout = false;
     // check if is a mastodon redirect
     //only with not KaiOS devices
     if (status.notKaiOS) {
@@ -1846,19 +1850,14 @@ var intro = {
       pixelfed_connect();
     }
 
-    vnode.state.stoptimeout = false;
-
     setTimeout(() => {
-      if (!vnode.state.stoptimeout) {
-        m.route.set("/start");
-      }
+      m.route.set("/start");
     }, 5000);
   },
 
   onremove: function (vnode) {
     localStorage.setItem("version", status.version);
     document.querySelector(".loading-spinner").style.display = "none";
-    vnode.state.stoptimeout = true;
   },
 
   view: function () {
@@ -1872,6 +1871,7 @@ var intro = {
           src: "./assets/icons/intro.svg",
 
           oncreate: () => {
+            bottom_bar("", "", "");
             document.querySelector(".loading-spinner").style.display = "block";
 
             try {
@@ -3079,6 +3079,13 @@ m.route(root, "/intro", {
   "/scan": scan,
 });
 
+//force to start at homepage
+if (!sessionStorage.getItem("visited")) {
+  console.log("heyyyyyy");
+  sessionStorage.setItem("visited", "true");
+  m.route.set("/intro");
+}
+
 function scrollToCenter() {
   const activeElement = document.activeElement;
   if (!activeElement) return;
@@ -3749,7 +3756,7 @@ function handleOAuthResult(result) {
       })
       .catch((err) => {
         console.error("Error:", err);
-        side_toaster("Connection failed");
+        side_toaster("Connection failed", 1000);
       });
   }
 }
