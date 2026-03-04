@@ -11,6 +11,7 @@ import {
   volume_control,
   setTabindex,
   detectMobileOS,
+  downloadFileAsBlob,
 } from "./assets/js/helper.js";
 
 import { stop_scan, start_scan } from "./assets/js/scan.js";
@@ -33,7 +34,7 @@ import "regenerator-runtime/runtime";
 dayjs.extend(duration);
 document.documentElement.lang = navigator.language || "en";
 
-let articles = [];
+export let articles = [];
 let downloadList = [];
 
 localforage
@@ -158,6 +159,16 @@ localforage
   .catch((err) => {
     console.error("Error accessing localForage:", err);
   });
+
+//set or get download files storage
+let downloaded_files = [];
+localforage.getItem("downloaded_files").then((e) => {
+  if (e === null) {
+    return localforage.setItem("downloaded_files", []);
+  } else {
+    downloaded_files = e;
+  }
+});
 
 let lastPlayedMediaList = [];
 let getLastMediaList = () => {
@@ -648,7 +659,8 @@ const generateDownloadList = (data) => {
 };
 
 const fetchContent = async (feed_download_list) => {
-  articles = [];
+  //clean articles, but keep downloaded
+  articles = articles.filter((article) => article.downloaded === true);
   channels = [];
   downloadList = feed_download_list;
 
@@ -817,6 +829,7 @@ const fetchContent = async (feed_download_list) => {
                   f.feed_title = e.title;
                   f.reblog = false;
                   f.images = [];
+                  f.downloaded = false;
 
                   // Typ (Text, Audio, Video, YouTube)
                   f.type = check_media(f);
@@ -1610,6 +1623,7 @@ var start = {
           )
         : filteredArticles.map((h, i) => {
             const readClass = read_articles.includes(h.id) ? "read" : "";
+            const dl = h.downloaded ? "true" : "false";
 
             return m(
               "article",
@@ -1617,6 +1631,7 @@ var start = {
                 class: `item ${readClass}`,
                 "data-id": h.id,
                 "data-type": h.type,
+                "data-downloaded": dl,
                 tabIndex: i,
                 key: h.id,
 
@@ -2178,7 +2193,24 @@ const AudioPlayerView = {
 
     if (attrs.url && globalAudioElement.src !== attrs.url) {
       try {
-        globalAudioElement.src = attrs.url;
+        let playDownloaded = false;
+        articles.forEach((a) => {
+          if (current_article.id == a.id && a.downloaded == true) {
+            //play downloaded file
+            console.log("play downloaded file");
+
+            const matchingFile = downloaded_files.find(
+              (b) => b.id === current_article.id,
+            );
+            if (matchingFile) {
+              globalAudioElement.src = URL.createObjectURL(matchingFile.blob);
+              playDownloaded = true;
+            } else {
+              globalAudioElement.src = attrs.url;
+            }
+          }
+        });
+        if (playDownloaded == false) globalAudioElement.src = attrs.url;
         globalAudioElement.play().catch((e) => {
           alert(e);
         });
@@ -2232,8 +2264,15 @@ const AudioPlayerView = {
       bottom_bar(
         "<img src='assets/icons/sleep.svg'>",
         "<img src='assets/icons/play.svg'>",
-        "",
+        "<img src='assets/icons/save.svg'>",
       );
+
+      if (current_article.downloaded)
+        bottom_bar(
+          "<img src='assets/icons/sleep.svg'>",
+          "<img src='assets/icons/play.svg'>",
+          "",
+        );
 
       document
         .querySelector("div.button-left")
@@ -2352,6 +2391,8 @@ const AudioPlayerView = {
         AudioPlayerView.seek("left");
       } else if (e.key === "ArrowRight") {
         AudioPlayerView.seek("right");
+      } else if (e.key === "SoftRight") {
+        alert("download");
       }
     }
   },
@@ -3495,6 +3536,37 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
         if (r.startsWith("/start")) {
           m.route.set("/options");
+        }
+
+        if (r.startsWith("/AudioPlayerView")) {
+          downloadFileAsBlob(globalAudioElement.src, current_article).then(
+            (e) => {
+              let nonduplicates = downloaded_files.filter(
+                (e) => e.id !== current_article.id,
+              );
+
+              if (e.blob.size == 0) {
+                side_toaster("can't download file", 3000);
+                return;
+              }
+
+              nonduplicates.push({ id: e.article.id, blob: e.blob });
+
+              localforage
+                .setItem("downloaded_files", nonduplicates)
+                .then(() => {});
+
+              articles.forEach((ee) => {
+                if (ee.id == e.article.id) {
+                  ee.downloaded = true;
+
+                  localforage.setItem("articles", articles).then(() => {
+                    side_toaster("downloaded", 3000);
+                  });
+                }
+              });
+            },
+          );
         }
 
         if (r.startsWith("/article")) {

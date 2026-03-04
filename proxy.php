@@ -75,12 +75,25 @@ if ($error) {
     echo json_encode(["error" => $error]);
     exit();
 }
-
 // Set response content type if possible
 if (json_decode($response) !== null) {
     header('Content-Type: application/json');
 } elseif (strpos($response, '<?xml') === 0) {
     header('Content-Type: application/xml');
+} else {
+    // Setze den Content-Type-Header basierend auf der Dateiendung
+    $fileExtension = pathinfo($url, PATHINFO_EXTENSION);
+    switch ($fileExtension) {
+        case 'mp3':
+            header('Content-Type: audio/mpeg');
+            break;
+        case 'wav':
+            header('Content-Type: audio/wav');
+            break;
+        default:
+            header('Content-Type: application/octet-stream');
+            break;
+    }
 }
 
 // Output the response

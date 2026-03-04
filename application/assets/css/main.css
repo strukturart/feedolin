@@ -245,6 +245,10 @@ label {
   float: left;
 }
 
+#start article.audio-downloaded {
+  background: red !important;
+}
+
 div#intro {
   position: fixed;
   background: black;
@@ -318,6 +322,11 @@ article .type-indicator {
   border-radius: 8px;
   padding: 5px;
   line-height: 0.4rem;
+}
+
+article[data-downloaded="true"] .type-indicator {
+  background: black;
+  color: white;
 }
 
 #start .channel {
@@ -779,6 +788,10 @@ video {
   #start kbd#version {
     display: none;
   }
+
+  #start article.audio-downloaded {
+    background: red !important;
+  }
 }
 
 @media screen and (min-width: 0px) and (max-width: 400px) {
@@ -843,7 +856,6 @@ video {
   #article article {
     overflow-y: scroll;
     height: 90%;
-    background: yellow;
   }
 
   .scrollable {
@@ -1011,5 +1023,9 @@ video {
     width: 100vh;
     height: 100vw;
     overflow: hidden;
+  }
+
+  #start article.audio-downloaded {
+    background: red !important;
   }
 }

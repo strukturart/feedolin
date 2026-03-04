@@ -1,6 +1,7 @@
 "use strict";
 
-import { status, settings } from "../../index.js";
+import { status, settings, articles } from "../../index.js";
+import localforage from "localforage";
 
 export let setTabindex = () => {
   let visibleElements = document.querySelectorAll(
@@ -15,6 +16,72 @@ export let setTabindex = () => {
     }
   });
 };
+
+export async function downloadFileAsBlob(url, article) {
+  return new Promise((resolve, reject) => {
+    try {
+      let t = url;
+      let xhr;
+
+      if (status.notKaiOS) {
+        t = settings.proxy_url + url;
+        xhr = new XMLHttpRequest();
+        xhr.responseType = "arraybuffer";
+      } else {
+        xhr = new XMLHttpRequest({ mozSystem: true });
+        xhr.responseType = "moz-chunked-arraybuffer";
+      }
+
+      const chunks = [];
+      let mimeType = "application/octet-stream";
+
+      xhr.open("GET", t, true);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 2) {
+          const type = xhr.getResponseHeader("content-type");
+          if (type) mimeType = type;
+        }
+      };
+
+      xhr.onprogress = function (event) {
+        if (xhr.response) {
+          chunks.push(new Uint8Array(xhr.response));
+        }
+
+        if (event.lengthComputable) {
+          console.log(event.loaded + "/" + event.total);
+        } else {
+          console.log("geladen:", chunks.length, "chunks");
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const blob = new Blob(chunks, { type: mimeType });
+
+          article.downloaded = true;
+
+          resolve({
+            article: article,
+            blob: blob,
+          });
+        } else {
+          reject(new Error(`HTTP-Fehler! status: ${xhr.status}`));
+        }
+      };
+
+      xhr.onerror = function () {
+        reject(new Error(`Fehler beim Laden von ${url}`));
+      };
+
+      xhr.send();
+    } catch (error) {
+      console.error(`Error ${url}:`, error);
+      reject({ error: error, url: url });
+    }
+  });
+}
 
 export let load_ads = function () {
   getKaiAd({
