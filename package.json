@@ -73,13 +73,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
+    "chunkai": "^1.0.1",
     "dayjs": "^1.11.13",
     "dompurify": "^3.0.3",
+    "jsqr": "^1.4.0",
     "localforage": "^1.10.0",
     "mithril": "^2.0.4",
     "regenerator-runtime": "^0.14.1",
     "rss-parser": "^3.13.0",
-    "swiped-events": "1.2.0",
-    "jsqr": "^1.4.0"
+    "swiped-events": "1.2.0"
   }
 }

@@ -1,6 +1,7 @@
 "use strict";
 
-import { status, settings } from "../../index.js";
+import { status, settings, articles } from "../../index.js";
+import localforage from "localforage";
 
 export let setTabindex = () => {
   let visibleElements = document.querySelectorAll(
@@ -15,6 +16,126 @@ export let setTabindex = () => {
     }
   });
 };
+
+export async function downloadFileK2(url, article) {
+  return new Promise((resolve, reject) => {
+    try {
+      let t = url;
+      let xhr = new XMLHttpRequest();
+      xhr.responseType = "arraybuffer";
+
+      xhr = new XMLHttpRequest({ mozSystem: true });
+      xhr.responseType = "moz-chunked-arraybuffer";
+
+      let chunks = [];
+      let mimeType = "application/octet-stream";
+
+      xhr.open("GET", t, true);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 2) {
+          const type = xhr.getResponseHeader("content-type");
+          if (type) mimeType = type;
+        }
+      };
+
+      xhr.onprogress = function (event) {
+        if (xhr.response) {
+          chunks.push(new Uint8Array(xhr.response));
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const blob = new Blob(chunks, { type: mimeType });
+
+          article.downloaded = true;
+
+          resolve({
+            article: article,
+            blob: blob,
+          });
+        } else {
+          reject(new Error(`HTTP-Fehler! status: ${xhr.status}`));
+        }
+      };
+
+      xhr.onerror = function () {
+        reject(new Error(`Fehler beim Laden von ${url}`));
+      };
+
+      xhr.send();
+    } catch (error) {
+      console.error(`Error ${url}:`, error);
+      reject({ error: error, url: url });
+    }
+  });
+}
+
+export async function getMimeTypeFromServer(url) {
+  try {
+    const response = await fetch(url, { method: "HEAD" });
+    const contentType = response.headers.get("content-type");
+
+    if (contentType) {
+      // Aus MIME Type die Extension extrahieren
+      const mimeToExt = {
+        "audio/mpeg": ".mp3",
+        "audio/wav": ".wav",
+        "audio/ogg": ".ogg",
+        "audio/mp4": ".m4a",
+      };
+
+      return mimeToExt[contentType] || ".mp3";
+    }
+  } catch (error) {
+    console.log("HEAD-Request fehlgeschlagen, nutze URL-Endung");
+  }
+
+  // Fallback auf URL-Endung
+  const urlWithoutParams = url.split("?")[0];
+  const ext = urlWithoutParams
+    .slice(urlWithoutParams.lastIndexOf("."))
+    .toLowerCase();
+
+  return ext || ".mp3";
+}
+
+// Verwendung
+
+export async function downloadFileAsBlob(url, article) {
+  try {
+    const response = await fetch(settings.proxy_url + url, {});
+
+    if (!response.ok) {
+      throw new Error(`HTTP-Fehler! status: ${response.status}`);
+    }
+
+    let loaded = 0;
+    const reader = response.body.getReader();
+    const chunks = [];
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      chunks.push(value);
+      loaded += value.byteLength;
+    }
+
+    const blob = new Blob(chunks, {
+      type: response.headers.get("content-type"),
+    });
+    article.downloaded = true;
+
+    return { article: article, blob: blob };
+  } catch (error) {
+    console.error(`Error ${url}:`, error);
+    return { error: error, url: url };
+  }
+}
 
 export let load_ads = function () {
   getKaiAd({

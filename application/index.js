@@ -11,9 +11,12 @@ import {
   volume_control,
   setTabindex,
   detectMobileOS,
+  downloadFileAsBlob,
+  getMimeTypeFromServer,
 } from "./assets/js/helper.js";
 
 import { stop_scan, start_scan } from "./assets/js/scan.js";
+import { Chunkai } from "chunkai";
 
 import { mastodon_account_info } from "./assets/js/mastodon.js";
 import localforage from "localforage";
@@ -33,7 +36,7 @@ import "regenerator-runtime/runtime";
 dayjs.extend(duration);
 document.documentElement.lang = navigator.language || "en";
 
-let articles = [];
+export let articles = [];
 let downloadList = [];
 
 localforage
@@ -120,6 +123,7 @@ export let status = {
   os: detectMobileOS(),
   debug: false,
   local_opml: [],
+  downloading: false,
 };
 
 const userAgent = navigator.userAgent || "";
@@ -158,6 +162,16 @@ localforage
   .catch((err) => {
     console.error("Error accessing localForage:", err);
   });
+
+//set or get download files storage
+let downloaded_files = [];
+localforage.getItem("downloaded_files").then((e) => {
+  if (e === null) {
+    return localforage.setItem("downloaded_files", []);
+  } else {
+    downloaded_files = e;
+  }
+});
 
 let lastPlayedMediaList = [];
 let getLastMediaList = () => {
@@ -648,7 +662,8 @@ const generateDownloadList = (data) => {
 };
 
 const fetchContent = async (feed_download_list) => {
-  articles = [];
+  //clean articles, but keep downloaded
+  articles = articles.filter((article) => article.downloaded === true);
   channels = [];
   downloadList = feed_download_list;
 
@@ -692,6 +707,10 @@ const fetchContent = async (feed_download_list) => {
   };
 
   let ids = [];
+
+  downloaded_files.forEach((e) => {
+    ids.push(e.id);
+  });
 
   feed_download_list.forEach((e) => {
     if (e.type === "mastodon") {
@@ -817,6 +836,7 @@ const fetchContent = async (feed_download_list) => {
                   f.feed_title = e.title;
                   f.reblog = false;
                   f.images = [];
+                  f.downloaded = false;
 
                   // Typ (Text, Audio, Video, YouTube)
                   f.type = check_media(f);
@@ -828,7 +848,7 @@ const fetchContent = async (feed_download_list) => {
                   }
                   if (f["yt:videoId"]) f.youtubeid = f["yt:videoId"];
 
-                  // URL & Datum
+                  // URL & Date
                   f.url = f.link || e.url;
                   const dateStr = f.isoDate || f.pubDate || "1970-01-01";
                   f.isoDate = dayjs(dateStr).isValid()
@@ -838,7 +858,7 @@ const fetchContent = async (feed_download_list) => {
                   // Content
                   f.content = f.content || f.summary || f.description || "";
 
-                  // Cover-Bild
+                  // Cover-Image
                   if (f.enclosure?.url) {
                     f.cover = f.enclosure.url;
                   } else if (f["media:thumbnail"]?.url) {
@@ -1610,6 +1630,7 @@ var start = {
           )
         : filteredArticles.map((h, i) => {
             const readClass = read_articles.includes(h.id) ? "read" : "";
+            const dl = h.downloaded ? "true" : "false";
 
             return m(
               "article",
@@ -1617,6 +1638,7 @@ var start = {
                 class: `item ${readClass}`,
                 "data-id": h.id,
                 "data-type": h.type,
+                "data-downloaded": dl,
                 tabIndex: i,
                 key: h.id,
 
@@ -2178,7 +2200,47 @@ const AudioPlayerView = {
 
     if (attrs.url && globalAudioElement.src !== attrs.url) {
       try {
-        globalAudioElement.src = attrs.url;
+        let playDownloaded = false;
+        articles.forEach((a) => {
+          if (current_article.id == a.id && a.downloaded == true) {
+            //play downloaded file
+            console.log("play downloaded file");
+
+            const matchingFile = downloaded_files.find(
+              (b) => b.id === current_article.id,
+            );
+            if (matchingFile) {
+              if (status.notKaiOS) {
+                globalAudioElement.src = URL.createObjectURL(matchingFile.blob);
+              } else {
+                let storage;
+                if ("b2g" in navigator) {
+                  storage = navigator.b2g.getDeviceStorage("sdcard"); // ← hier
+                } else {
+                  storage = navigator.getDeviceStorage("sdcard");
+                }
+
+                const request = storage.get(
+                  "feedolin/" + current_article.id + ".mp3",
+                );
+
+                request.onsuccess = function () {
+                  const file = this.result;
+                  globalAudioElement.src = new Audio(URL.createObjectURL(file));
+                };
+
+                request.onerror = function () {
+                  console.error("Fehler beim Laden der Datei:", this.error);
+                };
+              }
+
+              playDownloaded = true;
+            } else {
+              globalAudioElement.src = attrs.url;
+            }
+          }
+        });
+        if (playDownloaded == false) globalAudioElement.src = attrs.url;
         globalAudioElement.play().catch((e) => {
           alert(e);
         });
@@ -2232,8 +2294,15 @@ const AudioPlayerView = {
       bottom_bar(
         "<img src='assets/icons/sleep.svg'>",
         "<img src='assets/icons/play.svg'>",
-        "",
+        "<img src='assets/icons/save.svg'>",
       );
+
+      if (current_article.downloaded)
+        bottom_bar(
+          "<img src='assets/icons/sleep.svg'>",
+          "<img src='assets/icons/play.svg'>",
+          "<img src='assets/icons/delete.svg'>",
+        );
 
       document
         .querySelector("div.button-left")
@@ -2352,6 +2421,7 @@ const AudioPlayerView = {
         AudioPlayerView.seek("left");
       } else if (e.key === "ArrowRight") {
         AudioPlayerView.seek("right");
+      } else if (e.key === "SoftRight") {
       }
     }
   },
@@ -3081,7 +3151,6 @@ m.route(root, "/intro", {
 
 //force to start at homepage
 if (!sessionStorage.getItem("visited")) {
-  console.log("heyyyyyy");
   sessionStorage.setItem("visited", "true");
   m.route.set("/intro");
 }
@@ -3497,6 +3566,111 @@ document.addEventListener("DOMContentLoaded", function (e) {
           m.route.set("/options");
         }
 
+        if (r.startsWith("/AudioPlayerView")) {
+          if (current_article.downloaded) {
+            let todelete = downloaded_files.filter(
+              (e) => e.id !== current_article.id,
+            );
+
+            localforage.setItem("downloaded_files", todelete).then(() => {
+              articles.forEach((ee) => {
+                if (ee.id == current_article.id) {
+                  ee.downloaded = false;
+
+                  localforage.setItem("articles", articles).then(() => {
+                    side_toaster("download deleted", 3000);
+                  });
+                }
+              });
+            });
+          } else {
+            if (status.downloading) {
+              side_toaster("downloading, please wait", 3000);
+              return;
+            }
+            document.body.classList.add("loading");
+            status.downloading = true;
+
+            if (status.notKaiOS) {
+              downloadFileAsBlob(globalAudioElement.src, current_article)
+                .then((e) => {
+                  document.body.classList.remove("loading");
+                  let nonduplicates = downloaded_files.filter(
+                    (e) => e.id !== current_article.id,
+                  );
+
+                  if (e.blob.size == 0) {
+                    side_toaster("can't download file", 3000);
+                    status.downloading = false;
+
+                    return;
+                  }
+
+                  nonduplicates.push({ id: e.article.id, blob: e.blob });
+
+                  localforage
+                    .setItem("downloaded_files", nonduplicates)
+                    .then(() => {});
+
+                  articles.forEach((ee) => {
+                    if (ee.id == e.article.id) {
+                      ee.downloaded = true;
+
+                      localforage.setItem("articles", articles).then(() => {
+                        side_toaster("downloaded", 3000);
+                        status.downloading = false;
+                      });
+                    }
+                  });
+                })
+                .catch(() => {
+                  side_toaster("can't download file", 3000);
+                  document.body.classList.remove("loading");
+                  status.downloading = false;
+                });
+            } else {
+              getMimeTypeFromServer(globalAudioElement.src).then((e) => {
+                console.log(e);
+
+                let chunkai = new Chunkai({
+                  chunkByteLimit: 20048,
+                  storageName: "sdcard",
+                  remoteFileUrl: globalAudioElement.src,
+                  localFileUrl: "feedolin/" + current_article.id + e,
+                });
+
+                let id = current_article.id;
+
+                chunkai.onProgress = (progress) => {
+                  //console.log("progress", progress);
+                };
+
+                chunkai.onComplete = (progress) => {
+                  side_toaster("downloaded", 3000);
+                  document.body.classList.remove("loading");
+                  articles.forEach((ee) => {
+                    if (ee.id == id) {
+                      ee.downloaded = true;
+
+                      localforage.setItem("articles", articles).then(() => {
+                        side_toaster("downloaded", 3000);
+                        status.downloading = false;
+                      });
+                    }
+                  });
+                };
+                chunkai.onError = (err) => {
+                  side_toaster("can't download file", 3000);
+                  document.body.classList.remove("loading");
+                  status.downloading = false;
+                };
+
+                chunkai.start();
+              });
+            }
+          }
+        }
+
         if (r.startsWith("/article")) {
           if (current_article.type == "audio")
             m.route.set(
@@ -3835,6 +4009,5 @@ const isReload =
 
 if (isReload) {
   status.wasReload = true;
-  console.log("was reload");
   m.route.set("/intro");
 }
