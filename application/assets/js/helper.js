@@ -17,61 +17,6 @@ export let setTabindex = () => {
   });
 };
 
-export async function downloadFileK2(url, article) {
-  return new Promise((resolve, reject) => {
-    try {
-      let t = url;
-      let xhr = new XMLHttpRequest();
-      xhr.responseType = "arraybuffer";
-
-      xhr = new XMLHttpRequest({ mozSystem: true });
-      xhr.responseType = "moz-chunked-arraybuffer";
-
-      let chunks = [];
-      let mimeType = "application/octet-stream";
-
-      xhr.open("GET", t, true);
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 2) {
-          const type = xhr.getResponseHeader("content-type");
-          if (type) mimeType = type;
-        }
-      };
-
-      xhr.onprogress = function (event) {
-        if (xhr.response) {
-          chunks.push(new Uint8Array(xhr.response));
-        }
-      };
-
-      xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const blob = new Blob(chunks, { type: mimeType });
-
-          article.downloaded = true;
-
-          resolve({
-            article: article,
-            blob: blob,
-          });
-        } else {
-          reject(new Error(`HTTP-Fehler! status: ${xhr.status}`));
-        }
-      };
-
-      xhr.onerror = function () {
-        reject(new Error(`Fehler beim Laden von ${url}`));
-      };
-
-      xhr.send();
-    } catch (error) {
-      console.error(`Error ${url}:`, error);
-      reject({ error: error, url: url });
-    }
-  });
-}
-
 export async function getMimeTypeFromServer(url) {
   try {
     const response = await fetch(url, { method: "HEAD" });
@@ -439,38 +384,6 @@ function delete_file(filename) {
 
   request.onerror = function () {
     //toaster("Unable to delete the file: " + this.error, 2000);
-  };
-}
-
-function get_file(filename) {
-  var sdcard = navigator.getDeviceStorages("sdcard");
-  var request = sdcard[1].get(filename);
-
-  request.onsuccess = function () {
-    var file = this.result;
-    //alert("Get the file: " + file.name);
-  };
-
-  request.onerror = function () {
-    //alert("Unable to get the file: " + this.error);
-  };
-}
-
-function write_file(data, filename) {
-  var sdcard = navigator.getDeviceStorages("sdcard");
-  var file = new Blob([data], {
-    type: "text/plain",
-  });
-  var request = sdcard[1].addNamed(file, filename);
-
-  request.onsuccess = function () {
-    var name = this.result;
-    //toaster('File "' + name + '" successfully wrote on the sdcard storage area', 2000);
-  };
-
-  // An error typically occur if a file with the same name already exist
-  request.onerror = function () {
-    toaster("Unable to write the file: " + this.error, 2000);
   };
 }
 

@@ -2189,6 +2189,20 @@ let currentY = 0; // Current Y position
 let isSwiping = false; // Track if the user is actively swiping
 let seekInterval = null;
 
+globalAudioElement.addEventListener("playing", () => {
+  if (m.route.get().includes("/AudioPlayerView")) {
+    document.querySelector("#bottom-bar div.button-center").innerHTML =
+      "<img src='assets/icons/pause.svg'>";
+  }
+});
+
+globalAudioElement.addEventListener("pause", () => {
+  if (m.route.get().includes("/AudioPlayerView")) {
+    document.querySelector("#bottom-bar div.button-center").innerHTML =
+      "<img src='assets/icons/play.svg'>";
+  }
+});
+
 const AudioPlayerView = {
   audioDuration: 0, // Store audio duration
   currentTime: 0, // Store current time of the audio
@@ -2215,14 +2229,12 @@ const AudioPlayerView = {
               } else {
                 let storage;
                 if ("b2g" in navigator) {
-                  storage = navigator.b2g.getDeviceStorage("sdcard"); // ← hier
+                  storage = navigator.b2g.getDeviceStorage("sdcard");
                 } else {
                   storage = navigator.getDeviceStorage("sdcard");
                 }
 
-                const request = storage.get(
-                  "feedolin/" + current_article.id + ".mp3",
-                );
+                const request = storage.get(current_article.filePath);
 
                 request.onsuccess = function () {
                   const file = this.result;
@@ -2230,7 +2242,7 @@ const AudioPlayerView = {
                 };
 
                 request.onerror = function () {
-                  console.error("Fehler beim Laden der Datei:", this.error);
+                  console.error(this.error);
                 };
               }
 
@@ -2296,43 +2308,31 @@ const AudioPlayerView = {
 
   oncreate: () => {
     top_bar("", "", "");
-    bottom_bar("", "<img src='assets/icons/play.svg'>", "");
-    if (settings.sleepTimer) {
-      bottom_bar(
-        "<img src='assets/icons/sleep.svg'>",
-        "<img src='assets/icons/play.svg'>",
-        "<img src='assets/icons/save.svg'>",
-      );
+    bottom_bar(
+      "",
+      "<img src='assets/icons/play.svg'>",
+      "<img src='assets/icons/save.svg'>",
+    );
+    if (settings.sleepTimer)
+      document.querySelector("#bottom-bar div.button-left").innerHTML =
+        "<img src='assets/icons/sleep.svg'>";
 
-      if (current_article.downloaded)
-        bottom_bar(
-          "<img src='assets/icons/sleep.svg'>",
-          "<img src='assets/icons/play.svg'>",
-          "<img src='assets/icons/delete.svg'>",
-        );
+    if (current_article.downloaded)
+      document.querySelector("#bottom-bar div.button-right").innerHTML =
+        "<img src='assets/icons/delete.svg'>";
 
-      if (AudioPlayerView.isPlaying) {
-        bottom_bar(
-          "<img src='assets/icons/sleep.svg'>",
-          "<img src='assets/icons/pause.svg'>",
-          "<img src='assets/icons/save.svg'>",
-        );
-
-        if (current_article.downloaded)
-          bottom_bar(
-            "<img src='assets/icons/sleep.svg'>",
-            "<img src='assets/icons/pause.svg'>",
-            "<img src='assets/icons/delete.svg'>",
-          );
-      }
-      document
-        .querySelector("#bottom-bar div.button-left")
-        .addEventListener("click", function () {
-          status.sleepTimer
-            ? stopTimer()
-            : startTimer(settings.sleepTimer * 60 * 1000);
-        });
+    if (AudioPlayerView.isPlaying) {
+      document.querySelector("#bottom-bar div.button-center").innerHTML =
+        "<img src='assets/icons/pause.svg'>";
     }
+
+    document
+      .querySelector("#bottom-bar div.button-left")
+      .addEventListener("click", function () {
+        status.sleepTimer
+          ? stopTimer()
+          : startTimer(settings.sleepTimer * 60 * 1000);
+      });
 
     if (status.notKaiOS) {
       top_bar("<img src='assets/icons/back.svg'>", "", "");
@@ -2448,7 +2448,6 @@ const AudioPlayerView = {
         AudioPlayerView.seek("left");
       } else if (e.key === "ArrowRight") {
         AudioPlayerView.seek("right");
-      } else if (e.key === "SoftRight") {
       }
     }
   },
@@ -2456,12 +2455,8 @@ const AudioPlayerView = {
   togglePlayPause: () => {
     if (AudioPlayerView.isPlaying) {
       globalAudioElement.pause();
-      document.querySelector("#bottom-bar div.button-center img").src =
-        "assets/icons/play.svg";
     } else {
       globalAudioElement.play();
-      document.querySelector("#bottom-bar div.button-center img").src =
-        "assets/icons/pause.svg";
     }
     AudioPlayerView.isPlaying = !AudioPlayerView.isPlaying;
   },
@@ -3686,43 +3681,64 @@ document.addEventListener("DOMContentLoaded", function (e) {
                   status.downloading = false;
                 });
             } else {
-              getMimeTypeFromServer(globalAudioElement.src).then((e) => {
-                let chunkai = new Chunkai({
-                  chunkByteLimit: 20048,
-                  storageName: "sdcard",
-                  remoteFileUrl: globalAudioElement.src,
-                  localFileUrl: "feedolin/" + current_article.id + e,
-                });
+              let source = globalAudioElement.src;
+              if ("b2g" in navigator) {
+                source = settings.proxy_url + source;
+              }
 
-                let id = current_article.id;
-
-                chunkai.onProgress = (progress) => {
-                  //console.log("progress", progress);
-                };
-
-                chunkai.onComplete = (progress) => {
-                  side_toaster("downloaded", 3000);
-                  document.body.classList.remove("loading");
-                  articles.forEach((ee) => {
-                    if (ee.id == id) {
-                      ee.downloaded = true;
-                      ee.filePath = "feedolin/" + current_article.id + e;
-
-                      localforage.setItem("articles", articles).then(() => {
-                        side_toaster("downloaded", 3000);
-                        status.downloading = false;
-                      });
-                    }
+              getMimeTypeFromServer(source)
+                .then((e) => {
+                  let chunkai = new Chunkai({
+                    chunkByteLimit: 20048,
+                    storageName: "sdcard",
+                    remoteFileUrl: source,
+                    localFileUrl: "feedolin/" + current_article.id + e,
                   });
-                };
-                chunkai.onError = (err) => {
-                  side_toaster("can't download file", 3000);
+
+                  let id = current_article.id;
+
+                  //alert(JSON.stringify(chunkai));
+
+                  let to = setTimeout(() => {
+                    side_toaster("can't download file", 3000);
+                    document.body.classList.remove("loading");
+                    status.downloading = false;
+                  }, 30000);
+
+                  chunkai.onProgress = (progress) => {
+                    // alert(JSON.stringify(progress));
+                    console.log(progress, 3000);
+                    clearTimeout(to);
+                  };
+
+                  chunkai.onComplete = (progress) => {
+                    side_toaster("downloaded", 3000);
+                    document.body.classList.remove("loading");
+                    articles.forEach((ee) => {
+                      if (ee.id == id) {
+                        ee.downloaded = true;
+                        ee.filePath = "feedolin/" + current_article.id + e;
+
+                        localforage.setItem("articles", articles).then(() => {
+                          side_toaster("downloaded", 3000);
+                          status.downloading = false;
+                        });
+                      }
+                    });
+                  };
+                  chunkai.onError = (err) => {
+                    side_toaster("can't download file" + err, 3000);
+                    document.body.classList.remove("loading");
+                    status.downloading = false;
+                  };
+
+                  chunkai.start();
+                })
+                .catch((e) => {
+                  alert(e);
                   document.body.classList.remove("loading");
                   status.downloading = false;
-                };
-
-                chunkai.start();
-              });
+                });
             }
           }
         }
