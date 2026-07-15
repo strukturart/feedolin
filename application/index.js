@@ -2238,11 +2238,11 @@ const AudioPlayerView = {
 
                 request.onsuccess = function () {
                   const file = this.result;
-                  globalAudioElement.src = new Audio(URL.createObjectURL(file));
+                  globalAudioElement.src = URL.createObjectURL(file);
                 };
 
                 request.onerror = function () {
-                  console.error(this.error);
+                  alert(this.error);
                 };
               }
 
@@ -2261,14 +2261,22 @@ const AudioPlayerView = {
               AudioPlayerView.isPlaying = true;
             })
             .catch((e) => {
-              alert(e);
+              console.log(e);
             });
         }
 
         hasPlayedAudio.map((e) => {
           if (e.url === globalAudioElement.src) {
+            globalAudioElement.pause();
+            status.buttons_block = true;
             if (confirm("continue playing ?") == true) {
               globalAudioElement.currentTime = e.time;
+              globalAudioElement.play();
+
+              status.buttons_block = false;
+            } else {
+              status.buttons_block = false;
+              globalAudioElement.play();
             }
           }
         });
@@ -3593,7 +3601,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
         //todo ugly long function!!!
         if (r.startsWith("/AudioPlayerView")) {
           //delete downloaded file
-          if (current_article.downloaded) {
+          if (current_article.downloaded && !status.buttons_block) {
             if (status.notKaiOS) {
               let todelete = downloaded_files.filter(
                 (e) => e.id !== current_article.id,
@@ -3697,21 +3705,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
                   let id = current_article.id;
 
-                  //alert(JSON.stringify(chunkai));
+                  let downloadInProgress = null;
 
-                  let to = setTimeout(() => {
-                    side_toaster("can't download file", 3000);
-                    document.body.classList.remove("loading");
-                    status.downloading = false;
-                  }, 30000);
-
-                  chunkai.onProgress = (progress) => {
-                    // alert(JSON.stringify(progress));
-                    console.log(progress, 3000);
-                    clearTimeout(to);
-                  };
-
-                  chunkai.onComplete = (progress) => {
+                  const downloadCompleted = () => {
                     side_toaster("downloaded", 3000);
                     document.body.classList.remove("loading");
                     articles.forEach((ee) => {
@@ -3726,7 +3722,31 @@ document.addEventListener("DOMContentLoaded", function (e) {
                       }
                     });
                   };
+                  let to = setTimeout(() => {
+                    side_toaster("can't download file", 3000);
+                    document.body.classList.remove("loading");
+                    status.downloading = false;
+                  }, 30000);
+
+                  chunkai.onProgress = (progress) => {
+                    console.log(progress, 3000);
+                    //first progress event
+
+                    //if complete never get fired
+                    clearTimeout(downloadInProgress);
+                    downloadInProgress = setTimeout(() => {
+                      downloadCompleted();
+                    }, 20000);
+
+                    clearTimeout(to);
+                  };
+
+                  chunkai.onComplete = (progress) => {
+                    downloadCompleted();
+                  };
                   chunkai.onError = (err) => {
+                    if (err.contains("Error in body stream")) return;
+
                     side_toaster("can't download file" + err, 3000);
                     document.body.classList.remove("loading");
                     status.downloading = false;

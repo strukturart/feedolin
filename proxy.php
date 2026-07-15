@@ -1,112 +1,100 @@
 <?php
-
-// ========================
-// CORS
-// ========================
+// Enable CORS
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, Accept, Range");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Headers: Origin, Content-Type, Authorization, X-Requested-With");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit;
-
-// ========================
-// INPUT
-// ========================
-$url = $_GET['cors'] ?? null;
-
-if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
-    http_response_code(400);
-    exit("Invalid URL");
+// Parse input data
+$requestBody = file_get_contents("php://input");
+$isJsonRequest = false;
+$requestData = json_decode($requestBody, true);
+if (json_last_error() === JSON_ERROR_NONE) {
+    $isJsonRequest = true;
 }
 
-// ========================
-// MINIMAL SSRF PROTECTION
-// ========================
-$host = parse_url($url, PHP_URL_HOST);
-$ip = gethostbyname($host);
+// Determine request parameters
+$method = $_REQUEST['method'] ?? 'GET'; // Default to GET if method is not provided
+$url = $isJsonRequest ? $requestData['cors'] ?? null : ($_REQUEST['cors'] ?? null);
 
-$blocked = [
-    '127.0.0.1',
-    'localhost',
-    '0.0.0.0',
-    '169.254.169.254'
-];
-
-if (in_array($ip, $blocked, true)) {
-    http_response_code(403);
-    exit("Blocked host");
+// Handle direct query string URL (e.g., ?https://example.com..)
+if (!$url && isset($_SERVER['QUERY_STRING']) && filter_var($_SERVER['QUERY_STRING'], FILTER_VALIDATE_URL)) {
+    $url = $_SERVER['QUERY_STRING'];
 }
 
-// ========================
-// CURL
-// ========================
-$ch = curl_init($url);
+if (!$url) {
+    echo json_encode(["message" => "PROXY ACCESS DENIED! URL not specified"]);
+    exit();
+}
 
-// Forward headers (important for APIs + auth + range)
-$forwardHeaders = [];
-
-foreach (getallheaders() as $k => $v) {
-    $kl = strtolower($k);
-
-    if (in_array($kl, ['accept', 'user-agent', 'authorization', 'range'])) {
-        $forwardHeaders[] = "$k: $v";
+// Prepare headers
+$headers = [];
+foreach (getallheaders() as $key => $value) {
+    if (in_array(strtolower($key), ['content-type', 'authorization', 'x-requested-with'])) {
+        $headers[] = "$key: $value";
     }
 }
 
-// ========================
-// CRITICAL: NO BUFFERING (chunk safe)
-// ========================
-curl_setopt_array($ch, [
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_RETURNTRANSFER => false,   // 🔥 key for chunk streaming
-    CURLOPT_HTTPHEADER => $forwardHeaders,
-    CURLOPT_SSL_VERIFYPEER => true,
-    CURLOPT_SSL_VERIFYHOST => 2,
-    CURLOPT_TIMEOUT => 60,
+// Prepare CURL options
+$curl = curl_init();
+switch (strtoupper($method)) {
+    case 'POST':
+        $postData = $isJsonRequest ? $requestData : $_POST;
+        unset($postData['method'], $postData['cors']);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $isJsonRequest ? json_encode($postData) : http_build_query($postData),
+        ]);
+        break;
 
-    // 🔥 stream directly to output (chunk passthrough)
-    CURLOPT_WRITEFUNCTION => function ($ch, $data) {
-        echo $data;
-        flush();
-        return strlen($data);
-    },
+    case 'GET':
+        $getData = $isJsonRequest ? $requestData : $_GET;
+        unset($getData['method'], $getData['cors']);
+        $queryString = http_build_query($getData);
+        curl_setopt($curl, CURLOPT_URL, $url . ($queryString ? "?$queryString" : ""));
+        break;
 
-    // forward response headers (content-type, length, etc.)
-    CURLOPT_HEADERFUNCTION => function ($ch, $header) {
-        $len = strlen($header);
-        $parts = explode(':', $header, 2);
+    default:
+        echo json_encode(["message" => "Proxy only supports POST and GET requests"]);
+        exit();
+}
 
-        if (count($parts) == 2) {
-            $name = strtolower(trim($parts[0]));
-            $value = trim($parts[1]);
-
-            // safe headers only
-            if (in_array($name, [
-                'content-type',
-                'content-length',
-                'accept-ranges',
-                'content-range',
-                'transfer-encoding'
-            ])) {
-                header("$parts[0]: $value");
-            }
-        }
-
-        return $len;
-    }
+curl_setopt_array($curl, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_SSL_VERIFYPEER => false, // Disable for development, enable in production
+    CURLOPT_HTTPHEADER => $headers,
 ]);
 
-// ========================
-// EXECUTE
-// ========================
-$ok = curl_exec($ch);
+// Execute CURL request
+$response = curl_exec($curl);
+$error = curl_error($curl);
+curl_close($curl);
 
-if ($ok === false) {
-    http_response_code(500);
-    echo "Proxy error: " . curl_error($ch);
+if ($error) {
+    echo json_encode(["error" => $error]);
+    exit();
+}
+// Set response content type if possible
+if (json_decode($response) !== null) {
+    header('Content-Type: application/json');
+} elseif (strpos($response, '<?xml') === 0) {
+    header('Content-Type: application/xml');
+} else {
+    // Setze den Content-Type-Header basierend auf der Dateiendung
+    $fileExtension = pathinfo($url, PATHINFO_EXTENSION);
+    switch ($fileExtension) {
+        case 'mp3':
+            header('Content-Type: audio/mpeg');
+            break;
+        case 'wav':
+            header('Content-Type: audio/wav');
+            break;
+        default:
+            header('Content-Type: application/octet-stream');
+            break;
+    }
 }
 
-$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-http_response_code($code ?: 200);
-
-curl_close($ch);
+// Output the response
+echo $response;

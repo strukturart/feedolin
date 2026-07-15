@@ -82,14 +82,53 @@ if (userAgent && !userAgent.includes("KAIOS")) {
       }),
     );
   });
+}
 
-  // Serve files from cache when offline
-  self.addEventListener("fetch", (event) => {
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        // If the request is in the cache, return it. Otherwise, fetch from the network.
-        return response || fetch(event.request);
-      }),
-    );
-  });
+//for all devices
+const CACHE_NAME_IMAGE = "images-cache-v1";
+const MAX_ITEMS = 50;
+
+// Serve files from cache when offline
+
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+
+  // images
+  if (req.destination === "image") {
+    event.respondWith(handleImageRequest(req));
+    return;
+  }
+
+  // normal cache
+  event.respondWith(
+    caches.match(req).then((response) => {
+      return response || fetch(req);
+    }),
+  );
+});
+
+async function handleImageRequest(request) {
+  const cache = await caches.open(CACHE_NAME_IMAGE);
+  const cachedResponse = await cache.match(request);
+
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
+  const networkResponse = await fetch(request);
+  await cache.put(request, networkResponse.clone());
+
+  cleanupCache(cache);
+
+  return networkResponse;
+}
+
+async function cleanupCache(cache) {
+  const keys = await cache.keys();
+
+  if (keys.length <= MAX_ITEMS) return;
+
+  const itemsToDelete = keys.slice(0, keys.length - MAX_ITEMS);
+
+  await Promise.all(itemsToDelete.map((req) => cache.delete(req)));
 }
